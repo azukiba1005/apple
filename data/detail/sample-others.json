@@ -1,0 +1,1113 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "title": "初期サンプル(詳細)",
+    "generatedAt": "2026-10-31"
+  },
+  "products": [
+    {
+      "id": "iphone-14",
+      "category": "iPhone",
+      "name": "iPhone 14",
+      "generation": "第15世代 (2022)",
+      "releaseDate": "2022-09-16",
+      "specs": {
+        "soc": "A15 Bionic (6コアCPU / 5コアGPU)",
+        "ram": "6GB",
+        "display": "6.1インチ Super Retina XDR OLED 2532×1170 (460ppi / 60Hz)",
+        "battery": "3,279mAh (ビデオ再生 最大20時間)",
+        "weight": "172g",
+        "connectivity": [
+          "5G (Sub-6 / mmWave)",
+          "Wi-Fi 6",
+          "Bluetooth 5.3",
+          "nano-SIM + eSIM",
+          "衝突事故検出 / 衛星SOS"
+        ],
+        "bands": "5G: n1/n3/n5/n28/n41/n77/n78/n79 ほか, mmWave n257/n258/n260/n261",
+        "camera": "12MP デュアル (f/1.5 広角+超広角)",
+        "ports": "Lightning",
+        "os": "iOS 16 〜",
+        "identifier": "iPhone14,7"
+      },
+      "skus": [
+        {
+          "id": "128",
+          "label": "128GB",
+          "storage": "128GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "appleStorePrice": 119800,
+              "usdPrice": 799,
+              "exchangeRate": 143.5
+            },
+            {
+              "date": "2023-09-13",
+              "event": "次世代発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 112800,
+              "usdPrice": 699,
+              "exchangeRate": 147.5,
+              "approx": true
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 142560,
+              "currentPrice": 134230,
+              "mnpPrice": 112230,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 77855,
+                "residualValue": 56375
+              }
+            },
+            "au": {
+              "launchPrice": 140165,
+              "currentPrice": 131975,
+              "mnpPrice": 109975,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 65990,
+                "residualValue": 65990
+              }
+            },
+            "softbank": {
+              "launchPrice": 141365,
+              "currentPrice": 133105,
+              "mnpPrice": 111505,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 66555,
+                "residualValue": 66555
+              }
+            },
+            "rakuten": {
+              "launchPrice": 122195,
+              "currentPrice": 115055,
+              "mnpPrice": 95055,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 57530,
+                "residualValue": 57530
+              }
+            }
+          }
+        },
+        {
+          "id": "256",
+          "label": "256GB",
+          "storage": "256GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "appleStorePrice": 134800,
+              "usdPrice": 899,
+              "exchangeRate": 143.5
+            },
+            {
+              "date": "2023-09-13",
+              "event": "次世代発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 127800,
+              "usdPrice": 799,
+              "exchangeRate": 147.5,
+              "approx": true
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 160410,
+              "currentPrice": 152080,
+              "mnpPrice": 130080,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 88205,
+                "residualValue": 63875
+              }
+            },
+            "au": {
+              "launchPrice": 157715,
+              "currentPrice": 149525,
+              "mnpPrice": 127525,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 74765,
+                "residualValue": 74765
+              }
+            },
+            "softbank": {
+              "launchPrice": 159065,
+              "currentPrice": 150805,
+              "mnpPrice": 129205,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 75405,
+                "residualValue": 75405
+              }
+            },
+            "rakuten": {
+              "launchPrice": 137495,
+              "currentPrice": 130355,
+              "mnpPrice": 110355,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 65180,
+                "residualValue": 65180
+              }
+            }
+          }
+        },
+        {
+          "id": "512",
+          "label": "512GB",
+          "storage": "512GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "appleStorePrice": 164800,
+              "usdPrice": 1099,
+              "exchangeRate": 143.5
+            },
+            {
+              "date": "2023-09-13",
+              "event": "次世代発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 157800,
+              "usdPrice": 999,
+              "exchangeRate": 147.5,
+              "approx": true
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 196110,
+              "currentPrice": 187780,
+              "mnpPrice": 165780,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 108910,
+                "residualValue": 78870
+              }
+            },
+            "au": {
+              "launchPrice": 192815,
+              "currentPrice": 184625,
+              "mnpPrice": 162625,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 92315,
+                "residualValue": 92315
+              }
+            },
+            "softbank": {
+              "launchPrice": 194465,
+              "currentPrice": 186205,
+              "mnpPrice": 164605,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 93105,
+                "residualValue": 93105
+              }
+            },
+            "rakuten": {
+              "launchPrice": 168095,
+              "currentPrice": 160955,
+              "mnpPrice": 140955,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 80480,
+                "residualValue": 80480
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "iphone-15",
+      "category": "iPhone",
+      "name": "iPhone 15",
+      "generation": "第16世代 (2023)",
+      "releaseDate": "2023-09-22",
+      "specs": {
+        "soc": "A16 Bionic (6コアCPU / 5コアGPU)",
+        "ram": "6GB",
+        "display": "6.1インチ Super Retina XDR OLED 2556×1179 (460ppi / 60Hz) Dynamic Island",
+        "battery": "3,349mAh (ビデオ再生 最大20時間)",
+        "weight": "171g",
+        "connectivity": [
+          "5G (Sub-6 / mmWave)",
+          "Wi-Fi 6",
+          "Bluetooth 5.3",
+          "UWB 第2世代",
+          "nano-SIM + eSIM"
+        ],
+        "bands": "5G: n1/n3/n5/n28/n41/n77/n78/n79 ほか, mmWave n257/n258/n260/n261",
+        "camera": "48MP メイン + 12MP 超広角",
+        "ports": "USB-C (USB 2)",
+        "os": "iOS 17 〜",
+        "identifier": "iPhone15,4"
+      },
+      "skus": [
+        {
+          "id": "128",
+          "label": "128GB",
+          "storage": "128GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2023-09-22",
+              "event": "発売時",
+              "appleStorePrice": 124800,
+              "usdPrice": 799,
+              "exchangeRate": 148.5
+            },
+            {
+              "date": "2024-09-10",
+              "event": "次世代発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 112800,
+              "usdPrice": 699,
+              "exchangeRate": 142.5,
+              "approx": true
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 148510,
+              "currentPrice": 134230,
+              "mnpPrice": 112230,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 77855,
+                "residualValue": 56375
+              }
+            },
+            "au": {
+              "launchPrice": 146015,
+              "currentPrice": 131975,
+              "mnpPrice": 109975,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 65990,
+                "residualValue": 65990
+              }
+            },
+            "softbank": {
+              "launchPrice": 147265,
+              "currentPrice": 133105,
+              "mnpPrice": 111505,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 66555,
+                "residualValue": 66555
+              }
+            },
+            "rakuten": {
+              "launchPrice": 127295,
+              "currentPrice": 115055,
+              "mnpPrice": 95055,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 57530,
+                "residualValue": 57530
+              }
+            }
+          }
+        },
+        {
+          "id": "256",
+          "label": "256GB",
+          "storage": "256GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2023-09-22",
+              "event": "発売時",
+              "appleStorePrice": 139800,
+              "usdPrice": 899,
+              "exchangeRate": 148.5
+            },
+            {
+              "date": "2024-09-10",
+              "event": "次世代発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 127800,
+              "usdPrice": 799,
+              "exchangeRate": 142.5,
+              "approx": true
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 166360,
+              "currentPrice": 152080,
+              "mnpPrice": 130080,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 88205,
+                "residualValue": 63875
+              }
+            },
+            "au": {
+              "launchPrice": 163565,
+              "currentPrice": 149525,
+              "mnpPrice": 127525,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 74765,
+                "residualValue": 74765
+              }
+            },
+            "softbank": {
+              "launchPrice": 164965,
+              "currentPrice": 150805,
+              "mnpPrice": 129205,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 75405,
+                "residualValue": 75405
+              }
+            },
+            "rakuten": {
+              "launchPrice": 142595,
+              "currentPrice": 130355,
+              "mnpPrice": 110355,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 65180,
+                "residualValue": 65180
+              }
+            }
+          }
+        },
+        {
+          "id": "512",
+          "label": "512GB",
+          "storage": "512GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2023-09-22",
+              "event": "発売時",
+              "appleStorePrice": 169800,
+              "usdPrice": 1099,
+              "exchangeRate": 148.5
+            },
+            {
+              "date": "2024-09-10",
+              "event": "次世代発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 157800,
+              "usdPrice": 999,
+              "exchangeRate": 142.5,
+              "approx": true
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 202060,
+              "currentPrice": 187780,
+              "mnpPrice": 165780,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 108910,
+                "residualValue": 78870
+              }
+            },
+            "au": {
+              "launchPrice": 198665,
+              "currentPrice": 184625,
+              "mnpPrice": 162625,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 92315,
+                "residualValue": 92315
+              }
+            },
+            "softbank": {
+              "launchPrice": 200365,
+              "currentPrice": 186205,
+              "mnpPrice": 164605,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 93105,
+                "residualValue": 93105
+              }
+            },
+            "rakuten": {
+              "launchPrice": 173195,
+              "currentPrice": 160955,
+              "mnpPrice": 140955,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 80480,
+                "residualValue": 80480
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "iphone-16",
+      "category": "iPhone",
+      "name": "iPhone 16",
+      "generation": "第17世代 (2024)",
+      "releaseDate": "2024-09-20",
+      "specs": {
+        "soc": "A18 (6コアCPU / 5コアGPU)",
+        "ram": "8GB",
+        "display": "6.1インチ Super Retina XDR OLED 2556×1179 (460ppi / 60Hz)",
+        "battery": "3,561mAh (ビデオ再生 最大22時間)",
+        "weight": "170g",
+        "connectivity": [
+          "5G (Sub-6 / mmWave)",
+          "Wi-Fi 7",
+          "Bluetooth 5.3",
+          "UWB 第2世代",
+          "nano-SIM + eSIM",
+          "Apple Intelligence"
+        ],
+        "bands": "5G: n1/n3/n5/n28/n41/n77/n78/n79 ほか, mmWave n257/n258/n260/n261",
+        "camera": "48MP Fusion + 12MP 超広角",
+        "ports": "USB-C (USB 2)",
+        "os": "iOS 18 〜",
+        "identifier": "iPhone17,3"
+      },
+      "skus": [
+        {
+          "id": "128",
+          "label": "128GB",
+          "storage": "128GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "appleStorePrice": 124800,
+              "usdPrice": 799,
+              "exchangeRate": 143
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 148510,
+              "currentPrice": 148510,
+              "mnpPrice": 126510,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 86135,
+                "residualValue": 62375
+              }
+            },
+            "au": {
+              "launchPrice": 146015,
+              "currentPrice": 146015,
+              "mnpPrice": 124015,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 73010,
+                "residualValue": 73010
+              }
+            },
+            "softbank": {
+              "launchPrice": 147265,
+              "currentPrice": 147265,
+              "mnpPrice": 125665,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 73635,
+                "residualValue": 73635
+              }
+            },
+            "rakuten": {
+              "launchPrice": 127295,
+              "currentPrice": 127295,
+              "mnpPrice": 107295,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 63650,
+                "residualValue": 63650
+              }
+            }
+          }
+        },
+        {
+          "id": "256",
+          "label": "256GB",
+          "storage": "256GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "appleStorePrice": 139800,
+              "usdPrice": 899,
+              "exchangeRate": 143
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 166360,
+              "currentPrice": 166360,
+              "mnpPrice": 144360,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 96490,
+                "residualValue": 69870
+              }
+            },
+            "au": {
+              "launchPrice": 163565,
+              "currentPrice": 163565,
+              "mnpPrice": 141565,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 81785,
+                "residualValue": 81785
+              }
+            },
+            "softbank": {
+              "launchPrice": 164965,
+              "currentPrice": 164965,
+              "mnpPrice": 143365,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 82485,
+                "residualValue": 82485
+              }
+            },
+            "rakuten": {
+              "launchPrice": 142595,
+              "currentPrice": 142595,
+              "mnpPrice": 122595,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 71300,
+                "residualValue": 71300
+              }
+            }
+          }
+        },
+        {
+          "id": "512",
+          "label": "512GB",
+          "storage": "512GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "appleStorePrice": 169800,
+              "usdPrice": 1099,
+              "exchangeRate": 143
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 202060,
+              "currentPrice": 202060,
+              "mnpPrice": 180060,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 117195,
+                "residualValue": 84865
+              }
+            },
+            "au": {
+              "launchPrice": 198665,
+              "currentPrice": 198665,
+              "mnpPrice": 176665,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 99335,
+                "residualValue": 99335
+              }
+            },
+            "softbank": {
+              "launchPrice": 200365,
+              "currentPrice": 200365,
+              "mnpPrice": 178765,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 100185,
+                "residualValue": 100185
+              }
+            },
+            "rakuten": {
+              "launchPrice": 173195,
+              "currentPrice": 173195,
+              "mnpPrice": 153195,
+              "returnProgram": {
+                "name": "iPhoneアップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 86600,
+                "residualValue": 86600
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ipad-10",
+      "category": "iPad",
+      "name": "iPad (第10世代)",
+      "generation": "第10世代 (2022)",
+      "releaseDate": "2022-10-26",
+      "specs": {
+        "soc": "A14 Bionic",
+        "ram": "4GB",
+        "display": "10.9インチ Liquid Retina 2360×1640 (264ppi)",
+        "battery": "28.6Wh (Wi-Fiで最大10時間)",
+        "weight": "477g (Wi-Fi) / 481g (Cellular)",
+        "connectivity": [
+          "Wi-Fi 6",
+          "Bluetooth 5.2",
+          "5G Sub-6 (Cellularモデル)",
+          "eSIM"
+        ],
+        "bands": "5G: n1/n2/n3/n5/n7/n8/n12/n20/n25/n28/n30/n38/n40/n41/n66/n77/n78/n79 (Cellular)",
+        "camera": "12MP 広角 / 12MP 横向き前面",
+        "ports": "USB-C",
+        "os": "iPadOS 16 〜",
+        "identifier": "iPad13,18"
+      },
+      "skus": [
+        {
+          "id": "64-wifi",
+          "label": "64GB Wi-Fi",
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "priceHistory": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "appleStorePrice": 68800,
+              "usdPrice": 449,
+              "exchangeRate": 148
+            },
+            {
+              "date": "2024-05-15",
+              "event": "新型iPad発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 58800,
+              "usdPrice": 349,
+              "exchangeRate": 156,
+              "approx": true
+            }
+          ],
+          "carriers": {}
+        },
+        {
+          "id": "64-cell",
+          "label": "64GB Wi-Fi + Cellular",
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "priceHistory": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "appleStorePrice": 92800,
+              "usdPrice": 599,
+              "exchangeRate": 148
+            },
+            {
+              "date": "2024-05-15",
+              "event": "新型iPad発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 82800,
+              "usdPrice": 499,
+              "exchangeRate": 156,
+              "approx": true
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 103935,
+              "currentPrice": 92735,
+              "mnpPrice": 81735,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 53785,
+                "residualValue": 38950
+              }
+            },
+            "au": {
+              "launchPrice": 102080,
+              "currentPrice": 91080,
+              "mnpPrice": 80080,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 45540,
+                "residualValue": 45540
+              }
+            },
+            "softbank": {
+              "launchPrice": 102080,
+              "currentPrice": 91080,
+              "mnpPrice": 80080,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 45540,
+                "residualValue": 45540
+              }
+            },
+            "rakuten": {
+              "launchPrice": 92800,
+              "currentPrice": 82800,
+              "mnpPrice": 72800,
+              "returnProgram": {
+                "name": "アップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 41400,
+                "residualValue": 41400
+              }
+            }
+          }
+        },
+        {
+          "id": "256-wifi",
+          "label": "256GB Wi-Fi",
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "priceHistory": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "appleStorePrice": 84800,
+              "usdPrice": 599,
+              "exchangeRate": 148
+            },
+            {
+              "date": "2024-05-15",
+              "event": "新型iPad発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 74800,
+              "usdPrice": 499,
+              "exchangeRate": 156,
+              "approx": true
+            }
+          ],
+          "carriers": {}
+        }
+      ]
+    },
+    {
+      "id": "ipad-air-11-m2",
+      "category": "iPad",
+      "name": "iPad Air 11インチ (M2)",
+      "generation": "M2 (2024)",
+      "releaseDate": "2024-05-15",
+      "specs": {
+        "soc": "Apple M2 (8コアCPU / 10コアGPU)",
+        "ram": "8GB",
+        "display": "11インチ Liquid Retina 2360×1640 (264ppi / P3)",
+        "battery": "28.93Wh (Wi-Fiで最大10時間)",
+        "weight": "462g (Wi-Fi) / 462g (Cellular)",
+        "connectivity": [
+          "Wi-Fi 6E",
+          "Bluetooth 5.3",
+          "5G Sub-6 (Cellularモデル)",
+          "eSIM"
+        ],
+        "bands": "5G: n1/n2/n3/n5/n7/n8/n12/n20/n25/n28/n30/n38/n40/n41/n66/n77/n78/n79 (Cellular)",
+        "camera": "12MP 広角 / 12MP 横向き前面",
+        "ports": "USB-C (USB 3 / 10Gb/s)",
+        "os": "iPadOS 17 〜"
+      },
+      "skus": [
+        {
+          "id": "128-wifi",
+          "label": "128GB Wi-Fi",
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "priceHistory": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "appleStorePrice": 98800,
+              "usdPrice": 599,
+              "exchangeRate": 156
+            }
+          ],
+          "carriers": {}
+        },
+        {
+          "id": "128-cell",
+          "label": "128GB Wi-Fi + Cellular",
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "priceHistory": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "appleStorePrice": 128800,
+              "usdPrice": 749,
+              "exchangeRate": 156,
+              "approx": true
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 144255,
+              "currentPrice": 144255,
+              "mnpPrice": 133255,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 83670,
+                "residualValue": 60585
+              }
+            },
+            "au": {
+              "launchPrice": 141680,
+              "currentPrice": 141680,
+              "mnpPrice": 130680,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 70840,
+                "residualValue": 70840
+              }
+            },
+            "softbank": {
+              "launchPrice": 141680,
+              "currentPrice": 141680,
+              "mnpPrice": 130680,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 70840,
+                "residualValue": 70840
+              }
+            },
+            "rakuten": {
+              "launchPrice": 128800,
+              "currentPrice": 128800,
+              "mnpPrice": 118800,
+              "returnProgram": {
+                "name": "アップグレードプログラム",
+                "months": 24,
+                "effectiveCost": 64400,
+                "residualValue": 64400
+              }
+            }
+          }
+        },
+        {
+          "id": "256-wifi",
+          "label": "256GB Wi-Fi",
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "priceHistory": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "appleStorePrice": 118800,
+              "usdPrice": 699,
+              "exchangeRate": 156
+            }
+          ],
+          "carriers": {}
+        }
+      ]
+    },
+    {
+      "id": "watch-s10",
+      "category": "Apple Watch",
+      "name": "Apple Watch Series 10",
+      "generation": "Series 10 (2024)",
+      "releaseDate": "2024-09-20",
+      "specs": {
+        "soc": "S10 SiP (64bit デュアルコア)",
+        "ram": "非公開",
+        "display": "42mm: 374×446 / 46mm: 416×496 常時表示広視野角 LTPO3 OLED",
+        "battery": "通常使用 最大18時間 (急速充電 30分で約80%)",
+        "weight": "30g (42mm アルミ GPS)",
+        "connectivity": [
+          "GPS (L1 + L5)",
+          "4G LTE (Cellularモデル)",
+          "Wi-Fi 4",
+          "Bluetooth 5.3",
+          "UWB",
+          "eSIM"
+        ],
+        "bands": "LTE: B1/B3/B5/B8/B18/B19/B26/B28 ほか",
+        "camera": "—",
+        "ports": "磁気急速充電",
+        "os": "watchOS 11 〜",
+        "identifier": "Watch7,8"
+      },
+      "skus": [
+        {
+          "id": "42-gps",
+          "label": "42mm GPS",
+          "storage": "64GB",
+          "connectivity": "GPS",
+          "priceHistory": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "appleStorePrice": 59800,
+              "usdPrice": 399,
+              "exchangeRate": 143
+            }
+          ],
+          "carriers": {}
+        },
+        {
+          "id": "42-cell",
+          "label": "42mm GPS + Cellular",
+          "storage": "64GB",
+          "connectivity": "GPS + Cellular",
+          "priceHistory": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "appleStorePrice": 74800,
+              "usdPrice": 499,
+              "exchangeRate": 143
+            }
+          ],
+          "carriers": {
+            "docomo": {
+              "launchPrice": 82280,
+              "currentPrice": 82280,
+              "mnpPrice": 76780,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 80785,
+              "currentPrice": 80785,
+              "mnpPrice": 75285,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 80785,
+              "currentPrice": 80785,
+              "mnpPrice": 75285,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 74800,
+              "currentPrice": 74800,
+              "mnpPrice": 69800,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "mba-13-m2",
+      "category": "Mac",
+      "name": "MacBook Air 13インチ (M2)",
+      "generation": "M2 (2022)",
+      "releaseDate": "2022-07-15",
+      "specs": {
+        "soc": "Apple M2 (8コアCPU / 8コアGPU)",
+        "ram": "8GB",
+        "display": "13.6インチ Liquid Retina 2560×1664 (224ppi)",
+        "battery": "52.6Wh (ビデオ再生 最大18時間)",
+        "weight": "1.24kg",
+        "connectivity": [
+          "Wi-Fi 6",
+          "Bluetooth 5.0"
+        ],
+        "bands": "—",
+        "camera": "1080p FaceTime HD",
+        "ports": "MagSafe 3 / Thunderbolt 3 (USB 4) ×2 / 3.5mmジャック",
+        "os": "macOS Monterey 〜"
+      },
+      "skus": [
+        {
+          "id": "8-256",
+          "label": "8GB / 256GB SSD",
+          "storage": "256GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2022-07-15",
+              "event": "発売時",
+              "appleStorePrice": 164800,
+              "usdPrice": 1199,
+              "exchangeRate": 138
+            },
+            {
+              "date": "2024-03-08",
+              "event": "M3搭載モデル発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 148800,
+              "usdPrice": 999,
+              "exchangeRate": 149
+            }
+          ],
+          "carriers": {}
+        },
+        {
+          "id": "8-512",
+          "label": "8GB / 512GB SSD",
+          "storage": "512GB",
+          "connectivity": "-",
+          "priceHistory": [
+            {
+              "date": "2022-07-15",
+              "event": "発売時",
+              "appleStorePrice": 198800,
+              "usdPrice": 1499,
+              "exchangeRate": 138,
+              "approx": true
+            },
+            {
+              "date": "2024-03-08",
+              "event": "M3搭載モデル発表に伴う価格改定（値下げ）",
+              "appleStorePrice": 178800,
+              "usdPrice": 1199,
+              "exchangeRate": 149,
+              "approx": true
+            }
+          ],
+          "carriers": {}
+        }
+      ]
+    }
+  ]
+}

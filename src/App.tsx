@@ -5,7 +5,7 @@ import {
 import {
   Smartphone, Tablet, Watch, Laptop, Sun, Moon, TrendingUp, TrendingDown, Minus, Copy, Download, Upload,
   Trash2, RotateCcw, Check, Scale, LineChart as LineIcon, Database, Coins, Plus, X, Link2, AlertTriangle,
-  Info, Trophy, Apple,
+  Info, Trophy, Apple, Headphones, Search,
 } from 'lucide-react';
 
 /* =====================================================================================
@@ -24,6 +24,7 @@ export interface PricePoint {
   appleStorePrice: number; // 日本 Apple Store 税込価格 (JPY)
   usdPrice?: number;       // 米国 Apple Store 税抜価格 (USD)
   exchangeRate?: number;   // その日付近の市場為替 (JPY/USD)
+  taxRate?: number;        // 当時の消費税率 (省略時 0.10)
   approx?: boolean;        // 概算値フラグ (要検証)
   note?: string;
 }
@@ -69,6 +70,7 @@ export interface Product {
   releaseDate: string;
   specs: Specs;
   skus: Sku[];
+  detail?: boolean;       // 詳細価格データ(改定履歴/キャリア価格)あり。省略時は自動判定
 }
 
 export interface Dataset {
@@ -322,11 +324,16 @@ const signedPct = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : '±'}${Math.ab
 const ts = (d: string) => Date.parse(d + 'T00:00:00Z');
 const ym = (t: number) => { const d = new Date(t); return `${d.getUTCFullYear()}/${String(d.getUTCMonth() + 1).padStart(2, '0')}`; };
 const lastOf = <T,>(a: T[]) => a[a.length - 1];
-const currentApple = (s: Sku) => lastOf(s.priceHistory).appleStorePrice;
-const impliedRate = (p: PricePoint) => (p.usdPrice ? p.appleStorePrice / TAX / p.usdPrice : undefined);
+const impliedRate = (p: PricePoint) => (p.usdPrice ? p.appleStorePrice / (1 + (p.taxRate ?? 0.1)) / p.usdPrice : undefined);
+/** 価格データを持つSKU / 製品か */
+const skuPriced = (s: Sku) => s.priceHistory.length > 0;
+const pricedSkus = (p: Product) => p.skus.filter(skuPriced);
+const hasPrice = (p: Product) => p.skus.some(skuPriced);
+/** 詳細価格データ(複数回の改定 or キャリア価格)があるか */
+const hasDetail = (p: Product) => p.detail ?? p.skus.some((s) => new Set(s.priceHistory.map((h) => h.appleStorePrice)).size > 1 || Object.keys(s.carriers).some((k) => k !== 'apple'));
 
 const CATEGORY_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
-  iPhone: Smartphone, iPad: Tablet, 'Apple Watch': Watch, Mac: Laptop,
+  iPhone: Smartphone, iPad: Tablet, 'Apple Watch': Watch, Mac: Laptop, AirPods: Headphones,
 };
 const CatIcon = ({ cat, className }: { cat: string; className?: string }) => {
   const I = CATEGORY_ICON[cat] ?? Apple;
@@ -348,18 +355,18 @@ function normalizeDataset(raw: unknown): { products: Product[]; errors: string[]
     const skus: Sku[] = [];
     p.skus.forEach((s0, j) => {
       const s = s0 as Partial<Sku>;
-      if (!s?.id || !Array.isArray(s.priceHistory) || !s.priceHistory.length) return errors.push(`${tag}.skus[${j}]: id と priceHistory が必要です`);
+      if (!s?.id || !Array.isArray(s.priceHistory)) return errors.push(`${tag}.skus[${j}]: id と priceHistory(空配列可) が必要です`);
       const bad = s.priceHistory.find((h) => !h || typeof h.appleStorePrice !== 'number' || !/^\d{4}-\d{2}-\d{2}$/.test(h.date));
       if (bad) return errors.push(`${tag}.skus[${j}]: priceHistory の date(YYYY-MM-DD) / appleStorePrice(number) が不正です`);
       const priceHistory = [...s.priceHistory].sort((a, b) => a.date.localeCompare(b.date));
       const carriers: Sku['carriers'] = { ...(s.carriers ?? {}) };
-      carriers.apple = { launchPrice: priceHistory[0].appleStorePrice, currentPrice: lastOf(priceHistory).appleStorePrice, mnpPrice: null, returnProgram: null, ...(carriers.apple ?? {}) };
+      if (priceHistory.length) carriers.apple = { launchPrice: priceHistory[0].appleStorePrice, currentPrice: lastOf(priceHistory).appleStorePrice, mnpPrice: null, returnProgram: null, ...(carriers.apple ?? {}) };
       skus.push({ id: String(s.id), label: s.label ?? s.storage ?? String(s.id), storage: s.storage ?? '', connectivity: s.connectivity ?? '-', priceHistory, carriers });
     });
     if (!skus.length) return;
     products.push({
-      id: String(p.id), category: p.category, name: p.name, generation: p.generation ?? '', releaseDate: p.releaseDate ?? skus[0].priceHistory[0].date,
-      specs: p.specs ?? {}, skus,
+      id: String(p.id), category: p.category, name: p.name, generation: p.generation ?? '', releaseDate: p.releaseDate ?? skus[0].priceHistory[0]?.date ?? '',
+      specs: p.specs ?? {}, skus, ...(typeof p.detail === 'boolean' ? { detail: p.detail } : {}),
     });
   });
   return { products, errors };
@@ -379,12 +386,13 @@ const SPEC_ROWS: { key: string; label: string }[] = [
   { key: 'soc', label: 'SoC' }, { key: 'ram', label: 'RAM' }, { key: 'display', label: 'ディスプレイ' }, { key: 'battery', label: 'バッテリー' },
   { key: 'weight', label: '重量' }, { key: 'connectivity', label: '通信規格' }, { key: 'bands', label: '対応バンド' },
   { key: 'camera', label: 'カメラ' }, { key: 'ports', label: '端子' }, { key: 'os', label: 'OS' },
+  { key: 'colors', label: 'カラー' }, { key: 'launchPriceJpy', label: '発売時価格 (日本)' }, { key: 'launchPriceUsd', label: '発売時価格 (米国)' },
   { key: 'modelNumbers', label: '型番 (AppleDB)' }, { key: 'discontinued', label: '販売終了日 (日本時間)' },
 ];
 
 /* ---------- AppleDB (https://api.appledb.dev/device/main.json) 連携 ---------- */
 const APPLEDB_URL = 'https://api.appledb.dev/device/main.json';
-interface AppleDbDevice { name: string; type?: string; identifier?: string[]; soc?: string; model?: string[]; discontinued?: string; info?: Record<string, any>[] }
+interface AppleDbDevice { name: string; type?: string; identifier?: string[]; soc?: string; model?: string[]; discontinued?: string | string[]; info?: Record<string, any>[] }
 const addDays = (d: string, n: number) => new Date(Date.parse(d + 'T00:00:00Z') + n * 864e5).toISOString().slice(0, 10);
 
 /**
@@ -393,15 +401,18 @@ const addDays = (d: string, n: number) => new Date(Date.parse(d + 'T00:00:00Z') 
  * 価格は AppleDB に無いため一切変更しない。解像度/ppi は AppleDB が不正確な機種があるため採用しない。
  */
 function applyAppleDb(products: Product[], raw: unknown): { products: Product[]; report: string[] } {
-  const devices = (Array.isArray(raw) ? (raw as AppleDbDevice[]) : []).filter((d) => d && d.identifier?.length && d.info);
+  const devices = (Array.isArray(raw) ? (raw as AppleDbDevice[]) : []).filter((d) => d && d.identifier?.length);
   if (!devices.length) return { products, report: ['AppleDB 形式のデータ (identifier / info) が見つかりません'] };
   const today = new Date().toISOString().slice(0, 10);
   const report: string[] = [];
+  const unmatched: string[] = [];
+  const updatedLines: string[] = [];
+  let same = 0;
   const out = products.map((p) => {
-    const ids = String(p.specs.identifier ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+    const ids = String(p.specs.identifier ?? '').split(';').map((s) => s.trim()).filter(Boolean);
     const dev = devices.find((d) => ids.some((i) => d.identifier!.includes(i))) ?? devices.find((d) => d.name === p.name);
-    if (!dev) { report.push(`– ${p.name}: AppleDB に該当なし (specs.identifier を指定すると連携できます)`); return p; }
-    const g = (t: string): Record<string, any> => dev.info!.find((i) => i.type === t) ?? {};
+    if (!dev) { unmatched.push(p.name); return p; }
+    const g = (t: string): Record<string, any> => (dev.info ?? []).find((i) => i.type === t) ?? {};
     const cores = g('Cores'), mem = g('Memory'), pow = g('Power'), con = g('Connectivity'), soc = g('SoC');
     const s: Specs = { ...p.specs };
     const changed: string[] = [];
@@ -416,25 +427,29 @@ function applyAppleDb(products: Product[], raw: unknown): { products: Product[];
       set('connectivity', [...(con.Cellular ?? []).slice(0, 1), con['Wi-Fi'], con.Bluetooth ? `Bluetooth ${con.Bluetooth}` : null, con['Ultra-wideband'] ? 'UWB' : null, 'nano-SIM + eSIM'].filter(Boolean) as string[]);
     }
     set('modelNumbers', (dev.model ?? []).join(', '));
-    set('identifier', ids[0] ?? dev.identifier![0]);
+    if (!s.identifier) set('identifier', dev.identifier!.join(';'));
     set('appledb', `https://appledb.dev/device-selection/${encodeURIComponent(dev.name)}`);
 
     let skus = p.skus;
-    if (dev.discontinued) {
-      const jp = addDays(dev.discontinued, 1); // AppleDB は米国日付 → 日本時間は +1日
+    const discDate = ([] as string[]).concat(dev.discontinued ?? []).filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x)).sort().pop();
+    if (discDate) {
+      const jp = addDays(discDate, 1); // AppleDB は米国日付 → 日本時間は +1日
       set('discontinued', jp);
       let added = 0;
       skus = p.skus.map((k) => {
         const last = lastOf(k.priceHistory);
-        if (last.event === '販売終了' || jp <= last.date || jp > today) return k;
+        if (!last || last.event === '販売終了' || jp <= last.date || jp > today) return k;
         added++;
         return { ...k, priceHistory: [...k.priceHistory, { ...last, date: jp, event: '販売終了', approx: true, note: 'AppleDB の販売終了日 (米国日付+1日で日本時間に換算)。価格は終了時点' }] };
       });
       if (added) changed.push(`販売終了イベント×${added}`);
     }
-    report.push(changed.length ? `✓ ${p.name} ← ${dev.name}: ${changed.join(', ')}` : `✓ ${p.name}: 変更なし (最新)`);
+    if (changed.length) updatedLines.push(`✓ ${p.name} ← ${dev.name}: ${changed.join(', ')}`); else same++;
     return { ...p, specs: s, skus };
   });
+  report.unshift(`✓ ${out.length - unmatched.length}製品を突き合わせ (更新 ${updatedLines.length} / 変更なし ${same}) ／ 該当なし ${unmatched.length}${unmatched.length ? ` (例: ${unmatched.slice(0, 5).join(', ')})` : ''}`);
+  report.push(...updatedLines.slice(0, 40));
+  if (updatedLines.length > 40) report.push(`… ほか ${updatedLines.length - 40} 製品を更新`);
   return { products: out, report };
 }
 const specText = (v: string | string[] | undefined) => (Array.isArray(v) ? v.join(' / ') : v || '—');
@@ -533,15 +548,17 @@ function ProductSkuPicker({ products, sel, onChange }: { products: Product[]; se
   const cats = Array.from(new Set(products.map((x) => x.category)));
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <select className={selectCls} value={p.id} onChange={(e) => { const np = products.find((x) => x.id === e.target.value)!; onChange({ pid: np.id, sid: np.skus[0].id }); }}>
+      <select className={selectCls} value={p.id} onChange={(e) => { const np = products.find((x) => x.id === e.target.value)!; onChange({ pid: np.id, sid: (pricedSkus(np)[0] ?? np.skus[0]).id }); }}>
         {cats.map((c) => (<optgroup key={c} label={c}>{products.filter((x) => x.category === c).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</optgroup>))}
       </select>
       <select className={selectCls} value={sel.sid} onChange={(e) => onChange({ pid: p.id, sid: e.target.value })}>
-        {p.skus.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+        {(pricedSkus(p).length ? pricedSkus(p) : p.skus).map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
       </select>
     </div>
   );
 }
+
+const EmptyNote = ({ text }: { text: string }) => <div className={`${card} p-10 text-center text-sm text-zinc-500`}>{text}</div>;
 
 const useChartColors = () => { const d = useDark(); return { axis: d ? '#a1a1aa' : '#52525b', grid: d ? '#3f3f46' : '#e4e4e7', tipBg: d ? '#18181b' : '#ffffff', tipBorder: d ? '#3f3f46' : '#e4e4e7', text: d ? '#f4f4f5' : '#18181b' }; };
 
@@ -549,17 +566,21 @@ const useChartColors = () => { const d = useDark(); return { axis: d ? '#a1a1aa'
  * 5. タブ1: スペック＆キャリア価格 横並び比較
  * ===================================================================================== */
 
-function CompareView({ products, sels, setSels, mode, setMode, mnp, setMnp, toast }: {
-  products: Product[]; sels: Sel[]; setSels: (s: Sel[]) => void; mode: Mode; setMode: (m: Mode) => void; mnp: boolean; setMnp: (b: boolean) => void; toast: (m: string) => void;
+function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp, toast }: {
+  products: Product[]; all: Product[]; sels: Sel[]; setSels: (s: Sel[]) => void; mode: Mode; setMode: (m: Mode) => void; mnp: boolean; setMnp: (b: boolean) => void; toast: (m: string) => void;
 }) {
   const dark = useDark();
-  const cols = sels.map((s) => { const p = products.find((x) => x.id === s.pid)!; return { sel: s, p, sku: p.skus.find((k) => k.id === s.sid) ?? p.skus[0] }; });
+  const cols = sels.filter((s) => all.some((x) => x.id === s.pid)).map((s) => { const p = all.find((x) => x.id === s.pid)!; return { sel: s, p, sku: p.skus.find((k) => k.id === s.sid) ?? p.skus[0] }; });
   const [adding, setAdding] = useState('');
+  const [q, setQ] = useState('');
+  const [catF, setCatF] = useState('');
   const available = products.filter((p) => !sels.some((s) => s.pid === p.id));
+  const allCats = Array.from(new Set(products.map((x) => x.category)));
+  const matched = available.filter((p) => (!catF || p.category === catF) && (!q.trim() || p.name.toLowerCase().includes(q.trim().toLowerCase()) || String(p.specs.identifier ?? '').toLowerCase().includes(q.trim().toLowerCase())));
 
   const doCopy = async (kind: 'md' | 'csv') => {
     if (!sels.length) return;
-    const rows = buildCompareTable(products, sels, mode, mnp);
+    const rows = buildCompareTable(all, sels, mode, mnp);
     const ok = await copyText(kind === 'md' ? toMarkdown(rows) : toCSV(rows));
     toast(ok ? `${kind === 'md' ? 'Markdown' : 'CSV'} をコピーしました` : 'コピーに失敗しました');
   };
@@ -593,11 +614,16 @@ function CompareView({ products, sels, setSels, mode, setMode, mnp, setMnp, toas
             </span>
           ))}
           {available.length > 0 && (
-            <span className="inline-flex items-center gap-1">
-              <select className={selectCls} value={adding} onChange={(e) => { const p = products.find((x) => x.id === e.target.value); if (p) setSels([...sels, { pid: p.id, sid: p.skus[0].id }]); setAdding(''); }}>
-                <option value="">＋ 機種を追加…</option>
-                {Array.from(new Set(available.map((x) => x.category))).map((cat) => (
-                  <optgroup key={cat} label={cat}>{available.filter((x) => x.category === cat).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</optgroup>
+            <span className="inline-flex flex-wrap items-center gap-1.5">
+              <select className={selectCls} value={catF} onChange={(e) => setCatF(e.target.value)} aria-label="カテゴリ絞り込み">
+                <option value="">全カテゴリ</option>{allCats.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+              <span className="relative"><Search className="pointer-events-none absolute left-2 top-2 h-4 w-4 text-zinc-400" />
+                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="機種名・識別子で検索" className={`${selectCls} w-44 pl-7`} /></span>
+              <select className={`${selectCls} max-w-[16rem]`} value={adding} onChange={(e) => { const p = all.find((x) => x.id === e.target.value); if (p) setSels([...sels, { pid: p.id, sid: p.skus[0].id }]); setAdding(''); }}>
+                <option value="">＋ 機種を追加… ({matched.length}件)</option>
+                {Array.from(new Set(matched.map((x) => x.category))).map((cat) => (
+                  <optgroup key={cat} label={cat}>{matched.filter((x) => x.category === cat).slice(0, 300).map((x) => <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)}){hasDetail(x) ? ' ★' : ''}</option>)}</optgroup>
                 ))}
               </select>
             </span>
@@ -703,11 +729,16 @@ function CompareView({ products, sels, setSels, mode, setMode, mnp, setMnp, toas
  * ===================================================================================== */
 
 function TimelineView({ products }: { products: Product[] }) {
+  const priced = products.filter(hasPrice);
+  return priced.length ? <TimelineInner products={priced} /> : <EmptyNote text="価格データのある機種がありません (表示範囲を「歴代すべて」にするか、JSONを読み込んでください)" />;
+}
+
+function TimelineInner({ products }: { products: Product[] }) {
   const c = useChartColors();
   const dark = useDark();
-  const [sel, setSel] = useState<Sel>({ pid: products[0].id, sid: products[0].skus[0].id });
+  const [sel, setSel] = useState<Sel>({ pid: products[0].id, sid: pricedSkus(products[0])[0].id });
   const p = products.find((x) => x.id === sel.pid) ?? products[0];
-  const sku = p.skus.find((s) => s.id === sel.sid) ?? p.skus[0];
+  const sku = pricedSkus(p).find((s) => s.id === sel.sid) ?? pricedSkus(p)[0];
   const h = sku.priceHistory;
 
   const events = h.map((pt, i) => ({ pt, diff: i ? pt.appleStorePrice - h[i - 1].appleStorePrice : 0, prev: i ? h[i - 1].appleStorePrice : pt.appleStorePrice }));
@@ -719,11 +750,11 @@ function TimelineView({ products }: { products: Product[] }) {
 
   // 一斉改定日
   const dateCounts = new Map<string, number>();
-  products.forEach((pr) => { const s = pr.skus[0]; s.priceHistory.forEach((x, i) => { if (i && x.appleStorePrice !== s.priceHistory[i - 1].appleStorePrice) dateCounts.set(x.date, (dateCounts.get(x.date) ?? 0) + 1); }); });
+  products.forEach((pr) => { const s = pricedSkus(pr)[0]; s.priceHistory.forEach((x, i) => { if (i && x.appleStorePrice !== s.priceHistory[i - 1].appleStorePrice) dateCounts.set(x.date, (dateCounts.get(x.date) ?? 0) + 1); }); });
   const dates = Array.from(dateCounts.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([d]) => d);
   const [day, setDay] = useState(dates.includes('2022-07-01') ? '2022-07-01' : dates[0] ?? '');
   const dayRows = products.map((pr) => {
-    const s = pr.skus[0]; const i = s.priceHistory.findIndex((x) => x.date === day);
+    const s = pricedSkus(pr)[0]; const i = s.priceHistory.findIndex((x) => x.date === day);
     return i > 0 ? { pr, s, diff: s.priceHistory[i].appleStorePrice - s.priceHistory[i - 1].appleStorePrice, base: s.priceHistory[i - 1].appleStorePrice, ev: s.priceHistory[i].event } : null;
   }).filter(Boolean) as { pr: Product; s: Sku; diff: number; base: number; ev: string }[];
 
@@ -815,19 +846,25 @@ function verdict(prev: PricePoint, cur: PricePoint): { text: string; tone: 'up' 
 }
 
 function FxView({ products }: { products: Product[] }) {
+  const priced = products.filter((p) => pricedSkus(p).some((s) => s.priceHistory.some((h) => h.usdPrice)));
+  return priced.length ? <FxInner products={priced} /> : <EmptyNote text="USD価格つきの機種がありません (表示範囲を「歴代すべて」にしてください)" />;
+}
+
+function FxInner({ products }: { products: Product[] }) {
   const c = useChartColors();
   const dark = useDark();
   const cats = Array.from(new Set(products.map((x) => x.category)));
-  const [cat, setCat] = useState<string>(cats[0]);
-  const [sel, setSel] = useState<Sel>({ pid: products[0].id, sid: products[0].skus[0].id });
+  const [catSel, setCat] = useState<string>(cats[0]);
+  const cat = cats.includes(catSel) ? catSel : cats[0];
+  const [sel, setSel] = useState<Sel>({ pid: products[0].id, sid: pricedSkus(products[0])[0].id });
 
   const launchRows = products.filter((x) => x.category === cat).sort((a, b) => a.releaseDate.localeCompare(b.releaseDate)).map((pr) => {
-    const pt = pr.skus[0].priceHistory[0]; const ar = impliedRate(pt);
-    return { name: pr.name, sku: pr.skus[0].label, date: pt.date, jpy: pt.appleStorePrice, usd: pt.usdPrice, fx: pt.exchangeRate, apple: ar, premium: ar && pt.exchangeRate ? (ar / pt.exchangeRate - 1) * 100 : undefined };
+    const ps = pricedSkus(pr)[0]; const pt = ps.priceHistory[0]; const ar = impliedRate(pt);
+    return { name: pr.name, sku: ps.label, date: pt.date, jpy: pt.appleStorePrice, usd: pt.usdPrice, fx: pt.exchangeRate, apple: ar, premium: ar && pt.exchangeRate ? (ar / pt.exchangeRate - 1) * 100 : undefined };
   });
 
   const p = products.find((x) => x.id === sel.pid) ?? products[0];
-  const sku = p.skus.find((s) => s.id === sel.sid) ?? p.skus[0];
+  const sku = pricedSkus(p).find((s) => s.id === sel.sid) ?? pricedSkus(p)[0];
   const h = sku.priceHistory;
   const b = h[0]; const bAr = impliedRate(b);
   const idx = h.map((x) => ({
@@ -841,7 +878,7 @@ function FxView({ products }: { products: Product[] }) {
   return (
     <div className="space-y-5">
       <div className={`${card} p-5`}>
-        <SectionTitle icon={<Coins className="h-5 w-5" />} title="歴代モデル 発売時価格 vs 為替レート" desc={`Appleレート = 円価格 ÷ ${TAX}(消費税10%) ÷ USD価格。市場為替より高ければ「円建てに上乗せ」されています。`} />
+        <SectionTitle icon={<Coins className="h-5 w-5" />} title="歴代モデル 発売時価格 vs 為替レート" desc={`Appleレート = 円価格 ÷ ${TAX}(当時の消費税率) ÷ USD価格。市場為替より高ければ「円建てに上乗せ」されています。`} />
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="text-sm text-zinc-500">カテゴリ</span>
           <Segmented value={cat} onChange={setCat} options={cats.map((x) => ({ value: x, label: x }))} />
@@ -956,10 +993,12 @@ function DataView({ products, onReplace, onMerge, onReset, onRemove, onAppleDb, 
   const [url, setUrl] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
   const [dbReport, setDbReport] = useState<string[]>([]);
+  const [listQ, setListQ] = useState('');
+  const [listLimit, setListLimit] = useState(60);
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const runAppleDb = (raw: unknown) => { const rep = onAppleDb(raw); setDbReport(rep); toast(`AppleDB を適用しました (${rep.filter((r) => r.startsWith('✓')).length}製品)`); };
+  const runAppleDb = (raw: unknown) => { const rep = onAppleDb(raw); setDbReport(rep); toast(rep[0] ?? 'AppleDB を適用しました'); };
   const fetchAppleDb = async () => {
     setBusy(true);
     try { const r = await fetch(APPLEDB_URL); if (!r.ok) throw new Error(`HTTP ${r.status}`); runAppleDb(await r.json()); }
@@ -1047,16 +1086,20 @@ function DataView({ products, onReplace, onMerge, onReset, onRemove, onAppleDb, 
       </div>
 
       <div className={`${card} p-5`}>
-        <h3 className="mb-3 text-sm font-bold text-zinc-900 dark:text-zinc-50">読み込み済み製品 ({products.length})</h3>
+        <div className="mb-3 flex flex-wrap items-center gap-3">
+          <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">読み込み済み製品 ({products.length} / 詳細あり {products.filter(hasDetail).length})</h3>
+          <input value={listQ} onChange={(e) => { setListQ(e.target.value); setListLimit(60); }} placeholder="機種名・カテゴリで絞り込み" className={`${selectCls} w-56`} />
+        </div>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => (
+          {products.filter((p) => !listQ.trim() || `${p.name} ${p.category}`.toLowerCase().includes(listQ.trim().toLowerCase())).slice(0, listLimit).map((p) => (
             <div key={p.id} className="flex items-center justify-between rounded-xl bg-zinc-50 p-3 dark:bg-zinc-800/60">
               <div className="min-w-0"><div className="flex items-center gap-1.5 truncate text-sm font-semibold text-zinc-900 dark:text-zinc-50"><CatIcon cat={p.category} className="h-3.5 w-3.5" />{p.name}</div>
-                <div className="text-xs text-zinc-500">{p.releaseDate} ・ {p.skus.length} SKU</div></div>
+                <div className="text-xs text-zinc-500">{p.releaseDate} ・ {p.category} ・ {p.skus.length} SKU{hasDetail(p) ? ' ・ ★詳細' : hasPrice(p) ? ' ・ 基本価格' : ''}</div></div>
               <button aria-label="削除" disabled={products.length <= 1} onClick={() => onRemove(p.id)} className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-200 hover:text-rose-500 disabled:opacity-30 dark:hover:bg-zinc-700"><Trash2 className="h-4 w-4" /></button>
             </div>
           ))}
         </div>
+        {products.length > listLimit && <button className={`${btnCls} mt-3`} onClick={() => setListLimit(listLimit + 100)}>さらに表示 ({listLimit}/{products.length})</button>}
       </div>
     </div>
   );
@@ -1070,6 +1113,8 @@ const LS_DATA = 'apple-price-atlas:data:v1';
 const LS_THEME = 'apple-price-atlas:theme';
 const LS_EXT = 'apple-price-atlas:ext-version';
 const LS_AUTODB = 'apple-price-atlas:appledb-auto';
+const LS_SCOPE = 'apple-price-atlas:scope';
+type Scope = 'all' | 'detail';
 type Tab = 'compare' | 'timeline' | 'fx' | 'data';
 
 export default function App() {
@@ -1081,6 +1126,10 @@ export default function App() {
     try { const raw = localStorage.getItem(LS_DATA); if (raw) { const r = normalizeDataset(JSON.parse(raw)); if (r.products.length) return r.products; } } catch { /* noop */ }
     return normalizeDataset(BUILTIN_DATASET).products;
   });
+  const [scope, setScopeState] = useState<Scope>(() => { try { return localStorage.getItem(LS_SCOPE) === 'detail' ? 'detail' : 'all'; } catch { return 'all'; } });
+  const setScope = (v: Scope) => { setScopeState(v); try { localStorage.setItem(LS_SCOPE, v); } catch { /* noop */ } };
+  const nDetail = useMemo(() => products.filter(hasDetail).length, [products]);
+  const visible = useMemo(() => (scope === 'all' ? products : products.filter(hasDetail)), [products, scope]);
   const productsRef = useRef(products);
   productsRef.current = products;
   const [autoDb, setAutoDb] = useState<boolean>(() => { try { return localStorage.getItem(LS_AUTODB) !== 'off'; } catch { return true; } });
@@ -1169,9 +1218,19 @@ export default function App() {
         </header>
 
         <main className="mx-auto max-w-7xl px-4 py-6">
-          {tab === 'compare' && <CompareView products={products} sels={sels} setSels={setSels} mode={mode} setMode={setMode} mnp={mnp} setMnp={setMnp} toast={toast} />}
-          {tab === 'timeline' && <TimelineView products={products} />}
-          {tab === 'fx' && <FxView products={products} />}
+          {tab !== 'data' && (
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <span className="text-xs font-semibold text-zinc-500">表示範囲</span>
+              <Segmented<Scope> value={scope} onChange={setScope} options={[
+                { value: 'detail', label: `★ 詳細価格データあり (${nDetail})` },
+                { value: 'all', label: `歴代すべて (${products.length})` },
+              ]} />
+              <span className="text-xs text-zinc-500">{scope === 'detail' ? 'キャリア価格・値上げ/値下げ履歴を持つ機種のみ' : 'AppleDB の全機種(スペック・発売時の基本価格を比較)。★は詳細価格データあり'}</span>
+            </div>
+          )}
+          {tab === 'compare' && <CompareView products={visible} all={products} sels={sels} setSels={setSels} mode={mode} setMode={setMode} mnp={mnp} setMnp={setMnp} toast={toast} />}
+          {tab === 'timeline' && <TimelineView products={visible} />}
+          {tab === 'fx' && <FxView products={visible} />}
           {tab === 'data' && (
             <DataView products={products} sels={sels} mode={mode} mnp={mnp} toast={toast}
               onAppleDb={applyAppleDbNow} autoDb={autoDb} setAutoDb={(b) => { setAutoDb(b); try { localStorage.setItem(LS_AUTODB, b ? 'on' : 'off'); } catch { /* noop */ } }}
@@ -1201,3 +1260,6 @@ function mergeProducts(cur: Product[], incoming: Product[]): Product[] {
   return Array.from(map.values());
 }
 
+
+export const SAMPLE_DATASET = BUILTIN_DATASET;
+export { applyAppleDb, normalizeDataset };

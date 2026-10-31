@@ -1,10 +1,10 @@
 // AppleDB (https://api.appledb.dev/device/main.json) でスペック/販売終了日を補強・検証する
 // 使い方:
 //   curl -sSL -o data/appledb-main.json https://api.appledb.dev/device/main.json
-//   node data/enrich-with-appledb.mjs data/iphone-13-series.json data/iphone-13-series.enriched.json
+//   node data/enrich-with-appledb.mjs data/detail/iphone-13-series.json data/iphone-13-series.enriched.json
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const [, , inFile = 'data/iphone-13-series.json', outFile = 'data/iphone-13-series.enriched.json'] = process.argv;
+const [, , inFile = 'data/detail/iphone-13-series.json', outFile = 'data/iphone-13-series.enriched.json'] = process.argv;
 const db = JSON.parse(readFileSync('data/appledb-main.json', 'utf8'));
 const ds = JSON.parse(readFileSync(inFile, 'utf8'));
 
