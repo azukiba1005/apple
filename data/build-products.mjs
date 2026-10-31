@@ -3,7 +3,8 @@
 //   node data/build-products.mjs
 // 処理: ① AppleDB から対象カテゴリの全モデルを製品ファミリー単位に集約 (internal 除外/未発売除外)
 //       ② presets.mjs で基本スペック・発売時価格を補完  ③ data/detail/*.json の詳細データで上書き統合
-import { readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
+//       ④ data/prices/*.json (日本 Apple Store 価格履歴リサーチ) で SKU・価格改定履歴を統合
+import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { IPHONE, IPAD, WATCH, AIRPODS, MAC } from './presets.mjs';
 
 const db = JSON.parse(readFileSync('data/appledb-main.json', 'utf8'));
@@ -169,7 +170,7 @@ function buildProduct(g) {
   }
 
   const year = rel.slice(0, 4);
-  return { id: slug(g.family), category: g.cat, name: g.family, generation: `${year}年発売${g.macType ? ` (${g.macType})` : ''}`, releaseDate: rel, specs, skus, detail: false };
+  return { id: slug(g.family), category: g.cat, name: g.family, generation: `${year}年発売${g.macType ? ` (${g.macType})` : ''}`, releaseDate: rel, specs, skus, detail: false, _family: g.family };
 }
 
 const products = [...groups.values()].map(buildProduct);
@@ -189,7 +190,7 @@ for (const f of readdirSync('data/detail').filter((f) => f.endsWith('.json'))) {
     if (idx < 0) idx = products.findIndex((p) => p.name === d.name);
     if (idx >= 0) {
       const g = products[idx];
-      products[idx] = { ...g, ...d, id: d.id, specs: { ...g.specs, ...d.specs }, skus: d.skus, detail: true };
+      products[idx] = { ...g, ...d, id: d.id, specs: { ...g.specs, ...d.specs }, skus: d.skus, detail: true, _family: g._family };
       report.push(`✓ 詳細統合 ${f}: ${d.name} ← ${g.name}`);
     } else {
       products.push({ ...d, detail: true });
@@ -198,17 +199,104 @@ for (const f of readdirSync('data/detail').filter((f) => f.endsWith('.json'))) {
   }
 }
 
+/* ---------- ④ 価格リサーチデータ (data/prices/*.json) で価格履歴を統合 ---------- */
+// families のキーは AppleDB ファミリー名 (= _family)。detail 製品はキャリア価格を保持したまま priceHistory だけ差し替える。
+const storBytes = (s) => { const m = String(s).match(/([\d.]+)\s*(TB|GB|MB)/i); return m ? parseFloat(m[1]) * ({ TB: 1e6, GB: 1e3, MB: 1 }[m[2].toUpperCase()]) : 0; };
+const skuLabel = (r) => [r.size, r.storage && r.storage !== '-' ? r.storage : '', r.connectivity && r.connectivity !== '-' ? r.connectivity : ''].filter(Boolean).join(' ') || '標準';
+const EVENT_ALIAS = [
+  [/^部材(コスト)?高騰に伴う価格改定（値上げ）$/, '部品コスト高騰に伴う価格改定（値上げ）'],
+  [/^Apple ?Store ?(で )?SIM ?フリー(版)?販売開始$/, 'Apple Store で SIM フリー版販売開始'],
+];
+const normEvent = (e) => EVENT_ALIAS.reduce((s, [re, to]) => (re.test(s) ? to : s), String(e ?? '').trim());
+// 販売終了で価格不明 (jpy:null) の点は直前の価格を引き継ぎ approx 扱いにする
+const fillEnd = (hist) => {
+  const hs = hist.filter((h) => /^\d{4}-\d{2}-\d{2}$/.test(h.date)).sort((a, b) => a.date.localeCompare(b.date));
+  let last = null;
+  return hs.map((h) => {
+    if (typeof h.jpy === 'number') { last = h.jpy; return h; }
+    if (/販売終了/.test(h.event) && last != null) return { ...h, jpy: last, confidence: h.confidence === 'high' ? 'medium' : (h.confidence ?? 'low'), note: [h.note, '終了時価格不明のため直前価格を表示'].filter(Boolean).join(' / ') };
+    return h;
+  });
+};
+const toPoints = (hist) => fillEnd(hist)
+  .filter((h) => typeof h.jpy === 'number')
+  .map((h) => ({
+    date: h.date, event: normEvent(h.event), appleStorePrice: h.jpy,
+    ...(typeof h.usd === 'number' ? { usdPrice: h.usd } : {}),
+    exchangeRate: fxAt(h.date), taxRate: h.taxRate ?? taxAt(h.date),
+    ...(h.confidence !== 'high' ? { approx: true } : {}),
+    ...(h.confidence ? { confidence: h.confidence } : {}),
+    ...(h.note ? { note: h.note } : {}), ...(h.source ? { source: h.source } : {}),
+  }));
+const priceStats = { families: 0, skus: 0, points: 0, unmatched: [] };
+if (existsSync('data/prices')) {
+  for (const f of readdirSync('data/prices').filter((f) => f.endsWith('.json'))) {
+    let ds;
+    try { ds = JSON.parse(readFileSync(`data/prices/${f}`, 'utf8')); } catch (e) { report.push(`✗ ${f}: JSON 解析失敗 ${e.message}`); continue; }
+    for (const [fam, entry] of Object.entries(ds.families ?? {})) {
+      const p = products.find((x) => x._family === fam) ?? products.find((x) => x.name === fam);
+      if (!p) { priceStats.unmatched.push(`${f}:${fam}`); continue; }
+      const rs = (entry.skus ?? []).filter((r) => Array.isArray(r.history));
+      if (!rs.length) continue;
+      priceStats.families++;
+      const sorted = rs.slice().sort((a, b) => parseInt(a.size ?? 0) - parseInt(b.size ?? 0) || String(a.connectivity).localeCompare(String(b.connectivity)) || storBytes(a.storage) - storBytes(b.storage));
+      const newSkus = sorted.map((r) => {
+        const priceHistory = toPoints(r.history);
+        priceStats.skus++; priceStats.points += priceHistory.length;
+        const usdOnly = r.history.filter((h) => h.jpy == null && typeof h.usd === 'number');
+        return {
+          id: slug(`${r.size ?? ''}-${r.storage ?? ''}-${r.connectivity ?? ''}`) || 'base', label: skuLabel(r), storage: r.storage === '-' ? '' : (r.storage ?? ''),
+          connectivity: r.connectivity ?? '-', priceHistory, carriers: {},
+          ...(usdOnly.length && !priceHistory.length ? { note: `日本 Apple Store 未販売。米国価格 $${usdOnly[0].usd}` } : {}),
+        };
+      });
+      if (p.detail) {
+        // 既存 SKU (キャリア価格つき) は storage+connectivity で突き合わせて priceHistory を差し替え
+        const merged = p.skus.map((s) => {
+          const hit = newSkus.find((n) => n.storage === s.storage && (n.connectivity === s.connectivity || n.connectivity === '-' || s.connectivity === '-'));
+          if (!hit || !hit.priceHistory.length) return s;
+          const ph = hit.priceHistory;
+          // キャリア価格(推定モデル値)は Apple 価格の補正比率でスケール
+          const oldCur = s.priceHistory.at(-1)?.appleStorePrice, newCur = ph.at(-1).appleStorePrice;
+          const k = oldCur ? newCur / oldCur : 1;
+          const r10 = (n) => Math.round(n / 10) * 10;
+          const carriers = Object.fromEntries(Object.entries(s.carriers).filter(([id]) => id !== 'apple').map(([id, c]) => {
+            const cur = r10(c.currentPrice * k), disc = c.mnpPrice != null ? c.currentPrice - c.mnpPrice : null;
+            const rp = c.returnProgram ? { ...c.returnProgram, effectiveCost: r10(c.returnProgram.effectiveCost * k), ...(c.returnProgram.residualValue != null ? { residualValue: r10(c.returnProgram.residualValue * k) } : {}) } : c.returnProgram;
+            return [id, { ...c, currentPrice: cur, mnpPrice: disc != null ? cur - disc : c.mnpPrice, returnProgram: rp }];
+          }));
+          return { ...s, priceHistory: ph, carriers: { ...carriers, apple: { launchPrice: ph[0].appleStorePrice, currentPrice: newCur, mnpPrice: null, returnProgram: null } } };
+        });
+        const extra = newSkus.filter((n) => !p.skus.some((s) => s.storage === n.storage && (n.connectivity === s.connectivity || n.connectivity === '-' || s.connectivity === '-')));
+        p.skus = [...merged, ...extra];
+      } else {
+        p.skus = newSkus;
+      }
+      // 発売時価格(最小構成)を specs に反映
+      const launches = p.skus.map((s) => s.priceHistory[0]).filter(Boolean).sort((a, b) => a.date.localeCompare(b.date) || a.appleStorePrice - b.appleStorePrice);
+      if (launches.length) {
+        const l0 = launches.filter((l) => l.date === launches[0].date).sort((a, b) => a.appleStorePrice - b.appleStorePrice)[0];
+        p.specs.launchPriceJpy = `${yenStr(l0.appleStorePrice)} (税込・発売時最小構成)`;
+        if (l0.usdPrice) p.specs.launchPriceUsd = `$${l0.usdPrice}`;
+      }
+      p.priceResearched = true;
+    }
+  }
+}
+products.forEach((p) => { delete p._family; });
+
 products.sort((a, b) => a.category.localeCompare(b.category) || a.releaseDate.localeCompare(b.releaseDate) || a.name.localeCompare(b.name));
 mkdirSync('public', { recursive: true });
-const out = { schemaVersion: 1, meta: { title: 'Apple Price Atlas 全製品データ', generatedAt: new Date().toISOString(), source: 'AppleDB (api.appledb.dev) + presets + data/detail', disclaimer: 'スペック・発売時価格のうちプリセット由来は概算(approx)です。キャリア価格は detail データのみで推定値を含みます。公式情報で要確認。' }, products };
+const out = { schemaVersion: 1, meta: { title: 'Apple Price Atlas 全製品データ', generatedAt: new Date().toISOString(), source: 'AppleDB (api.appledb.dev) + data/prices (価格リサーチ) + presets + data/detail', disclaimer: '価格履歴は報道・公式情報を元に収集(confidence が high 以外は概算)。プリセット由来の値とキャリア価格は推定値を含みます。公式情報で要確認。' }, products };
 writeFileSync('public/products.json', JSON.stringify(out));
 
 /* ---------- カバレッジレポート ---------- */
 const fields = ['soc', 'display', 'ram', 'weight', 'ports', 'battery'];
 const cats = [...new Set(products.map((p) => p.category))];
 console.log(report.join('\n'));
-console.log(`\n総製品数: ${products.length} / 詳細あり: ${products.filter((p) => p.detail).length} / 発売時JPY価格あり: ${products.filter((p) => p.skus.some((s) => s.priceHistory.length)).length}`);
+console.log(`\n価格リサーチ: ${priceStats.families}機種 / ${priceStats.skus} SKU / ${priceStats.points}価格点${priceStats.unmatched.length ? ` / 未対応キー: ${priceStats.unmatched.join(', ')}` : ''}`);
+console.log(`総製品数: ${products.length} / 詳細あり: ${products.filter((p) => p.detail).length} / 価格履歴リサーチ済: ${products.filter((p) => p.priceResearched).length} / JPY価格あり: ${products.filter((p) => p.skus.some((s) => s.priceHistory.length)).length}`);
 for (const c of cats) {
   const ps = products.filter((p) => p.category === c);
-  console.log(`${c.padEnd(12)} ${String(ps.length).padStart(3)}機種 | ` + fields.map((f) => `${f}:${ps.filter((p) => p.specs[f]).length}`).join(' ') + ` | JPY価格:${ps.filter((p) => p.skus.some((s) => s.priceHistory.length)).length}`);
+  console.log(`${c.padEnd(12)} ${String(ps.length).padStart(3)}機種 | ` + fields.map((f) => `${f}:${ps.filter((p) => p.specs[f]).length}`).join(' ') + ` | JPY価格:${ps.filter((p) => p.skus.some((s) => s.priceHistory.length)).length} 改定履歴:${ps.filter((p) => p.skus.some((s) => s.priceHistory.length > 1)).length}`);
 }

@@ -26,6 +26,8 @@ export interface PricePoint {
   exchangeRate?: number;   // その日付近の市場為替 (JPY/USD)
   taxRate?: number;        // 当時の消費税率 (省略時 0.10)
   approx?: boolean;        // 概算値フラグ (要検証)
+  confidence?: 'high' | 'medium' | 'low';
+  source?: string;         // 出典 URL
   note?: string;
 }
 
@@ -71,6 +73,7 @@ export interface Product {
   specs: Specs;
   skus: Sku[];
   detail?: boolean;       // 詳細価格データ(改定履歴/キャリア価格)あり。省略時は自動判定
+  priceResearched?: boolean; // 価格履歴リサーチ済み
 }
 
 export interface Dataset {
@@ -366,7 +369,7 @@ function normalizeDataset(raw: unknown): { products: Product[]; errors: string[]
     if (!skus.length) return;
     products.push({
       id: String(p.id), category: p.category, name: p.name, generation: p.generation ?? '', releaseDate: p.releaseDate ?? skus[0].priceHistory[0]?.date ?? '',
-      specs: p.specs ?? {}, skus, ...(typeof p.detail === 'boolean' ? { detail: p.detail } : {}),
+      specs: p.specs ?? {}, skus, ...(typeof p.detail === 'boolean' ? { detail: p.detail } : {}), ...(p.priceResearched ? { priceResearched: true } : {}),
     });
   });
   return { products, errors };
@@ -797,8 +800,11 @@ function TimelineInner({ products }: { products: Product[] }) {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-50">{pt.date}</span>
                 <span className="text-sm text-zinc-600 dark:text-zinc-300">{pt.event}</span>
-                {pt.approx && <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">概算</span>}
+                {pt.approx && <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">{pt.confidence === 'low' ? '要検証' : '概算'}</span>}
+                {pt.confidence === 'high' && <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">出典確認済</span>}
+                {pt.source && <SourceLink src={pt.source} />}
               </div>
+              {pt.note && <div className="mt-0.5 text-xs text-zinc-500">{pt.note}</div>}
               <div className="mt-1 flex flex-wrap items-center gap-2">
                 <span className="text-xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(pt.appleStorePrice)}</span>
                 {i > 0 && <DeltaBadge diff={diff} base={prev} />}
@@ -825,6 +831,93 @@ function TimelineInner({ products }: { products: Product[] }) {
           {!dayRows.length && <div className="text-sm text-zinc-500">該当なし</div>}
         </div>
       </div>
+
+      <AllEventsTable products={products} />
+    </div>
+  );
+}
+
+function SourceLink({ src }: { src: string }) {
+  const isUrl = /^https?:\/\//.test(src);
+  let host = src;
+  try { if (isUrl) host = new URL(src).hostname.replace(/^www\./, ''); } catch { /* noop */ }
+  return isUrl
+    ? <a href={src} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-[11px] text-sky-600 hover:underline dark:text-sky-400"><Link2 className="h-3 w-3" />{host}</a>
+    : <span className="text-[11px] text-zinc-500">出典: {src}</span>;
+}
+
+type EvKind = 'all' | 'launch' | 'up' | 'down' | 'end';
+interface EvRow { date: string; product: Product; sku: Sku; event: string; kind: Exclude<EvKind, 'all'>; price: number; prev?: number; usd?: number; approx?: boolean; source?: string }
+
+/** 全機種の価格イベント (発売・値上げ・値下げ・販売終了) を一覧化 */
+function AllEventsTable({ products }: { products: Product[] }) {
+  const [kind, setKind] = useState<EvKind>('all');
+  const [cat, setCat] = useState('');
+  const [allSkus, setAllSkus] = useState(false);
+  const [q, setQ] = useState('');
+  const [limit, setLimit] = useState(150);
+  const [sortDesc, setSortDesc] = useState(true);
+  const cats = Array.from(new Set(products.map((p) => p.category)));
+  const rows = useMemo(() => {
+    const out: EvRow[] = [];
+    products.forEach((p) => {
+      const skus = allSkus ? pricedSkus(p) : pricedSkus(p).slice(0, 1);
+      skus.forEach((s) => s.priceHistory.forEach((h, i) => {
+        const prev = i ? s.priceHistory[i - 1].appleStorePrice : undefined;
+        const k: EvRow['kind'] = i === 0 ? 'launch' : /販売終了/.test(h.event) ? 'end' : prev != null && h.appleStorePrice > prev ? 'up' : prev != null && h.appleStorePrice < prev ? 'down' : 'end';
+        out.push({ date: h.date, product: p, sku: s, event: h.event, kind: k, price: h.appleStorePrice, prev, usd: h.usdPrice, approx: h.approx, source: h.source });
+      }));
+    });
+    return out;
+  }, [products, allSkus]);
+  const ql = q.trim().toLowerCase();
+  const filtered = rows
+    .filter((r) => (kind === 'all' || r.kind === kind) && (!cat || r.product.category === cat) && (!ql || `${r.product.name} ${r.event}`.toLowerCase().includes(ql)))
+    .sort((a, b) => (sortDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) || a.product.name.localeCompare(b.product.name));
+  const counts = { up: rows.filter((r) => r.kind === 'up').length, down: rows.filter((r) => r.kind === 'down').length, launch: rows.filter((r) => r.kind === 'launch').length, end: rows.filter((r) => r.kind === 'end').length };
+  const kindBadge: Record<EvRow['kind'], string> = {
+    launch: 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300', up: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300',
+    down: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300', end: 'bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300',
+  };
+  const kindLabel: Record<EvRow['kind'], string> = { launch: '発売', up: '値上げ', down: '値下げ', end: '販売終了/変更なし' };
+  const exportCsv = () => {
+    const head = ['日付', 'カテゴリ', '製品', 'SKU', '種別', 'イベント', '改定前(円)', '改定後(円)', '差額(円)', '変動率(%)', 'USD', '概算', '出典'];
+    const lines = filtered.map((r) => [r.date, r.product.category, r.product.name, r.sku.label, kindLabel[r.kind], r.event, r.prev ?? '', r.price, r.prev != null ? r.price - r.prev : '', r.prev ? ((r.price / r.prev - 1) * 100).toFixed(1) : '', r.usd ?? '', r.approx ? '概算' : '', r.source ?? '']);
+    downloadFile('apple-price-events.csv', '\uFEFF' + toCSV([head, ...lines.map((l) => l.map(String))]), 'text/csv');
+  };
+  return (
+    <div className={`${card} p-5`}>
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <h3 className="mr-2 text-sm font-bold text-zinc-900 dark:text-zinc-50">全機種 価格イベント一覧 ({filtered.length}件)</h3>
+        <Segmented<EvKind> value={kind} onChange={(v) => { setKind(v); setLimit(150); }} options={[
+          { value: 'all', label: 'すべて' }, { value: 'launch', label: `発売 ${counts.launch}` }, { value: 'up', label: `値上げ ${counts.up}` },
+          { value: 'down', label: `値下げ ${counts.down}` }, { value: 'end', label: `終了 ${counts.end}` },
+        ]} />
+        <select className={selectCls} value={cat} onChange={(e) => { setCat(e.target.value); setLimit(150); }}><option value="">全カテゴリ</option>{cats.map((c) => <option key={c} value={c}>{c}</option>)}</select>
+        <input value={q} onChange={(e) => { setQ(e.target.value); setLimit(150); }} placeholder="製品名・イベントで検索" className={`${selectCls} w-48`} />
+        <label className="inline-flex cursor-pointer items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300"><input type="checkbox" checked={allSkus} onChange={(e) => setAllSkus(e.target.checked)} className="h-4 w-4 accent-sky-500" />全容量SKU</label>
+        <button className={btnCls} onClick={() => setSortDesc(!sortDesc)}>{sortDesc ? '新しい順' : '古い順'}</button>
+        <button className={`${btnCls} ml-auto`} onClick={exportCsv}><Download className="h-4 w-4" />CSV</button>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[820px] text-sm">
+          <thead><tr className="border-b border-zinc-200 text-left text-xs text-zinc-500 dark:border-zinc-800">{['日付', '製品 / SKU', '種別', 'イベント', '価格 (税込)', '差額', '出典'].map((x) => <th key={x} className="p-2 font-semibold">{x}</th>)}</tr></thead>
+          <tbody>
+            {filtered.slice(0, limit).map((r, i) => (
+              <tr key={`${r.product.id}-${r.sku.id}-${r.date}-${i}`} className="border-b border-zinc-100 align-top text-zinc-800 dark:border-zinc-800 dark:text-zinc-200">
+                <td className="whitespace-nowrap p-2 tabular-nums">{r.date}</td>
+                <td className="p-2"><div className="flex items-center gap-1.5 font-semibold"><CatIcon cat={r.product.category} className="h-3.5 w-3.5 shrink-0" />{r.product.name}</div><div className="text-xs text-zinc-500">{r.sku.label}</div></td>
+                <td className="p-2"><span className={`whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-bold ${kindBadge[r.kind]}`}>{kindLabel[r.kind]}</span></td>
+                <td className="p-2 text-xs">{r.event}{r.approx && <span className="ml-1 rounded bg-amber-100 px-1 text-[10px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">概算</span>}</td>
+                <td className="whitespace-nowrap p-2 tabular-nums">{r.prev != null && r.prev !== r.price && <span className="text-xs text-zinc-400">{yen(r.prev)} → </span>}<span className="font-bold">{yen(r.price)}</span>{r.usd != null && <div className="text-[11px] text-zinc-500">US ${r.usd}</div>}</td>
+                <td className="p-2">{r.prev != null && r.prev !== r.price ? <DeltaBadge diff={r.price - r.prev} base={r.prev} /> : <span className="text-xs text-zinc-400">—</span>}</td>
+                <td className="p-2">{r.source ? <SourceLink src={r.source} /> : <span className="text-xs text-zinc-400">—</span>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {filtered.length > limit && <button className={`${btnCls} mt-3`} onClick={() => setLimit(limit + 300)}>さらに表示 ({limit}/{filtered.length})</button>}
     </div>
   );
 }

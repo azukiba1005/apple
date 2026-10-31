@@ -1,0 +1,5329 @@
+{
+  "meta": {
+    "group": "ipad-modern",
+    "researchedAt": "2026-10-31",
+    "notes": "日本 Apple Store 直販の税込価格。2021-03 以前の税別表示期は税別価格×(1+税率) を切り捨てで換算し note に税別価格を記載。 2021-04-01 の総額表示義務化は価格改定ではないため履歴に含めない。 主なイベント: 2019-10-01 消費税10%、2022-07-01 円安一斉値上げ、2022-10-19 iPad Air(第5世代)/mini(第6世代) 再値上げ (iPad 第9世代は据え置き)、2024-05-08 iPad 第10世代値下げ、2026-06-25 部品(メモリ/ストレージ)コスト高騰による一斉値上げ。2023年・2025年は iPad 本体価格の改定なし (後継機は据え置き価格)。 2026-06-25 改定は円安ではなく部品コスト高騰が主因のため event を「部品コスト高騰に伴う価格改定（値上げ）」とした。容量別・Cellular 価格はブログ等の検索要約ベースで confidence を medium/low としている。 USD は米国 Apple Store 税抜の発表価格 (一般に知られる公式価格)。2026-06 改定後の USD は未調査のため省略。 source は検索結果がリダイレクト URL のみだったためドメイン名 + 記事内容で記載。 iPad Pro M4/M5 は標準ガラス構成のみ (Nano-texture は +16,000円)。"
+  },
+  "families": {
+    "iPad Air (3rd generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2019-03-18",
+              "event": "発売時",
+              "jpy": 59184,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (2019年3月 iPad Air/mini 発表記事); impress.co.jp (PC Watch)",
+              "note": "税別54,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 60280,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別54,800円"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 60280,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (第4世代) 発表に伴い販売終了。2021-03以前は税別表示"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2019-03-18",
+              "event": "発売時",
+              "jpy": 77544,
+              "usd": 649,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (2019年3月 iPad Air/mini 発表記事); impress.co.jp (PC Watch)",
+              "note": "税別71,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 78980,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別71,800円"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 78980,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (第4世代) 発表に伴い販売終了。2021-03以前は税別表示"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2019-03-18",
+              "event": "発売時",
+              "jpy": 75384,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (2019年3月 iPad Air/mini 発表記事); impress.co.jp (PC Watch)",
+              "note": "税別69,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 76780,
+              "usd": 629,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別69,800円"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 76780,
+              "usd": 629,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (第4世代) 発表に伴い販売終了。2021-03以前は税別表示"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2019-03-18",
+              "event": "発売時",
+              "jpy": 93744,
+              "usd": 779,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (2019年3月 iPad Air/mini 発表記事); impress.co.jp (PC Watch)",
+              "note": "税別86,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 95480,
+              "usd": 779,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別86,800円"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 95480,
+              "usd": 779,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (第4世代) 発表に伴い販売終了。2021-03以前は税別表示"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad mini (5th generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2019-03-18",
+              "event": "発売時",
+              "jpy": 49464,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (2019年3月 iPad Air/mini 発表記事); impress.co.jp (PC Watch)",
+              "note": "税別45,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 50380,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別45,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 50380,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (第6世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2019-03-18",
+              "event": "発売時",
+              "jpy": 67824,
+              "usd": 549,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (2019年3月 iPad Air/mini 発表記事); impress.co.jp (PC Watch)",
+              "note": "税別62,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 69080,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別62,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 69080,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (第6世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2019-03-18",
+              "event": "発売時",
+              "jpy": 65664,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakakumag.com (2019年3月 iPad Air/mini 発表記事); impress.co.jp (PC Watch)",
+              "note": "税別60,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 66880,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別60,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 66880,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (第6世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2019-03-18",
+              "event": "発売時",
+              "jpy": 84024,
+              "usd": 679,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (2019年3月 iPad Air/mini 発表記事); impress.co.jp (PC Watch)",
+              "note": "税別77,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 85580,
+              "usd": 679,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別77,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 85580,
+              "usd": 679,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (第6世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (7th generation)": {
+      "skus": [
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2019-09-25",
+              "event": "発売時",
+              "jpy": 37584,
+              "usd": 329,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (iPad 第7世代 発表記事); impress.co.jp",
+              "note": "税別34,800円。日本の店頭発売は2019-09-30、オンライン出荷は9/25頃から"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 38280,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別34,800円"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 38280,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (第8世代) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2019-09-25",
+              "event": "発売時",
+              "jpy": 48384,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (iPad 第7世代 発表記事); impress.co.jp",
+              "note": "税別44,800円。日本の店頭発売は2019-09-30、オンライン出荷は9/25頃から"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 49280,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別44,800円"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 49280,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (第8世代) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2019-09-25",
+              "event": "発売時",
+              "jpy": 53784,
+              "usd": 459,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (iPad 第7世代 発表記事); impress.co.jp",
+              "note": "税別49,800円。日本の店頭発売は2019-09-30、オンライン出荷は9/25頃から"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 54780,
+              "usd": 459,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別49,800円"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 54780,
+              "usd": 459,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (第8世代) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2019-09-25",
+              "event": "発売時",
+              "jpy": 64584,
+              "usd": 559,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (iPad 第7世代 発表記事); impress.co.jp",
+              "note": "税別59,800円。日本の店頭発売は2019-09-30、オンライン出荷は9/25頃から"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 65780,
+              "usd": 559,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "消費税率変更による機械的換算(税別価格×1.10)。税別価格は発売時出典に同じ",
+              "note": "税別59,800円"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 65780,
+              "usd": 559,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (第8世代) 発表に伴い販売終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 11-inch (2nd generation)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 93280,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別84,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 93280,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 105380,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別95,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 105380,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 129580,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別117,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 129580,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 153780,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別139,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 153780,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 111980,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別101,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 111980,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 124080,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別112,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 124080,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 148280,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別134,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 148280,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 172480,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別156,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 172480,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 12.9-inch (4th generation)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 115280,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別104,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 115280,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 127380,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別115,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 127380,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 151580,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別137,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 151580,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 175780,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別159,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 175780,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 133980,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別121,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 133980,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 146080,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別132,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 146080,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 170280,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別154,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 170280,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-03-25",
+              "event": "発売時",
+              "jpy": 194480,
+              "usd": 1649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "photosku.com; buyers-buy-mobile.com; s-max.jp; impress.co.jp (2020年 iPad Pro 税別価格)",
+              "note": "税別176,800円"
+            },
+            {
+              "date": "2021-04-21",
+              "event": "販売終了",
+              "jpy": 194480,
+              "usd": 1649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M1) 発表に伴い販売終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (8th generation)": {
+      "skus": [
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 38280,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air 第4世代 価格); gigazine.net / appbank.net (iPad 第8世代 価格)",
+              "note": "税別34,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 38280,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (第9世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 49280,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air 第4世代 価格); gigazine.net / appbank.net (iPad 第8世代 価格)",
+              "note": "税別44,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 49280,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (第9世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 54780,
+              "usd": 459,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air 第4世代 価格); gigazine.net / appbank.net (iPad 第8世代 価格)",
+              "note": "税別49,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 54780,
+              "usd": 459,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (第9世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 65780,
+              "usd": 559,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air 第4世代 価格); gigazine.net / appbank.net (iPad 第8世代 価格)",
+              "note": "税別59,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 65780,
+              "usd": 559,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (第9世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air (4th generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 69080,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air 第4世代 価格); gigazine.net / appbank.net (iPad 第8世代 価格)",
+              "note": "税別62,800円"
+            },
+            {
+              "date": "2022-03-09",
+              "event": "販売終了",
+              "jpy": 69080,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (第5世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 87780,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air 第4世代 価格); gigazine.net / appbank.net (iPad 第8世代 価格)",
+              "note": "税別79,800円"
+            },
+            {
+              "date": "2022-03-09",
+              "event": "販売終了",
+              "jpy": 87780,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (第5世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 85580,
+              "usd": 729,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air 第4世代 価格); gigazine.net / appbank.net (iPad 第8世代 価格)",
+              "note": "税別77,800円"
+            },
+            {
+              "date": "2022-03-09",
+              "event": "販売終了",
+              "jpy": 85580,
+              "usd": 729,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (第5世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 104280,
+              "usd": 879,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air 第4世代 価格); gigazine.net / appbank.net (iPad 第8世代 価格)",
+              "note": "税別94,800円"
+            },
+            {
+              "date": "2022-03-09",
+              "event": "販売終了",
+              "jpy": 104280,
+              "usd": 879,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (第5世代) 発表に伴い販売終了。2021-04以降は総額表示(価格自体の改定なし)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 11-inch (3rd generation)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 94800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 117800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 117800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 106800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 132800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 132800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 130800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 162800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 162800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 178800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 222800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 222800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 226800,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 282800,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 282800,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 112800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 139800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 139800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 124800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 154800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 154800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 148800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 184800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 184800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 196800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 244800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 244800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 244800,
+              "usd": 2099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp",
+              "note": "税込価格(2021-04 総額表示義務化後の発表)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 304800,
+              "usd": 2099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 304800,
+              "usd": 2099,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 は発表日 2022-10-18(米国)/10-19(日本) と整合しないため 10-19 を採用)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 12.9-inch (5th generation)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 129800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 159800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 159800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 141800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 174800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 174800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 165800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 204800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 204800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 213800,
+              "usd": 1799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 264800,
+              "usd": 1799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 264800,
+              "usd": 1799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 261800,
+              "usd": 2199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 324800,
+              "usd": 2199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 324800,
+              "usd": 2199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 147800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 181800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 181800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 159800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 196800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 196800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 183800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 226800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 226800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 231800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 286800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 286800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-05-21",
+              "event": "発売時",
+              "jpy": 279800,
+              "usd": 2399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 346800,
+              "usd": 2399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net (2022年7月値上げ 新旧価格表); itmedia.co.jp; itmedia.co.jp (12.9インチ新旧価格表)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "販売終了",
+              "jpy": 346800,
+              "usd": 2399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M2) 発表に伴い販売終了 (AppleDB記載 2022-10-09 → 発表日 10-19(日本) を採用)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (9th generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 39800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "teach-me.biz (2021年9月 iPad/iPad mini 発表時価格)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 49800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; picky-s.jp; apple-life.net (iPad 第9世代 2022年7月改定)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 49800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "2022-10 の iPad(第10世代) 発表時は価格据え置き (itmedia.co.jp)。iPad Air(M2)/Pro(M4) 発表日に販売終了。2023年中の改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 57800,
+              "usd": 479,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "teach-me.biz (2021年9月 iPad/iPad mini 発表時価格)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 71800,
+              "usd": 479,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; picky-s.jp; apple-life.net (iPad 第9世代 2022年7月改定)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 71800,
+              "usd": 479,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "2022-10 の iPad(第10世代) 発表時は価格据え置き (itmedia.co.jp)。iPad Air(M2)/Pro(M4) 発表日に販売終了。2023年中の改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 56800,
+              "usd": 459,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "teach-me.biz (2021年9月 iPad/iPad mini 発表時価格)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 69800,
+              "usd": 459,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; picky-s.jp; apple-life.net (iPad 第9世代 2022年7月改定)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 69800,
+              "usd": 459,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "2022-10 の iPad(第10世代) 発表時は価格据え置き (itmedia.co.jp)。iPad Air(M2)/Pro(M4) 発表日に販売終了。2023年中の改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 74800,
+              "usd": 609,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "teach-me.biz (2021年9月 iPad/iPad mini 発表時価格)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 91800,
+              "usd": 609,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; picky-s.jp; apple-life.net (iPad 第9世代 2022年7月改定)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 91800,
+              "usd": 609,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "2022-10 の iPad(第10世代) 発表時は価格据え置き (itmedia.co.jp)。iPad Air(M2)/Pro(M4) 発表日に販売終了。2023年中の改定なし"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad mini (6th generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 59800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "teach-me.biz (2021年9月 iPad/iPad mini 発表時価格)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 72800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; impress.co.jp (ケータイWatch 2022年7月1日値上げ); itmedia.co.jp; iphone-mania.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 78800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2022年10月19日 iPad 価格改定); kakaku.com; kobonemi.com",
+              "note": "iPad(第10世代)/iPad Pro(M2) 発表と同時の再改定"
+            },
+            {
+              "date": "2024-10-16",
+              "event": "販売終了",
+              "jpy": 78800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A17 Pro) 発表に伴い販売終了。2022-10 以降の改定は確認できず (一部ブログに更なる値上げの記述があるが未確認)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 77800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "teach-me.biz (2021年9月 iPad/iPad mini 発表時価格)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 94800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; impress.co.jp (ケータイWatch 2022年7月1日値上げ); itmedia.co.jp; iphone-mania.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 102800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2022年10月19日 iPad 価格改定); kakaku.com; kobonemi.com",
+              "note": "iPad(第10世代)/iPad Pro(M2) 発表と同時の再改定"
+            },
+            {
+              "date": "2024-10-16",
+              "event": "販売終了",
+              "jpy": 102800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A17 Pro) 発表に伴い販売終了。2022-10 以降の改定は確認できず (一部ブログに更なる値上げの記述があるが未確認)"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 77800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "teach-me.biz (2021年9月 iPad/iPad mini 発表時価格)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 94800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; impress.co.jp (ケータイWatch 2022年7月1日値上げ); itmedia.co.jp; iphone-mania.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 102800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2022年10月19日 iPad 価格改定); kakaku.com; kobonemi.com",
+              "note": "iPad(第10世代)/iPad Pro(M2) 発表と同時の再改定"
+            },
+            {
+              "date": "2024-10-16",
+              "event": "販売終了",
+              "jpy": 102800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A17 Pro) 発表に伴い販売終了。2022-10 以降の改定は確認できず (一部ブログに更なる値上げの記述があるが未確認)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 95800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "teach-me.biz (2021年9月 iPad/iPad mini 発表時価格)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 116800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; impress.co.jp (ケータイWatch 2022年7月1日値上げ); itmedia.co.jp; iphone-mania.jp"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 126800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2022年10月19日 iPad 価格改定); kakaku.com; kobonemi.com",
+              "note": "iPad(第10世代)/iPad Pro(M2) 発表と同時の再改定"
+            },
+            {
+              "date": "2024-10-16",
+              "event": "販売終了",
+              "jpy": 126800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A17 Pro) 発表に伴い販売終了。2022-10 以降の改定は確認できず (一部ブログに更なる値上げの記述があるが未確認)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air (5th generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-03-18",
+              "event": "発売時",
+              "jpy": 74800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; usedoor.jp (iPad Air 第5世代 価格推移)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 84800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; impress.co.jp (ケータイWatch 2022年7月1日値上げ); itmedia.co.jp; iphone-mania.jp; mupon.net; usedoor.jp (iPad Air 第5世代 価格推移)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 92800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2022年10月19日 iPad 価格改定); kakaku.com; kobonemi.com",
+              "note": "iPad(第10世代)/iPad Pro(M2) 発表と同時の再改定"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 92800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M2) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-03-18",
+              "event": "発売時",
+              "jpy": 92800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; usedoor.jp (iPad Air 第5世代 価格推移)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 106800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; impress.co.jp (ケータイWatch 2022年7月1日値上げ); itmedia.co.jp; iphone-mania.jp; mupon.net; usedoor.jp (iPad Air 第5世代 価格推移)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 116800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2022年10月19日 iPad 価格改定); kakaku.com; kobonemi.com",
+              "note": "iPad(第10世代)/iPad Pro(M2) 発表と同時の再改定"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 116800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M2) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-03-18",
+              "event": "発売時",
+              "jpy": 92800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; usedoor.jp (iPad Air 第5世代 価格推移)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 106800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; impress.co.jp (ケータイWatch 2022年7月1日値上げ); itmedia.co.jp; iphone-mania.jp; mupon.net; usedoor.jp (iPad Air 第5世代 価格推移)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 116800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2022年10月19日 iPad 価格改定); kakaku.com; kobonemi.com",
+              "note": "iPad(第10世代)/iPad Pro(M2) 発表と同時の再改定"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 116800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M2) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-03-18",
+              "event": "発売時",
+              "jpy": 110800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; usedoor.jp (iPad Air 第5世代 価格推移)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 128800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mupon.net; impress.co.jp (ケータイWatch 2022年7月1日値上げ); itmedia.co.jp; iphone-mania.jp; mupon.net; usedoor.jp (iPad Air 第5世代 価格推移)"
+            },
+            {
+              "date": "2022-10-19",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 140800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2022年10月19日 iPad 価格改定); kakaku.com; kobonemi.com",
+              "note": "iPad(第10世代)/iPad Pro(M2) 発表と同時の再改定"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 140800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M2) 発表に伴い販売終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (10th generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 68800,
+              "usd": 449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp (iPad 第10世代 発表時価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "iPad Air (M2)/iPad Pro (M4)発表に伴う価格改定（値下げ）",
+              "jpy": 58800,
+              "usd": 349,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (2024年5月 iPad 第10世代 値下げ); itmedia.co.jp; gizmodo.jp"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 58800,
+              "usd": 349,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (A16) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 92800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp (iPad 第10世代 発表時価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "iPad Air (M2)/iPad Pro (M4)発表に伴う価格改定（値下げ）",
+              "jpy": 84800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (2024年5月 iPad 第10世代 値下げ); itmedia.co.jp; gizmodo.jp"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 84800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (A16) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 92800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp (iPad 第10世代 発表時価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "iPad Air (M2)/iPad Pro (M4)発表に伴う価格改定（値下げ）",
+              "jpy": 84800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (2024年5月 iPad 第10世代 値下げ); itmedia.co.jp; gizmodo.jp"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 84800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (A16) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 116800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp (iPad 第10世代 発表時価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "iPad Air (M2)/iPad Pro (M4)発表に伴う価格改定（値下げ）",
+              "jpy": 110800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (2024年5月 iPad 第10世代 値下げ); itmedia.co.jp; gizmodo.jp"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 110800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad (A16) 発表に伴い販売終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 11-inch (4th generation)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 124800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 124800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 140800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 140800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 172800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 172800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 236800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 236800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 300800,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 300800,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 148800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 148800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 164800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 164800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 196800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 196800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 260800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 260800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 324800,
+              "usd": 2099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 324800,
+              "usd": 2099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 12.9-inch (6th generation)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 172800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 172800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 188800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 188800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 220800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 220800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 284800,
+              "usd": 1799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 284800,
+              "usd": 1799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 348800,
+              "usd": 2199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 348800,
+              "usd": 2199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 196800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 196800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 212800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 212800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 244800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 244800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 308800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 308800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2022-10-26",
+              "event": "発売時",
+              "jpy": 372800,
+              "usd": 2399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイWatch); kakaku.com (M2 iPad Pro 価格)"
+            },
+            {
+              "date": "2024-05-08",
+              "event": "販売終了",
+              "jpy": 372800,
+              "usd": 2399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M4) 発表に伴い販売終了。販売期間中の価格改定なし"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air 11-inch (M2)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 98800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 98800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 114800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 114800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 150800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 150800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 186800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 186800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 124800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 124800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 140800,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 140800,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 176800,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 176800,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 212800,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 212800,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air 13-inch (M2)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 128800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 128800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 144800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 144800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 180800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 180800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 216800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 216800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 154800,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 154800,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 170800,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 170800,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 206800,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 206800,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 242800,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; nojima.co.jp; kakaku.com (iPad Air M2 価格)"
+            },
+            {
+              "date": "2025-03-05",
+              "event": "販売終了",
+              "jpy": 242800,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M3) 発表に伴い販売終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 11-inch (M4)": {
+      "skus": [
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 168800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 168800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 204800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 204800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 272800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 272800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 340800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 340800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 204800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 204800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 240800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 240800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 308800,
+              "usd": 1799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 308800,
+              "usd": 1799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 376800,
+              "usd": 2199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 376800,
+              "usd": 2199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 13-inch (M4)": {
+      "skus": [
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 218800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 218800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 254800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 254800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 322800,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 322800,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 390800,
+              "usd": 2299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 390800,
+              "usd": 2299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 254800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円。Cellular は Wi-Fi+36,000円 (一部出典に異なる値あり)"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 254800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 290800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円。Cellular は Wi-Fi+36,000円 (一部出典に異なる値あり)"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 290800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 358800,
+              "usd": 2099,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円。Cellular は Wi-Fi+36,000円 (一部出典に異なる値あり)"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 358800,
+              "usd": 2099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-05-15",
+              "event": "発売時",
+              "jpy": 426800,
+              "usd": 2499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "nojima.co.jp; iphone-mania.jp; kakaku.com (M4 iPad Pro 価格)",
+              "note": "標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円。Cellular は Wi-Fi+36,000円 (一部出典に異なる値あり)"
+            },
+            {
+              "date": "2025-10-16",
+              "event": "販売終了",
+              "jpy": 426800,
+              "usd": 2499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Pro (M5) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad mini (A17 Pro)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-10-23",
+              "event": "発売時",
+              "jpy": 78800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp; kakaku.com; sosukeblog.com (iPad mini A17 Pro 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 99800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp (iPad mini A17 Pro 2026年6月改定後価格); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            },
+            {
+              "date": "2026-10-27",
+              "event": "販売終了",
+              "jpy": 99800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A20 Pro) 発表に伴い販売終了 (終了時価格は 2026-06 改定後価格)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-10-23",
+              "event": "発売時",
+              "jpy": 94800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp; kakaku.com; sosukeblog.com (iPad mini A17 Pro 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 116800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad mini A17 Pro 2026年6月改定後価格); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            },
+            {
+              "date": "2026-10-27",
+              "event": "販売終了",
+              "jpy": 116800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A20 Pro) 発表に伴い販売終了 (終了時価格は 2026-06 改定後価格)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2024-10-23",
+              "event": "発売時",
+              "jpy": 130800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp; kakaku.com; sosukeblog.com (iPad mini A17 Pro 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 151800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad mini A17 Pro 2026年6月改定後価格); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            },
+            {
+              "date": "2026-10-27",
+              "event": "販売終了",
+              "jpy": 151800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A20 Pro) 発表に伴い販売終了 (終了時価格は 2026-06 改定後価格)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-10-23",
+              "event": "発売時",
+              "jpy": 104800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp; kakaku.com; sosukeblog.com (iPad mini A17 Pro 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 124800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad mini A17 Pro 2026年6月改定後価格); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            },
+            {
+              "date": "2026-10-27",
+              "event": "販売終了",
+              "jpy": 124800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A20 Pro) 発表に伴い販売終了 (終了時価格は 2026-06 改定後価格)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-10-23",
+              "event": "発売時",
+              "jpy": 120800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp; kakaku.com; sosukeblog.com (iPad mini A17 Pro 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 141800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad mini A17 Pro 2026年6月改定後価格); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            },
+            {
+              "date": "2026-10-27",
+              "event": "販売終了",
+              "jpy": 141800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A20 Pro) 発表に伴い販売終了 (終了時価格は 2026-06 改定後価格)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2024-10-23",
+              "event": "発売時",
+              "jpy": 156800,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp; kakaku.com; sosukeblog.com (iPad mini A17 Pro 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 176800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "iphone-mania.jp (iPad mini A17 Pro 2026年6月改定後価格); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            },
+            {
+              "date": "2026-10-27",
+              "event": "販売終了",
+              "jpy": 176800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad mini (A20 Pro) 発表に伴い販売終了 (終了時価格は 2026-06 改定後価格)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (A16)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 58800,
+              "usd": 349,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; phablet.jp; kakaku.com (iPad A16 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 74800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp (iPad A16 2026年6月改定後価格); note.com; itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 74800,
+              "usd": 449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; phablet.jp; kakaku.com (iPad A16 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 91800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad A16 2026年6月改定後価格); note.com; itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 110800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; phablet.jp; kakaku.com (iPad A16 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 126800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad A16 2026年6月改定後価格); note.com; itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 84800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; phablet.jp; kakaku.com (iPad A16 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 99800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad A16 2026年6月改定後価格); note.com; itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 100800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; phablet.jp; kakaku.com (iPad A16 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 116800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad A16 2026年6月改定後価格); note.com; itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 136800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; phablet.jp; kakaku.com (iPad A16 価格)"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 151800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp (iPad A16 2026年6月改定後価格); note.com; itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air 11-inch (M3)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 98800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 98800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 114800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 114800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 150800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 150800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 186800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 186800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 124800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 124800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 140800,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 140800,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 176800,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 176800,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 212800,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 212800,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air 13-inch (M3)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 128800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 128800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 144800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 144800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 180800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 180800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 216800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 216800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 154800,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 154800,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 170800,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 170800,
+              "usd": 1049,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 206800,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 206800,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-03-12",
+              "event": "発売時",
+              "jpy": 242800,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (iPad Air M3 価格); pastec.net (M2 から価格据え置き)",
+              "note": "M2 モデルから価格据え置き"
+            },
+            {
+              "date": "2026-03-03",
+              "event": "販売終了",
+              "jpy": 242800,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB 販売終了日 + 後継機発表報道 (終了時点価格は直前の価格点に同じ)",
+              "note": "iPad Air (M4) 発表に伴い販売終了 (2026-06 値上げ前)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 11-inch (M5)": {
+      "skus": [
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 168800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 209800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 204800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 244800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 272800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 314800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 340800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 404800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 204800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 244800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 240800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 279800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 308800,
+              "usd": 1799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 349800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 376800,
+              "usd": 2199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 439800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 13-inch (M5)": {
+      "skus": [
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 218800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 269800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 254800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 304800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 322800,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 374800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 390800,
+              "usd": 2299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 464800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 254800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 304800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 290800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 339800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 358800,
+              "usd": 2099,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 409800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        },
+        {
+          "storage": "2TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2025-10-22",
+              "event": "発売時",
+              "jpy": 426800,
+              "usd": 2499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp; ascii.jp (M5 iPad Pro 発表 168,800円〜/218,800円〜, M4 から据え置き); kakaku.com",
+              "note": "M4 モデルから価格据え置き (最小構成以外は M4 価格からの据え置き前提)。標準ガラス。1TB/2TB の Nano-texture ガラスは +16,000円"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 499800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "note.com; iphone-mania.jp; apple.com (現行価格); applelinkage.com (Cellular)",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。標準ガラス"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air 11-inch (M4)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 98800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 129800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "goruu-blog.com; biccamera.com; ketiketidenki.com (11インチ iPad Air M4 改定後); phablet.jp (Cellular); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 114800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 146800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "goruu-blog.com; biccamera.com; ketiketidenki.com (11インチ iPad Air M4 改定後); phablet.jp (Cellular); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 150800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 181800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "goruu-blog.com; biccamera.com; ketiketidenki.com (11インチ iPad Air M4 改定後); phablet.jp (Cellular); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 186800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 231800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "goruu-blog.com; biccamera.com; ketiketidenki.com (11インチ iPad Air M4 改定後); phablet.jp (Cellular); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 124800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 154800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "goruu-blog.com; biccamera.com; ketiketidenki.com (11インチ iPad Air M4 改定後); phablet.jp (Cellular); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 140800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 171800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "goruu-blog.com; biccamera.com; ketiketidenki.com (11インチ iPad Air M4 改定後); phablet.jp (Cellular); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 176800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 206800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "goruu-blog.com; biccamera.com; ketiketidenki.com (11インチ iPad Air M4 改定後); phablet.jp (Cellular); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 212800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 256800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "goruu-blog.com; biccamera.com; ketiketidenki.com (11インチ iPad Air M4 改定後); phablet.jp (Cellular); itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air 13-inch (M4)": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 128800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 169800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com; note.com; aty800.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく。512GB/1TB Cellular は信頼できる値が見つからず未記載"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 144800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 186800,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com; note.com; aty800.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく。512GB/1TB Cellular は信頼できる値が見つからず未記載"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 180800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 221800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com; note.com; aty800.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく。512GB/1TB Cellular は信頼できる値が見つからず未記載"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 216800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 271800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com; note.com; aty800.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく。512GB/1TB Cellular は信頼できる値が見つからず未記載"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 154800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 194800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com; note.com; aty800.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく。512GB/1TB Cellular は信頼できる値が見つからず未記載"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 170800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            },
+            {
+              "date": "2026-06-25",
+              "event": "部品コスト高騰に伴う価格改定（値上げ）",
+              "jpy": 211800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "itmedia.co.jp; gigazine.net (2026年6月25日 Apple 値上げ); note.com; palmfan.com; note.com; aty800.com",
+              "note": "2026-06-25 メモリ/ストレージ部品価格高騰を理由とする一斉値上げ。容量別・Cellular の値はブログ等の検索要約に基づく。512GB/1TB Cellular は信頼できる値が見つからず未記載"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 206800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-03-11",
+              "event": "発売時",
+              "jpy": 242800,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "s-max.jp (iPad Air M4 日本価格); apple.com",
+              "note": "M3 モデルと同価格"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

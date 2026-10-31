@@ -1,0 +1,4033 @@
+{
+  "meta": {
+    "group": "ipad-legacy",
+    "researchedAt": "2026-10-31",
+    "notes": "jpy は日本 Apple Store 税込価格。2014-04 以降の税別表示期間は税別価格×(1+税率)で換算し、税別価格を note に記載。 2014-03 以前は税込表示 (5%)。 Wi-Fi + Cellular (初代/iPad 2 は Wi-Fi + 3G、第3世代は Wi-Fi + 4G) は 2014-07-01 に Apple Store で SIM フリー版販売が始まるまでキャリア販売のみのため jpy:null (Apple 発表の参考価格は note に記載)。 2014-04-01 消費税8%移行時、Apple は旧税込額と同じ数字を税別価格として表示したとする情報が複数あり、それに基づき換算 (一部 low)。 2015 年の円安改定は iPad では確認できず (iPhone/Mac/App Store のみ報道)。2016-09-08 に iPad Pro の円高値下げ、2017-09-13 に iPad Pro 256GB/512GB の値上げあり。 source は search_web のリダイレクト URL しか得られなかったため出典ドメイン名と記事内容で記載。 usd は米国 Apple Store 税抜価格 (既知の公式価格)。 販売終了日は原則 AppleDB の日付 (日本時間の後継機発表日) を使用。"
+  },
+  "families": {
+    "iPad": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2010-05-28",
+              "event": "発売時",
+              "jpy": 48800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "gigazine.net / impress.co.jp (iPad 日本発売・価格発表 2010-05)",
+              "note": "日本発売日 (米国 2010-04-03)。当時は税込表示"
+            },
+            {
+              "date": "2011-03-03",
+              "event": "iPad 2発表に伴う価格改定（値下げ）",
+              "jpy": 35800,
+              "usd": 399,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
+              "note": "在庫限りの値下げ販売"
+            },
+            {
+              "date": "2011-04-28",
+              "event": "販売終了",
+              "jpy": 35800,
+              "usd": 399,
+              "taxRate": 0.05,
+              "confidence": "low",
+              "source": "wayohoo.com / impress.co.jp (iPad 2 日本発売 2011-04-28)",
+              "note": "日本 Apple Store での正確な販売終了日は不明。便宜上 iPad 2 日本発売日とした (AppleDB では 2011-03-03)"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2010-05-28",
+              "event": "発売時",
+              "jpy": 58800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "gigazine.net / impress.co.jp (iPad 日本発売・価格発表 2010-05)",
+              "note": "日本発売日 (米国 2010-04-03)。当時は税込表示"
+            },
+            {
+              "date": "2011-03-03",
+              "event": "iPad 2発表に伴う価格改定（値下げ）",
+              "jpy": 44800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
+              "note": "在庫限りの値下げ販売"
+            },
+            {
+              "date": "2011-04-28",
+              "event": "販売終了",
+              "jpy": 44800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "low",
+              "source": "wayohoo.com / impress.co.jp (iPad 2 日本発売 2011-04-28)",
+              "note": "日本 Apple Store での正確な販売終了日は不明。便宜上 iPad 2 日本発売日とした (AppleDB では 2011-03-03)"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2010-05-28",
+              "event": "発売時",
+              "jpy": 68800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "gigazine.net / impress.co.jp (iPad 日本発売・価格発表 2010-05)",
+              "note": "日本発売日 (米国 2010-04-03)。当時は税込表示"
+            },
+            {
+              "date": "2011-03-03",
+              "event": "iPad 2発表に伴う価格改定（値下げ）",
+              "jpy": 52800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
+              "note": "在庫限りの値下げ販売"
+            },
+            {
+              "date": "2011-04-28",
+              "event": "販売終了",
+              "jpy": 52800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "low",
+              "source": "wayohoo.com / impress.co.jp (iPad 2 日本発売 2011-04-28)",
+              "note": "日本 Apple Store での正確な販売終了日は不明。便宜上 iPad 2 日本発売日とした (AppleDB では 2011-03-03)"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2010-05-28",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "softbank.jp / gihyo.jp / impress.co.jp",
+              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2011-03-03",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 529,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
+              "note": "iPad 2 発表。Apple Store 直販価格なし"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2010-05-28",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "softbank.jp / gihyo.jp / impress.co.jp",
+              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2011-03-03",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
+              "note": "iPad 2 発表。Apple Store 直販価格なし"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2010-05-28",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "softbank.jp / gihyo.jp / impress.co.jp",
+              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2011-03-03",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
+              "note": "iPad 2 発表。Apple Store 直販価格なし"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad 2": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2011-04-28",
+              "event": "発売時",
+              "jpy": 44800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "wayohoo.com / impress.co.jp (iPad 2 日本発売 2011-04-28)",
+              "note": "日本発売日 (震災で延期。米国 2011-03-11)。税込表示"
+            },
+            {
+              "date": "2012-03-08",
+              "event": "新しいiPad発表に伴う価格改定（値下げ）",
+              "jpy": 34800,
+              "usd": 399,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / mynavi.jp (新しい iPad 発表時の iPad 2 価格 2012-03)",
+              "note": "16GB のみ継続販売"
+            },
+            {
+              "date": "2013-05-31",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 39800,
+              "usd": 399,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "itmedia.co.jp / mynavi.jp / gigazine.net / taisy0.com / impress.co.jp (2013-05-31 円安に伴う iPad・iPod 値上げ)"
+            },
+            {
+              "date": "2014-03-19",
+              "event": "販売終了",
+              "jpy": 39800,
+              "usd": 399,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "gigazine.net / impress.co.jp / livedoor.com (2014-03 iPad 2 販売終了・iPad Retina 16GB 再販)",
+              "note": "iPad Retina ディスプレイモデル 16GB の再販に置き換え"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2011-04-28",
+              "event": "発売時",
+              "jpy": 52800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "wayohoo.com / impress.co.jp (iPad 2 日本発売 2011-04-28)"
+            },
+            {
+              "date": "2012-03-08",
+              "event": "販売終了",
+              "jpy": 52800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "apple.com / mynavi.jp (新しい iPad 発表時の iPad 2 価格 2012-03)",
+              "note": "新しい iPad 発表で 16GB 以外は終了"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2011-04-28",
+              "event": "発売時",
+              "jpy": 60800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "wayohoo.com / impress.co.jp (iPad 2 日本発売 2011-04-28)"
+            },
+            {
+              "date": "2012-03-08",
+              "event": "販売終了",
+              "jpy": 60800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "apple.com / mynavi.jp (新しい iPad 発表時の iPad 2 価格 2012-03)",
+              "note": "新しい iPad 発表で 16GB 以外は終了"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2011-04-28",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "impress.co.jp / softbank.jp",
+              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2014-03-19",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 529,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "gigazine.net / impress.co.jp / livedoor.com (2014-03 iPad 2 販売終了・iPad Retina 16GB 再販)",
+              "note": "Apple Store 直販価格なし"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2011-04-28",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "impress.co.jp / softbank.jp",
+              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2012-03-08",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "apple.com / mynavi.jp (新しい iPad 発表時の iPad 2 価格 2012-03)",
+              "note": "Apple Store 直販価格なし"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2011-04-28",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "impress.co.jp / softbank.jp",
+              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2012-03-08",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "apple.com / mynavi.jp (新しい iPad 発表時の iPad 2 価格 2012-03)",
+              "note": "Apple Store 直販価格なし"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (3rd generation)": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-03-16",
+              "event": "発売時",
+              "jpy": 42800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (新しい iPad 日本発売 2012-03-16)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2012-10-24",
+              "event": "販売終了",
+              "jpy": 42800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "iPad Retina ディスプレイモデル (第4世代) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-03-16",
+              "event": "発売時",
+              "jpy": 50800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (新しい iPad 日本発売 2012-03-16)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2012-10-24",
+              "event": "販売終了",
+              "jpy": 50800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "iPad Retina ディスプレイモデル (第4世代) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-03-16",
+              "event": "発売時",
+              "jpy": 58800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (新しい iPad 日本発売 2012-03-16)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2012-10-24",
+              "event": "販売終了",
+              "jpy": 58800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "iPad Retina ディスプレイモデル (第4世代) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-03-16",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "softbank.jp / impress.co.jp",
+              "note": "Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2012-10-24",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-03-16",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "softbank.jp / impress.co.jp",
+              "note": "Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2012-10-24",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-03-16",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "softbank.jp / impress.co.jp",
+              "note": "Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2012-10-24",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (4th generation)": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": 42800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2013-05-31",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 49800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "itmedia.co.jp / mynavi.jp / gigazine.net / taisy0.com / impress.co.jp (2013-05-31 円安に伴う iPad・iPod 値上げ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 49800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "iPad Air 発表で一旦販売終了 (2014-03 に 16GB のみ再販)"
+            },
+            {
+              "date": "2014-03-19",
+              "event": "容量ラインナップ変更",
+              "jpy": 39800,
+              "usd": 399,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "gigazine.net / impress.co.jp / livedoor.com (2014-03 iPad 2 販売終了・iPad Retina 16GB 再販)",
+              "note": "iPad 2 の後継エントリーモデルとして 16GB を販売再開"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 42984,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 39,800円。Apple Store が税別表示に切替。税別 39,800円の記載あり (旧税込額と同額の数字を税別で表示)"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 42984,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 39,800円。iPad Air 2 発表"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": 50800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2013-05-31",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 59800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / mynavi.jp / gigazine.net / taisy0.com / impress.co.jp (2013-05-31 円安に伴う iPad・iPod 値上げ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 59800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "iPad Air 発表"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": 58800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2013-05-31",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 69800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / mynavi.jp / gigazine.net / taisy0.com / impress.co.jp (2013-05-31 円安に伴う iPad・iPod 値上げ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 69800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "iPad Air 発表"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-02-05",
+              "event": "発売時",
+              "jpy": 66800,
+              "usd": 799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "phileweb.com / apollomaniacs.com (iPad 128GB 2013-02-05)",
+              "note": "128GB は 2013-02-05 追加"
+            },
+            {
+              "date": "2013-05-31",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 79800,
+              "usd": 799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "itmedia.co.jp / mynavi.jp / gigazine.net / taisy0.com / impress.co.jp (2013-05-31 円安に伴う iPad・iPod 値上げ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 79800,
+              "usd": 799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "impress.co.jp / softbank.jp / kddi.com",
+              "note": "ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+            },
+            {
+              "date": "2014-03-19",
+              "event": "容量ラインナップ変更",
+              "jpy": null,
+              "usd": 529,
+              "taxRate": 0.05,
+              "confidence": "low",
+              "source": "gigazine.net / impress.co.jp / livedoor.com (2014-03 iPad 2 販売終了・iPad Retina 16GB 再販)",
+              "note": "16GB 再販。報道では Wi-Fi + Cellular 53,800円 とされるが、Apple Store の SIM フリー販売開始 (2014-07-01) 前のためキャリア向け参考価格の可能性が高い"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "2014-07-01 以降 Apple Store で SIM フリー版が販売された可能性があるが価格未確認"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "impress.co.jp / softbank.jp / kddi.com",
+              "note": "ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "impress.co.jp / softbank.jp / kddi.com",
+              "note": "ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-02-05",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 929,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "impress.co.jp / softbank.jp / kddi.com",
+              "note": "ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 929,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad mini": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": 28800,
+              "usd": 329,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2013-05-31",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 32800,
+              "usd": 329,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "itmedia.co.jp / mynavi.jp / gigazine.net / taisy0.com / impress.co.jp (2013-05-31 円安に伴う iPad・iPod 値上げ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "iPad Air発表に伴う価格改定（値下げ）",
+              "jpy": 31800,
+              "usd": 299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)",
+              "note": "16GB のみ継続"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 34344,
+              "usd": 299,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 31,800円。税別表示へ切替。税別 31,800円の記載あり"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 28944,
+              "usd": 249,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 26,800円"
+            },
+            {
+              "date": "2015-06-20",
+              "event": "販売終了",
+              "jpy": 28944,
+              "usd": 249,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "AppleDB / apollomaniacs.com",
+              "note": "税抜 26,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": 36800,
+              "usd": 429,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)"
+            },
+            {
+              "date": "2013-05-31",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 42800,
+              "usd": 429,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / mynavi.jp / gigazine.net / taisy0.com / impress.co.jp (2013-05-31 円安に伴う iPad・iPod 値上げ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 42800,
+              "usd": 429,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2012-11-02",
+              "event": "発売時",
+              "jpy": 44800,
+              "usd": 529,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)"
+            },
+            {
+              "date": "2013-05-31",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 52800,
+              "usd": 529,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / mynavi.jp / gigazine.net / taisy0.com / impress.co.jp (2013-05-31 円安に伴う iPad・iPod 値上げ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 52800,
+              "usd": 529,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-11-30",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 459,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 39,800円)"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 44064,
+              "usd": 379,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 40,800円。Apple Store SIM フリー版価格。SIM フリー販売は 2014-07-01 開始だが 2014-07〜10 の価格は未確認"
+            },
+            {
+              "date": "2015-06-20",
+              "event": "販売終了",
+              "jpy": 44064,
+              "usd": 379,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "AppleDB / apollomaniacs.com",
+              "note": "税抜 40,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-11-30",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 559,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 559,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2012-11-30",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 659,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": null,
+              "usd": 659,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-11-01",
+              "event": "発売時",
+              "jpy": 51800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 55944,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 51,800円。税別表示へ切替。旧税込額と同じ数字を税別価格として表示したとする情報 (funq.jp 等) に基づく。49,800円(税別) とする情報もあり要確認"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 42,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "販売終了",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 42,800円。9.7インチ iPad Pro 発表"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-11-01",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜)"
+            },
+            {
+              "date": "2014-07-01",
+              "event": "Apple Store で SIM フリー版販売開始",
+              "jpy": 66744,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "appbank.net / kakaku.com / itmedia.co.jp / livedoor.com (2014-07-01 Apple Store SIM フリー iPad 販売開始)",
+              "note": "税抜 61,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 56,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "販売終了",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 56,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-11-01",
+              "event": "発売時",
+              "jpy": 61800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 66744,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 61,800円。税別表示へ切替。旧税込額と同じ数字を税別価格として表示したとする情報 (funq.jp 等) に基づく。49,800円(税別) とする情報もあり要確認"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 51624,
+              "usd": 449,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 47,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "販売終了",
+              "jpy": 51624,
+              "usd": 449,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 47,800円。9.7インチ iPad Pro 発表"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-11-01",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜)"
+            },
+            {
+              "date": "2014-07-01",
+              "event": "Apple Store で SIM フリー版販売開始",
+              "jpy": 77544,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "appbank.net / kakaku.com / itmedia.co.jp / livedoor.com (2014-07-01 Apple Store SIM フリー iPad 販売開始)",
+              "note": "税抜 71,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 66744,
+              "usd": 579,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 61,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "販売終了",
+              "jpy": 66744,
+              "usd": 579,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 61,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-11-01",
+              "event": "発売時",
+              "jpy": 71800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 77544,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 71,800円。税別表示へ切替。旧税込額と同じ数字を税別価格として表示したとする情報 (funq.jp 等) に基づく。49,800円(税別) とする情報もあり要確認"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 77544,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 71,800円。64GB/128GB は iPad Air 2 発表で終了"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-11-01",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜)"
+            },
+            {
+              "date": "2014-07-01",
+              "event": "Apple Store で SIM フリー版販売開始",
+              "jpy": 88344,
+              "usd": 829,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "appbank.net / kakaku.com / itmedia.co.jp / livedoor.com (2014-07-01 Apple Store SIM フリー iPad 販売開始)",
+              "note": "税抜 81,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 88344,
+              "usd": 829,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 81,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-11-01",
+              "event": "発売時",
+              "jpy": 81800,
+              "usd": 799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 88344,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 81,800円。税別表示へ切替。旧税込額と同じ数字を税別価格として表示したとする情報 (funq.jp 等) に基づく。49,800円(税別) とする情報もあり要確認"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 88344,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 81,800円。64GB/128GB は iPad Air 2 発表で終了"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-11-01",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 929,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜)"
+            },
+            {
+              "date": "2014-07-01",
+              "event": "Apple Store で SIM フリー版販売開始",
+              "jpy": 99144,
+              "usd": 929,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "appbank.net / kakaku.com / itmedia.co.jp / livedoor.com (2014-07-01 Apple Store SIM フリー iPad 販売開始)",
+              "note": "税抜 91,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 99144,
+              "usd": 929,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 91,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad mini 2": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-11-12",
+              "event": "発売時",
+              "jpy": 41900,
+              "usd": 399,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "当時の名称は iPad mini Retina ディスプレイモデル。税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 45252,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 41,900円。税別表示へ切替。旧税込額と同じ数字を税別表示したと仮定 (iPad Air / iPad mini / iPad Retina の事例に基づく)。16GB は 39,800円(税別) とする情報もあり要確認"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 34344,
+              "usd": 299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 31,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 34344,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 31,800円。16GB 廃止"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-11-14",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 529,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜)"
+            },
+            {
+              "date": "2014-07-01",
+              "event": "Apple Store で SIM フリー版販売開始",
+              "jpy": 55944,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "appbank.net / kakaku.com / itmedia.co.jp / livedoor.com (2014-07-01 Apple Store SIM フリー iPad 販売開始)",
+              "note": "税抜 51,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 49464,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 45,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 49464,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 45,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-11-12",
+              "event": "発売時",
+              "jpy": 51800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "当時の名称は iPad mini Retina ディスプレイモデル。税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 55944,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 51,800円。税別表示へ切替。旧税込額と同じ数字を税別表示したと仮定 (iPad Air / iPad mini / iPad Retina の事例に基づく)。16GB は 39,800円(税別) とする情報もあり要確認"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 39744,
+              "usd": 349,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 36,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 32184,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 29,800円。32GB のみに整理され値下げ (36,800→29,800円 税別)"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "販売終了",
+              "jpy": 32184,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 29,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-11-14",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 629,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜)"
+            },
+            {
+              "date": "2014-07-01",
+              "event": "Apple Store で SIM フリー版販売開始",
+              "jpy": 66744,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "appbank.net / kakaku.com / itmedia.co.jp / livedoor.com (2014-07-01 Apple Store SIM フリー iPad 販売開始)",
+              "note": "税抜 61,800円。16GB 51,800円(税別) からの容量差 10,000円刻みで推定"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "iPad Air 2発表に伴う価格改定（値下げ）",
+              "jpy": 54864,
+              "usd": 479,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 50,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 47304,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 43,800円。32GB のみに整理され値下げ"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "販売終了",
+              "jpy": 47304,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 43,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-11-12",
+              "event": "発売時",
+              "jpy": 61800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "当時の名称は iPad mini Retina ディスプレイモデル。税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 66744,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 61,800円。税別表示へ切替。旧税込額と同じ数字を税別表示したと仮定 (iPad Air / iPad mini / iPad Retina の事例に基づく)。16GB は 39,800円(税別) とする情報もあり要確認"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 66744,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 61,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-11-14",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 729,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜)"
+            },
+            {
+              "date": "2014-07-01",
+              "event": "Apple Store で SIM フリー版販売開始",
+              "jpy": 77544,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "appbank.net / kakaku.com / itmedia.co.jp / livedoor.com (2014-07-01 Apple Store SIM フリー iPad 販売開始)",
+              "note": "税抜 71,800円。16GB 51,800円(税別) からの容量差 10,000円刻みで推定"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 77544,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 71,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2013-11-12",
+              "event": "発売時",
+              "jpy": 71800,
+              "usd": 699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "当時の名称は iPad mini Retina ディスプレイモデル。税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更(5%→8%)",
+              "jpy": 77544,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "arigato-ipod.com / funq.jp / apple.com (2014-04 税別表示切替)",
+              "note": "税抜 71,800円。税別表示へ切替。旧税込額と同じ数字を税別表示したと仮定 (iPad Air / iPad mini / iPad Retina の事例に基づく)。16GB は 39,800円(税別) とする情報もあり要確認"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 77544,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 71,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2013-11-14",
+              "event": "発売時",
+              "jpy": null,
+              "usd": 829,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜)"
+            },
+            {
+              "date": "2014-07-01",
+              "event": "Apple Store で SIM フリー版販売開始",
+              "jpy": 88344,
+              "usd": 829,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "appbank.net / kakaku.com / itmedia.co.jp / livedoor.com (2014-07-01 Apple Store SIM フリー iPad 販売開始)",
+              "note": "税抜 81,800円。16GB 51,800円(税別) からの容量差 10,000円刻みで推定"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 88344,
+              "usd": 829,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
+              "note": "税抜 81,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Air 2": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 58104,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gigazine.net / apple.com (iPad Air 2 日本価格 2014-10)",
+              "note": "税抜 53,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "iPad Pro (9.7インチ)発表に伴う価格改定（値下げ）",
+              "jpy": 48384,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 44,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 48384,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 44,800円。32GB/128GB 構成に変更"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 42,800円。32GB 追加"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "販売終了",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 42,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 69984,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gigazine.net / apple.com (iPad Air 2 日本価格 2014-10)",
+              "note": "税抜 64,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "iPad Pro (9.7インチ)発表に伴う価格改定（値下げ）",
+              "jpy": 60264,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 55,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 60264,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 55,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 81864,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gigazine.net / apple.com (iPad Air 2 日本価格 2014-10)",
+              "note": "税抜 75,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "販売終了",
+              "jpy": 81864,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 75,800円。一旦終了 (2016-09-08 に再追加)"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 57024,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 52,800円。128GB を新価格で再追加"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "販売終了",
+              "jpy": 57024,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 52,800円"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 73224,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gigazine.net / apple.com (iPad Air 2 日本価格 2014-10)",
+              "note": "税抜 67,800円。Apple Store SIM フリー版"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "iPad Pro (9.7インチ)発表に伴う価格改定（値下げ）",
+              "jpy": 63504,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 58,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 63504,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 58,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 56,800円"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "販売終了",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 56,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 85104,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gigazine.net / apple.com (iPad Air 2 日本価格 2014-10)",
+              "note": "税抜 78,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "iPad Pro (9.7インチ)発表に伴う価格改定（値下げ）",
+              "jpy": 75384,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 69,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 75384,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 69,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 96984,
+              "usd": 829,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gigazine.net / apple.com (iPad Air 2 日本価格 2014-10)",
+              "note": "税抜 89,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "販売終了",
+              "jpy": 96984,
+              "usd": 829,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp (2016-03 iPad Air 2 値下げ)",
+              "note": "税抜 89,800円。一旦終了 (2016-09-08 に再追加)"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 72144,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 66,800円"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "販売終了",
+              "jpy": 72144,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 66,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad mini 3": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (iPad mini 3 日本価格 2014-10)",
+              "note": "税抜 42,800円"
+            },
+            {
+              "date": "2015-09-10",
+              "event": "販売終了",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 42,800円。iPad mini 4 発表"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 58104,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "impress.co.jp (iPad mini 3 日本価格 2014-10)",
+              "note": "税抜 53,800円。64GB 52,800円 / 128GB 62,800円 とする情報もあり"
+            },
+            {
+              "date": "2015-09-10",
+              "event": "販売終了",
+              "jpy": 58104,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 53,800円。iPad mini 4 発表"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 69984,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "impress.co.jp (iPad mini 3 日本価格 2014-10)",
+              "note": "税抜 64,800円。64GB 52,800円 / 128GB 62,800円 とする情報もあり"
+            },
+            {
+              "date": "2015-09-10",
+              "event": "販売終了",
+              "jpy": 69984,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 64,800円。iPad mini 4 発表"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (iPad mini 3 日本価格 2014-10)",
+              "note": "税抜 56,800円。Apple Store SIM フリー版"
+            },
+            {
+              "date": "2015-09-10",
+              "event": "販売終了",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 56,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 73224,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "impress.co.jp (iPad mini 3 日本価格 2014-10)",
+              "note": "税抜 67,800円。Apple Store SIM フリー版"
+            },
+            {
+              "date": "2015-09-10",
+              "event": "販売終了",
+              "jpy": 73224,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 67,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2014-10-22",
+              "event": "発売時",
+              "jpy": 85104,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "impress.co.jp (iPad mini 3 日本価格 2014-10)",
+              "note": "税抜 78,800円。Apple Store SIM フリー版"
+            },
+            {
+              "date": "2015-09-10",
+              "event": "販売終了",
+              "jpy": 85104,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 78,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad mini 4": {
+      "skus": [
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2015-09-10",
+              "event": "発売時",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 42,800円。発表・発売は 2015-09-09 (米国時間)"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 42,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 42,800円。32GB 追加"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "販売終了",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 42,800円。128GB のみに整理"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2015-09-10",
+              "event": "発売時",
+              "jpy": 58104,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 53,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 58104,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 53,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2015-09-10",
+              "event": "発売時",
+              "jpy": 69984,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 64,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 57024,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 52,800円。32GB/128GB 構成への変更に伴い値下げ"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "iPad (第5世代)発表に伴う価格改定（値下げ）",
+              "jpy": 49464,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 45,800円"
+            },
+            {
+              "date": "2019-03-19",
+              "event": "販売終了",
+              "jpy": 49464,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / apple.com (iPad mini 第5世代発表)",
+              "note": "税抜 45,800円"
+            }
+          ]
+        },
+        {
+          "storage": "16GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2015-09-10",
+              "event": "発売時",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 56,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 56,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 56,800円"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "販売終了",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 56,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2015-09-10",
+              "event": "発売時",
+              "jpy": 73224,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 67,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 73224,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 67,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2015-09-10",
+              "event": "発売時",
+              "jpy": 85104,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com / apollomaniacs.com (iPad mini 4 日本価格 2015-09)",
+              "note": "税抜 78,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 72144,
+              "usd": 629,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "gigazine.net / mynavi.jp / impress.co.jp / sapico.net (2016-09 iPad 容量・価格改定)",
+              "note": "税抜 66,800円"
+            },
+            {
+              "date": "2017-03-22",
+              "event": "iPad (第5世代)発表に伴う価格改定（値下げ）",
+              "jpy": 65664,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com / kobonemi.com / iphone-mania.jp (2017-03 iPad 第5世代発表・mini 4 値下げ)",
+              "note": "税抜 60,800円"
+            },
+            {
+              "date": "2019-03-19",
+              "event": "販売終了",
+              "jpy": 65664,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / apple.com (iPad mini 第5世代発表)",
+              "note": "税抜 60,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro (12.9-inch) (1st generation)": {
+      "skus": [
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2015-11-11",
+              "event": "発売時",
+              "jpy": 102384,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / genkosha.com / gigazine.net (iPad Pro 12.9 日本価格 2015-11)",
+              "note": "税抜 94,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 89424,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 82,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 89424,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 82,800円。10.5/12.9インチ iPad Pro (2017) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2015-11-11",
+              "event": "発売時",
+              "jpy": 121824,
+              "usd": 949,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / genkosha.com / gigazine.net (iPad Pro 12.9 日本価格 2015-11)",
+              "note": "税抜 112,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 100224,
+              "usd": 949,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 92,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 100224,
+              "usd": 949,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 92,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2016-03-22",
+              "event": "容量ラインナップ変更",
+              "jpy": 141264,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 130,800円。256GB は 9.7インチ iPad Pro 発表時に追加"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 111024,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 102,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 111024,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 102,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2015-11-11",
+              "event": "発売時",
+              "jpy": 139104,
+              "usd": 1079,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / genkosha.com / gigazine.net (iPad Pro 12.9 日本価格 2015-11)",
+              "note": "税抜 128,800円。Cellular は 128GB のみ (32GB Cellular なし)"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 115344,
+              "usd": 1079,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 106,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 115344,
+              "usd": 1079,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 106,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2016-03-22",
+              "event": "容量ラインナップ変更",
+              "jpy": 158544,
+              "usd": 1229,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 146,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 126144,
+              "usd": 1229,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 116,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 126144,
+              "usd": 1229,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 116,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro (9.7-inch)": {
+      "skus": [
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2016-03-31",
+              "event": "発売時",
+              "jpy": 72144,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp / aty800.com (9.7インチ iPad Pro 日本価格 2016-03)",
+              "note": "税抜 66,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 67824,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 62,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 67824,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 62,800円。10.5インチ iPad Pro 発表"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2016-03-31",
+              "event": "発売時",
+              "jpy": 91584,
+              "usd": 749,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp / aty800.com (9.7インチ iPad Pro 日本価格 2016-03)",
+              "note": "税抜 84,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 78624,
+              "usd": 749,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 72,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 78624,
+              "usd": 749,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 72,800円。10.5インチ iPad Pro 発表"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2016-03-31",
+              "event": "発売時",
+              "jpy": 111024,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp / aty800.com (9.7インチ iPad Pro 日本価格 2016-03)",
+              "note": "税抜 102,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 89424,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 82,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 89424,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 82,800円。10.5インチ iPad Pro 発表"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2016-03-31",
+              "event": "発売時",
+              "jpy": 89424,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp / aty800.com (9.7インチ iPad Pro 日本価格 2016-03)",
+              "note": "税抜 82,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 82944,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 76,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 82944,
+              "usd": 729,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 76,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2016-03-31",
+              "event": "発売時",
+              "jpy": 108864,
+              "usd": 879,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "apple.com / impress.co.jp / aty800.com (9.7インチ iPad Pro 日本価格 2016-03)",
+              "note": "税抜 100,800円。108,000円とする情報もあるが他容量との差額 (Wi-Fi + 16,000円) から 100,800円 を採用"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 93744,
+              "usd": 879,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 86,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 93744,
+              "usd": 879,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 86,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2016-03-31",
+              "event": "発売時",
+              "jpy": 128304,
+              "usd": 1029,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com / impress.co.jp / aty800.com (9.7インチ iPad Pro 日本価格 2016-03)",
+              "note": "税抜 118,800円"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "円高に伴う価格改定（値下げ）",
+              "jpy": 104544,
+              "usd": 1029,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "livedoor.com / sapico.net / aty800.com (2016-09 iPad Pro 円高値下げ)",
+              "note": "税抜 96,800円"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 104544,
+              "usd": 1029,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 96,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (5th generation)": {
+      "skus": [
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2017-03-24",
+              "event": "発売時",
+              "jpy": 40824,
+              "usd": 329,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com / kakaku.com / wikipedia.org (iPad 第5世代 日本価格)",
+              "note": "税抜 37,800円"
+            },
+            {
+              "date": "2018-03-28",
+              "event": "販売終了",
+              "jpy": 40824,
+              "usd": 329,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / kakakumag.com / t-1.co.jp (iPad 第6世代 日本価格) (第6世代発表)",
+              "note": "税抜 37,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2017-03-24",
+              "event": "発売時",
+              "jpy": 52704,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com / kakaku.com / wikipedia.org (iPad 第5世代 日本価格)",
+              "note": "税抜 48,800円"
+            },
+            {
+              "date": "2018-03-28",
+              "event": "販売終了",
+              "jpy": 52704,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / kakakumag.com / t-1.co.jp (iPad 第6世代 日本価格) (第6世代発表)",
+              "note": "税抜 48,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2017-03-24",
+              "event": "発売時",
+              "jpy": 57024,
+              "usd": 459,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com / kakaku.com / wikipedia.org (iPad 第5世代 日本価格)",
+              "note": "税抜 52,800円"
+            },
+            {
+              "date": "2018-03-28",
+              "event": "販売終了",
+              "jpy": 57024,
+              "usd": 459,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / kakakumag.com / t-1.co.jp (iPad 第6世代 日本価格) (第6世代発表)",
+              "note": "税抜 52,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2017-03-24",
+              "event": "発売時",
+              "jpy": 68904,
+              "usd": 559,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "kakakumag.com / kakaku.com / wikipedia.org (iPad 第5世代 日本価格)",
+              "note": "税抜 63,800円"
+            },
+            {
+              "date": "2018-03-28",
+              "event": "販売終了",
+              "jpy": 68904,
+              "usd": 559,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / kakakumag.com / t-1.co.jp (iPad 第6世代 日本価格) (第6世代発表)",
+              "note": "税抜 63,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro (10.5-inch)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 75384,
+              "usd": 649,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 69,800円"
+            },
+            {
+              "date": "2019-03-19",
+              "event": "販売終了",
+              "jpy": 75384,
+              "usd": 649,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / apple.com (iPad Air 第3世代発表)",
+              "note": "税抜 69,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 87264,
+              "usd": 749,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 80,800円"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "iPhone 8発表に伴う価格改定（値上げ）",
+              "jpy": 93744,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "itmedia.co.jp / impress.co.jp (2017-09 iPad Pro 256GB/512GB 値上げ)",
+              "note": "税抜 86,800円。256GB/512GB のみ一律 6,000円(税別) 値上げ (部材価格高騰とみられる)"
+            },
+            {
+              "date": "2019-03-19",
+              "event": "販売終了",
+              "jpy": 93744,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / apple.com (iPad Air 第3世代発表)",
+              "note": "税抜 86,800円"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 111024,
+              "usd": 949,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 102,800円"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "iPhone 8発表に伴う価格改定（値上げ）",
+              "jpy": 117504,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "itmedia.co.jp / impress.co.jp (2017-09 iPad Pro 256GB/512GB 値上げ)",
+              "note": "税抜 108,800円。256GB/512GB のみ一律 6,000円(税別) 値上げ (部材価格高騰とみられる)"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 117504,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "asobiing.com / itmedia.co.jp / 4gamer.net (2018-10 新 iPad Pro 発表後の旧モデル扱い)",
+              "note": "税抜 108,800円。新 iPad Pro 発表後は 64GB/256GB のみ継続とされる"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 91584,
+              "usd": 779,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 84,800円"
+            },
+            {
+              "date": "2019-03-19",
+              "event": "販売終了",
+              "jpy": 91584,
+              "usd": 779,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / apple.com (iPad Air 第3世代発表)",
+              "note": "税抜 84,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 103464,
+              "usd": 879,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 95,800円"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "iPhone 8発表に伴う価格改定（値上げ）",
+              "jpy": 109944,
+              "usd": 929,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / impress.co.jp (2017-09 iPad Pro 256GB/512GB 値上げ)",
+              "note": "税抜 101,800円。256GB/512GB のみ一律 6,000円(税別) 値上げ (部材価格高騰とみられる)"
+            },
+            {
+              "date": "2019-03-19",
+              "event": "販売終了",
+              "jpy": 109944,
+              "usd": 929,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / apple.com (iPad Air 第3世代発表)",
+              "note": "税抜 101,800円"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 127224,
+              "usd": 1079,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 117,800円"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "iPhone 8発表に伴う価格改定（値上げ）",
+              "jpy": 133704,
+              "usd": 1129,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / impress.co.jp (2017-09 iPad Pro 256GB/512GB 値上げ)",
+              "note": "税抜 123,800円。256GB/512GB のみ一律 6,000円(税別) 値上げ (部材価格高騰とみられる)"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 133704,
+              "usd": 1129,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "asobiing.com / itmedia.co.jp / 4gamer.net (2018-10 新 iPad Pro 発表後の旧モデル扱い)",
+              "note": "税抜 123,800円。新 iPad Pro 発表後は 64GB/256GB のみ継続とされる"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro (12.9-inch) (2nd generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 93744,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 86,800円"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 93744,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp / 4gamer.net (2018-10 新 iPad Pro 発表後の旧モデル扱い)",
+              "note": "税抜 86,800円。12.9インチ iPad Pro (第3世代) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 105624,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 97,800円"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "iPhone 8発表に伴う価格改定（値上げ）",
+              "jpy": 112104,
+              "usd": 949,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "itmedia.co.jp / impress.co.jp (2017-09 iPad Pro 256GB/512GB 値上げ)",
+              "note": "税抜 103,800円。256GB/512GB のみ一律 6,000円(税別) 値上げ"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 112104,
+              "usd": 949,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp / 4gamer.net (2018-10 新 iPad Pro 発表後の旧モデル扱い)",
+              "note": "税抜 103,800円。12.9インチ iPad Pro (第3世代) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 129384,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 119,800円"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "iPhone 8発表に伴う価格改定（値上げ）",
+              "jpy": 135864,
+              "usd": 1149,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "itmedia.co.jp / impress.co.jp (2017-09 iPad Pro 256GB/512GB 値上げ)",
+              "note": "税抜 125,800円。256GB/512GB のみ一律 6,000円(税別) 値上げ"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 135864,
+              "usd": 1149,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp / 4gamer.net (2018-10 新 iPad Pro 発表後の旧モデル扱い)",
+              "note": "税抜 125,800円。12.9インチ iPad Pro (第3世代) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 109944,
+              "usd": 929,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 101,800円"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 109944,
+              "usd": 929,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp / 4gamer.net (2018-10 新 iPad Pro 発表後の旧モデル扱い)",
+              "note": "税抜 101,800円。12.9インチ iPad Pro (第3世代) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 121824,
+              "usd": 1029,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 112,800円"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "iPhone 8発表に伴う価格改定（値上げ）",
+              "jpy": 128304,
+              "usd": 1079,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / impress.co.jp (2017-09 iPad Pro 256GB/512GB 値上げ)",
+              "note": "税抜 118,800円。256GB/512GB のみ一律 6,000円(税別) 値上げ"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 128304,
+              "usd": 1079,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp / 4gamer.net (2018-10 新 iPad Pro 発表後の旧モデル扱い)",
+              "note": "税抜 118,800円。12.9インチ iPad Pro (第3世代) 発表"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2017-06-13",
+              "event": "発売時",
+              "jpy": 145584,
+              "usd": 1229,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / sumahosupportline.com (iPad Pro 10.5 / 12.9 第2世代 日本価格 2017-06)",
+              "note": "税抜 134,800円"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "iPhone 8発表に伴う価格改定（値上げ）",
+              "jpy": 152064,
+              "usd": 1279,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / impress.co.jp (2017-09 iPad Pro 256GB/512GB 値上げ)",
+              "note": "税抜 140,800円。256GB/512GB のみ一律 6,000円(税別) 値上げ"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 152064,
+              "usd": 1279,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp / 4gamer.net (2018-10 新 iPad Pro 発表後の旧モデル扱い)",
+              "note": "税抜 140,800円。12.9インチ iPad Pro (第3世代) 発表"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad (6th generation)": {
+      "skus": [
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-03-30",
+              "event": "発売時",
+              "jpy": 40824,
+              "usd": 329,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / kakakumag.com / t-1.co.jp (iPad 第6世代 日本価格)",
+              "note": "税抜 37,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 40824,
+              "usd": 329,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com (iPad 第7世代発表 2019-09-10 米国時間)",
+              "note": "税抜 37,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-03-30",
+              "event": "発売時",
+              "jpy": 52704,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / kakakumag.com / t-1.co.jp (iPad 第6世代 日本価格)",
+              "note": "税抜 48,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 52704,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com (iPad 第7世代発表 2019-09-10 米国時間)",
+              "note": "税抜 48,800円"
+            }
+          ]
+        },
+        {
+          "storage": "32GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-03-30",
+              "event": "発売時",
+              "jpy": 57024,
+              "usd": 459,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "4gamer.net / kakakumag.com / t-1.co.jp (iPad 第6世代 日本価格)",
+              "note": "税抜 52,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 57024,
+              "usd": 459,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com (iPad 第7世代発表 2019-09-10 米国時間)",
+              "note": "税抜 52,800円"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-03-30",
+              "event": "発売時",
+              "jpy": 68904,
+              "usd": 559,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "4gamer.net / kakakumag.com / t-1.co.jp (iPad 第6世代 日本価格)",
+              "note": "税抜 63,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 68904,
+              "usd": 559,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com (iPad 第7世代発表 2019-09-10 米国時間)",
+              "note": "税抜 63,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 11-inch (1st generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 96984,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 89,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 98780,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 89,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 98780,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 89,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 115344,
+              "usd": 949,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 106,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 117480,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 106,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 117480,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 106,800円"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 139104,
+              "usd": 1149,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 128,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 141680,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 128,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 141680,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 128,800円"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 186624,
+              "usd": 1549,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 172,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 190080,
+              "usd": 1549,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 172,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 190080,
+              "usd": 1549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 172,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 115344,
+              "usd": 949,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 106,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 117480,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 106,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 117480,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 106,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 133704,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 123,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 136180,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 123,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 136180,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 123,800円"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 157464,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 145,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 160380,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 145,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 160380,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 145,800円"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 204984,
+              "usd": 1699,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 189,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 208780,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 189,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 208780,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 189,800円"
+            }
+          ]
+        }
+      ]
+    },
+    "iPad Pro 12.9-inch (3rd generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 120744,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 111,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 122980,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 111,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 122980,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 111,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 139104,
+              "usd": 1149,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 128,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 141680,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 128,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 141680,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 128,800円"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 162864,
+              "usd": 1349,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 150,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 165880,
+              "usd": 1349,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 150,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 165880,
+              "usd": 1349,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 150,800円"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 210384,
+              "usd": 1749,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 194,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 214280,
+              "usd": 1749,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 194,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 214280,
+              "usd": 1749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 194,800円"
+            }
+          ]
+        },
+        {
+          "storage": "64GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 139104,
+              "usd": 1149,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 128,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 141680,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 128,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 141680,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 128,800円"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 157464,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 145,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 160380,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 145,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 160380,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 145,800円"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 181224,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 167,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 184580,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 167,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 184580,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 167,800円"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2018-11-07",
+              "event": "発売時",
+              "jpy": 228744,
+              "usd": 1899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp / 4gamer.net / gizmodo.jp (iPad Pro 11 / 12.9 第3世代 日本価格 2018-10)",
+              "note": "税抜 211,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 232980,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "gadgetcospa.com / maruka.biz (2019-10 消費税10% 後の iPad Pro 税込価格)",
+              "note": "税抜 211,800円。税抜価格据え置き"
+            },
+            {
+              "date": "2020-03-19",
+              "event": "販売終了",
+              "jpy": 232980,
+              "usd": 1899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com (iPad Pro 2020 発表 2020-03-18 米国時間)",
+              "note": "税抜 211,800円"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

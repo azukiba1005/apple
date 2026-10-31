@@ -1,0 +1,1856 @@
+{
+  "meta": {
+    "group": "iphone-2018-2021",
+    "researchedAt": "2026-10-31",
+    "notes": "日本Apple Store(SIMフリー)税込価格。2021-03以前は税別表示価格×税率で税込換算(端数は四捨五入、noteに税別価格)。2021-04-01の総額表示義務化は表示のみの変更のためイベント化していない。USDは米国Apple Store税抜価格(iPhone 12/12 miniはキャリア契約版価格)。source はWeb検索結果のリダイレクトURLのみ取得できたためドメイン名で記載。data/detail/iphone-13-series.json の2022-09/2023-09概算値は検証の上で修正(13 mini 512GB 137,800円、iPhone 13 2023-09改定 95,800/110,800/140,800円)。"
+  },
+  "families": {
+    "iPhone XS": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 121824,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別112,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 121824,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "iPhone 11発表に伴いApple Storeでの販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 140184,
+              "usd": 1149,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別129,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 140184,
+              "usd": 1149,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "iPhone 11発表に伴いApple Storeでの販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 165024,
+              "usd": 1349,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別152,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 165024,
+              "usd": 1349,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "iPhone 11発表に伴いApple Storeでの販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone XS Max": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 134784,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別124,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 134784,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "iPhone 11発表に伴いApple Storeでの販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 153144,
+              "usd": 1249,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別141,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 153144,
+              "usd": 1249,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "iPhone 11発表に伴いApple Storeでの販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 177984,
+              "usd": 1449,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別164,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 177984,
+              "usd": 1449,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "iPhone 11発表に伴いApple Storeでの販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone XR": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-10-26",
+              "event": "発売時",
+              "jpy": 91584,
+              "usd": 749,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "phablet.jp",
+              "note": "税別84,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "iPhone 11発表に伴う価格改定（値下げ）",
+              "jpy": 69984,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別64,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 71280,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別64,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "iPhone 12発表に伴う価格改定（値下げ）",
+              "jpy": 60280,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別54,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 60280,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 13発表に伴い販売終了(2021-04以降は総額表示60,280円)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-10-26",
+              "event": "発売時",
+              "jpy": 98064,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "phablet.jp",
+              "note": "税別90,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "iPhone 11発表に伴う価格改定（値下げ）",
+              "jpy": 75384,
+              "usd": 649,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別69,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 76780,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別69,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "iPhone 12発表に伴う価格改定（値下げ）",
+              "jpy": 65780,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別59,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 65780,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 13発表に伴い販売終了(2021-04以降は総額表示65,780円)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2018-10-26",
+              "event": "発売時",
+              "jpy": 109944,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "phablet.jp",
+              "note": "税別101,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 109944,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "iPhone 11発表時に256GBモデルのみ販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 11": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 80784,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com",
+              "note": "税別74,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 82280,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com",
+              "note": "税別74,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "iPhone 12発表に伴う価格改定（値下げ）",
+              "jpy": 71280,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別64,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値下げ）",
+              "jpy": 61800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com, itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 72800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com, kakaku.com (価格.comマガジン)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 72800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 86184,
+              "usd": 749,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com",
+              "note": "税別79,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 87780,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com",
+              "note": "税別79,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "iPhone 12発表に伴う価格改定（値下げ）",
+              "jpy": 76780,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別69,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値下げ）",
+              "jpy": 67800,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com, itmedia.co.jp"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 79800,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com, kakaku.com (価格.comマガジン)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 79800,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 98064,
+              "usd": 849,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com",
+              "note": "税別90,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 99880,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com",
+              "note": "税別90,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "iPhone 12発表に伴う価格改定（値下げ）",
+              "jpy": 88880,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "kakaku.com (価格.comマガジン), macotakara.jp",
+              "note": "税別80,800円。日本では256GB継続販売との記事あり(米国では2020-10に256GB廃止とされUSDは省略)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 88880,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-reserve.com, macotakara.jp",
+              "note": "iPhone 13発表時の改定で256GB販売終了と複数記事が記載(価格は終了時点・総額表示88,880円)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 11 Pro": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 115344,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別106,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 117480,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別106,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "販売終了",
+              "jpy": 117480,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "iPhone 12発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 132624,
+              "usd": 1149,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別122,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 135080,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別122,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "販売終了",
+              "jpy": 135080,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "iPhone 12発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 156384,
+              "usd": 1349,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別144,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 159280,
+              "usd": 1349,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別144,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "販売終了",
+              "jpy": 159280,
+              "usd": 1349,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "iPhone 12発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 11 Pro Max": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 129384,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別119,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 131780,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別119,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "販売終了",
+              "jpy": 131780,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "iPhone 12発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 146664,
+              "usd": 1249,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別135,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 149380,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別135,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "販売終了",
+              "jpy": 149380,
+              "usd": 1249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "iPhone 12発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 170424,
+              "usd": 1449,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別157,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 173580,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別157,800円据え置き(税込換算)"
+            },
+            {
+              "date": "2020-10-14",
+              "event": "販売終了",
+              "jpy": 173580,
+              "usd": 1449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "iPhone 12発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone SE (2nd generation)": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-04-24",
+              "event": "発売時",
+              "jpy": 49280,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別44,800円。2020-10のiPhone 12発表時は価格据え置き(同梱物のみ変更)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値上げ）",
+              "jpy": 49800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "49,280円→49,800円(+520円)"
+            },
+            {
+              "date": "2022-03-09",
+              "event": "販売終了",
+              "jpy": 49800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp",
+              "note": "iPhone SE(第3世代)発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-04-24",
+              "event": "発売時",
+              "jpy": 54780,
+              "usd": 449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別49,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値上げ）",
+              "jpy": 55800,
+              "usd": 449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "54,780円→55,800円(+1,020円)"
+            },
+            {
+              "date": "2022-03-09",
+              "event": "販売終了",
+              "jpy": 55800,
+              "usd": 449,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp",
+              "note": "iPhone SE(第3世代)発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-04-24",
+              "event": "発売時",
+              "jpy": 66880,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakakumag.com (価格.comマガジン)",
+              "note": "税別60,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 66880,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp",
+              "note": "iPhone 13発表時に256GBモデル販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 12": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 94380,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別85,800円。USDはキャリア契約版(SIMフリーは+30ドル)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値下げ）",
+              "jpy": 86800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 102800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "appllio.com, iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 92800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン), iphone-reserve.com"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 92800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mynavi.jp",
+              "note": "iPhone 15発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 99880,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別90,800円。USDはキャリア契約版(SIMフリーは+30ドル)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値下げ）",
+              "jpy": 92800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 109800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "appllio.com, iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 99800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン), iphone-reserve.com"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 99800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mynavi.jp",
+              "note": "iPhone 15発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 111980,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別101,800円。USDはキャリア契約版(SIMフリーは+30ドル)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値下げ）",
+              "jpy": 104800,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 124800,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "appllio.com, iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 114800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン), iphone-reserve.com"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 114800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "mynavi.jp",
+              "note": "iPhone 15発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 12 Pro": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 117480,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "税別106,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 117480,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp, phablet.jp",
+              "note": "iPhone 13 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 129580,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "税別117,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 129580,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp, phablet.jp",
+              "note": "iPhone 13 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-10-23",
+              "event": "発売時",
+              "jpy": 153780,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "税別139,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 153780,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp, phablet.jp",
+              "note": "iPhone 13 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 12 mini": {
+      "skus": [
+        {
+          "storage": "64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-11-13",
+              "event": "発売時",
+              "jpy": 82280,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別74,800円。USDはキャリア契約版(SIMフリーは+30ドル)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値下げ）",
+              "jpy": 69800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 87800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "appllio.com, iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 87800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-11-13",
+              "event": "発売時",
+              "jpy": 87780,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別79,800円。USDはキャリア契約版(SIMフリーは+30ドル)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値下げ）",
+              "jpy": 75800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 94800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "appllio.com, iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 94800,
+              "usd": 649,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-11-13",
+              "event": "発売時",
+              "jpy": 99880,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "税別90,800円。USDはキャリア契約版(SIMフリーは+30ドル)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "iPhone 13発表に伴う価格改定（値下げ）",
+              "jpy": 87800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 109800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "appllio.com, iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 109800,
+              "usd": 749,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 12 Pro Max": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-11-13",
+              "event": "発売時",
+              "jpy": 129580,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "税別117,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 129580,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp, phablet.jp",
+              "note": "iPhone 13 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-11-13",
+              "event": "発売時",
+              "jpy": 141680,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "税別128,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 141680,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp, phablet.jp",
+              "note": "iPhone 13 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-11-13",
+              "event": "発売時",
+              "jpy": 165880,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)",
+              "note": "税別150,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 165880,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp, phablet.jp",
+              "note": "iPhone 13 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 13": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 98800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 117800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 107800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "iPhone 15発表に伴う価格改定（値下げ）",
+              "jpy": 95800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン), impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 95800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "ascii.jp, iphone-mania.jp",
+              "note": "iPhone 16発表に伴い販売終了(価格は終了時点。2023-09〜2024-09間の改定情報なし)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 110800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 132800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 122800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "iPhone 15発表に伴う価格改定（値下げ）",
+              "jpy": 110800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン), impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 110800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "ascii.jp, iphone-mania.jp",
+              "note": "iPhone 16発表に伴い販売終了(価格は終了時点。2023-09〜2024-09間の改定情報なし)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 134800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 162800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 152800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "iPhone 15発表に伴う価格改定（値下げ）",
+              "jpy": 140800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン), impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 140800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "ascii.jp, iphone-mania.jp",
+              "note": "iPhone 16発表に伴い販売終了(価格は終了時点。2023-09〜2024-09間の改定情報なし)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 13 mini": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 86800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 99800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 92800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com, iphone-mania.jp, itmedia.co.jp",
+              "note": "一律7,000円値下げ"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 92800,
+              "usd": 599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "iPhone 15発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 98800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 114800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 107800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com, iphone-mania.jp, itmedia.co.jp",
+              "note": "一律7,000円値下げ"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 107800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "iPhone 15発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 122800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 144800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "iPhone 14発表に伴う価格改定（値下げ）",
+              "jpy": 137800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com, iphone-mania.jp, itmedia.co.jp",
+              "note": "一律7,000円値下げ"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 137800,
+              "usd": 899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com (価格.comマガジン)",
+              "note": "iPhone 15発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 13 Pro": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 122800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 144800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 144800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 134800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 159800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 159800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 158800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 189800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 189800,
+              "usd": 1299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 182800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 219800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 219800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    },
+    "iPhone 13 Pro Max": {
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 134800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 159800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 159800,
+              "usd": 1099,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 146800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 174800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 174800,
+              "usd": 1199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 170800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 204800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 204800,
+              "usd": 1399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        },
+        {
+          "storage": "1TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-09-24",
+              "event": "発売時",
+              "jpy": 194800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp (ケータイ Watch)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 234800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 234800,
+              "usd": 1599,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-reserve.com",
+              "note": "iPhone 14 Pro発表に伴い販売終了(価格は終了時点)"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
