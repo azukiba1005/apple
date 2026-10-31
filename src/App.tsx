@@ -333,7 +333,7 @@ const skuPriced = (s: Sku) => s.priceHistory.length > 0;
 const pricedSkus = (p: Product) => p.skus.filter(skuPriced);
 const hasPrice = (p: Product) => p.skus.some(skuPriced);
 /** 詳細価格データ(複数回の改定 or キャリア価格)があるか */
-const hasDetail = (p: Product) => p.detail ?? p.skus.some((s) => new Set(s.priceHistory.map((h) => h.appleStorePrice)).size > 1 || Object.keys(s.carriers).some((k) => k !== 'apple'));
+const hasDetail = (p: Product) => hasPrice(p) && (!!p.detail || !!p.priceResearched) || p.skus.some((s) => new Set(s.priceHistory.map((h) => h.appleStorePrice)).size > 1 || Object.keys(s.carriers).some((k) => k !== 'apple'));
 
 const CATEGORY_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
   iPhone: Smartphone, iPad: Tablet, 'Apple Watch': Watch, Mac: Laptop, AirPods: Headphones,
@@ -623,7 +623,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
               </select>
               <span className="relative"><Search className="pointer-events-none absolute left-2 top-2 h-4 w-4 text-zinc-400" />
                 <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="機種名・識別子で検索" className={`${selectCls} w-44 pl-7`} /></span>
-              <select className={`${selectCls} max-w-[16rem]`} value={adding} onChange={(e) => { const p = all.find((x) => x.id === e.target.value); if (p) setSels([...sels, { pid: p.id, sid: p.skus[0].id }]); setAdding(''); }}>
+              <select className={`${selectCls} max-w-[16rem]`} value={adding} onChange={(e) => { const p = all.find((x) => x.id === e.target.value); if (p) setSels([...sels, { pid: p.id, sid: (pricedSkus(p)[0] ?? p.skus[0]).id }]); setAdding(''); }}>
                 <option value="">＋ 機種を追加… ({matched.length}件)</option>
                 {Array.from(new Set(matched.map((x) => x.category))).map((cat) => (
                   <optgroup key={cat} label={cat}>{matched.filter((x) => x.category === cat).slice(0, 300).map((x) => <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)}){hasDetail(x) ? ' ★' : ''}</option>)}</optgroup>
@@ -687,7 +687,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                       return (
                         <td key={c.sel.pid} className="p-2 align-top">
                           {v == null ? (
-                            <div className="rounded-xl p-2.5 text-zinc-400">{cp ? (mode === 'return' ? '返却プログラム対象外' : '—') : '取扱なし'}</div>
+                            <div className="rounded-xl p-2.5 text-zinc-400">{cp ? (mode === 'return' ? '返却プログラム対象外' : '—') : id === 'apple' ? <>日本 Apple Store 価格なし{c.p.specs.launchPriceUsd ? <span className="block text-[11px]">米国発売時 {String(c.p.specs.launchPriceUsd)}</span> : null}</> : '取扱なし'}</div>
                           ) : (
                             <div className="rounded-xl p-2.5 transition" style={isMin ? { backgroundColor: '#10b9811f', boxShadow: 'inset 0 0 0 2px #10b981' } : { boxShadow: `inset 3px 0 0 ${col}` }}>
                               <div className="flex items-center gap-2">
@@ -1315,10 +1315,10 @@ export default function App() {
             <div className="mb-4 flex flex-wrap items-center gap-3">
               <span className="text-xs font-semibold text-zinc-500">表示範囲</span>
               <Segmented<Scope> value={scope} onChange={setScope} options={[
-                { value: 'detail', label: `★ 詳細価格データあり (${nDetail})` },
+                { value: 'detail', label: `★ 価格履歴あり (${nDetail})` },
                 { value: 'all', label: `歴代すべて (${products.length})` },
               ]} />
-              <span className="text-xs text-zinc-500">{scope === 'detail' ? 'キャリア価格・値上げ/値下げ履歴を持つ機種のみ' : 'AppleDB の全機種(スペック・発売時の基本価格を比較)。★は詳細価格データあり'}</span>
+              <span className="text-xs text-zinc-500">{scope === 'detail' ? '発売時・値上げ/値下げ履歴（またはキャリア価格）を持つ機種のみ' : 'AppleDB の全機種(スペック中心・価格のない機種も含む)。★は価格履歴あり'}</span>
             </div>
           )}
           {tab === 'compare' && <CompareView products={visible} all={products} sels={sels} setSels={setSels} mode={mode} setMode={setMode} mnp={mnp} setMnp={setMnp} toast={toast} />}
@@ -1356,3 +1356,5 @@ function mergeProducts(cur: Product[], incoming: Product[]): Product[] {
 
 export const SAMPLE_DATASET = BUILTIN_DATASET;
 export { applyAppleDb, normalizeDataset };
+
+export { hasDetail, hasPrice };
