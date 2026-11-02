@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>プライバシーポリシー | Apple Price Atlas</title>
+    <meta name="description" content="Apple Price Atlas（スペック・キャリア価格・価格改定比較サイト）のプライバシーポリシー" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: 'class' };
+      (function () {
+        try {
+          var t = localStorage.getItem('apple-price-atlas:theme');
+          var isDark = t ? t === 'dark' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', !!isDark);
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      html, body {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        overflow-x: hidden;
+      }
+    </style>
+  </head>
+  <body class="bg-zinc-50 text-zinc-900 antialiased selection:bg-sky-500 selection:text-white dark:bg-zinc-950 dark:text-zinc-100">
+    <div class="min-h-screen flex flex-col">
+      <!-- Header -->
+      <header class="sticky top-0 z-30 border-b border-zinc-200 bg-white/85 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85">
+        <div class="mx-auto flex max-w-4xl items-center gap-2 sm:gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
+          <a data-nav="home" href="/" class="flex min-w-0 items-center gap-2 group">
+            <div class="shrink-0 rounded-xl bg-zinc-900 p-1.5 text-white transition group-hover:opacity-85 dark:bg-white dark:text-zinc-900">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/>
+                <path d="M10 2c1 .5 2 2 2 5"/>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <div class="truncate text-sm sm:text-base font-extrabold leading-tight">Apple Price Atlas</div>
+              <div class="truncate text-[10px] sm:text-[11px] text-zinc-500">スペック・キャリア価格・価格改定の完全比較</div>
+            </div>
+          </a>
+
+          <div class="ml-auto flex items-center gap-2">
+            <a data-nav="home" href="/" class="inline-flex items-center gap-1 rounded-lg border border-zinc-300 bg-white px-2.5 py-1.5 text-xs sm:text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              <span>比較ツールへ戻る</span>
+            </a>
+            <button id="theme-toggle" type="button" aria-label="テーマ切替" class="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-2.5 py-1.5 text-xs sm:text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700">
+              <span id="theme-icon"></span>
+              <span id="theme-label" class="hidden sm:inline"></span>
+            </button>
+          </div>
+        </div>
+
+        <nav class="mx-auto flex max-w-4xl gap-1 px-3 sm:px-4">
+          <a data-nav="privacy" href="/privacy/" class="inline-flex items-center gap-1.5 border-b-2 border-sky-500 px-3 py-2 text-xs sm:text-sm font-semibold text-sky-600 dark:text-sky-400">
+            プライバシーポリシー
+          </a>
+          <a data-nav="terms" href="/terms/" class="inline-flex items-center gap-1.5 border-b-2 border-transparent px-3 py-2 text-xs sm:text-sm font-semibold text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-100">
+            利用規約
+          </a>
+        </nav>
+      </header>
+
+      <!-- Main Content -->
+      <main class="mx-auto w-full max-w-4xl flex-1 px-3 py-6 sm:px-4 sm:py-10">
+        <article class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">
+          <div class="border-b border-zinc-200 pb-4 dark:border-zinc-800">
+            <span class="inline-flex items-center rounded-full bg-sky-500/10 px-2.5 py-0.5 text-xs font-semibold text-sky-600 dark:text-sky-400">Privacy Policy</span>
+            <h1 class="mt-2 text-xl font-extrabold tracking-tight text-zinc-900 sm:text-2xl dark:text-zinc-50">プライバシーポリシー</h1>
+            <p class="mt-1 text-xs text-zinc-500">制定・最終改定日: 2026年11月2日</p>
+          </div>
+
+          <div class="mt-6 space-y-6 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+            <p>
+              「Apple Price Atlas」（以下「当サイト」）は、ユーザーのプライバシーを尊重し、個人情報の保護に関する法令を遵守するとともに、以下のとおりプライバシーポリシー（以下「本ポリシー」）を定め、適切な取り扱いに努めます。
+            </p>
+
+            <section class="space-y-2">
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">1. 個人情報の取得について</h2>
+              <p>
+                当サイトでは、アカウント登録や入力フォーム等を設けておらず、氏名・住所・電話番号・メールアドレス等の個人を特定できる情報をユーザーから取得・保存することはありません。
+              </p>
+            </section>
+
+            <section class="space-y-2">
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">2. ローカルストレージ（LocalStorage）の利用について</h2>
+              <p>
+                当サイトでは、表示設定の保持および製品データの読み込み高速化のため、お使いのブラウザのローカルストレージ（<code>localStorage</code>）に以下の情報を保存します。
+              </p>
+              <ul class="list-disc space-y-1 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+                <li>カラーテーマ設定（ライトモード／ダークモードの選択状態）</li>
+                <li>表示範囲設定（「価格履歴あり」または「歴代すべて」の選択状態）</li>
+                <li>製品カタログおよびスペック・価格履歴のキャッシュデータ</li>
+              </ul>
+              <p>
+                これらのデータはお使いの端末（ブラウザ）内にのみ保存され、当サイトや第三者のサーバーへ自動送信されることはありません。ブラウザのサイトデータ消去機能からいつでも削除できます。
+              </p>
+            </section>
+
+            <section class="space-y-2">
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">3. データ出力機能（Excel・CSV・Markdown）について</h2>
+              <p>
+                当サイトが提供する Excel（<code>.xlsx</code>）ファイルのダウンロード機能、ならびに比較データのコピー機能は、すべてお使いのブラウザ内（クライアントサイド）のプログラムのみで生成・処理されます。ユーザーが選択した機種や比較条件が外部サーバーへ送信・記録されることはありません。
+              </p>
+            </section>
+
+            <section class="space-y-2">
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">4. 外部通信・ホスティング・アクセス解析について</h2>
+              <p>
+                当サイトの配信および最新スペックデータの取得にあたり、以下の外部サービス・ネットワーク通信を利用しています。
+              </p>
+              <ul class="list-disc space-y-1.5 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+                <li>
+                  <strong class="text-zinc-800 dark:text-zinc-200">ホスティング基盤（Cloudflare Pages / GitHub Pages）</strong>:
+                  サイトの安全な配信・不正アクセス対策・パフォーマンス計測のため、インフラ提供事業者（Cloudflare, Inc. / GitHub, Inc.）によってIPアドレス、リクエスト日時、ブラウザ種別（User-Agent）、リファラ等の標準的な通信ログや匿名化された統計情報（Cloudflare Web Analytics 等）が処理される場合があります。
+                </li>
+                <li>
+                  <strong class="text-zinc-800 dark:text-zinc-200">オープンデータベース連携（AppleDB API）</strong>:
+                  製品のスペック情報や販売終了日を補完するため、起動時に <code>api.appledb.dev</code> へブラウザからリクエストを行う場合があります。
+                </li>
+                <li>
+                  <strong class="text-zinc-800 dark:text-zinc-200">CDN配信（Tailwind CSS CDN）</strong>:
+                  画面表示用スタイルシートの読み込みのため <code>cdn.tailwindcss.com</code> を利用しています。
+                </li>
+              </ul>
+            </section>
+
+            <section class="space-y-2">
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">5. 外部サイトへのリンクについて</h2>
+              <p>
+                当サイトには、価格改定の出典元メディア、Apple公式サイト、各通信キャリアの公式サイト等への外部リンクが含まれています。リンク先の外部サイトにおける個人情報の取り扱いについては、各サイトのプライバシーポリシーをご確認ください。
+              </p>
+            </section>
+
+            <section class="space-y-2">
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">6. プライバシーポリシーの変更</h2>
+              <p>
+                当サイトは、法令の改正やサービス内容の変更等に応じて、本ポリシーを事前の予告なく改定することがあります。改定後のプライバシーポリシーは、本ページに掲載した時点から効力を生じるものとします。
+              </p>
+            </section>
+          </div>
+        </article>
+      </main>
+
+      <!-- Footer -->
+      <footer class="mx-auto w-full max-w-4xl px-3 pb-10 pt-4 text-[11px] sm:text-xs text-zinc-500 sm:px-4">
+        <div class="flex flex-col gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800">
+          <div>※ 価格は日本国内の税込表示。為替・USD価格・キャリア価格には概算/モデル値を含みます。</div>
+          <div class="flex items-center gap-4 font-medium">
+            <a data-nav="home" href="/" class="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">トップページ</a>
+            <a data-nav="privacy" href="/privacy/" class="text-sky-600 dark:text-sky-400">プライバシーポリシー</a>
+            <a data-nav="terms" href="/terms/" class="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">利用規約</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var base = window.location.pathname.replace(/\/(privacy|terms)(\/index\.html|\/)?$/, '/');
+        if (!base.endsWith('/')) base += '/';
+        document.querySelectorAll('[data-nav="home"]').forEach(function (el) { el.setAttribute('href', base); });
+        document.querySelectorAll('[data-nav="privacy"]').forEach(function (el) { el.setAttribute('href', base + 'privacy/'); });
+        document.querySelectorAll('[data-nav="terms"]').forEach(function (el) { el.setAttribute('href', base + 'terms/'); });
+
+        var sunSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>';
+        var moonSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+        var btn = document.getElementById('theme-toggle');
+        var icon = document.getElementById('theme-icon');
+        var label = document.getElementById('theme-label');
+
+        function renderTheme() {
+          var isDark = document.documentElement.classList.contains('dark');
+          if (icon) icon.innerHTML = isDark ? sunSvg : moonSvg;
+          if (label) label.textContent = isDark ? 'ライト' : 'ダーク';
+        }
+        renderTheme();
+
+        if (btn) {
+          btn.addEventListener('click', function () {
+            var next = !document.documentElement.classList.contains('dark');
+            document.documentElement.classList.toggle('dark', next);
+            try { localStorage.setItem('apple-price-atlas:theme', next ? 'dark' : 'light'); } catch (e) {}
+            renderTheme();
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
