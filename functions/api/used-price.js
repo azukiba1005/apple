@@ -10,10 +10,10 @@ export async function onRequestGet(context) {
   const category = url.searchParams.get('category') || 'iPhone';
   const launchPrice = Number(url.searchParams.get('launchPrice') || 0) || 98800;
   const releaseDate = url.searchParams.get('releaseDate') || '2023-09-22';
-  const appId = context.env?.RAKUTEN_APP_ID || '';
-  const affiliateId = context.env?.RAKUTEN_AFFILIATE_ID || '';
-  const accessKey = context.env?.RAKUTEN_ACCESS_KEY || '';
-  const yahooAppId = context.env?.YAHOO_APP_ID || '';
+  const appId = String(context.env?.RAKUTEN_APP_ID ?? '').trim();
+  const affiliateId = String(context.env?.RAKUTEN_AFFILIATE_ID ?? '').trim();
+  const accessKey = String(context.env?.RAKUTEN_ACCESS_KEY ?? '').trim();
+  const yahooAppId = String(context.env?.YAHOO_APP_ID ?? '').trim();
 
   const data = await searchRakutenUsedPrice({
     productName,
