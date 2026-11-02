@@ -285,12 +285,19 @@ const SAMPLE_PRODUCTS: Product[] = [
   },
 ];
 
-// AppleDB 連携用の機種ID (specs.identifier)。AppleDB 適用時にスペック・販売終了日が補強される
+// AppleDB 連携用の機種ID (specs.identifier) と販売終了日の初期値
 const APPLEDB_IDS: Record<string, string> = {
   'iphone-13': 'iPhone14,5', 'iphone-14': 'iPhone14,7', 'iphone-15': 'iPhone15,4', 'iphone-16': 'iPhone17,3',
   'ipad-10': 'iPad13,18', 'watch-s10': 'Watch7,8',
 };
-SAMPLE_PRODUCTS.forEach((p) => { if (APPLEDB_IDS[p.id]) p.specs.identifier = APPLEDB_IDS[p.id]; });
+const SAMPLE_DISCONTINUED: Record<string, string> = {
+  'iphone-13': '2024-09-10', 'iphone-14': '2025-09-10', 'iphone-15': '2026-09-10',
+  'ipad-10': '2025-03-05', 'ipad-air-11-m2': '2025-03-05', 'watch-s10': '2025-09-10', 'mba-13-m2': '2025-03-06',
+};
+SAMPLE_PRODUCTS.forEach((p) => {
+  if (APPLEDB_IDS[p.id]) p.specs.identifier = APPLEDB_IDS[p.id];
+  if (SAMPLE_DISCONTINUED[p.id]) p.specs.discontinued = SAMPLE_DISCONTINUED[p.id];
+});
 
 const BUILTIN_DATASET: Dataset = {
   schemaVersion: 1,
@@ -325,8 +332,158 @@ const signedYen = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : '±'}¥${Math.
 const signedPct = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : '±'}${Math.abs(n).toFixed(1)}%`;
 const ts = (d: string) => Date.parse(d + 'T00:00:00Z');
 const ym = (t: number) => { const d = new Date(t); return `${d.getUTCFullYear()}/${String(d.getUTCMonth() + 1).padStart(2, '0')}`; };
+const ymJp = (t: number) => { const d = new Date(t); return `${d.getUTCFullYear()}年${d.getUTCMonth() + 1}月`; };
 const lastOf = <T,>(a: T[]) => a[a.length - 1];
 const impliedRate = (p: PricePoint) => (p.usdPrice ? p.appleStorePrice / (1 + (p.taxRate ?? 0.1)) / p.usdPrice : undefined);
+
+/** グラフ縦軸用の日本円フォーマット (例: 12万円 / 12.5万円 / 8,000円) */
+function yenAxis(v: number): string {
+  if (v === 0) return '0円';
+  if (Math.abs(v) >= 10000) {
+    const man = v / 10000;
+    const s = Number.isInteger(man) ? String(man) : man.toFixed(man * 10 % 1 === 0 ? 1 : 2).replace(/\.?0+$/, '');
+    return `${s}万円`;
+  }
+  return `${Math.round(v).toLocaleString('ja-JP')}円`;
+}
+
+/** 日本円の価格配列から、日本人に読みやすい「万円 / 0.5万円」刻みの縦軸 domain と ticks を算出する */
+function buildYenAxis(values: number[]): { domain: [number, number]; ticks: number[] } {
+  const valid = values.filter((v) => Number.isFinite(v) && v >= 0);
+  if (!valid.length) return { domain: [0, 100000], ticks: [0, 50000, 100000] };
+  const min = Math.min(...valid);
+  const max = Math.max(...valid);
+  if (min === max) {
+    const step = min >= 80000 ? 10000 : min >= 20000 ? 5000 : 2000;
+    const center = Math.round(min / step) * step;
+    const low = Math.max(0, center - step * 2);
+    const high = low + step * 4;
+    const ticks: number[] = [];
+    for (let v = low; v <= high; v += step) ticks.push(v);
+    return { domain: [low, high], ticks };
+  }
+  const span = max - min;
+  const pad = Math.max(span * 0.15, 2000);
+  const steps = max >= 40000 ? [5000, 10000, 20000, 25000, 50000, 100000, 200000, 500000] : [2000, 5000, 10000, 20000, 50000];
+  let chosen = steps[steps.length - 1];
+  for (const s of steps) {
+    const low = Math.max(0, Math.floor((min - pad) / s) * s);
+    const high = Math.ceil((max + pad) / s) * s;
+    const count = Math.round((high - low) / s);
+    if (count <= 6) { chosen = s; break; }
+  }
+  let low = Math.max(0, Math.floor((min - pad) / chosen) * chosen);
+  let high = Math.ceil((max + pad) / chosen) * chosen;
+  while (Math.round((high - low) / chosen) < 3) {
+    if (low >= chosen) low -= chosen;
+    high += chosen;
+  }
+  const ticks: number[] = [];
+  for (let v = low; v <= high; v += chosen) ticks.push(v);
+  return { domain: [low, high], ticks };
+}
+
+interface DeviceTimelinePoint {
+  t: number;
+  date: string;
+  price: number;
+  event: string;
+  diff: number;
+  isStart?: boolean;
+  isEnd?: boolean;
+  isOngoing?: boolean;
+  pt: PricePoint;
+}
+
+/**
+ * 各デバイス・SKUの価格履歴から、左端=発売時、右端=販売終了日(現行機は現在)となるグラフ用データと横軸目盛りを生成する
+ */
+function buildDeviceTimeline(p: Product, sku: Sku) {
+  const h = sku.priceHistory;
+  const last = lastOf(h);
+  const isEndEv = (ev: string, note?: string, idx?: number) =>
+    /販売終了|終売/.test(ev) || ((idx ?? 0) > 0 && ev === '容量ラインナップ変更' && /終了|廃止|移行/.test(note ?? ''));
+  const lastIsEnd = isEndEv(last.event, last.note, h.length - 1);
+  const specDisc = typeof p.specs.discontinued === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(p.specs.discontinued) ? p.specs.discontinued : undefined;
+  const siblingDisc = p.skus.flatMap((k) => k.priceHistory).find((x) => /販売終了|終売/.test(x.event))?.date;
+  const endDate = lastIsEnd ? last.date : (specDisc && specDisc >= last.date ? specDisc : siblingDisc && siblingDisc >= last.date ? siblingDisc : undefined);
+  const isDiscontinued = !!endDate;
+
+  const points: DeviceTimelinePoint[] = h.map((x, idx) => ({
+    t: ts(x.date),
+    date: x.date,
+    price: x.appleStorePrice,
+    event: x.event,
+    diff: idx > 0 ? x.appleStorePrice - h[idx - 1].appleStorePrice : 0,
+    isStart: idx === 0,
+    isEnd: idx === h.length - 1 && isDiscontinued && endDate === x.date,
+    pt: x,
+  }));
+
+  if (isDiscontinued && endDate && endDate > last.date) {
+    const endPt: PricePoint = { ...last, date: endDate, event: 'Apple Store販売終了' };
+    points.push({
+      t: ts(endDate),
+      date: endDate,
+      price: last.appleStorePrice,
+      event: 'Apple Store販売終了',
+      diff: 0,
+      isEnd: true,
+      pt: endPt,
+    });
+  } else if (!isDiscontinued) {
+    const endT = Math.max(Date.now(), ts(last.date));
+    const endD = new Date(endT).toISOString().slice(0, 10);
+    if (endD > last.date || points.length === 1) {
+      const nowPt: PricePoint = { ...last, date: endD, event: '現在 (販売中)' };
+      points.push({
+        t: endT,
+        date: endD,
+        price: last.appleStorePrice,
+        event: '現在 (販売中)',
+        diff: 0,
+        isOngoing: true,
+        pt: nowPt,
+      });
+    } else {
+      points[points.length - 1].isOngoing = true;
+    }
+  }
+
+  const minT = points[0].t;
+  const maxT = points[points.length - 1].t;
+  const spanDays = (maxT - minT) / 864e5;
+  const stepCount = spanDays <= 90 ? 1 : spanDays <= 240 ? 2 : spanDays <= 600 ? 3 : 4;
+  const xTicks: number[] = [];
+  if (maxT <= minT) {
+    xTicks.push(minT);
+  } else {
+    for (let i = 0; i <= stepCount; i++) {
+      xTicks.push(Math.round(minT + ((maxT - minT) * i) / stepCount));
+    }
+  }
+
+  const formatXTick = (t: number) => {
+    if (maxT > minT && Math.abs(t - maxT) < 1000) {
+      return isDiscontinued ? `${ym(t)} (販売終了)` : `${ym(t)} (現在)`;
+    }
+    if (Math.abs(t - minT) < 1000) {
+      return `${ym(t)} (発売)`;
+    }
+    return ym(t);
+  };
+
+  return {
+    points,
+    minT,
+    maxT,
+    xTicks,
+    formatXTick,
+    isDiscontinued,
+    startDate: points[0].date,
+    endDate: points[points.length - 1].date,
+  };
+}
 /** 価格データを持つSKU / 製品か */
 const skuPriced = (s: Sku) => s.priceHistory.length > 0;
 const pricedSkus = (p: Product) => p.skus.filter(skuPriced);
@@ -440,7 +597,7 @@ function applyAppleDb(products: Product[], raw: unknown): { products: Product[];
       let added = 0;
       skus = p.skus.map((k) => {
         const last = lastOf(k.priceHistory);
-        if (!last || last.event === '販売終了' || jp <= last.date || jp > today) return k;
+        if (!last || /販売終了|終売/.test(last.event) || jp <= last.date || jp > today) return k;
         added++;
         return { ...k, priceHistory: [...k.priceHistory, { ...last, date: jp, event: '販売終了', approx: true, note: 'AppleDB の販売終了日 (米国日付+1日で日本時間に換算)。価格は終了時点' }] };
       });
@@ -1228,7 +1385,16 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
   const hikes = events.filter((e) => e.diff > 0), cuts = events.filter((e) => e.diff < 0);
   const maxHike = hikes.sort((a, b) => b.diff - a.diff)[0];
   const maxCut = cuts.sort((a, b) => a.diff - b.diff)[0];
-  const chartData = [...h.map((x) => ({ t: ts(x.date), price: x.appleStorePrice, event: x.event })), { t: Math.max(Date.now(), ts(lastOf(h).date)), price: lastOf(h).appleStorePrice, event: '現在' }];
+  const tl = useMemo(() => buildDeviceTimeline(p, sku), [p, sku]);
+  const yAxis = useMemo(() => buildYenAxis(tl.points.map((x) => x.price)), [tl.points]);
+  const timelineEvents = useMemo(() => {
+    const base = h.map((pt, i) => ({ pt, diff: i ? pt.appleStorePrice - h[i - 1].appleStorePrice : 0, prev: i ? h[i - 1].appleStorePrice : pt.appleStorePrice, isEnd: i === h.length - 1 && tl.isDiscontinued && tl.endDate === pt.date }));
+    const lastPt = lastOf(tl.points);
+    if (tl.isDiscontinued && lastPt && lastPt.date > lastOf(h).date) {
+      base.push({ pt: lastPt.pt, diff: 0, prev: lastOf(h).appleStorePrice, isEnd: true });
+    }
+    return base;
+  }, [h, tl]);
 
   // 一斉改定日
   const dateCounts = new Map<string, number>();
@@ -1303,7 +1469,7 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
         </div>
         <div className="mt-3.5 sm:mt-4 grid gap-2.5 sm:gap-3 sm:grid-cols-3">
           {[
-            { label: '発売時 → 現在', node: <DeltaBadge diff={total} base={h[0].appleStorePrice} />, sub: `${yen(h[0].appleStorePrice)} → ${yen(lastOf(h).appleStorePrice)}` },
+            { label: tl.isDiscontinued ? '発売時 → 販売終了時' : '発売時 → 現在', node: <DeltaBadge diff={total} base={h[0].appleStorePrice} />, sub: `${yen(h[0].appleStorePrice)} → ${yen(lastOf(h).appleStorePrice)}` },
             { label: '最大の値上げ', node: maxHike ? <DeltaBadge diff={maxHike.diff} base={maxHike.prev} /> : <span className="text-sm text-zinc-400">値上げなし</span>, sub: maxHike ? maxHike.pt.date : '' },
             { label: '最大の値下げ', node: maxCut ? <DeltaBadge diff={maxCut.diff} base={maxCut.prev} /> : <span className="text-sm text-zinc-400">値下げなし</span>, sub: maxCut ? maxCut.pt.date : '' },
           ].map((x) => (
@@ -1312,15 +1478,71 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
             </div>
           ))}
         </div>
-        <div className="mt-4 sm:mt-5 h-56 sm:h-72">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-zinc-50 px-3 py-2 text-xs text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-300">
+          <div className="flex flex-wrap items-center gap-1.5 tabular-nums">
+            <span className="font-semibold text-zinc-500 dark:text-zinc-400">表示期間:</span>
+            <span className="font-bold text-sky-600 dark:text-sky-400">{tl.startDate} (発売)</span>
+            <span>〜</span>
+            <span className={`font-bold ${tl.isDiscontinued ? 'text-zinc-700 dark:text-zinc-200' : 'text-emerald-600 dark:text-emerald-400'}`}>
+              {tl.endDate} ({tl.isDiscontinued ? '販売終了' : '現在販売中'})
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 text-[11px] text-zinc-500">
+            <span className="inline-flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full bg-sky-500" />発売</span>
+            <span className="inline-flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full bg-rose-500" />値上げ</span>
+            <span className="inline-flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />値下げ</span>
+            <span className="inline-flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-full bg-zinc-500" />{tl.isDiscontinued ? '販売終了' : '現在'}</span>
+          </div>
+        </div>
+        <div className="mt-3 sm:mt-4 h-60 sm:h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <LineChart data={tl.points} margin={{ top: 12, right: 20, left: 4, bottom: 4 }}>
               <CartesianGrid stroke={c.grid} strokeDasharray="3 3" />
-              <XAxis dataKey="t" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={ym} stroke={c.axis} fontSize={11} />
-              <YAxis stroke={c.axis} fontSize={11} domain={['auto', 'auto']} tickFormatter={(v) => `¥${(v / 1000).toFixed(0)}k`} width={48} />
-              <Tooltip contentStyle={{ background: c.tipBg, border: `1px solid ${c.tipBorder}`, borderRadius: 12, color: c.text }}
-                labelFormatter={(t: any) => new Date(t).toISOString().slice(0, 10)} formatter={(v: any, _n: any, item: any) => [yen(v), item?.payload?.event]} />
-              <Line type="stepAfter" dataKey="price" name="Apple Store" stroke={carrierColor('apple', dark)} strokeWidth={3} dot={{ r: 4, fill: '#0ea5e9', stroke: c.tipBg, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+              <XAxis
+                dataKey="t"
+                type="number"
+                scale="time"
+                domain={[tl.minT, tl.maxT]}
+                ticks={tl.xTicks}
+                tickFormatter={tl.formatXTick}
+                interval="preserveStartEnd"
+                padding={{ left: 16, right: 24 }}
+                stroke={c.axis}
+                fontSize={11}
+              />
+              <YAxis
+                stroke={c.axis}
+                fontSize={11}
+                domain={yAxis.domain}
+                ticks={yAxis.ticks}
+                tickFormatter={yenAxis}
+                width={56}
+              />
+              <Tooltip
+                contentStyle={{ background: c.tipBg, border: `1px solid ${c.tipBorder}`, borderRadius: 12, color: c.text }}
+                labelFormatter={(t: any) => `${new Date(t).toISOString().slice(0, 10)} (${ymJp(Number(t))})`}
+                formatter={(v: any, _n: any, item: any) => [yen(v), item?.payload?.event]}
+              />
+              <Line
+                type="stepAfter"
+                dataKey="price"
+                name="Apple Store"
+                stroke={carrierColor('apple', dark)}
+                strokeWidth={3}
+                dot={(props: any) => {
+                  const { cx, cy, payload, index } = props;
+                  if (cx == null || cy == null) return <g key={index} />;
+                  const fill = payload?.isStart
+                    ? '#0ea5e9'
+                    : payload?.diff > 0
+                      ? '#f43f5e'
+                      : payload?.diff < 0
+                        ? '#10b981'
+                        : '#71717a';
+                  return <circle key={index} cx={cx} cy={cy} r={payload?.isEnd ? 5 : 4.5} fill={fill} stroke={c.tipBg} strokeWidth={2} />;
+                }}
+                activeDot={{ r: 6.5 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -1329,9 +1551,9 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
       <div className={`${card} p-3.5 sm:p-5`}>
         <h3 className="mb-3.5 sm:mb-4 text-sm font-bold text-zinc-900 dark:text-zinc-50">改定タイムライン — {p.name} {sku.label}</h3>
         <ol className="relative ml-2.5 sm:ml-3 space-y-4 sm:space-y-5 border-l-2 border-zinc-200 dark:border-zinc-700">
-          {events.map(({ pt, diff, prev }, i) => (
+          {timelineEvents.map(({ pt, diff, prev, isEnd }, i) => (
             <li key={pt.date + i} className="ml-4 sm:ml-5">
-              <span className={`absolute -left-[9px] mt-1 h-4 w-4 rounded-full border-2 border-white dark:border-zinc-900 ${i === 0 ? 'bg-sky-500' : diff > 0 ? 'bg-rose-500' : diff < 0 ? 'bg-emerald-500' : 'bg-zinc-400'}`} />
+              <span className={`absolute -left-[9px] mt-1 h-4 w-4 rounded-full border-2 border-white dark:border-zinc-900 ${i === 0 ? 'bg-sky-500' : diff > 0 ? 'bg-rose-500' : diff < 0 ? 'bg-emerald-500' : isEnd ? 'bg-zinc-500' : 'bg-zinc-400'}`} />
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <span className="text-xs sm:text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-50">{pt.date}</span>
                 <span className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">{pt.event}</span>
@@ -1342,7 +1564,7 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
               {pt.note && <div className="mt-0.5 text-xs text-zinc-500">{pt.note}</div>}
               <div className="mt-1 flex flex-wrap items-center gap-2">
                 <span className="text-lg sm:text-xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(pt.appleStorePrice)}</span>
-                {i > 0 && <DeltaBadge diff={diff} base={prev} />}
+                {i > 0 && diff !== 0 && <DeltaBadge diff={diff} base={prev} />}
                 {pt.usdPrice != null && <span className="text-xs text-zinc-500">US ${pt.usdPrice} @ ¥{pt.exchangeRate}</span>}
               </div>
             </li>
@@ -1663,13 +1885,17 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
   const p = products.find((x) => x.id === sel.pid) ?? products[0];
   const sku = pricedSkus(p).find((s) => s.id === sel.sid) ?? pricedSkus(p)[0];
   const h = sku.priceHistory;
+  const tl = useMemo(() => buildDeviceTimeline(p, sku), [p, sku]);
   const b = h[0]; const bAr = impliedRate(b);
-  const idx = h.map((x) => ({
-    t: ts(x.date), JPY: (x.appleStorePrice / b.appleStorePrice) * 100,
-    USD: x.usdPrice && b.usdPrice ? (x.usdPrice / b.usdPrice) * 100 : null,
-    市場為替: x.exchangeRate && b.exchangeRate ? (x.exchangeRate / b.exchangeRate) * 100 : null,
-    Appleレート: bAr && impliedRate(x) ? (impliedRate(x)! / bAr) * 100 : null,
-  }));
+  const idx = tl.points.map(( item ) => {
+    const x = item.pt;
+    return {
+      t: item.t, JPY: (x.appleStorePrice / b.appleStorePrice) * 100,
+      USD: x.usdPrice && b.usdPrice ? (x.usdPrice / b.usdPrice) * 100 : null,
+      市場為替: x.exchangeRate && b.exchangeRate ? (x.exchangeRate / b.exchangeRate) * 100 : null,
+      Appleレート: bAr && impliedRate(x) ? (impliedRate(x)! / bAr) * 100 : null,
+    };
+  });
   const tip = { background: c.tipBg, border: `1px solid ${c.tipBorder}`, borderRadius: 12, color: c.text };
 
   const exportBreakdownExcel = () => {
@@ -1720,8 +1946,8 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
             <ComposedChart data={launchRows} margin={{ top: 10, right: 6, left: 0, bottom: 0 }}>
               <CartesianGrid stroke={c.grid} strokeDasharray="3 3" />
               <XAxis dataKey="name" stroke={c.axis} fontSize={10} interval="preserveStartEnd" />
-              <YAxis yAxisId="l" stroke={c.axis} fontSize={11} tickFormatter={(v) => `¥${(v / 1000).toFixed(0)}k`} width={48} />
-              <YAxis yAxisId="r" orientation="right" stroke={c.axis} fontSize={11} domain={['auto', 'auto']} tickFormatter={(v) => `${v}`} width={36} />
+              <YAxis yAxisId="l" stroke={c.axis} fontSize={11} tickFormatter={yenAxis} width={56} />
+              <YAxis yAxisId="r" orientation="right" stroke={c.axis} fontSize={11} domain={['auto', 'auto']} tickFormatter={(v) => `${v}円`} width={44} />
               <Tooltip contentStyle={tip} formatter={(v: any, n: any) => (n === '発売時価格(JPY)' ? yen(v) : typeof v === 'number' ? v.toFixed(1) : v)} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar yAxisId="l" dataKey="jpy" name="発売時価格(JPY)" fill={carrierColor('apple', dark)} fillOpacity={0.25} radius={[6, 6, 0, 0]} />
@@ -1811,11 +2037,22 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
         </div>
         <div className="mt-4 h-56 sm:h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={idx} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <LineChart data={idx} margin={{ top: 10, right: 20, left: 4, bottom: 4 }}>
               <CartesianGrid stroke={c.grid} strokeDasharray="3 3" />
-              <XAxis dataKey="t" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={ym} stroke={c.axis} fontSize={11} />
+              <XAxis
+                dataKey="t"
+                type="number"
+                scale="time"
+                domain={[tl.minT, tl.maxT]}
+                ticks={tl.xTicks}
+                tickFormatter={tl.formatXTick}
+                interval="preserveStartEnd"
+                padding={{ left: 16, right: 24 }}
+                stroke={c.axis}
+                fontSize={11}
+              />
               <YAxis stroke={c.axis} fontSize={11} domain={['auto', 'auto']} tickFormatter={(v) => `${Math.round(v)}`} width={36} />
-              <Tooltip contentStyle={tip} labelFormatter={(t: any) => new Date(t).toISOString().slice(0, 10)} formatter={(v: any) => (typeof v === 'number' ? v.toFixed(1) : v)} />
+              <Tooltip contentStyle={tip} labelFormatter={(t: any) => `${new Date(t).toISOString().slice(0, 10)} (${ymJp(Number(t))})`} formatter={(v: any) => (typeof v === 'number' ? v.toFixed(1) : v)} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Line type="stepAfter" dataKey="JPY" name="円価格 (発売時=100)" stroke={carrierColor('apple', dark)} strokeWidth={3} dot />
               <Line type="stepAfter" dataKey="USD" name="USD価格" stroke={carrierColor('au', dark)} strokeWidth={2} dot connectNulls />
