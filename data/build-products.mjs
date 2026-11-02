@@ -6,6 +6,7 @@
 //       ④ data/prices/*.json (日本 Apple Store 価格履歴リサーチ) で SKU・価格改定履歴を統合
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { IPHONE, IPAD, WATCH, AIRPODS, MAC } from './presets.mjs';
+import { estimatePlatformOffers, buildUsedPricingObject } from './fetch-used-prices.mjs';
 
 const db = JSON.parse(readFileSync('data/appledb-main.json', 'utf8'));
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -283,7 +284,25 @@ if (existsSync('data/prices')) {
     }
   }
 }
-products.forEach((p) => { delete p._family; });
+products.forEach((p) => {
+  delete p._family;
+  p.skus.forEach((s) => {
+    const launchPrice = s.priceHistory?.[0]?.appleStorePrice ?? s.carriers?.apple?.launchPrice ?? null;
+    const offers = estimatePlatformOffers({
+      productName: p.name,
+      storage: s.storage || s.label,
+      category: p.category,
+      launchPrice: launchPrice || 98800,
+      releaseDate: p.releaseDate,
+    });
+    s.usedPricing = buildUsedPricingObject({
+      rakutenOffer: offers.rakutenOffer,
+      yahooOffer: offers.yahooOffer,
+      unusedOffer: offers.unusedOffer,
+      launchPrice,
+    });
+  });
+});
 
 products.sort((a, b) => a.category.localeCompare(b.category) || a.releaseDate.localeCompare(b.releaseDate) || a.name.localeCompare(b.name));
 mkdirSync('public', { recursive: true });

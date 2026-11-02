@@ -11,6 +11,7 @@ import {
   estimateUsedMarketData,
   fetchUsedMarketPrice,
   type UsedMarketData,
+  type UsedPricing,
 } from './usedPrice';
 
 /* =====================================================================================
@@ -61,6 +62,7 @@ export interface Sku {
   connectivity: ConnectivityType;
   priceHistory: PricePoint[];
   carriers: Partial<Record<CarrierId, CarrierPrice>>;
+  usedPricing?: UsedPricing;      // 楽天市場・Yahoo!ショッピング横断中古最安値データ
 }
 
 export interface Specs {
@@ -525,7 +527,15 @@ function normalizeDataset(raw: unknown): { products: Product[]; errors: string[]
       const priceHistory = [...s.priceHistory].sort((a, b) => a.date.localeCompare(b.date));
       const carriers: Sku['carriers'] = { ...(s.carriers ?? {}) };
       if (priceHistory.length) carriers.apple = { launchPrice: priceHistory[0].appleStorePrice, currentPrice: lastOf(priceHistory).appleStorePrice, mnpPrice: null, returnProgram: null, ...(carriers.apple ?? {}) };
-      skus.push({ id: String(s.id), label: s.label ?? s.storage ?? String(s.id), storage: s.storage ?? '', connectivity: s.connectivity ?? '-', priceHistory, carriers });
+      skus.push({
+        id: String(s.id),
+        label: s.label ?? s.storage ?? String(s.id),
+        storage: s.storage ?? '',
+        connectivity: s.connectivity ?? '-',
+        priceHistory,
+        carriers,
+        ...(s.usedPricing ? { usedPricing: s.usedPricing } : {}),
+      });
     });
     if (!skus.length) return;
     products.push({
@@ -642,9 +652,16 @@ function buildCompareTable(
     const min = Math.min(...vals.map((x) => x.v));
     return vals.filter((x) => x.v === min).map((x) => CARRIER_META[x.id].label).join(' / ');
   })]);
-  rows.push(['現在の中古最安値', ...cols.map((c) => `${yen(getUsed(c.p, c.sku).used.price)} (${getUsed(c.p, c.sku).used.shopName})`)]);
+  rows.push(['現在の中古最安値 (横断)', ...cols.map((c) => {
+    const up = getUsed(c.p, c.sku).usedPricing;
+    const plat = up.lowestPlatform === 'yahoo' ? 'Yahoo!ショッピング' : '楽天市場';
+    const best = up.lowestPlatform === 'yahoo' ? up.yahoo : up.rakuten;
+    return `${yen(up.lowestPrice)} [${plat}: ${best?.shopName ?? ''}]`;
+  })]);
+  rows.push(['楽天市場 中古最安値', ...cols.map((c) => { const r = getUsed(c.p, c.sku).usedPricing.rakuten; return r ? `${yen(r.price)} (${r.shopName})` : '—'; })]);
+  rows.push(['Yahoo!ショッピング 中古最安値', ...cols.map((c) => { const y = getUsed(c.p, c.sku).usedPricing.yahoo; return y ? `${yen(y.price)} (${y.shopName})` : '—'; })]);
   rows.push(['未使用品最安値', ...cols.map((c) => { const u = getUsed(c.p, c.sku).unused; return u ? `${yen(u.price)} (${u.shopName})` : '—'; })]);
-  rows.push(['リセールバリュー (残価率)', ...cols.map((c) => { const r = getUsed(c.p, c.sku).resaleRate; return r != null ? `リセール率 ${r}%` : '—'; })]);
+  rows.push(['リセールバリュー (残価率)', ...cols.map((c) => { const r = getUsed(c.p, c.sku).usedPricing.resaleValuePercent; return r != null ? `リセール率 ${r}%` : '—'; })]);
   return rows;
 }
 const toMarkdown = (rows: string[][]) => {
@@ -988,12 +1005,15 @@ function buildCompareExcelSheets(products: Product[], sel: Sel[], mode: Mode, mn
   })]);
 
   const usedForCols = cols.map((c) => estimateUsedMarketData(c.p, c.sku));
-  compareRows.push(secRow('中古相場・資産価値 (楽天市場)'));
-  compareRows.push(['現在の中古最安値', ...usedForCols.map((u): XlsCell => ({ v: u.used.price, k: 'yen' }))]);
+  compareRows.push(secRow('中古相場・資産価値 (楽天市場 ＆ Yahoo!ショッピング 横断比較)'));
+  compareRows.push(['現在の中古最安値 (横断)', ...usedForCols.map((u): XlsCell => ({ v: u.usedPricing.lowestPrice, k: 'yenBest' }))]);
+  compareRows.push(['最安プラットフォーム', ...usedForCols.map((u): XlsCell => (u.usedPricing.lowestPlatform === 'yahoo' ? 'Yahoo!ショッピング' : '楽天市場'))]);
+  compareRows.push(['リセールバリュー (残価率)', ...usedForCols.map((u): XlsCell => (u.usedPricing.resaleValuePercent != null ? `リセール率 ${u.usedPricing.resaleValuePercent}%` : '—'))]);
+  compareRows.push(['楽天市場 中古最安値', ...usedForCols.map((u): XlsCell => (u.usedPricing.rakuten ? { v: u.usedPricing.rakuten.price, k: 'yen' } : '—'))]);
+  compareRows.push(['楽天市場 ショップ名', ...usedForCols.map((u): XlsCell => u.usedPricing.rakuten?.shopName ?? '—')]);
+  compareRows.push(['Yahoo!ショッピング 中古最安値', ...usedForCols.map((u): XlsCell => (u.usedPricing.yahoo ? { v: u.usedPricing.yahoo.price, k: 'yen' } : '—'))]);
+  compareRows.push(['Yahoo!ショッピング ショップ名', ...usedForCols.map((u): XlsCell => u.usedPricing.yahoo?.shopName ?? '—')]);
   compareRows.push(['未使用品最安値', ...usedForCols.map((u): XlsCell => (u.unused ? { v: u.unused.price, k: 'yen' } : '—'))]);
-  compareRows.push(['リセールバリュー (残価率)', ...usedForCols.map((u): XlsCell => (u.resaleRate != null ? `リセール率 ${u.resaleRate}%` : '—'))]);
-  compareRows.push(['中古最安ショップ', ...usedForCols.map((u): XlsCell => u.used.shopName)]);
-  compareRows.push(['商品検索リンク', ...usedForCols.map((u): XlsCell => u.used.itemUrl)]);
 
   compareRows.push(secRow('スペック'));
   SPEC_ROWS.forEach((r) => {
@@ -1288,50 +1308,93 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                     )}
                   </div>
 
-                  {/* 現在の中古相場（最安値・未使用品最安値）・リセールバリュー・ショップリンク枠 */}
-                  <div className="mt-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-2.5 dark:border-zinc-800 dark:bg-zinc-800/50">
-                    <div className="flex flex-wrap items-center justify-between gap-1.5">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-zinc-600 dark:text-zinc-300">
-                        <ShoppingBag className="h-3.5 w-3.5 shrink-0 text-rose-500" />
-                        現在の中古相場 (最安値)
-                        {usedInfo.source === 'mock' && (
-                          <span className="rounded bg-zinc-200/80 px-1 py-0.2 text-[10px] font-normal text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">推定</span>
-                        )}
-                      </span>
-                      <ResaleBadge rate={usedInfo.resaleRate} launchPrice={usedInfo.launchPrice} />
-                    </div>
-                    <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-base sm:text-lg font-extrabold tabular-nums text-rose-600 dark:text-rose-400">
-                          {yen(usedInfo.used.price)}
-                        </span>
-                        {usedInfo.unused && (
-                          <span className="text-[11px] tabular-nums text-zinc-500 dark:text-zinc-400">
-                            未使用品: <strong className="font-bold text-zinc-700 dark:text-zinc-200">{yen(usedInfo.unused.price)}</strong>
+                  {/* 現在の中古相場（楽天・Yahoo!横断最安値・未使用品最安値）・リセールバリュー・ショップリンク枠 */}
+                  {(() => {
+                    const up = usedInfo.usedPricing;
+                    const isYahooLowest = up.lowestPlatform === 'yahoo';
+                    return (
+                      <div className="mt-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-2.5 dark:border-zinc-800 dark:bg-zinc-800/50">
+                        <div className="flex flex-wrap items-center justify-between gap-1.5">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-zinc-600 dark:text-zinc-300">
+                            <ShoppingBag className="h-3.5 w-3.5 shrink-0 text-rose-500" />
+                            現在の中古最安値
+                            <span
+                              className={`rounded-full px-1.5 py-0.2 text-[10px] font-extrabold text-white ${
+                                isYahooLowest ? 'bg-amber-500' : 'bg-rose-600'
+                              }`}
+                            >
+                              {isYahooLowest ? 'Yahoo!最安' : '楽天最安'}
+                            </span>
+                            {usedInfo.source === 'mock' && (
+                              <span className="rounded bg-zinc-200/80 px-1 py-0.2 text-[10px] font-normal text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">推定</span>
+                            )}
                           </span>
-                        )}
+                          <ResaleBadge rate={up.resaleValuePercent} launchPrice={usedInfo.launchPrice} />
+                        </div>
+                        <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-base sm:text-lg font-extrabold tabular-nums text-rose-600 dark:text-rose-400">
+                              {yen(up.lowestPrice)}
+                            </span>
+                            {usedInfo.unused && (
+                              <span className="text-[11px] tabular-nums text-zinc-500 dark:text-zinc-400">
+                                未使用: <strong className="font-bold text-zinc-700 dark:text-zinc-200">{yen(usedInfo.unused.price)}</strong>
+                              </span>
+                            )}
+                          </div>
+                          {usedInfo.launchPrice && (
+                            <span className="text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">
+                              発売時直販 {yen(usedInfo.launchPrice)}
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-2 space-y-1 border-t border-zinc-200/60 pt-1.5 text-[11px] dark:border-zinc-700/60">
+                          {up.rakuten && (
+                            <div className="flex items-center justify-between gap-1.5">
+                              <span className="inline-flex min-w-0 items-center gap-1 truncate">
+                                <span className="shrink-0 rounded bg-rose-100 px-1 py-0.2 text-[10px] font-bold text-rose-700 dark:bg-rose-500/20 dark:text-rose-300">楽天</span>
+                                <span className={`font-bold tabular-nums ${!isYahooLowest ? 'text-rose-600 dark:text-rose-400' : 'text-zinc-700 dark:text-zinc-300'}`}>
+                                  {yen(up.rakuten.price)}
+                                </span>
+                                <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.rakuten.shopName}>
+                                  ({up.rakuten.shopName})
+                                </span>
+                              </span>
+                              <a
+                                href={up.rakuten.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex shrink-0 items-center gap-0.5 font-semibold text-sky-600 hover:underline dark:text-sky-400"
+                              >
+                                商品 <ExternalLink className="h-3 w-3" />
+                              </a>
+                            </div>
+                          )}
+                          {up.yahoo && (
+                            <div className="flex items-center justify-between gap-1.5">
+                              <span className="inline-flex min-w-0 items-center gap-1 truncate">
+                                <span className="shrink-0 rounded bg-amber-100 px-1 py-0.2 text-[10px] font-bold text-amber-800 dark:bg-amber-500/20 dark:text-amber-300">Yahoo!</span>
+                                <span className={`font-bold tabular-nums ${isYahooLowest ? 'text-rose-600 dark:text-rose-400' : 'text-zinc-700 dark:text-zinc-300'}`}>
+                                  {yen(up.yahoo.price)}
+                                </span>
+                                <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.yahoo.shopName}>
+                                  ({up.yahoo.shopName})
+                                </span>
+                              </span>
+                              <a
+                                href={up.yahoo.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex shrink-0 items-center gap-0.5 font-semibold text-sky-600 hover:underline dark:text-sky-400"
+                              >
+                                商品 <ExternalLink className="h-3 w-3" />
+                              </a>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      {usedInfo.launchPrice && (
-                        <span className="text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">
-                          発売時直販 {yen(usedInfo.launchPrice)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-zinc-200/60 pt-1.5 text-[11px] dark:border-zinc-700/60">
-                      <span className="truncate font-medium text-zinc-600 dark:text-zinc-300" title={usedInfo.used.shopName}>
-                        {usedInfo.used.shopName}
-                      </span>
-                      <a
-                        href={usedInfo.used.itemUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex shrink-0 items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400"
-                      >
-                        商品リンク
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    </div>
-                  </div>
+                    );
+                  })()}
                 </div>
               );
             })}
@@ -1389,29 +1452,34 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                 ))}
               </div>
 
-              {/* スマホ縦並び: 中古相場・リセールバリュー */}
+              {/* スマホ縦並び: 中古相場・リセールバリュー (楽天・Yahoo!横断比較) */}
               <div className={`${card} divide-y divide-zinc-100 overflow-hidden dark:divide-zinc-800`}>
                 <div className="bg-zinc-50 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:bg-zinc-800/50">
-                  現在の中古相場（最安値）・リセールバリュー (楽天市場)
+                  現在の中古相場（最安値）・リセールバリュー (楽天市場 ＆ Yahoo!ショッピング)
                 </div>
                 <div className="space-y-2.5 p-3.5">
                   {cols.map((c) => {
                     const u = getUsedData(c);
+                    const up = u.usedPricing;
+                    const isYahooLowest = up.lowestPlatform === 'yahoo';
                     return (
                       <div key={c.sel.pid} className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-2.5 text-xs dark:border-zinc-800 dark:bg-zinc-800/50">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <span className="font-bold text-zinc-900 dark:text-zinc-100">
                             {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
                           </span>
-                          <ResaleBadge rate={u.resaleRate} launchPrice={u.launchPrice} />
+                          <ResaleBadge rate={up.resaleValuePercent} launchPrice={u.launchPrice} />
                         </div>
                         <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-2">
-                          <div className="flex flex-wrap items-baseline gap-2">
-                            <span className="text-[11px] text-zinc-500">中古最安:</span>
-                            <span className="text-base font-extrabold tabular-nums text-rose-600 dark:text-rose-400">{yen(u.used.price)}</span>
+                          <div className="flex flex-wrap items-baseline gap-1.5">
+                            <span className="text-[11px] text-zinc-500">横断最安:</span>
+                            <span className="text-base font-extrabold tabular-nums text-rose-600 dark:text-rose-400">{yen(up.lowestPrice)}</span>
+                            <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold text-white ${isYahooLowest ? 'bg-amber-500' : 'bg-rose-600'}`}>
+                              {isYahooLowest ? 'Yahoo!最安' : '楽天最安'}
+                            </span>
                             {u.unused && (
                               <span className="text-[11px] tabular-nums text-zinc-500">
-                                / 未使用最安: <strong className="font-bold text-zinc-800 dark:text-zinc-200">{yen(u.unused.price)}</strong>
+                                / 未使用: <strong className="font-bold text-zinc-800 dark:text-zinc-200">{yen(u.unused.price)}</strong>
                               </span>
                             )}
                           </div>
@@ -1419,16 +1487,27 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                             <span className="text-[10px] tabular-nums text-zinc-400">発売時直販 {yen(u.launchPrice)}</span>
                           )}
                         </div>
-                        <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-zinc-200/60 pt-1.5 text-[11px] dark:border-zinc-700/60">
-                          <span className="truncate text-zinc-600 dark:text-zinc-300">{u.used.shopName}</span>
-                          <a
-                            href={u.used.itemUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex shrink-0 items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400"
-                          >
-                            商品リンク <ExternalLink className="h-3 w-3" />
-                          </a>
+                        <div className="mt-2 space-y-1 border-t border-zinc-200/60 pt-1.5 text-[11px] dark:border-zinc-700/60">
+                          {up.rakuten && (
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="truncate text-zinc-600 dark:text-zinc-300">
+                                <strong className="text-rose-600 dark:text-rose-400">[楽天]</strong> {yen(up.rakuten.price)} — {up.rakuten.shopName}
+                              </span>
+                              <a href={up.rakuten.url} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400">
+                                リンク <ExternalLink className="h-3 w-3" />
+                              </a>
+                            </div>
+                          )}
+                          {up.yahoo && (
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="truncate text-zinc-600 dark:text-zinc-300">
+                                <strong className="text-amber-600 dark:text-amber-400">[Yahoo!]</strong> {yen(up.yahoo.price)} — {up.yahoo.shopName}
+                              </span>
+                              <a href={up.yahoo.url} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400">
+                                リンク <ExternalLink className="h-3 w-3" />
+                              </a>
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
@@ -1511,7 +1590,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                 ))}
                 <tr className="bg-zinc-50 dark:bg-zinc-800/50">
                   <td colSpan={cols.length + 1} className="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">
-                    中古相場・資産価値 — 楽天市場 (ケース・ジャンク除外 / 本体最安値)
+                    中古相場・資産価値 — 楽天市場 ＆ Yahoo!ショッピング 横断比較 (ケース・ジャンク除外 / 本体最安値)
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-100 dark:border-zinc-800">
@@ -1520,23 +1599,33 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                       <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
                       現在の中古相場
                     </div>
-                    <div className="mt-0.5 text-[10px] text-zinc-400">最安値・リセール率</div>
+                    <div className="mt-0.5 text-[10px] text-zinc-400">楽天・Yahoo!横断最安</div>
                   </td>
                   {cols.map((c) => {
                     const u = getUsedData(c);
+                    const up = u.usedPricing;
+                    const isYahooLowest = up.lowestPlatform === 'yahoo';
                     return (
                       <td key={c.sel.pid} className="p-1.5 sm:p-2 align-top">
                         <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-2 sm:p-2.5 dark:border-zinc-800 dark:bg-zinc-800/40">
                           <div className="flex flex-wrap items-center justify-between gap-1.5">
                             <div>
-                              <div className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
-                                中古最安値 {u.source === 'mock' && <span className="rounded bg-zinc-200/80 px-1 text-[9px] font-normal dark:bg-zinc-700">推定</span>}
+                              <div className="flex items-center gap-1 text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
+                                <span>横断最安値</span>
+                                <span
+                                  className={`rounded-full px-1.5 py-0.2 text-[9px] font-bold text-white ${
+                                    isYahooLowest ? 'bg-amber-500' : 'bg-rose-600'
+                                  }`}
+                                >
+                                  {isYahooLowest ? 'Yahoo!最安' : '楽天最安'}
+                                </span>
+                                {u.source === 'mock' && <span className="rounded bg-zinc-200/80 px-1 text-[9px] font-normal dark:bg-zinc-700">推定</span>}
                               </div>
                               <div className="text-base sm:text-lg font-extrabold tabular-nums text-rose-600 dark:text-rose-400">
-                                {yen(u.used.price)}
+                                {yen(up.lowestPrice)}
                               </div>
                             </div>
-                            <ResaleBadge rate={u.resaleRate} launchPrice={u.launchPrice} />
+                            <ResaleBadge rate={up.resaleValuePercent} launchPrice={u.launchPrice} />
                           </div>
                           {u.unused && (
                             <div className="mt-1 flex items-center justify-between text-[11px] tabular-nums text-zinc-600 dark:text-zinc-300">
@@ -1557,19 +1646,77 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                               発売時Apple直販: {yen(u.launchPrice)} (下限除外 {yen(u.minPrice)})
                             </div>
                           )}
-                          <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-zinc-200/70 pt-1.5 text-[11px] dark:border-zinc-700/70">
-                            <span className="truncate font-medium text-zinc-700 dark:text-zinc-300" title={u.used.shopName}>
-                              {u.used.shopName}
-                            </span>
-                            <a
-                              href={u.used.itemUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex shrink-0 items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400"
-                            >
-                              商品リンク
-                              <ExternalLink className="h-3 w-3" />
-                            </a>
+
+                          {/* 楽天市場 vs Yahoo!ショッピング 横断比較リスト */}
+                          <div className="mt-2 space-y-1.5 border-t border-zinc-200/70 pt-1.5 text-[11px] dark:border-zinc-700/70">
+                            {up.rakuten && (
+                              <div
+                                className={`rounded-lg px-2 py-1 ${
+                                  !isYahooLowest
+                                    ? 'bg-emerald-500/10 ring-1 ring-emerald-500/40'
+                                    : 'bg-white/60 dark:bg-zinc-900/40'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between gap-1">
+                                  <span className="inline-flex items-center gap-1 font-bold text-rose-600 dark:text-rose-400">
+                                    楽天市場
+                                    {!isYahooLowest && (
+                                      <span className="rounded bg-emerald-500 px-1 py-0.2 text-[9px] font-bold text-white">最安</span>
+                                    )}
+                                  </span>
+                                  <span className="font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">
+                                    {yen(up.rakuten.price)}
+                                  </span>
+                                </div>
+                                <div className="mt-0.5 flex items-center justify-between gap-1 text-[10px]">
+                                  <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.rakuten.shopName}>
+                                    {up.rakuten.shopName}
+                                  </span>
+                                  <a
+                                    href={up.rakuten.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex shrink-0 items-center gap-0.5 font-semibold text-sky-600 hover:underline dark:text-sky-400"
+                                  >
+                                    商品リンク <ExternalLink className="h-2.5 w-2.5" />
+                                  </a>
+                                </div>
+                              </div>
+                            )}
+                            {up.yahoo && (
+                              <div
+                                className={`rounded-lg px-2 py-1 ${
+                                  isYahooLowest
+                                    ? 'bg-emerald-500/10 ring-1 ring-emerald-500/40'
+                                    : 'bg-white/60 dark:bg-zinc-900/40'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between gap-1">
+                                  <span className="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
+                                    Yahoo!ショッピング
+                                    {isYahooLowest && (
+                                      <span className="rounded bg-emerald-500 px-1 py-0.2 text-[9px] font-bold text-white">最安</span>
+                                    )}
+                                  </span>
+                                  <span className="font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">
+                                    {yen(up.yahoo.price)}
+                                  </span>
+                                </div>
+                                <div className="mt-0.5 flex items-center justify-between gap-1 text-[10px]">
+                                  <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.yahoo.shopName}>
+                                    {up.yahoo.shopName}
+                                  </span>
+                                  <a
+                                    href={up.yahoo.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex shrink-0 items-center gap-0.5 font-semibold text-sky-600 hover:underline dark:text-sky-400"
+                                  >
+                                    商品リンク <ExternalLink className="h-2.5 w-2.5" />
+                                  </a>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </td>

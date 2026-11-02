@@ -1,6 +1,6 @@
 // Cloudflare Pages Function: /api/used-price
-// 環境変数 RAKUTEN_APP_ID が設定されている場合は楽天市場 商品検索API (IchibaItem/Search/20220601) を呼び出し、
-// 未設定の場合は推定相場（フォールバック）を返します。
+// 環境変数 RAKUTEN_APP_ID / YAHOO_APP_ID が設定されている場合は
+// 楽天市場APIおよびYahoo!ショッピングAPI (v3) を呼び出し、横断比較データを返します。
 import { searchRakutenUsedPrice } from '../../data/fetch-used-prices.mjs';
 
 export async function onRequestGet(context) {
@@ -13,6 +13,7 @@ export async function onRequestGet(context) {
   const appId = context.env?.RAKUTEN_APP_ID || '';
   const affiliateId = context.env?.RAKUTEN_AFFILIATE_ID || '';
   const accessKey = context.env?.RAKUTEN_ACCESS_KEY || '';
+  const yahooAppId = context.env?.YAHOO_APP_ID || '';
 
   const data = await searchRakutenUsedPrice({
     productName,
@@ -23,6 +24,7 @@ export async function onRequestGet(context) {
     appId,
     affiliateId,
     accessKey,
+    yahooAppId,
   });
 
   return new Response(JSON.stringify(data), {
@@ -33,4 +35,3 @@ export async function onRequestGet(context) {
     },
   });
 }
-

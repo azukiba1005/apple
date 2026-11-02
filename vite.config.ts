@@ -2,7 +2,12 @@ import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { searchRakutenUsedPrice } from './data/fetch-used-prices.mjs';
 
-function rakutenUsedPriceProxy(envConfig: { appId: string; affiliateId: string; accessKey: string }): Plugin {
+function usedPriceProxy(envConfig: {
+  appId: string;
+  affiliateId: string;
+  accessKey: string;
+  yahooAppId: string;
+}): Plugin {
   const attachMiddleware = (middlewares: any) => {
     middlewares.use('/api/used-price', async (req: any, res: any) => {
       try {
@@ -15,6 +20,7 @@ function rakutenUsedPriceProxy(envConfig: { appId: string; affiliateId: string; 
         const appId = process.env.RAKUTEN_APP_ID || envConfig.appId || '';
         const affiliateId = process.env.RAKUTEN_AFFILIATE_ID || envConfig.affiliateId || '';
         const accessKey = process.env.RAKUTEN_ACCESS_KEY || envConfig.accessKey || '';
+        const yahooAppId = process.env.YAHOO_APP_ID || envConfig.yahooAppId || '';
 
         const result = await searchRakutenUsedPrice({
           productName,
@@ -25,6 +31,7 @@ function rakutenUsedPriceProxy(envConfig: { appId: string; affiliateId: string; 
           appId,
           affiliateId,
           accessKey,
+          yahooAppId,
         });
 
         res.statusCode = 200;
@@ -39,7 +46,7 @@ function rakutenUsedPriceProxy(envConfig: { appId: string; affiliateId: string; 
   };
 
   return {
-    name: 'rakuten-used-price-proxy',
+    name: 'used-price-proxy',
     configureServer(server) {
       attachMiddleware(server.middlewares);
     },
@@ -55,21 +62,24 @@ export default defineConfig(({ mode }) => {
   const rakutenAppId = process.env.RAKUTEN_APP_ID || env.RAKUTEN_APP_ID || env.VITE_RAKUTEN_APP_ID || '';
   const rakutenAffiliateId = process.env.RAKUTEN_AFFILIATE_ID || env.RAKUTEN_AFFILIATE_ID || '';
   const rakutenAccessKey = process.env.RAKUTEN_ACCESS_KEY || env.RAKUTEN_ACCESS_KEY || '';
+  const yahooAppId = process.env.YAHOO_APP_ID || env.YAHOO_APP_ID || env.VITE_YAHOO_APP_ID || '';
 
   return {
     base: './',
-    envPrefix: ['VITE_', 'RAKUTEN_'],
+    envPrefix: ['VITE_', 'RAKUTEN_', 'YAHOO_'],
     define: {
       'import.meta.env.RAKUTEN_APP_ID': JSON.stringify(rakutenAppId),
       'import.meta.env.RAKUTEN_AFFILIATE_ID': JSON.stringify(rakutenAffiliateId),
       'import.meta.env.RAKUTEN_ACCESS_KEY': JSON.stringify(rakutenAccessKey),
+      'import.meta.env.YAHOO_APP_ID': JSON.stringify(yahooAppId),
     },
     plugins: [
       react(),
-      rakutenUsedPriceProxy({
+      usedPriceProxy({
         appId: rakutenAppId,
         affiliateId: rakutenAffiliateId,
         accessKey: rakutenAccessKey,
+        yahooAppId,
       }),
     ],
     build: {
