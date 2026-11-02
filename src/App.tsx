@@ -2631,7 +2631,10 @@ export default function App() {
 
         <footer className="mx-auto max-w-7xl px-3 sm:px-4 pb-10 text-[11px] sm:text-xs text-zinc-500">
           <div className="flex flex-col gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800">
-            <div>※ 価格は日本国内の税込表示。為替・USD価格・キャリア価格には概算/モデル値を含みます。購入前に各公式サイトで最新情報をご確認ください。</div>
+            <div className="space-y-0.5">
+              <div>※ 価格は日本国内の税込表示。為替・USD価格・キャリア価格・中古相場には概算/モデル値を含みます。購入前に各公式サイト・販売店で最新情報をご確認ください。</div>
+              <div>※ 当サイトは楽天アフィリエイト等のアフィリエイトプログラムに参加しており、一部ショップリンクに広告（PR）を含みます。</div>
+            </div>
             <div className="flex shrink-0 items-center gap-4 font-medium">
               <a href="./privacy/" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">プライバシーポリシー</a>
               <a href="./terms/" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">利用規約</a>

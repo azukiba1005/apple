@@ -95,7 +95,7 @@
               <ul class="list-disc space-y-1 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                 <li>カラーテーマ設定（ライトモード／ダークモードの選択状態）</li>
                 <li>表示範囲設定（「価格履歴あり」または「歴代すべて」の選択状態）</li>
-                <li>製品カタログおよびスペック・価格履歴のキャッシュデータ</li>
+                <li>製品カタログおよびスペック・価格履歴・中古相場データのキャッシュデータ</li>
               </ul>
               <p>
                 これらのデータはお使いの端末（ブラウザ）内にのみ保存され、当サイトや第三者のサーバーへ自動送信されることはありません。ブラウザのサイトデータ消去機能からいつでも削除できます。
@@ -110,14 +110,18 @@
             </section>
 
             <section class="space-y-2">
-              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">4. 外部通信・ホスティング・アクセス解析について</h2>
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">4. 外部通信・ホスティング・ECモールAPI連携について</h2>
               <p>
-                当サイトの配信および最新スペックデータの取得にあたり、以下の外部サービス・ネットワーク通信を利用しています。
+                当サイトの配信、最新スペックデータの取得、および中古相場（最安値・リセールバリュー）の取得にあたり、以下の外部サービス・ネットワーク通信を利用しています。
               </p>
               <ul class="list-disc space-y-1.5 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                 <li>
                   <strong class="text-zinc-800 dark:text-zinc-200">ホスティング基盤（Cloudflare Pages / GitHub Pages）</strong>:
                   サイトの安全な配信・不正アクセス対策・パフォーマンス計測のため、インフラ提供事業者（Cloudflare, Inc. / GitHub, Inc.）によってIPアドレス、リクエスト日時、ブラウザ種別（User-Agent）、リファラ等の標準的な通信ログや匿名化された統計情報（Cloudflare Web Analytics 等）が処理される場合があります。
+                </li>
+                <li>
+                  <strong class="text-zinc-800 dark:text-zinc-200">ECモール商品検索API（楽天市場 商品検索API / Yahoo!ショッピング 商品検索API v3）</strong>:
+                  各機種の現在の中古最安値・未使用品最安値および取扱ショップ情報を取得するため、サーバーサイド関数（Cloudflare Pages Functions）または事前集計バッチ処理等を通じて、楽天グループ株式会社が提供する「Rakuten Developers（楽天市場商品検索API）」およびLINEヤフー株式会社が提供する「Yahoo!デベロッパーネットワーク（Yahoo!ショッピングAPI v3）」を利用しています。検索処理には製品名・容量・カテゴリ等の検索条件のみが用いられ、閲覧ユーザーの個人情報が各APIへ送信されることはありません。
                 </li>
                 <li>
                   <strong class="text-zinc-800 dark:text-zinc-200">オープンデータベース連携（AppleDB API）</strong>:
@@ -131,14 +135,32 @@
             </section>
 
             <section class="space-y-2">
-              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">5. 外部サイトへのリンクについて</h2>
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">5. アフィリエイトプログラムおよびCookie等の利用について</h2>
               <p>
-                当サイトには、価格改定の出典元メディア、Apple公式サイト、各通信キャリアの公式サイト等への外部リンクが含まれています。リンク先の外部サイトにおける個人情報の取り扱いについては、各サイトのプライバシーポリシーをご確認ください。
+                当サイトは、楽天アフィリエイト、Yahoo!ショッピング アフィリエイト（バリューコマース等を含む）、その他のアフィリエイトプログラムに参加しています。
+              </p>
+              <ul class="list-disc space-y-1.5 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+                <li>
+                  ユーザーが当サイト内の商品リンク（楽天市場・Yahoo!ショッピング等の各ショップへのリンク）をクリックして外部ECサイトへ遷移した際、成果計測（紹介報酬の割り当て）のために、遷移先のECモール運営事業者またはアフィリエイトサービスプロバイダ（ASP）によってお使いのブラウザに Cookie（クッキー）や識別パラメータが記録・参照される場合があります。
+                </li>
+                <li>
+                  これらの Cookie 等によって収集される情報は、リンク先での商品購入実績の確認および不正防止の目的にのみ使用され、当サイト運営者がユーザーの氏名・住所・メールアドレス・購入履歴等の個人情報を取得・閲覧することは一切ありません。
+                </li>
+                <li>
+                  各ECモールにおける Cookie の取り扱いや無効化（オプトアウト）の手順については、楽天グループ株式会社およびLINEヤフー株式会社等の各プライバシーポリシーをご確認ください。
+                </li>
+              </ul>
+            </section>
+
+            <section class="space-y-2">
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">6. 外部サイトへのリンクについて</h2>
+              <p>
+                当サイトには、楽天市場・Yahoo!ショッピング内の各出店ショップ、価格改定の出典元メディア、Apple公式サイト、各通信キャリアの公式サイト等への外部リンクが含まれています。リンク先の外部サイトにおける個人情報の取り扱いについては、各サイトのプライバシーポリシーをご確認ください。
               </p>
             </section>
 
             <section class="space-y-2">
-              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">6. プライバシーポリシーの変更</h2>
+              <h2 class="text-base font-bold text-zinc-900 dark:text-zinc-100">7. プライバシーポリシーの変更</h2>
               <p>
                 当サイトは、法令の改正やサービス内容の変更等に応じて、本ポリシーを事前の予告なく改定することがあります。改定後のプライバシーポリシーは、本ページに掲載した時点から効力を生じるものとします。
               </p>
@@ -150,7 +172,10 @@
       <!-- Footer -->
       <footer class="mx-auto w-full max-w-4xl px-3 pb-10 pt-4 text-[11px] sm:text-xs text-zinc-500 sm:px-4">
         <div class="flex flex-col gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800">
-          <div>※ 価格は日本国内の税込表示。為替・USD価格・キャリア価格には概算/モデル値を含みます。</div>
+          <div class="space-y-0.5">
+            <div>※ 価格は日本国内の税込表示。為替・USD価格・キャリア価格・中古相場には概算/モデル値を含みます。</div>
+            <div>※ 当サイトは楽天アフィリエイト等のアフィリエイトプログラムに参加しており、一部ショップリンクに広告（PR）を含みます。</div>
+          </div>
           <div class="flex items-center gap-4 font-medium">
             <a data-nav="home" href="/" class="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">トップページ</a>
             <a data-nav="privacy" href="/privacy/" class="text-sky-600 dark:text-sky-400">プライバシーポリシー</a>
