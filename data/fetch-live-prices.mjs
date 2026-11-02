@@ -26,6 +26,8 @@ import {
   cleanSearchProductName,
   extractStorageToken,
   calcMinPrice,
+  callRakutenIchibaSearch,
+  isRakutenApiDisabled,
   fetchFromRakutenApi,
   fetchFromYahooApi,
   estimatePlatformOffers,
@@ -58,13 +60,13 @@ export const CARRIER_PRICE_URLS = {
     'Apple Watch': 'https://onlineshop.smt.docomo.ne.jp/products/apple_watch/index.html',
   },
   au: {
-    iPhone: 'https://www.au.com/iphone/product/price/',
-    iPad: 'https://www.au.com/ipad/product/price/',
-    'Apple Watch': 'https://www.au.com/apple-watch/product/price/',
+    iPhone: 'https://www.au.com/iphone/',
+    iPad: 'https://www.au.com/ipad/',
+    'Apple Watch': 'https://www.au.com/apple-watch/',
   },
   softbank: {
-    iPhone: 'https://www.softbank.jp/iphone/price/',
-    iPad: 'https://www.softbank.jp/ipad/price/',
+    iPhone: 'https://www.softbank.jp/mobile/iphone/',
+    iPad: 'https://www.softbank.jp/mobile/ipad/',
     'Apple Watch': 'https://www.softbank.jp/mobile/apple-watch/',
   },
 };
@@ -292,7 +294,7 @@ export async function fetchRakutenMobileOfficialPrice({
   affiliateId = process.env.RAKUTEN_AFFILIATE_ID,
   accessKey = process.env.RAKUTEN_ACCESS_KEY,
 }) {
-  if (!appId) return null;
+  if (!appId || isRakutenApiDisabled()) return null;
 
   // Wi-Fi専用iPadやGPS専用Watch、Macは楽天モバイルのキャリア端末対象外の場合はスキップ可能だが、
   // 楽天モバイル公式楽天市場店ではApple Watch GPSやiPadも扱うため検索を試みる
@@ -304,27 +306,15 @@ export async function fetchRakutenMobileOfficialPrice({
   // 新品端末のため発売時価格の50%を下限に設定（アクセサリーや極端な割引セット誤認防止）
   const minNewPrice = Math.max(Math.round((Number(launchPrice) || 80000) * 0.5), 25000);
 
-  const params = new URLSearchParams({
-    applicationId: appId,
-    shopCode: 'rakutenmobile',
-    format: 'json',
-    formatVersion: '2',
+  const json = await callRakutenIchibaSearch({
+    appId,
+    affiliateId,
+    accessKey,
     keyword,
-    NGKeyword: RAKUTEN_NG_KEYWORD,
-    minPrice: String(minNewPrice),
-    sort: '+itemPrice',
-    availability: '1',
-    hits: '30',
+    shopCode: 'rakutenmobile',
+    minPrice: minNewPrice,
+    hits: 30,
   });
-  if (affiliateId) params.set('affiliateId', affiliateId);
-  if (accessKey) params.set('accessKey', accessKey);
-
-  const endpoint = accessKey ? RAKUTEN_OPENAPI_ENDPOINT : RAKUTEN_API_ENDPOINT;
-  const res = await fetch(`${endpoint}?${params.toString()}`);
-  if (!res.ok) {
-    throw new Error(`Rakuten Mobile API HTTP ${res.status}`);
-  }
-  const json = await res.json();
   const items = json?.Items ?? [];
   if (!Array.isArray(items) || items.length === 0) return null;
 
@@ -435,7 +425,7 @@ async function scrapeCarrierCategoryBlocks(context, carrierId, url) {
     page = await context.newPage();
     const res = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
     if (!res || res.status() >= 400) {
-      console.warn(`[warn] ${carrierId} (${url}): HTTP ${res?.status() ?? 'ERR'} - フォールバックを使用します`);
+      console.log(`[info] ${carrierId} (${url}): HTTP ${res?.status() ?? 'ERR'} - 既存マスターデータを維持します`);
       return [];
     }
     await page.waitForTimeout(2000);
@@ -694,9 +684,10 @@ export async function runFetchLivePrices() {
       }
 
       // 2-C. 楽天モバイル公式 (`shopCode=rakutenmobile`) 新品キャリア価格を取得
-      const rmKey = `${product.name}|${storageTerm}|${sku.connectivity || '-'}`;
+      const normStorageKey = extractStorageToken(storageTerm, product.category) || storageTerm;
+      const rmKey = `${product.name}|${normStorageKey}|${sku.connectivity || '-'}`;
       let rmLive = null;
-      if (appId && product.category !== 'Mac') {
+      if (appId && !isRakutenApiDisabled() && product.category !== 'Mac') {
         if (rakutenMobileQueryCache.has(rmKey)) {
           rmLive = rakutenMobileQueryCache.get(rmKey);
         } else {
@@ -716,7 +707,7 @@ export async function runFetchLivePrices() {
             console.warn(`[warn] 楽天モバイル公式API (${product.name} ${storageTerm}): ${err.message}`);
           }
           rakutenMobileQueryCache.set(rmKey, rmLive);
-          await sleep(API_WAIT_MS);
+          if (!isRakutenApiDisabled()) await sleep(API_WAIT_MS);
         }
       }
       if (rmLive) {
@@ -724,7 +715,7 @@ export async function runFetchLivePrices() {
       }
 
       // 3. 楽天市場 ＆ Yahoo!ショッピング 中古最安値の取得 (1リクエストごとに 1200ms ウェイト)
-      const usedKey = `${product.name}|${storageTerm}|${product.category}`;
+      const usedKey = `${product.name}|${normStorageKey}|${product.category}`;
       let usedPricing = null;
 
       if (usedPriceQueryCache.has(usedKey)) {
@@ -756,7 +747,7 @@ export async function runFetchLivePrices() {
         let yahooOffer = null;
         let unusedOffer = null;
 
-        if (appId) {
+        if (appId && !isRakutenApiDisabled()) {
           try {
             rakutenOffer = await fetchFromRakutenApi({
               productName: product.name,
@@ -771,23 +762,25 @@ export async function runFetchLivePrices() {
           } catch (err) {
             console.warn(`[warn] 楽天市場API 中古 (${product.name} ${storageTerm}): ${err.message}`);
           }
-          await sleep(API_WAIT_MS);
+          if (!isRakutenApiDisabled()) await sleep(API_WAIT_MS);
 
-          try {
-            unusedOffer = await fetchFromRakutenApi({
-              productName: product.name,
-              storage: storageTerm,
-              category: product.category,
-              launchPrice,
-              condition: '未使用',
-              appId,
-              affiliateId,
-              accessKey,
-            });
-          } catch {
-            /* ignore */
+          if (!isRakutenApiDisabled()) {
+            try {
+              unusedOffer = await fetchFromRakutenApi({
+                productName: product.name,
+                storage: storageTerm,
+                category: product.category,
+                launchPrice,
+                condition: '未使用',
+                appId,
+                affiliateId,
+                accessKey,
+              });
+            } catch {
+              /* ignore */
+            }
+            if (!isRakutenApiDisabled()) await sleep(API_WAIT_MS);
           }
-          await sleep(API_WAIT_MS);
         }
 
         if (yahooAppId) {

@@ -13,7 +13,18 @@ import {
   toYahooAffiliateUrl,
 } from './fetch-used-prices.mjs';
 
-const db = JSON.parse(readFileSync('data/appledb-main.json', 'utf8'));
+const APPLEDB_PATH = 'data/appledb-main.json';
+if (!existsSync(APPLEDB_PATH)) {
+  console.log('[info] data/appledb-main.json が存在しないため api.appledb.dev から取得します...');
+  const res = await fetch('https://api.appledb.dev/device/main.json');
+  if (!res.ok) {
+    throw new Error(`Failed to fetch AppleDB main.json: HTTP ${res.status}`);
+  }
+  const text = await res.text();
+  mkdirSync('data', { recursive: true });
+  writeFileSync(APPLEDB_PATH, text);
+}
+const db = JSON.parse(readFileSync(APPLEDB_PATH, 'utf8'));
 const TODAY = new Date().toISOString().slice(0, 10);
 const first = (v) => (Array.isArray(v) ? v[0] : v);
 const addDays = (d, n) => new Date(Date.parse(d + 'T00:00:00Z') + n * 864e5).toISOString().slice(0, 10);
