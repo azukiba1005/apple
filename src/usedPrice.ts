@@ -3,7 +3,7 @@ import type { Category, Product, Sku } from './App';
 /* =====================================================================================
  * 楽天市場API (IchibaItem/Search/20220601) ＆
  * Yahoo!ショッピングAPI (v3: ShoppingWebService/V3/itemSearch)
- * 横断中古最安値・リセールバリュー取得モジュール
+ * 横断中古最安値・リセールバリュー取得モジュール（厳密タイトル検証＆大手ショップ優先版）
  * ===================================================================================== */
 
 export const RAKUTEN_API_ENDPOINT = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601';
@@ -11,10 +11,10 @@ export const RAKUTEN_OPENAPI_ENDPOINT = 'https://openapi.rakuten.co.jp/ichibams/
 export const YAHOO_API_ENDPOINT = 'https://shopping.yahooapis.jp/ShoppingWebService/V3/itemSearch';
 
 export const RAKUTEN_NG_KEYWORD =
-  'ケース フィルム カバー 保護 ガラス 修理 レンタル ジャンク 部品 交換 バッテリー バンド ベルト';
+  'ケース フィルム カバー 保護 ガラス 修理 レンタル ジャンク 部品 交換 バッテリー バンド ベルト 用 対応 互換 AQUOS Galaxy Xperia Pixel OPPO Xiaomi';
 
 export const YAHOO_NEGATIVE_TERMS =
-  '-ケース -フィルム -カバー -ガラス -修理 -レンタル -ジャンク -バッテリー -交換 -バンド -ベルト';
+  '-ケース -フィルム -カバー -ガラス -修理 -レンタル -ジャンク -バッテリー -交換 -バンド -ベルト -AQUOS -Galaxy -Xperia -Pixel -OPPO -Xiaomi -モック -空箱';
 
 export const RAKUTEN_GENRE_IDS: Record<string, string> = {
   iPhone: '560202',
@@ -32,6 +32,32 @@ export const YAHOO_GENRE_CATEGORY_IDS: Record<string, string> = {
   Watch: '49950',
 };
 
+/** 他社スマホ・アクセサリー・ジャンクの完全ブラックリスト */
+export const TITLE_BLACKLIST = [
+  'AQUOS', 'Galaxy', 'Xperia', 'Pixel', 'arrows', 'OPPO', 'Xiaomi', 'Redmi', 'ZenFone', 'HUAWEI',
+  'ケース', 'カバー', 'フィルム', 'ガラス', 'バンド', 'ベルト', 'ストラップ', '充電器', 'ケーブル', 'アダプタ',
+  '用', '対応', '互換', '保護', '修理', '交換', 'バッテリー交換',
+  'ジャンク', '難あり', '訳あり', '画面割れ', '赤ロム', 'モック', '空箱', '箱のみ', 'レンタル', 'ふるさと納税',
+];
+
+const NORMALIZED_BLACKLIST = TITLE_BLACKLIST.map((w) => w.normalize('NFKC').toUpperCase());
+
+/** 信頼できる大手中古ショップキーワード一覧 */
+export const TRUSTED_SHOP_KEYWORDS = [
+  'イオシス', 'じゃんぱら', 'ゲオ', 'GEO', 'ソフマップ', 'リコレ', 'ビックカメラ',
+  'ヤマダ', 'ケーズ', 'ノジマ', 'エディオン', 'カメラのキタムラ', 'ブックオフ', 'BOOKOFF',
+  'ハードオフ', 'セカンドストリート', '2nd STREET', 'にこスマ', 'エコたん', 'PCコンフル',
+  'デジタルコレクション', 'モバックス', 'ムスビー', 'ワールドモバイル', 'アメモバ',
+  '대黒屋', '大黒屋', 'コメ兵', 'KOMEHYO', 'Be-Stock',
+];
+
+const NORMALIZED_TRUSTED_SHOPS = TRUSTED_SHOP_KEYWORDS.map((w) => ({
+  raw: w,
+  norm: w.normalize('NFKC').toUpperCase(),
+}));
+
+const ALL_CAPACITIES = ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB', '2TB'];
+
 export type UsedPlatformId = 'rakuten' | 'yahoo';
 
 export interface UsedPlatformOffer {
@@ -39,6 +65,7 @@ export interface UsedPlatformOffer {
   shopName: string;
   url: string;
   updatedAt: string;
+  isTrustedShop?: boolean;
   itemName?: string;
   source?: 'api' | 'mock';
 }
@@ -57,6 +84,7 @@ export interface UsedItemOffer {
   shopName: string;
   itemName: string;
   itemUrl: string;
+  isTrustedShop?: boolean;
 }
 
 export interface UsedMarketData {
@@ -74,6 +102,179 @@ export interface UsedMarketData {
   /** 'api' = 楽天またはYahoo! APIから実取得, 'mock' = キー未設定時の推定フォールバック */
   source: 'api' | 'mock';
   fetchedAt: string;
+}
+
+/**
+ * ショップ名が信頼できる大手中古ショップに該当するか判定する
+ */
+export function isTrustedShop(shopName: string): boolean {
+  const norm = String(shopName ?? '').normalize('NFKC').toUpperCase();
+  if (!norm) return false;
+  return NORMALIZED_TRUSTED_SHOPS.some((k) => norm.includes(k.norm));
+}
+
+/**
+ * 厳密タイトル検証関数 (`isValidProductTitle`)
+ * 1. NFKC正規化後にブラックリスト語句を完全除外
+ * 2. 別モデル（Pro / Plus / Max / mini / e / Air 等）の誤爆を厳密に防止
+ * 3. ストレージ容量の一致確認と他容量の除外
+ */
+export function isValidProductTitle(
+  title: string,
+  productName: string,
+  storage = '',
+  category = '',
+): boolean {
+  if (!title || !productName) return false;
+  const normTitle = String(title).normalize('NFKC');
+  const upperTitle = normTitle.toUpperCase();
+  const normProd = String(productName).normalize('NFKC').trim();
+  const upperProd = normProd.toUpperCase();
+
+  // [条件3] ブラックリスト文字列が1つでも含まれる場合は無条件で除外
+  for (const word of NORMALIZED_BLACKLIST) {
+    if (upperTitle.includes(word)) return false;
+  }
+
+  // [条件1] 別モデル（上位/下位機種）の誤爆防止
+  if (/^IPHONE/i.test(normProd) || category === 'iPhone') {
+    if (!upperTitle.includes('IPHONE')) return false;
+
+    const seMatch = normProd.match(/^iPhone\s*SE/i);
+    if (seMatch) {
+      if (!/IPHONE\s*SE\b/i.test(upperTitle)) return false;
+      if (/第3世代|3rd/i.test(normProd) && !/第3世代|3世代|3RD|SE3|SE\s*3|2022/i.test(upperTitle)) return false;
+      if (/第2世代|2nd/i.test(normProd) && !/第2世代|2世代|2ND|SE2|SE\s*2|2020/i.test(upperTitle)) return false;
+    } else {
+      const m = normProd.match(/^iPhone\s*(\d+|X[SR]?|X)\b/i);
+      const eModel = normProd.match(/^iPhone\s*(\d+)e\b/i);
+      const modelCode = (eModel ? eModel[1] : m ? m[1] : '').toUpperCase();
+      if (modelCode) {
+        const wantPro = /\bPRO\b/i.test(normProd);
+        const wantMax = /\bMAX\b/i.test(normProd);
+        const wantPlus = /\bPLUS\b/i.test(normProd);
+        const wantMini = /\bMINI\b/i.test(normProd);
+        const wantE = Boolean(eModel) || new RegExp(`^IPHONE\\s*${modelCode}\\s*E\\b`, 'i').test(normProd);
+
+        if (wantE) {
+          const eRe = new RegExp(`IPHONE\\s*${modelCode}\\s*E(?![A-Z0-9])`, 'i');
+          if (!eRe.test(upperTitle)) return false;
+        } else {
+          const baseRe = new RegExp(`IPHONE\\s*${modelCode}(?![0-9A-Z]|\\s*E\\b)`, 'i');
+          if (!baseRe.test(upperTitle)) return false;
+          const afterModelRe = new RegExp(
+            `IPHONE\\s*${modelCode}\\s*(PRO|PLUS|MAX|MINI|E)\\b`,
+            'i',
+          );
+          if (!wantPro && !wantPlus && !wantMax && !wantMini && afterModelRe.test(upperTitle)) {
+            return false;
+          }
+        }
+
+        if (wantPro !== /\bPRO\b/i.test(upperTitle)) return false;
+        if (wantMax !== /\bMAX\b/i.test(upperTitle)) return false;
+        if (wantPlus !== /\bPLUS\b/i.test(upperTitle)) return false;
+        if (wantMini !== /\bMINI\b/i.test(upperTitle)) return false;
+
+        // 別のiPhoneナンバーが併記されているタイトルを除外
+        const otherNums = ['11', '12', '13', '14', '15', '16', '17'].filter((n) => n !== modelCode);
+        for (const on of otherNums) {
+          if (new RegExp(`IPHONE\\s*${on}(?![0-9])`, 'i').test(upperTitle)) return false;
+        }
+      }
+    }
+  } else if (/^IPAD/i.test(normProd) || category === 'iPad') {
+    if (!upperTitle.includes('IPAD')) return false;
+    const wantAir = /\bAIR\b/i.test(normProd);
+    const wantPro = /\bPRO\b/i.test(normProd);
+    const wantMini = /\bMINI\b/i.test(normProd);
+
+    if (wantAir !== /\bAIR\b/i.test(upperTitle)) return false;
+    if (wantPro !== /\bPRO\b/i.test(upperTitle)) return false;
+    if (wantMini !== /\bMINI\b/i.test(upperTitle)) return false;
+
+    const genMatch = normProd.match(/第(\d+)世代|(\d+)(?:st|nd|rd|th)\s+generation/i);
+    if (genMatch) {
+      const genNum = genMatch[1] || genMatch[2];
+      const genRe = new RegExp(`(第\\s*${genNum}\\s*世代|${genNum}\\s*世代|${genNum}TH|第${genNum})`, 'i');
+      if (!genRe.test(upperTitle)) return false;
+    }
+
+    const chipMatch = normProd.match(/\b(M\d+)\b/i);
+    if (chipMatch) {
+      const chip = chipMatch[1].toUpperCase();
+      if (!new RegExp(`\\b${chip}\\b`, 'i').test(upperTitle)) return false;
+    }
+
+    const inchMatch = normProd.match(/(\d+(?:\.\d+)?)\s*(?:インチ|-inch)/i);
+    if (inchMatch) {
+      const inch = inchMatch[1].replace('.', '\\.');
+      if (!new RegExp(`(?<!\\d)${inch}\\s*(?:インチ|INCH|型)?`, 'i').test(upperTitle)) return false;
+    }
+  } else if (/WATCH/i.test(normProd) || category === 'Apple Watch' || category === 'Watch') {
+    if (!upperTitle.includes('WATCH')) return false;
+    const wantUltra = /\bULTRA\b/i.test(normProd);
+    const wantSE = /\bSE\b/i.test(normProd);
+    const seriesMatch = normProd.match(/Series\s*(\d+)/i);
+
+    if (wantUltra !== /\bULTRA\b/i.test(upperTitle)) return false;
+    if (wantSE !== /\bSE\b/i.test(upperTitle)) return false;
+    if (seriesMatch) {
+      const sNum = seriesMatch[1];
+      const sRe = new RegExp(`(SERIES\\s*${sNum}|S${sNum})(?![0-9])`, 'i');
+      if (!sRe.test(upperTitle)) return false;
+    }
+  } else if (/MAC/i.test(normProd) || category === 'Mac') {
+    if (/MACBOOK\s*AIR/i.test(normProd)) {
+      if (!/MACBOOK\s*AIR/i.test(upperTitle) || /MACBOOK\s*PRO/i.test(upperTitle)) return false;
+    } else if (/MACBOOK\s*PRO/i.test(normProd)) {
+      if (!/MACBOOK\s*PRO/i.test(upperTitle) || /MACBOOK\s*AIR/i.test(upperTitle)) return false;
+    } else if (/MAC\s*MINI/i.test(normProd)) {
+      if (!/MAC\s*MINI/i.test(upperTitle)) return false;
+    } else if (/IMAC/i.test(normProd)) {
+      if (!/\bIMAC\b/i.test(upperTitle)) return false;
+    } else if (/MAC\s*STUDIO/i.test(normProd)) {
+      if (!/MAC\s*STUDIO/i.test(upperTitle)) return false;
+    }
+    const chipMatch = normProd.match(/\b(M\d+)\b/i);
+    if (chipMatch) {
+      const chip = chipMatch[1].toUpperCase();
+      if (!new RegExp(`\\b${chip}\\b`, 'i').test(upperTitle)) return false;
+    }
+  } else {
+    if (!upperTitle.includes(upperProd)) return false;
+  }
+
+  // [条件2] ストレージ容量の一致確認（Watch以外の容量指定SKU）
+  const isWatch = /WATCH/i.test(normProd) || category === 'Apple Watch' || category === 'Watch';
+  const storMatch = String(storage ?? '').normalize('NFKC').toUpperCase().match(/\b(\d+)\s*(GB|TB)\b/);
+  if (storMatch && !isWatch) {
+    const targetNum = storMatch[1];
+    const targetUnit = storMatch[2];
+    const targetCap = `${targetNum}${targetUnit}`;
+
+    const targetRe =
+      targetUnit === 'GB'
+        ? new RegExp(`(?<!\\d)${targetNum}\\s*G(?:B)?(?![A-Z0-9])`, 'i')
+        : new RegExp(`(?<!\\d)${targetNum}\\s*T(?:B)?(?![A-Z0-9])`, 'i');
+
+    if (!targetRe.test(upperTitle)) return false;
+
+    const isMac = /MAC/i.test(normProd) || category === 'Mac';
+    for (const cap of ALL_CAPACITIES) {
+      if (cap === targetCap) continue;
+      if (isMac && (cap === '16GB' || cap === '32GB')) continue;
+      const mCap = cap.match(/^(\d+)(GB|TB)$/);
+      if (!mCap) continue;
+      const otherRe =
+        mCap[2] === 'GB'
+          ? new RegExp(`(?<!\\d)${mCap[1]}\\s*G(?:B)?(?![A-Z0-9])`, 'i')
+          : new RegExp(`(?<!\\d)${mCap[1]}\\s*T(?:B)?(?![A-Z0-9])`, 'i');
+      if (otherRe.test(upperTitle)) return false;
+    }
+  }
+
+  return true;
 }
 
 /** カテゴリに応じた楽天ジャンルIDを返す */
@@ -122,25 +323,44 @@ export function calcResaleRate(usedPrice: number | null | undefined, launchPrice
   return Math.round((usedPrice / launchPrice) * 100);
 }
 
+export function cleanSearchProductName(productName: string): string {
+  return String(productName ?? '')
+    .normalize('NFKC')
+    .replace(/\((\d+)(?:st|nd|rd|th)\s+generation\)/i, '第$1世代')
+    .replace(/[()]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function extractStorageToken(storage: string, category = ''): string {
+  if (/watch/i.test(category)) {
+    const mm = String(storage ?? '').match(/\b(\d+mm)\b/i);
+    return mm ? mm[1] : '';
+  }
+  const m = String(storage ?? '').normalize('NFKC').match(/\b(\d+\s*(?:GB|TB))\b/i);
+  return m ? m[1].replace(/\s+/g, '') : '';
+}
+
 /** 楽天検索用キーワード `${製品名} ${容量} 中古` (または `未使用`) を組み立てる */
 export function buildSearchKeyword(
   productName: string,
   storage: string,
   condition: '中古' | '未使用' = '中古',
+  category = '',
 ): string {
-  const cleanName = productName.replace(/\s+/g, ' ').trim();
-  const cleanStorage = storage && storage !== '-' ? storage.trim() : '';
+  const cleanName = cleanSearchProductName(productName);
+  const cleanStorage = extractStorageToken(storage, category);
   return [cleanName, cleanStorage, condition].filter(Boolean).join(' ');
 }
 
-/** Yahoo!ショッピングAPI (v3) 用マイナス検索つきクエリを組み立てる */
-export function buildYahooSearchQuery(productName: string, storage: string): string {
-  const cleanName = productName.replace(/\s+/g, ' ').trim();
-  const cleanStorage = storage && storage !== '-' ? storage.trim() : '';
-  return [cleanName, cleanStorage, YAHOO_NEGATIVE_TERMS].filter(Boolean).join(' ');
+/** Yahoo!ショッピングAPI (v3) 用フレーズ検索＋マイナス検索つきクエリを組み立てる */
+export function buildYahooSearchQuery(productName: string, storage: string, category = ''): string {
+  const cleanName = cleanSearchProductName(productName);
+  const cleanStorage = extractStorageToken(storage, category);
+  return [`"${cleanName}"`, cleanStorage, YAHOO_NEGATIVE_TERMS].filter(Boolean).join(' ');
 }
 
-/** 楽天市場 商品検索API のリクエストパラメータを生成する */
+/** 楽天市場 商品検索API のリクエストパラメータを生成する (hits=20) */
 export function buildRakutenSearchParams(opts: {
   appId: string;
   affiliateId?: string;
@@ -152,7 +372,7 @@ export function buildRakutenSearchParams(opts: {
   condition?: '中古' | '未使用';
 }): URLSearchParams {
   const condition = opts.condition ?? '中古';
-  const keyword = buildSearchKeyword(opts.productName, opts.storage, condition);
+  const keyword = buildSearchKeyword(opts.productName, opts.storage, condition, opts.category);
   const genreId = getRakutenGenreId(opts.category);
   const minPrice = calcMinPrice(opts.launchPrice);
 
@@ -166,14 +386,14 @@ export function buildRakutenSearchParams(opts: {
     minPrice: String(minPrice),
     sort: '+itemPrice',
     availability: '1',
-    hits: '10',
+    hits: '20',
   });
   if (opts.affiliateId) params.set('affiliateId', opts.affiliateId);
   if (opts.accessKey) params.set('accessKey', opts.accessKey);
   return params;
 }
 
-/** Yahoo!ショッピングAPI (v3) のリクエストパラメータを生成する */
+/** Yahoo!ショッピングAPI (v3) のリクエストパラメータを生成する (results=20) */
 export function buildYahooSearchParams(opts: {
   yahooAppId: string;
   productName: string;
@@ -181,7 +401,7 @@ export function buildYahooSearchParams(opts: {
   category: string;
   launchPrice?: number | null;
 }): URLSearchParams {
-  const query = buildYahooSearchQuery(opts.productName, opts.storage);
+  const query = buildYahooSearchQuery(opts.productName, opts.storage, opts.category);
   const genreCategoryId = getYahooGenreCategoryId(opts.category);
   const priceFrom = calcMinPrice(opts.launchPrice);
 
@@ -192,7 +412,7 @@ export function buildYahooSearchParams(opts: {
     genre_category_id: genreCategoryId,
     price_from: String(priceFrom),
     sort: '+price',
-    results: '5',
+    results: '20',
   });
 }
 
@@ -204,14 +424,14 @@ export function buildRakutenWebUrl(opts: {
   launchPrice?: number | null;
   condition?: '中古' | '未使用';
 }): string {
-  const keyword = buildSearchKeyword(opts.productName, opts.storage, opts.condition ?? '中古');
+  const keyword = buildSearchKeyword(opts.productName, opts.storage, opts.condition ?? '中古', opts.category);
   const genreId = getRakutenGenreId(opts.category);
   const minPrice = calcMinPrice(opts.launchPrice);
   const encodedKw = encodeURIComponent(keyword);
   const qs = new URLSearchParams({
     min: String(minPrice),
     nitem: RAKUTEN_NG_KEYWORD,
-    s: '2', // 価格が安い順
+    s: '2',
   });
   return `https://search.rakuten.co.jp/search/mall/${encodedKw}/${genreId}/?${qs.toString()}`;
 }
@@ -223,9 +443,9 @@ export function buildYahooWebUrl(opts: {
   category: string;
   launchPrice?: number | null;
 }): string {
-  const cleanName = opts.productName.replace(/\s+/g, ' ').trim();
-  const cleanStorage = opts.storage && opts.storage !== '-' ? opts.storage.trim() : '';
-  const p = [cleanName, cleanStorage, '中古'].filter(Boolean).join(' ');
+  const cleanName = cleanSearchProductName(opts.productName);
+  const cleanStorage = extractStorageToken(opts.storage, opts.category);
+  const p = [cleanName, cleanStorage, '中古', '-ケース', '-フィルム', '-ジャンク'].filter(Boolean).join(' ');
   const cid = getYahooGenreCategoryId(opts.category);
   const pf = calcMinPrice(opts.launchPrice);
   const qs = new URLSearchParams({
@@ -233,64 +453,86 @@ export function buildYahooWebUrl(opts: {
     cid,
     pf: String(pf),
     used: '1',
-    X: '2', // 価格が安い順
+    X: '2',
   });
   return `https://shopping.yahoo.co.jp/search?${qs.toString()}`;
 }
 
-/** タイトルにジャンク・難あり・訳あり・アクセサリー類が含まれていないか二次チェック */
-const EXCLUDE_TITLE_RE =
-  /ジャンク|難あり|訳あり|訳有|ケース|フィルム|カバー|保護|ガラス|修理|レンタル|部品|交換|バッテリー交換|バンドのみ|ベルトのみ|モックアップ|空箱|箱のみ/;
+/**
+ * 候補リストから「大手ショップ (`isTrustedShop: true`) の最安値」を最優先で採用し、
+ * 大手ショップが0件の場合のみ「一般ショップの最安値（参考価格）」を採用する
+ */
+function selectBestValidatedCandidate(candidates: UsedPlatformOffer[]): UsedPlatformOffer | null {
+  if (!candidates.length) return null;
+  const sorted = [...candidates].sort((a, b) => a.price - b.price);
+  const trusted = sorted.filter((c) => c.isTrustedShop);
+  if (trusted.length > 0) return trusted[0];
+  return sorted[0];
+}
 
-export function pickCheapestRakutenOffer(items: any[], minPrice: number): UsedPlatformOffer | null {
+export function pickCheapestRakutenOffer(
+  items: any[],
+  minPrice: number,
+  productName: string,
+  storage = '',
+  category = '',
+): UsedPlatformOffer | null {
   if (!Array.isArray(items)) return null;
   const today = new Date().toISOString().slice(0, 10);
   const candidates: UsedPlatformOffer[] = [];
-  for (const raw of items) {
+  for (const raw of items.slice(0, 20)) {
     const it = raw?.Item ?? raw;
     if (!it) continue;
     const price = Number(it.itemPrice);
     const title = String(it.itemName ?? '');
+    const shopName = String(it.shopName || '楽天市場ショップ');
     if (!Number.isFinite(price) || price < minPrice) continue;
-    if (EXCLUDE_TITLE_RE.test(title)) continue;
+    if (!isValidProductTitle(title, productName, storage, category)) continue;
     candidates.push({
       price,
-      shopName: String(it.shopName || '楽天市場ショップ'),
+      shopName,
       url: String(it.affiliateUrl || it.itemUrl || ''),
       updatedAt: today,
       itemName: title,
+      isTrustedShop: isTrustedShop(shopName),
       source: 'api',
     });
   }
-  candidates.sort((a, b) => a.price - b.price);
-  return candidates[0] ?? null;
+  return selectBestValidatedCandidate(candidates);
 }
 
 /**
- * Yahoo!ショッピングAPI (v3) の上位5件から
- * 商品名に「ジャンク」「難あり」「訳あり」が含まれない最安の1件を採用する
+ * Yahoo!ショッピングAPI (v3) の上位20件から
+ * 厳密タイトル検証 (`isValidProductTitle`) ＋ 大手ショップ優先 (`isTrustedShop`) で最安の1件を採用する
  */
-export function pickCheapestYahooOffer(hits: any[], minPrice: number): UsedPlatformOffer | null {
+export function pickCheapestYahooOffer(
+  hits: any[],
+  minPrice: number,
+  productName: string,
+  storage = '',
+  category = '',
+): UsedPlatformOffer | null {
   if (!Array.isArray(hits)) return null;
   const today = new Date().toISOString().slice(0, 10);
   const candidates: UsedPlatformOffer[] = [];
-  for (const hit of hits.slice(0, 5)) {
+  for (const hit of hits.slice(0, 20)) {
     if (!hit) continue;
     const price = Number(hit.price);
     const title = String(hit.name ?? '');
+    const shopName = String(hit.seller?.name || 'Yahoo!ショッピング店');
     if (!Number.isFinite(price) || price < minPrice) continue;
-    if (EXCLUDE_TITLE_RE.test(title)) continue;
+    if (!isValidProductTitle(title, productName, storage, category)) continue;
     candidates.push({
       price,
-      shopName: String(hit.seller?.name || 'Yahoo!ショッピング店'),
+      shopName,
       url: String(hit.url || ''),
       updatedAt: today,
       itemName: title,
+      isTrustedShop: isTrustedShop(shopName),
       source: 'api',
     });
   }
-  candidates.sort((a, b) => a.price - b.price);
-  return candidates[0] ?? null;
+  return selectBestValidatedCandidate(candidates);
 }
 
 /** 環境変数から RAKUTEN_APP_ID / YAHOO_APP_ID を取得する (Node / Vite 両対応) */
@@ -335,7 +577,7 @@ const MOCK_YAHOO_SHOPS = [
   'イオシス Yahoo!店',
   'ゲオオンラインストア Yahoo!店',
   'ソフマップ Yahoo!店',
-  'スマホ市場 Yahoo!店',
+  'カメラのキタムラ Yahoo!店',
 ];
 
 function hashCode(str: string): number {
@@ -354,18 +596,30 @@ export function buildUsedPricing(
 ): UsedPricing {
   const rIsApi = rakutenOffer?.source === 'api';
   const yIsApi = yahooOffer?.source === 'api';
+  const rTrusted = Boolean(rakutenOffer?.isTrustedShop);
+  const yTrusted = Boolean(yahooOffer?.isTrustedShop);
 
   let lowestPlatform: UsedPlatformId = 'rakuten';
   let lowestPrice = rakutenOffer?.price ?? yahooOffer?.price ?? 0;
 
-  if (rIsApi && yIsApi && rakutenOffer && yahooOffer) {
-    if (yahooOffer.price < rakutenOffer.price) {
+  const pickCheaper = (r: UsedPlatformOffer, y: UsedPlatformOffer) => {
+    if (rTrusted && !yTrusted) {
+      lowestPlatform = 'rakuten';
+      lowestPrice = r.price;
+    } else if (!rTrusted && yTrusted) {
       lowestPlatform = 'yahoo';
-      lowestPrice = yahooOffer.price;
+      lowestPrice = y.price;
+    } else if (y.price < r.price) {
+      lowestPlatform = 'yahoo';
+      lowestPrice = y.price;
     } else {
       lowestPlatform = 'rakuten';
-      lowestPrice = rakutenOffer.price;
+      lowestPrice = r.price;
     }
+  };
+
+  if (rIsApi && yIsApi && rakutenOffer && yahooOffer) {
+    pickCheaper(rakutenOffer, yahooOffer);
   } else if (rIsApi && rakutenOffer) {
     lowestPlatform = 'rakuten';
     lowestPrice = rakutenOffer.price;
@@ -373,13 +627,7 @@ export function buildUsedPricing(
     lowestPlatform = 'yahoo';
     lowestPrice = yahooOffer.price;
   } else if (rakutenOffer && yahooOffer) {
-    if (yahooOffer.price < rakutenOffer.price) {
-      lowestPlatform = 'yahoo';
-      lowestPrice = yahooOffer.price;
-    } else {
-      lowestPlatform = 'rakuten';
-      lowestPrice = rakutenOffer.price;
-    }
+    pickCheaper(rakutenOffer, yahooOffer);
   } else if (yahooOffer) {
     lowestPlatform = 'yahoo';
     lowestPrice = yahooOffer.price;
@@ -389,14 +637,17 @@ export function buildUsedPricing(
     lowestPrice,
     lowestPlatform,
     resaleValuePercent: calcResaleRate(lowestPrice, launchPrice),
-    rakuten: rakutenOffer,
-    yahoo: yahooOffer,
+    rakuten: rakutenOffer
+      ? { ...rakutenOffer, isTrustedShop: rakutenOffer.isTrustedShop ?? isTrustedShop(rakutenOffer.shopName) }
+      : null,
+    yahoo: yahooOffer
+      ? { ...yahooOffer, isTrustedShop: yahooOffer.isTrustedShop ?? isTrustedShop(yahooOffer.shopName) }
+      : null,
   };
 }
 
 /**
  * APIキー未設定時またはオフライン時の推定中古・未使用品最安値ジェネレータ
- * 楽天市場・Yahoo!ショッピング双方の相場と横断最安値を算出する
  */
 export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketData {
   const launchPrice = getLaunchApplePrice(product, sku);
@@ -408,12 +659,25 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
   const minPrice = calcMinPrice(launchPrice);
   const genreId = getRakutenGenreId(product.category);
   const storageLabel = sku.storage || sku.label;
-  const keyword = buildSearchKeyword(product.name, storageLabel, '中古');
+  const keyword = buildSearchKeyword(product.name, storageLabel, '中古', product.category);
   const today = new Date().toISOString().slice(0, 10);
 
-  // SKU にビルド済みの usedPricing がある場合はそれを初期値として活用
   if (sku.usedPricing && sku.usedPricing.lowestPrice > 0) {
-    const up = sku.usedPricing;
+    const up: UsedPricing = {
+      ...sku.usedPricing,
+      rakuten: sku.usedPricing.rakuten
+        ? {
+            ...sku.usedPricing.rakuten,
+            isTrustedShop: sku.usedPricing.rakuten.isTrustedShop ?? isTrustedShop(sku.usedPricing.rakuten.shopName),
+          }
+        : null,
+      yahoo: sku.usedPricing.yahoo
+        ? {
+            ...sku.usedPricing.yahoo,
+            isTrustedShop: sku.usedPricing.yahoo.isTrustedShop ?? isTrustedShop(sku.usedPricing.yahoo.shopName),
+          }
+        : null,
+    };
     const best = up.lowestPlatform === 'yahoo' ? up.yahoo ?? up.rakuten : up.rakuten ?? up.yahoo;
     const unusedPrice = Math.min(
       Math.round((latestPrice * 0.96) / 1000) * 1000 - 200,
@@ -430,7 +694,7 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
       used: {
         price: up.lowestPrice,
         shopName: best?.shopName ?? 'イオシス楽天市場店',
-        itemName: best?.itemName ?? `【中古】${product.name} ${storageLabel}`,
+        itemName: best?.itemName ?? `${product.name} ${storageLabel}`,
         itemUrl:
           best?.url ??
           buildRakutenWebUrl({
@@ -440,11 +704,12 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
             launchPrice,
             condition: '中古',
           }),
+        isTrustedShop: best?.isTrustedShop ?? true,
       },
       unused: {
         price: Math.max(up.lowestPrice + 3000, unusedPrice),
         shopName: up.rakuten?.shopName ?? 'イオシス楽天市場店',
-        itemName: `【未使用品】${product.name} ${storageLabel} 本体`,
+        itemName: `${product.name} ${storageLabel} 未使用品 本体`,
         itemUrl: buildRakutenWebUrl({
           productName: product.name,
           storage: storageLabel,
@@ -452,6 +717,7 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
           launchPrice,
           condition: '未使用',
         }),
+        isTrustedShop: true,
       },
       resaleRate: up.resaleValuePercent ?? calcResaleRate(up.lowestPrice, launchPrice),
       source: up.rakuten?.source === 'api' || up.yahoo?.source === 'api' ? 'api' : 'mock',
@@ -499,7 +765,8 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
       condition: '中古',
     }),
     updatedAt: today,
-    itemName: `【中古】${product.name} ${storageLabel} SIMフリー 本体`,
+    itemName: `${product.name} ${storageLabel} SIMフリー 本体`,
+    isTrustedShop: true,
     source: 'mock',
   };
 
@@ -513,7 +780,8 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
       launchPrice,
     }),
     updatedAt: today,
-    itemName: `【中古】${product.name} ${storageLabel} SIMフリー 本体`,
+    itemName: `${product.name} ${storageLabel} SIMフリー 本体`,
+    isTrustedShop: true,
     source: 'mock',
   };
 
@@ -533,11 +801,12 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
       shopName: bestOffer.shopName,
       itemName: bestOffer.itemName ?? '',
       itemUrl: bestOffer.url,
+      isTrustedShop: true,
     },
     unused: {
       price: unusedPrice,
       shopName: MOCK_RAKUTEN_SHOPS[(seed + 1) % MOCK_RAKUTEN_SHOPS.length],
-      itemName: `【未使用品】${product.name} ${storageLabel} 本体 開封済み未使用`,
+      itemName: `${product.name} ${storageLabel} 未使用品 本体`,
       itemUrl: buildRakutenWebUrl({
         productName: product.name,
         storage: storageLabel,
@@ -545,6 +814,7 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
         launchPrice,
         condition: '未使用',
       }),
+      isTrustedShop: true,
     },
     resaleRate: usedPricing.resaleValuePercent,
     source: 'mock',
@@ -554,9 +824,6 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
 
 /**
  * 楽天市場API ＆ Yahoo!ショッピングAPI (v3) を呼び出して横断最安値を取得する関数
- * 1. サーバプロキシ `/api/used-price` を試行
- * 2. 直接API呼び出し (`RAKUTEN_APP_ID` / `YAHOO_APP_ID` 設定時、片方のみでも動作)
- * 3. 未設定・通信エラー時は推定値フォールバック (`estimateUsedMarketData`) を返す
  */
 const memoryCache = new Map<string, UsedMarketData>();
 
@@ -574,7 +841,7 @@ export async function fetchUsedMarketPrice(
   const minPrice = calcMinPrice(launchPrice);
   const genreId = getRakutenGenreId(product.category);
   const storageTerm = sku.storage || sku.label;
-  const keyword = buildSearchKeyword(product.name, storageTerm, '中古');
+  const keyword = buildSearchKeyword(product.name, storageTerm, '中古', product.category);
   const appId = options?.appId?.trim() || resolveRakutenAppId();
   const yahooAppId = options?.yahooAppId?.trim() || resolveYahooAppId();
   const fallback = estimateUsedMarketData(product, sku);
@@ -593,14 +860,21 @@ export async function fetchUsedMarketPrice(
       if (res.ok) {
         const data = await res.json();
         if (data && data.usedPricing && typeof data.usedPricing.lowestPrice === 'number') {
-          const up: UsedPricing = {
-            lowestPrice: data.usedPricing.lowestPrice,
-            lowestPlatform: data.usedPricing.lowestPlatform === 'yahoo' ? 'yahoo' : 'rakuten',
-            resaleValuePercent:
-              data.usedPricing.resaleValuePercent ?? calcResaleRate(data.usedPricing.lowestPrice, launchPrice),
-            rakuten: data.usedPricing.rakuten ?? fallback.usedPricing.rakuten,
-            yahoo: data.usedPricing.yahoo ?? fallback.usedPricing.yahoo,
-          };
+          const rOffer = data.usedPricing.rakuten
+            ? {
+                ...data.usedPricing.rakuten,
+                isTrustedShop:
+                  data.usedPricing.rakuten.isTrustedShop ?? isTrustedShop(data.usedPricing.rakuten.shopName),
+              }
+            : fallback.usedPricing.rakuten;
+          const yOffer = data.usedPricing.yahoo
+            ? {
+                ...data.usedPricing.yahoo,
+                isTrustedShop:
+                  data.usedPricing.yahoo.isTrustedShop ?? isTrustedShop(data.usedPricing.yahoo.shopName),
+              }
+            : fallback.usedPricing.yahoo;
+          const up = buildUsedPricing(rOffer, yOffer, launchPrice);
           const best = up.lowestPlatform === 'yahoo' ? up.yahoo ?? up.rakuten! : up.rakuten ?? up.yahoo!;
           const result: UsedMarketData = {
             productId: product.id,
@@ -615,6 +889,7 @@ export async function fetchUsedMarketPrice(
               shopName: best.shopName,
               itemName: best.itemName ?? '',
               itemUrl: best.url,
+              isTrustedShop: Boolean(best.isTrustedShop),
             },
             unused: data.unused ?? fallback.unused,
             resaleRate: up.resaleValuePercent,
@@ -630,7 +905,7 @@ export async function fetchUsedMarketPrice(
     }
   }
 
-  // 2) RAKUTEN_APP_ID または YAHOO_APP_ID が設定されている場合（片方のみでも動作）
+  // 2) RAKUTEN_APP_ID または YAHOO_APP_ID が設定されている場合
   if (appId || yahooAppId) {
     let rakutenOffer: UsedPlatformOffer | null = null;
     let yahooOffer: UsedPlatformOffer | null = null;
@@ -658,7 +933,13 @@ export async function fetchUsedMarketPrice(
               const usedRes = await fetch(`${rakutenEndpoint}?${usedParams.toString()}`);
               if (usedRes.ok) {
                 const usedJson = await usedRes.json();
-                rakutenOffer = pickCheapestRakutenOffer(usedJson?.Items ?? [], minPrice);
+                rakutenOffer = pickCheapestRakutenOffer(
+                  usedJson?.Items ?? [],
+                  minPrice,
+                  product.name,
+                  storageTerm,
+                  product.category,
+                );
               }
             } catch {
               /* ignore */
@@ -677,13 +958,20 @@ export async function fetchUsedMarketPrice(
               const unusedRes = await fetch(`${rakutenEndpoint}?${unusedParams.toString()}`);
               if (unusedRes.ok) {
                 const unusedJson = await unusedRes.json();
-                const u = pickCheapestRakutenOffer(unusedJson?.Items ?? [], minPrice);
+                const u = pickCheapestRakutenOffer(
+                  unusedJson?.Items ?? [],
+                  minPrice,
+                  product.name,
+                  storageTerm,
+                  product.category,
+                );
                 if (u) {
                   unusedOffer = {
                     price: u.price,
                     shopName: u.shopName,
                     itemName: u.itemName ?? '',
                     itemUrl: u.url,
+                    isTrustedShop: Boolean(u.isTrustedShop),
                   };
                 }
               }
@@ -705,7 +993,13 @@ export async function fetchUsedMarketPrice(
               const yRes = await fetch(`${YAHOO_API_ENDPOINT}?${yParams.toString()}`);
               if (yRes.ok) {
                 const yJson = await yRes.json();
-                yahooOffer = pickCheapestYahooOffer(yJson?.hits ?? [], minPrice);
+                yahooOffer = pickCheapestYahooOffer(
+                  yJson?.hits ?? [],
+                  minPrice,
+                  product.name,
+                  storageTerm,
+                  product.category,
+                );
               }
             } catch {
               /* ignore */
@@ -732,6 +1026,7 @@ export async function fetchUsedMarketPrice(
           shopName: best.shopName,
           itemName: best.itemName ?? '',
           itemUrl: best.url,
+          isTrustedShop: Boolean(best.isTrustedShop),
         },
         unused: unusedOffer ?? fallback.unused,
         resaleRate: usedPricing.resaleValuePercent,

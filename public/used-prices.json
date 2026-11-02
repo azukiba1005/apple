@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T07:47:23.101Z",
+  "generatedAt": "2026-11-02T08:00:50.744Z",
   "items": {
     "iphone-13:128GB": {
       "keyword": "iPhone 13 128GB 中古",
@@ -13,43 +13,48 @@
         "rakuten": {
           "price": 38800,
           "shopName": "じゃんぱら楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPhone 13 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 13 128GB SIMフリー 本体",
           "source": "mock"
         },
         "yahoo": {
           "price": 39800,
           "shopName": "イオシス Yahoo!店",
-          "url": "https://shopping.yahoo.co.jp/search?p=iPhone+13+128GB+%E4%B8%AD%E5%8F%A4&cid=38338&pf=14820&used=1&X=2",
+          "url": "https://shopping.yahoo.co.jp/search?p=iPhone+13+128GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38338&pf=14820&used=1&X=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPhone 13 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 13 128GB SIMフリー 本体",
           "source": "mock"
         },
         "unused": {
           "price": 43800,
           "shopName": "ゲオモバイル楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【未使用品】iPhone 13 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 13 128GB 未使用品 本体",
           "source": "mock"
         }
       },
       "used": {
         "price": 38800,
         "shopName": "じゃんぱら楽天市場店",
-        "itemName": "【中古】iPhone 13 128GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "iPhone 13 128GB SIMフリー 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "unused": {
         "price": 43800,
         "shopName": "ゲオモバイル楽天市場店",
-        "itemName": "【未使用品】iPhone 13 128GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "iPhone 13 128GB 未使用品 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "resaleRate": 39,
       "source": "mock",
-      "fetchedAt": "2026-11-02T07:47:23.069Z"
+      "fetchedAt": "2026-11-02T08:00:50.712Z"
     },
     "iphone-14:128GB": {
       "keyword": "iPhone 14 128GB 中古",
@@ -63,43 +68,48 @@
         "rakuten": {
           "price": 56800,
           "shopName": "にこスマ楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2014%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=17970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2014%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=17970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPhone 14 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 14 128GB SIMフリー 本体",
           "source": "mock"
         },
         "yahoo": {
           "price": 55800,
-          "shopName": "スマホ市場 Yahoo!店",
-          "url": "https://shopping.yahoo.co.jp/search?p=iPhone+14+128GB+%E4%B8%AD%E5%8F%A4&cid=38338&pf=17970&used=1&X=2",
+          "shopName": "カメラのキタムラ Yahoo!店",
+          "url": "https://shopping.yahoo.co.jp/search?p=iPhone+14+128GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38338&pf=17970&used=1&X=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPhone 14 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 14 128GB SIMフリー 本体",
           "source": "mock"
         },
         "unused": {
           "price": 64800,
           "shopName": "イオシス楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2014%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=17970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2014%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=17970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【未使用品】iPhone 14 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 14 128GB 未使用品 本体",
           "source": "mock"
         }
       },
       "used": {
         "price": 55800,
-        "shopName": "スマホ市場 Yahoo!店",
-        "itemName": "【中古】iPhone 14 128GB 本体",
-        "itemUrl": "https://shopping.yahoo.co.jp/search?p=iPhone+14+128GB+%E4%B8%AD%E5%8F%A4&cid=38338&pf=17970&used=1&X=2"
+        "shopName": "カメラのキタムラ Yahoo!店",
+        "itemName": "iPhone 14 128GB SIMフリー 本体",
+        "itemUrl": "https://shopping.yahoo.co.jp/search?p=iPhone+14+128GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38338&pf=17970&used=1&X=2",
+        "isTrustedShop": true
       },
       "unused": {
         "price": 64800,
         "shopName": "イオシス楽天市場店",
-        "itemName": "【未使用品】iPhone 14 128GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2014%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=17970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "iPhone 14 128GB 未使用品 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2014%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=17970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "resaleRate": 47,
       "source": "mock",
-      "fetchedAt": "2026-11-02T07:47:23.100Z"
+      "fetchedAt": "2026-11-02T08:00:50.743Z"
     },
     "iphone-15:128GB": {
       "keyword": "iPhone 15 128GB 中古",
@@ -113,43 +123,48 @@
         "rakuten": {
           "price": 67800,
           "shopName": "ソフマップ楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPhone 15 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 15 128GB SIMフリー 本体",
           "source": "mock"
         },
         "yahoo": {
           "price": 68800,
           "shopName": "ソフマップ Yahoo!店",
-          "url": "https://shopping.yahoo.co.jp/search?p=iPhone+15+128GB+%E4%B8%AD%E5%8F%A4&cid=38338&pf=18720&used=1&X=2",
+          "url": "https://shopping.yahoo.co.jp/search?p=iPhone+15+128GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38338&pf=18720&used=1&X=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPhone 15 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 15 128GB SIMフリー 本体",
           "source": "mock"
         },
         "unused": {
           "price": 76800,
           "shopName": "にこスマ楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【未使用品】iPhone 15 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 15 128GB 未使用品 本体",
           "source": "mock"
         }
       },
       "used": {
         "price": 67800,
         "shopName": "ソフマップ楽天市場店",
-        "itemName": "【中古】iPhone 15 128GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "iPhone 15 128GB SIMフリー 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "unused": {
         "price": 76800,
         "shopName": "にこスマ楽天市場店",
-        "itemName": "【未使用品】iPhone 15 128GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "iPhone 15 128GB 未使用品 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "resaleRate": 54,
       "source": "mock",
-      "fetchedAt": "2026-11-02T07:47:23.100Z"
+      "fetchedAt": "2026-11-02T08:00:50.743Z"
     },
     "iphone-16:128GB": {
       "keyword": "iPhone 16 128GB 中古",
@@ -163,46 +178,51 @@
         "rakuten": {
           "price": 76800,
           "shopName": "ゲオモバイル楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2016%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2016%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPhone 16 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 16 128GB SIMフリー 本体",
           "source": "mock"
         },
         "yahoo": {
           "price": 75800,
           "shopName": "ゲオオンラインストア Yahoo!店",
-          "url": "https://shopping.yahoo.co.jp/search?p=iPhone+16+128GB+%E4%B8%AD%E5%8F%A4&cid=38338&pf=18720&used=1&X=2",
+          "url": "https://shopping.yahoo.co.jp/search?p=iPhone+16+128GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38338&pf=18720&used=1&X=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPhone 16 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 16 128GB SIMフリー 本体",
           "source": "mock"
         },
         "unused": {
           "price": 87800,
           "shopName": "ソフマップ楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2016%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPhone%2016%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【未使用品】iPhone 16 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPhone 16 128GB 未使用品 本体",
           "source": "mock"
         }
       },
       "used": {
         "price": 75800,
         "shopName": "ゲオオンラインストア Yahoo!店",
-        "itemName": "【中古】iPhone 16 128GB 本体",
-        "itemUrl": "https://shopping.yahoo.co.jp/search?p=iPhone+16+128GB+%E4%B8%AD%E5%8F%A4&cid=38338&pf=18720&used=1&X=2"
+        "itemName": "iPhone 16 128GB SIMフリー 本体",
+        "itemUrl": "https://shopping.yahoo.co.jp/search?p=iPhone+16+128GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38338&pf=18720&used=1&X=2",
+        "isTrustedShop": true
       },
       "unused": {
         "price": 87800,
         "shopName": "ソフマップ楽天市場店",
-        "itemName": "【未使用品】iPhone 16 128GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2016%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "iPhone 16 128GB 未使用品 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2016%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "resaleRate": 61,
       "source": "mock",
-      "fetchedAt": "2026-11-02T07:47:23.100Z"
+      "fetchedAt": "2026-11-02T08:00:50.744Z"
     },
     "ipad-10:64GB": {
-      "keyword": "iPad (第10世代) 64GB 中古",
+      "keyword": "iPad 第10世代 64GB 中古",
       "genreId": "560029",
       "minPrice": 10320,
       "launchPrice": 68800,
@@ -213,46 +233,51 @@
         "rakuten": {
           "price": 29800,
           "shopName": "じゃんぱら楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPad%20(%E7%AC%AC10%E4%B8%96%E4%BB%A3)%2064GB%20%E4%B8%AD%E5%8F%A4/560029/?min=10320&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPad%20%E7%AC%AC10%E4%B8%96%E4%BB%A3%2064GB%20%E4%B8%AD%E5%8F%A4/560029/?min=10320&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPad (第10世代) 64GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPad (第10世代) 64GB SIMフリー 本体",
           "source": "mock"
         },
         "yahoo": {
           "price": 28800,
           "shopName": "イオシス Yahoo!店",
-          "url": "https://shopping.yahoo.co.jp/search?p=iPad+%28%E7%AC%AC10%E4%B8%96%E4%BB%A3%29+64GB+%E4%B8%AD%E5%8F%A4&cid=38340&pf=10320&used=1&X=2",
+          "url": "https://shopping.yahoo.co.jp/search?p=iPad+%E7%AC%AC10%E4%B8%96%E4%BB%A3+64GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38340&pf=10320&used=1&X=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPad (第10世代) 64GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPad (第10世代) 64GB SIMフリー 本体",
           "source": "mock"
         },
         "unused": {
           "price": 33800,
           "shopName": "ゲオモバイル楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPad%20(%E7%AC%AC10%E4%B8%96%E4%BB%A3)%2064GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=10320&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPad%20%E7%AC%AC10%E4%B8%96%E4%BB%A3%2064GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=10320&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【未使用品】iPad (第10世代) 64GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPad (第10世代) 64GB 未使用品 本体",
           "source": "mock"
         }
       },
       "used": {
         "price": 28800,
         "shopName": "イオシス Yahoo!店",
-        "itemName": "【中古】iPad (第10世代) 64GB 本体",
-        "itemUrl": "https://shopping.yahoo.co.jp/search?p=iPad+%28%E7%AC%AC10%E4%B8%96%E4%BB%A3%29+64GB+%E4%B8%AD%E5%8F%A4&cid=38340&pf=10320&used=1&X=2"
+        "itemName": "iPad (第10世代) 64GB SIMフリー 本体",
+        "itemUrl": "https://shopping.yahoo.co.jp/search?p=iPad+%E7%AC%AC10%E4%B8%96%E4%BB%A3+64GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38340&pf=10320&used=1&X=2",
+        "isTrustedShop": true
       },
       "unused": {
         "price": 33800,
         "shopName": "ゲオモバイル楽天市場店",
-        "itemName": "【未使用品】iPad (第10世代) 64GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPad%20(%E7%AC%AC10%E4%B8%96%E4%BB%A3)%2064GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=10320&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "iPad (第10世代) 64GB 未使用品 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPad%20%E7%AC%AC10%E4%B8%96%E4%BB%A3%2064GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=10320&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "resaleRate": 42,
       "source": "mock",
-      "fetchedAt": "2026-11-02T07:47:23.100Z"
+      "fetchedAt": "2026-11-02T08:00:50.744Z"
     },
     "ipad-air-11-m2:128GB": {
-      "keyword": "iPad Air 11インチ (M2) 128GB 中古",
+      "keyword": "iPad Air 11インチ M2 128GB 中古",
       "genreId": "560029",
       "minPrice": 14820,
       "launchPrice": 98800,
@@ -263,96 +288,106 @@
         "rakuten": {
           "price": 54800,
           "shopName": "にこスマ楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPad%20Air%2011%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20128GB%20%E4%B8%AD%E5%8F%A4/560029/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPad%20Air%2011%E3%82%A4%E3%83%B3%E3%83%81%20M2%20128GB%20%E4%B8%AD%E5%8F%A4/560029/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPad Air 11インチ (M2) 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPad Air 11インチ (M2) 128GB SIMフリー 本体",
           "source": "mock"
         },
         "yahoo": {
           "price": 53800,
-          "shopName": "スマホ市場 Yahoo!店",
-          "url": "https://shopping.yahoo.co.jp/search?p=iPad+Air+11%E3%82%A4%E3%83%B3%E3%83%81+%28M2%29+128GB+%E4%B8%AD%E5%8F%A4&cid=38340&pf=14820&used=1&X=2",
+          "shopName": "カメラのキタムラ Yahoo!店",
+          "url": "https://shopping.yahoo.co.jp/search?p=iPad+Air+11%E3%82%A4%E3%83%B3%E3%83%81+M2+128GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38340&pf=14820&used=1&X=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】iPad Air 11インチ (M2) 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPad Air 11インチ (M2) 128GB SIMフリー 本体",
           "source": "mock"
         },
         "unused": {
           "price": 61800,
           "shopName": "イオシス楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/iPad%20Air%2011%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/iPad%20Air%2011%E3%82%A4%E3%83%B3%E3%83%81%20M2%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【未使用品】iPad Air 11インチ (M2) 128GB 本体",
+          "isTrustedShop": true,
+          "itemName": "iPad Air 11インチ (M2) 128GB 未使用品 本体",
           "source": "mock"
         }
       },
       "used": {
         "price": 53800,
-        "shopName": "スマホ市場 Yahoo!店",
-        "itemName": "【中古】iPad Air 11インチ (M2) 128GB 本体",
-        "itemUrl": "https://shopping.yahoo.co.jp/search?p=iPad+Air+11%E3%82%A4%E3%83%B3%E3%83%81+%28M2%29+128GB+%E4%B8%AD%E5%8F%A4&cid=38340&pf=14820&used=1&X=2"
+        "shopName": "カメラのキタムラ Yahoo!店",
+        "itemName": "iPad Air 11インチ (M2) 128GB SIMフリー 本体",
+        "itemUrl": "https://shopping.yahoo.co.jp/search?p=iPad+Air+11%E3%82%A4%E3%83%B3%E3%83%81+M2+128GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=38340&pf=14820&used=1&X=2",
+        "isTrustedShop": true
       },
       "unused": {
         "price": 61800,
         "shopName": "イオシス楽天市場店",
-        "itemName": "【未使用品】iPad Air 11インチ (M2) 128GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPad%20Air%2011%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "iPad Air 11インチ (M2) 128GB 未使用品 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPad%20Air%2011%E3%82%A4%E3%83%B3%E3%83%81%20M2%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "resaleRate": 54,
       "source": "mock",
-      "fetchedAt": "2026-11-02T07:47:23.100Z"
+      "fetchedAt": "2026-11-02T08:00:50.744Z"
     },
-    "watch-s10:64GB": {
-      "keyword": "Apple Watch Series 10 64GB 中古",
+    "watch-s10:42mm GPS": {
+      "keyword": "Apple Watch Series 10 42mm 中古",
       "genreId": "564500",
       "minPrice": 8970,
       "launchPrice": 59800,
       "usedPricing": {
-        "lowestPrice": 26800,
-        "lowestPlatform": "yahoo",
-        "resaleValuePercent": 45,
+        "lowestPrice": 30800,
+        "lowestPlatform": "rakuten",
+        "resaleValuePercent": 52,
         "rakuten": {
-          "price": 27800,
-          "shopName": "じゃんぱら楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2064GB%20%E4%B8%AD%E5%8F%A4/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "price": 30800,
+          "shopName": "にこスマ楽天市場店",
+          "url": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2042mm%20%E4%B8%AD%E5%8F%A4/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】Apple Watch Series 10 64GB 本体",
+          "isTrustedShop": true,
+          "itemName": "Apple Watch Series 10 42mm GPS SIMフリー 本体",
           "source": "mock"
         },
         "yahoo": {
-          "price": 26800,
-          "shopName": "イオシス Yahoo!店",
-          "url": "https://shopping.yahoo.co.jp/search?p=Apple+Watch+Series+10+64GB+%E4%B8%AD%E5%8F%A4&cid=49950&pf=8970&used=1&X=2",
+          "price": 31800,
+          "shopName": "カメラのキタムラ Yahoo!店",
+          "url": "https://shopping.yahoo.co.jp/search?p=Apple+Watch+Series+10+42mm+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=49950&pf=8970&used=1&X=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】Apple Watch Series 10 64GB 本体",
+          "isTrustedShop": true,
+          "itemName": "Apple Watch Series 10 42mm GPS SIMフリー 本体",
           "source": "mock"
         },
         "unused": {
-          "price": 31800,
-          "shopName": "ゲオモバイル楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2064GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "price": 34800,
+          "shopName": "イオシス楽天市場店",
+          "url": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2042mm%20%E6%9C%AA%E4%BD%BF%E7%94%A8/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【未使用品】Apple Watch Series 10 64GB 本体",
+          "isTrustedShop": true,
+          "itemName": "Apple Watch Series 10 42mm GPS 未使用品 本体",
           "source": "mock"
         }
       },
       "used": {
-        "price": 26800,
-        "shopName": "イオシス Yahoo!店",
-        "itemName": "【中古】Apple Watch Series 10 64GB 本体",
-        "itemUrl": "https://shopping.yahoo.co.jp/search?p=Apple+Watch+Series+10+64GB+%E4%B8%AD%E5%8F%A4&cid=49950&pf=8970&used=1&X=2"
+        "price": 30800,
+        "shopName": "にこスマ楽天市場店",
+        "itemName": "Apple Watch Series 10 42mm GPS SIMフリー 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2042mm%20%E4%B8%AD%E5%8F%A4/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "unused": {
-        "price": 31800,
-        "shopName": "ゲオモバイル楽天市場店",
-        "itemName": "【未使用品】Apple Watch Series 10 64GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2064GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "price": 34800,
+        "shopName": "イオシス楽天市場店",
+        "itemName": "Apple Watch Series 10 42mm GPS 未使用品 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2042mm%20%E6%9C%AA%E4%BD%BF%E7%94%A8/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
-      "resaleRate": 45,
+      "resaleRate": 52,
       "source": "mock",
-      "fetchedAt": "2026-11-02T07:47:23.100Z"
+      "fetchedAt": "2026-11-02T08:00:50.744Z"
     },
     "mba-13-m2:256GB": {
-      "keyword": "MacBook Air 13インチ (M2) 256GB 中古",
+      "keyword": "MacBook Air 13インチ M2 256GB 中古",
       "genreId": "100040",
       "minPrice": 24720,
       "launchPrice": 164800,
@@ -363,43 +398,48 @@
         "rakuten": {
           "price": 64800,
           "shopName": "ゲオモバイル楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/MacBook%20Air%2013%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20256GB%20%E4%B8%AD%E5%8F%A4/100040/?min=24720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/MacBook%20Air%2013%E3%82%A4%E3%83%B3%E3%83%81%20M2%20256GB%20%E4%B8%AD%E5%8F%A4/100040/?min=24720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】MacBook Air 13インチ (M2) 256GB 本体",
+          "isTrustedShop": true,
+          "itemName": "MacBook Air 13インチ (M2) 256GB SIMフリー 本体",
           "source": "mock"
         },
         "yahoo": {
           "price": 63800,
           "shopName": "ゲオオンラインストア Yahoo!店",
-          "url": "https://shopping.yahoo.co.jp/search?p=MacBook+Air+13%E3%82%A4%E3%83%B3%E3%83%81+%28M2%29+256GB+%E4%B8%AD%E5%8F%A4&cid=2514&pf=24720&used=1&X=2",
+          "url": "https://shopping.yahoo.co.jp/search?p=MacBook+Air+13%E3%82%A4%E3%83%B3%E3%83%81+M2+256GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=2514&pf=24720&used=1&X=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【中古】MacBook Air 13インチ (M2) 256GB 本体",
+          "isTrustedShop": true,
+          "itemName": "MacBook Air 13インチ (M2) 256GB SIMフリー 本体",
           "source": "mock"
         },
         "unused": {
           "price": 73800,
           "shopName": "ソフマップ楽天市場店",
-          "url": "https://search.rakuten.co.jp/search/mall/MacBook%20Air%2013%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20256GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/100040/?min=24720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2",
+          "url": "https://search.rakuten.co.jp/search/mall/MacBook%20Air%2013%E3%82%A4%E3%83%B3%E3%83%81%20M2%20256GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/100040/?min=24720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
           "updatedAt": "2026-11-02",
-          "itemName": "【未使用品】MacBook Air 13インチ (M2) 256GB 本体",
+          "isTrustedShop": true,
+          "itemName": "MacBook Air 13インチ (M2) 256GB 未使用品 本体",
           "source": "mock"
         }
       },
       "used": {
         "price": 63800,
         "shopName": "ゲオオンラインストア Yahoo!店",
-        "itemName": "【中古】MacBook Air 13インチ (M2) 256GB 本体",
-        "itemUrl": "https://shopping.yahoo.co.jp/search?p=MacBook+Air+13%E3%82%A4%E3%83%B3%E3%83%81+%28M2%29+256GB+%E4%B8%AD%E5%8F%A4&cid=2514&pf=24720&used=1&X=2"
+        "itemName": "MacBook Air 13インチ (M2) 256GB SIMフリー 本体",
+        "itemUrl": "https://shopping.yahoo.co.jp/search?p=MacBook+Air+13%E3%82%A4%E3%83%B3%E3%83%81+M2+256GB+%E4%B8%AD%E5%8F%A4+-%E3%82%B1%E3%83%BC%E3%82%B9+-%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+-%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF&cid=2514&pf=24720&used=1&X=2",
+        "isTrustedShop": true
       },
       "unused": {
         "price": 73800,
         "shopName": "ソフマップ楽天市場店",
-        "itemName": "【未使用品】MacBook Air 13インチ (M2) 256GB 本体",
-        "itemUrl": "https://search.rakuten.co.jp/search/mall/MacBook%20Air%2013%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20256GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/100040/?min=24720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+        "itemName": "MacBook Air 13インチ (M2) 256GB 未使用品 本体",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/MacBook%20Air%2013%E3%82%A4%E3%83%B3%E3%83%81%20M2%20256GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/100040/?min=24720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88+%E7%94%A8+%E5%AF%BE%E5%BF%9C+%E4%BA%92%E6%8F%9B+AQUOS+Galaxy+Xperia+Pixel+OPPO+Xiaomi&s=2",
+        "isTrustedShop": true
       },
       "resaleRate": 39,
       "source": "mock",
-      "fetchedAt": "2026-11-02T07:47:23.100Z"
+      "fetchedAt": "2026-11-02T08:00:50.744Z"
     }
   }
 }

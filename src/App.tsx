@@ -1140,6 +1140,28 @@ function ResaleBadge({ rate, launchPrice }: { rate: number | null; launchPrice?:
   );
 }
 
+/** 大手中古ショップ認定バッジ（イオシス・じゃんぱら・ゲオ・ソフマップ等） */
+function TrustedShopBadge({ isTrusted, compact }: { isTrusted?: boolean; compact?: boolean }) {
+  if (isTrusted !== false) {
+    return (
+      <span
+        title="✅ 大手ショップ認定（イオシス・じゃんぱら・ゲオ・ソフマップ・にこスマ等）"
+        className="inline-flex items-center gap-0.5 whitespace-nowrap rounded-full border border-emerald-500/40 bg-emerald-50 px-1.5 py-0.2 text-[10px] font-bold text-emerald-700 dark:border-emerald-400/40 dark:bg-emerald-500/15 dark:text-emerald-300"
+      >
+        {compact ? '✅ 大手認定' : '✅ 大手ショップ認定'}
+      </span>
+    );
+  }
+  return (
+    <span
+      title="大手ショップ在庫0件のため、タイトル検証を通過した一般ショップの最安値を表示しています"
+      className="inline-flex items-center whitespace-nowrap rounded-full bg-amber-100/80 px-1.5 py-0.2 text-[10px] font-semibold text-amber-800 dark:bg-amber-500/20 dark:text-amber-300"
+    >
+      ※一般ショップ参考価格
+    </span>
+  );
+}
+
 function Segmented<T extends string>({ value, onChange, options }: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[] }) {
   return (
     <div className="no-scrollbar inline-flex max-w-full overflow-x-auto rounded-xl bg-zinc-200/70 p-1 dark:bg-zinc-800">
@@ -1312,10 +1334,11 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                   {(() => {
                     const up = usedInfo.usedPricing;
                     const isYahooLowest = up.lowestPlatform === 'yahoo';
+                    const bestOffer = isYahooLowest ? up.yahoo ?? up.rakuten : up.rakuten ?? up.yahoo;
                     return (
                       <div className="mt-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-2.5 dark:border-zinc-800 dark:bg-zinc-800/50">
                         <div className="flex flex-wrap items-center justify-between gap-1.5">
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-zinc-600 dark:text-zinc-300">
+                          <span className="inline-flex flex-wrap items-center gap-1 text-[11px] font-bold text-zinc-600 dark:text-zinc-300">
                             <ShoppingBag className="h-3.5 w-3.5 shrink-0 text-rose-500" />
                             現在の中古最安値
                             <span
@@ -1325,6 +1348,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                             >
                               {isYahooLowest ? 'Yahoo!最安' : '楽天最安'}
                             </span>
+                            <TrustedShopBadge isTrusted={bestOffer?.isTrustedShop} compact />
                             {usedInfo.source === 'mock' && (
                               <span className="rounded bg-zinc-200/80 px-1 py-0.2 text-[10px] font-normal text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">推定</span>
                             )}
@@ -1357,7 +1381,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                                   {yen(up.rakuten.price)}
                                 </span>
                                 <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.rakuten.shopName}>
-                                  ({up.rakuten.shopName})
+                                  {up.rakuten.isTrustedShop !== false ? '✅' : '※'}{up.rakuten.shopName}
                                 </span>
                               </span>
                               <a
@@ -1378,7 +1402,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                                   {yen(up.yahoo.price)}
                                 </span>
                                 <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.yahoo.shopName}>
-                                  ({up.yahoo.shopName})
+                                  {up.yahoo.isTrustedShop !== false ? '✅' : '※'}{up.yahoo.shopName}
                                 </span>
                               </span>
                               <a
@@ -1590,7 +1614,12 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                 ))}
                 <tr className="bg-zinc-50 dark:bg-zinc-800/50">
                   <td colSpan={cols.length + 1} className="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">
-                    中古相場・資産価値 — 楽天市場 ＆ Yahoo!ショッピング 横断比較 (ケース・ジャンク除外 / 本体最安値)
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span>中古相場・資産価値 — 楽天市場 ＆ Yahoo!ショッピング 横断比較</span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold normal-case text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                        ✅ 大手ショップ認定（イオシス・じゃんぱら・ゲオ等）優先 ／ 他社端末・別モデル・ジャンク完全除外
+                      </span>
+                    </div>
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-100 dark:border-zinc-800">
@@ -1600,17 +1629,19 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                       現在の中古相場
                     </div>
                     <div className="mt-0.5 text-[10px] text-zinc-400">楽天・Yahoo!横断最安</div>
+                    <div className="mt-1"><TrustedShopBadge isTrusted={true} compact /></div>
                   </td>
                   {cols.map((c) => {
                     const u = getUsedData(c);
                     const up = u.usedPricing;
                     const isYahooLowest = up.lowestPlatform === 'yahoo';
+                    const bestOffer = isYahooLowest ? up.yahoo ?? up.rakuten : up.rakuten ?? up.yahoo;
                     return (
                       <td key={c.sel.pid} className="p-1.5 sm:p-2 align-top">
                         <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-2 sm:p-2.5 dark:border-zinc-800 dark:bg-zinc-800/40">
                           <div className="flex flex-wrap items-center justify-between gap-1.5">
                             <div>
-                              <div className="flex items-center gap-1 text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
+                              <div className="flex flex-wrap items-center gap-1 text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
                                 <span>横断最安値</span>
                                 <span
                                   className={`rounded-full px-1.5 py-0.2 text-[9px] font-bold text-white ${
@@ -1619,6 +1650,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                                 >
                                   {isYahooLowest ? 'Yahoo!最安' : '楽天最安'}
                                 </span>
+                                <TrustedShopBadge isTrusted={bestOffer?.isTrustedShop} compact />
                                 {u.source === 'mock' && <span className="rounded bg-zinc-200/80 px-1 text-[9px] font-normal dark:bg-zinc-700">推定</span>}
                               </div>
                               <div className="text-base sm:text-lg font-extrabold tabular-nums text-rose-600 dark:text-rose-400">
@@ -1670,6 +1702,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                                 </div>
                                 <div className="mt-0.5 flex items-center justify-between gap-1 text-[10px]">
                                   <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.rakuten.shopName}>
+                                    {up.rakuten.isTrustedShop !== false ? '✅ ' : '※一般: '}
                                     {up.rakuten.shopName}
                                   </span>
                                   <a
@@ -1704,6 +1737,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                                 </div>
                                 <div className="mt-0.5 flex items-center justify-between gap-1 text-[10px]">
                                   <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.yahoo.shopName}>
+                                    {up.yahoo.isTrustedShop !== false ? '✅ ' : '※一般: '}
                                     {up.yahoo.shopName}
                                   </span>
                                   <a

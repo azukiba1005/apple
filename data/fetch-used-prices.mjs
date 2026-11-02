@@ -3,9 +3,11 @@
  * Yahoo!ショッピング 商品検索API (v3: ShoppingWebService/V3/itemSearch)
  * 横断中古最安値・リセールバリュー取得モジュール＆CLIスクリプト
  *
- * 使い方:
- *   node data/fetch-used-prices.mjs
- *   (環境変数 RAKUTEN_APP_ID / YAHOO_APP_ID を .env から読み込み。片方のみの設定や未設定でも動作します)
+ * 【厳密フィルタリング＆大手ショップ優先仕様】
+ * 1. Yahoo! API (results=20) / 楽天API (hits=20) から上位20件を取得
+ * 2. isValidProductTitle() でモデル完全一致（Pro/Plus/Max/mini/e 等の誤爆防止）、
+ *    ストレージ容量一致、他社Android端末・アクセサリー・ジャンク等の完全ブラックリスト除外を実施
+ * 3. isTrustedShop() で大手中古ショップ（イオシス・じゃんぱら・ゲオ等）を判定し最優先で採用
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -26,10 +28,10 @@ export const RAKUTEN_OPENAPI_ENDPOINT = 'https://openapi.rakuten.co.jp/ichibams/
 export const YAHOO_API_ENDPOINT = 'https://shopping.yahooapis.jp/ShoppingWebService/V3/itemSearch';
 
 export const RAKUTEN_NG_KEYWORD =
-  'ケース フィルム カバー 保護 ガラス 修理 レンタル ジャンク 部品 交換 バッテリー バンド ベルト';
+  'ケース フィルム カバー 保護 ガラス 修理 レンタル ジャンク 部品 交換 バッテリー バンド ベルト 用 対応 互換 AQUOS Galaxy Xperia Pixel OPPO Xiaomi';
 
 export const YAHOO_NEGATIVE_TERMS =
-  '-ケース -フィルム -カバー -ガラス -修理 -レンタル -ジャンク -バッテリー -交換 -バンド -ベルト';
+  '-ケース -フィルム -カバー -ガラス -修理 -レンタル -ジャンク -バッテリー -交換 -バンド -ベルト -AQUOS -Galaxy -Xperia -Pixel -OPPO -Xiaomi -モック -空箱';
 
 export const RAKUTEN_GENRE_IDS = {
   iPhone: '560202',
@@ -47,12 +49,31 @@ export const YAHOO_GENRE_CATEGORY_IDS = {
   Watch: '49950',
 };
 
-// 商品名による二次除外フィルタ（ジャンク・難あり・訳あり・アクセサリー類を除外）
-const YAHOO_EXCLUDE_TITLE_RE =
-  /ジャンク|難あり|訳あり|訳有|ケース|フィルム|カバー|保護|ガラス|修理|レンタル|部品|バッテリー交換|バンドのみ|ベルトのみ|モックアップ|空箱|箱のみ/;
+/** 2-3. 他社スマホ・アクセサリー・ジャンクの完全ブラックリスト */
+export const TITLE_BLACKLIST = [
+  'AQUOS', 'Galaxy', 'Xperia', 'Pixel', 'arrows', 'OPPO', 'Xiaomi', 'Redmi', 'ZenFone', 'HUAWEI',
+  'ケース', 'カバー', 'フィルム', 'ガラス', 'バンド', 'ベルト', 'ストラップ', '充電器', 'ケーブル', 'アダプタ',
+  '用', '対応', '互換', '保護', '修理', '交換', 'バッテリー交換',
+  'ジャンク', '難あり', '訳あり', '画面割れ', '赤ロム', 'モック', '空箱', '箱のみ', 'レンタル', 'ふるさと納税',
+];
 
-const RAKUTEN_EXCLUDE_TITLE_RE =
-  /ジャンク|難あり|訳あり|訳有|ケース|フィルム|カバー|保護|ガラス|修理|レンタル|部品|交換|バッテリー交換|バンドのみ|ベルトのみ|モックアップ|空箱|箱のみ/;
+const NORMALIZED_BLACKLIST = TITLE_BLACKLIST.map((w) => w.normalize('NFKC').toUpperCase());
+
+/** 3. 信頼できる大手中古ショップキーワード一覧 */
+export const TRUSTED_SHOP_KEYWORDS = [
+  'イオシス', 'じゃんぱら', 'ゲオ', 'GEO', 'ソフマップ', 'リコレ', 'ビックカメラ',
+  'ヤマダ', 'ケーズ', 'ノジマ', 'エディオン', 'カメラのキタムラ', 'ブックオフ', 'BOOKOFF',
+  'ハードオフ', 'セカンドストリート', '2nd STREET', 'にこスマ', 'エコたん', 'PCコンフル',
+  'デジタルコレクション', 'モバックス', 'ムスビー', 'ワールドモバイル', 'アメモバ',
+  '대黒屋', '大黒屋', 'コメ兵', 'KOMEHYO', 'Be-Stock',
+];
+
+const NORMALIZED_TRUSTED_SHOPS = TRUSTED_SHOP_KEYWORDS.map((w) => ({
+  raw: w,
+  norm: w.normalize('NFKC').toUpperCase(),
+}));
+
+const ALL_CAPACITIES = ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB', '2TB'];
 
 const MOCK_RAKUTEN_SHOPS = [
   'イオシス楽天市場店',
@@ -67,8 +88,185 @@ const MOCK_YAHOO_SHOPS = [
   'イオシス Yahoo!店',
   'ゲオオンラインストア Yahoo!店',
   'ソフマップ Yahoo!店',
-  'スマホ市場 Yahoo!店',
+  'カメラのキタムラ Yahoo!店',
 ];
+
+/**
+ * ショップ名が信頼できる大手中古ショップに該当するか判定する
+ */
+export function isTrustedShop(shopName) {
+  const norm = String(shopName ?? '').normalize('NFKC').toUpperCase();
+  if (!norm) return false;
+  return NORMALIZED_TRUSTED_SHOPS.some((k) => norm.includes(k.norm));
+}
+
+/**
+ * 厳密タイトル検証関数 (`isValidProductTitle`)
+ * 1. NFKC正規化後にブラックリスト語句を完全除外
+ * 2. 別モデル（Pro / Plus / Max / mini / e / Air 等）の誤爆を厳密に防止
+ * 3. ストレージ容量の一致確認と他容量の除外
+ */
+export function isValidProductTitle(title, productName, storage = '', category = '') {
+  if (!title || !productName) return false;
+  const normTitle = String(title).normalize('NFKC');
+  const upperTitle = normTitle.toUpperCase();
+  const normProd = String(productName).normalize('NFKC').trim();
+  const upperProd = normProd.toUpperCase();
+
+  // [条件3] ブラックリスト文字列が1つでも含まれる場合は無条件で除外
+  for (const word of NORMALIZED_BLACKLIST) {
+    if (upperTitle.includes(word)) return false;
+  }
+
+  // [条件1] 別モデル（上位/下位機種）の誤爆防止
+  if (/^IPHONE/i.test(normProd) || category === 'iPhone') {
+    if (!upperTitle.includes('IPHONE')) return false;
+
+    const seMatch = normProd.match(/^iPhone\s*SE/i);
+    if (seMatch) {
+      if (!/IPHONE\s*SE\b/i.test(upperTitle)) return false;
+      if (/第3世代|3rd/i.test(normProd) && !/第3世代|3世代|3RD|SE3|SE\s*3|2022/i.test(upperTitle)) return false;
+      if (/第2世代|2nd/i.test(normProd) && !/第2世代|2世代|2ND|SE2|SE\s*2|2020/i.test(upperTitle)) return false;
+    } else {
+      // iPhone 数字 または X/XS/XR
+      const m = normProd.match(/^iPhone\s*(\d+|X[SR]?|X)\b/i);
+      const eModel = normProd.match(/^iPhone\s*(\d+)e\b/i);
+      const modelCode = (eModel ? eModel[1] : m ? m[1] : '').toUpperCase();
+      if (modelCode) {
+        const wantPro = /\bPRO\b/i.test(normProd);
+        const wantMax = /\bMAX\b/i.test(normProd);
+        const wantPlus = /\bPLUS\b/i.test(normProd);
+        const wantMini = /\bMINI\b/i.test(normProd);
+        const wantE = Boolean(eModel) || new RegExp(`^IPHONE\\s*${modelCode}\\s*E\\b`, 'i').test(normProd);
+
+        if (wantE) {
+          // iPhone 16e 等
+          const eRe = new RegExp(`IPHONE\\s*${modelCode}\\s*E(?![A-Z0-9])`, 'i');
+          if (!eRe.test(upperTitle)) return false;
+        } else {
+          // 該当モデル番号が含まれ、直後に別の数字や 'e' が続かないことを確認
+          const baseRe = new RegExp(`IPHONE\\s*${modelCode}(?![0-9A-Z]|\\s*E\\b)`, 'i');
+          if (!baseRe.test(upperTitle)) return false;
+          // 直後に Pro / Plus / Max / mini / e が続く別機種を除外
+          const afterModelRe = new RegExp(
+            `IPHONE\\s*${modelCode}\\s*(PRO|PLUS|MAX|MINI|E)\\b`,
+            'i',
+          );
+          if (!wantPro && !wantPlus && !wantMax && !wantMini && afterModelRe.test(upperTitle)) {
+            return false;
+          }
+        }
+
+        if (wantPro !== /\bPRO\b/i.test(upperTitle)) return false;
+        if (wantMax !== /\bMAX\b/i.test(upperTitle)) return false;
+        if (wantPlus !== /\bPLUS\b/i.test(upperTitle)) return false;
+        if (wantMini !== /\bMINI\b/i.test(upperTitle)) return false;
+
+        // 別のiPhoneナンバーが併記されているタイトル（比較・複数機種表記）を除外
+        const otherNums = ['11', '12', '13', '14', '15', '16', '17'].filter((n) => n !== modelCode);
+        for (const on of otherNums) {
+          if (new RegExp(`IPHONE\\s*${on}(?![0-9])`, 'i').test(upperTitle)) return false;
+        }
+      }
+    }
+  } else if (/^IPAD/i.test(normProd) || category === 'iPad') {
+    if (!upperTitle.includes('IPAD')) return false;
+    const wantAir = /\bAIR\b/i.test(normProd);
+    const wantPro = /\bPRO\b/i.test(normProd);
+    const wantMini = /\bMINI\b/i.test(normProd);
+
+    if (wantAir !== /\bAIR\b/i.test(upperTitle)) return false;
+    if (wantPro !== /\bPRO\b/i.test(upperTitle)) return false;
+    if (wantMini !== /\bMINI\b/i.test(upperTitle)) return false;
+
+    // 世代指定がある場合 (例: "iPad (第10世代)" / "iPad (10th generation)")
+    const genMatch = normProd.match(/第(\d+)世代|(\d+)(?:st|nd|rd|th)\s+generation/i);
+    if (genMatch) {
+      const genNum = genMatch[1] || genMatch[2];
+      const genRe = new RegExp(`(第\\s*${genNum}\\s*世代|${genNum}\\s*世代|${genNum}TH|第${genNum})`, 'i');
+      if (!genRe.test(upperTitle)) return false;
+    }
+
+    // Mチップ指定がある場合 (例: "(M2)")
+    const chipMatch = normProd.match(/\b(M\d+)\b/i);
+    if (chipMatch) {
+      const chip = chipMatch[1].toUpperCase();
+      if (!new RegExp(`\\b${chip}\\b`, 'i').test(upperTitle)) return false;
+    }
+
+    // インチ指定がある場合 (例: "11インチ" / "11-inch" / "12.9-inch")
+    const inchMatch = normProd.match(/(\d+(?:\.\d+)?)\s*(?:インチ|-inch)/i);
+    if (inchMatch) {
+      const inch = inchMatch[1].replace('.', '\\.');
+      if (!new RegExp(`(?<!\\d)${inch}\\s*(?:インチ|INCH|型)?`, 'i').test(upperTitle)) return false;
+    }
+  } else if (/WATCH/i.test(normProd) || category === 'Apple Watch' || category === 'Watch') {
+    if (!upperTitle.includes('WATCH')) return false;
+    const wantUltra = /\bULTRA\b/i.test(normProd);
+    const wantSE = /\bSE\b/i.test(normProd);
+    const seriesMatch = normProd.match(/Series\s*(\d+)/i);
+
+    if (wantUltra !== /\bULTRA\b/i.test(upperTitle)) return false;
+    if (wantSE !== /\bSE\b/i.test(upperTitle)) return false;
+    if (seriesMatch) {
+      const sNum = seriesMatch[1];
+      const sRe = new RegExp(`(SERIES\\s*${sNum}|S${sNum})(?![0-9])`, 'i');
+      if (!sRe.test(upperTitle)) return false;
+    }
+  } else if (/MAC/i.test(normProd) || category === 'Mac') {
+    if (/MACBOOK\s*AIR/i.test(normProd)) {
+      if (!/MACBOOK\s*AIR/i.test(upperTitle) || /MACBOOK\s*PRO/i.test(upperTitle)) return false;
+    } else if (/MACBOOK\s*PRO/i.test(normProd)) {
+      if (!/MACBOOK\s*PRO/i.test(upperTitle) || /MACBOOK\s*AIR/i.test(upperTitle)) return false;
+    } else if (/MAC\s*MINI/i.test(normProd)) {
+      if (!/MAC\s*MINI/i.test(upperTitle)) return false;
+    } else if (/IMAC/i.test(normProd)) {
+      if (!/\bIMAC\b/i.test(upperTitle)) return false;
+    } else if (/MAC\s*STUDIO/i.test(normProd)) {
+      if (!/MAC\s*STUDIO/i.test(upperTitle)) return false;
+    }
+    const chipMatch = normProd.match(/\b(M\d+)\b/i);
+    if (chipMatch) {
+      const chip = chipMatch[1].toUpperCase();
+      if (!new RegExp(`\\b${chip}\\b`, 'i').test(upperTitle)) return false;
+    }
+  } else {
+    // その他カテゴリは製品名キーワードが含まれるか確認
+    if (!upperTitle.includes(upperProd)) return false;
+  }
+
+  // [条件2] ストレージ容量の一致確認（Watch以外の容量指定SKU）
+  const isWatch = /WATCH/i.test(normProd) || category === 'Apple Watch' || category === 'Watch';
+  const storMatch = String(storage ?? '').normalize('NFKC').toUpperCase().match(/\b(\d+)\s*(GB|TB)\b/);
+  if (storMatch && !isWatch) {
+    const targetNum = storMatch[1];
+    const targetUnit = storMatch[2];
+    const targetCap = `${targetNum}${targetUnit}`;
+
+    const targetRe =
+      targetUnit === 'GB'
+        ? new RegExp(`(?<!\\d)${targetNum}\\s*G(?:B)?(?![A-Z0-9])`, 'i')
+        : new RegExp(`(?<!\\d)${targetNum}\\s*T(?:B)?(?![A-Z0-9])`, 'i');
+
+    if (!targetRe.test(upperTitle)) return false;
+
+    // 他のストレージ容量が含まれている場合は除外（Macの8GB/16GB RAM表記は除く）
+    const isMac = /MAC/i.test(normProd) || category === 'Mac';
+    for (const cap of ALL_CAPACITIES) {
+      if (cap === targetCap) continue;
+      if (isMac && (cap === '16GB' || cap === '32GB')) continue;
+      const mCap = cap.match(/^(\d+)(GB|TB)$/);
+      if (!mCap) continue;
+      const otherRe =
+        mCap[2] === 'GB'
+          ? new RegExp(`(?<!\\d)${mCap[1]}\\s*G(?:B)?(?![A-Z0-9])`, 'i')
+          : new RegExp(`(?<!\\d)${mCap[1]}\\s*T(?:B)?(?![A-Z0-9])`, 'i');
+      if (otherRe.test(upperTitle)) return false;
+    }
+  }
+
+  return true;
+}
 
 export function getRakutenGenreId(category) {
   if (RAKUTEN_GENRE_IDS[category]) return RAKUTEN_GENRE_IDS[category];
@@ -93,21 +291,40 @@ export function calcMinPrice(launchPrice) {
   return Math.max(Math.round(n * 0.15), 5000);
 }
 
-export function buildRakutenKeyword(productName, storage, condition = '中古') {
-  const cleanName = String(productName ?? '').replace(/\s+/g, ' ').trim();
-  const cleanStorage = storage && storage !== '-' ? String(storage).trim() : '';
+/** 検索向けに製品名をクリーン化（例: "iPad (10th generation)" → "iPad 第10世代"） */
+export function cleanSearchProductName(productName) {
+  return String(productName ?? '')
+    .normalize('NFKC')
+    .replace(/\((\d+)(?:st|nd|rd|th)\s+generation\)/i, '第$1世代')
+    .replace(/[()]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function extractStorageToken(storage, category = '') {
+  if (/watch/i.test(category)) {
+    const mm = String(storage ?? '').match(/\b(\d+mm)\b/i);
+    return mm ? mm[1] : '';
+  }
+  const m = String(storage ?? '').normalize('NFKC').match(/\b(\d+\s*(?:GB|TB))\b/i);
+  return m ? m[1].replace(/\s+/g, '') : '';
+}
+
+export function buildRakutenKeyword(productName, storage, condition = '中古', category = '') {
+  const cleanName = cleanSearchProductName(productName);
+  const cleanStorage = extractStorageToken(storage, category);
   return [cleanName, cleanStorage, condition].filter(Boolean).join(' ');
 }
 
-/** Yahoo!ショッピングAPI (v3) 用クエリ（マイナス検索つき） */
-export function buildYahooQuery(productName, storage) {
-  const cleanName = String(productName ?? '').replace(/\s+/g, ' ').trim();
-  const cleanStorage = storage && storage !== '-' ? String(storage).trim() : '';
-  return [cleanName, cleanStorage, YAHOO_NEGATIVE_TERMS].filter(Boolean).join(' ');
+/** Yahoo!ショッピングAPI (v3) 用クエリ（フレーズ/必須ワード＋マイナス検索） */
+export function buildYahooQuery(productName, storage, category = '') {
+  const cleanName = cleanSearchProductName(productName);
+  const cleanStorage = extractStorageToken(storage, category);
+  return [`"${cleanName}"`, cleanStorage, YAHOO_NEGATIVE_TERMS].filter(Boolean).join(' ');
 }
 
 export function buildRakutenWebSearchUrl({ productName, storage, category, launchPrice, condition = '中古' }) {
-  const keyword = buildRakutenKeyword(productName, storage, condition);
+  const keyword = buildRakutenKeyword(productName, storage, condition, category);
   const genreId = getRakutenGenreId(category);
   const minPrice = calcMinPrice(launchPrice);
   const qs = new URLSearchParams({
@@ -119,9 +336,9 @@ export function buildRakutenWebSearchUrl({ productName, storage, category, launc
 }
 
 export function buildYahooWebSearchUrl({ productName, storage, category, launchPrice }) {
-  const cleanName = String(productName ?? '').replace(/\s+/g, ' ').trim();
-  const cleanStorage = storage && storage !== '-' ? String(storage).trim() : '';
-  const p = [cleanName, cleanStorage, '中古'].filter(Boolean).join(' ');
+  const cleanName = cleanSearchProductName(productName);
+  const cleanStorage = extractStorageToken(storage, category);
+  const p = [cleanName, cleanStorage, '中古', '-ケース', '-フィルム', '-ジャンク'].filter(Boolean).join(' ');
   const cid = getYahooGenreCategoryId(category);
   const pf = calcMinPrice(launchPrice);
   const qs = new URLSearchParams({
@@ -129,7 +346,7 @@ export function buildYahooWebSearchUrl({ productName, storage, category, launchP
     cid,
     pf: String(pf),
     used: '1',
-    X: '2', // 価格が安い順
+    X: '2',
   });
   return `https://shopping.yahoo.co.jp/search?${qs.toString()}`;
 }
@@ -141,7 +358,7 @@ function hashCode(str) {
 }
 
 /**
- * 推定相場ジェネレータ（APIキー未設定時・通信エラー時のフォールバック）
+ * 推定相場ジェネレータ（APIキー未設定時・該当在庫0件時のフォールバック）
  */
 export function estimatePlatformOffers({
   productName,
@@ -164,7 +381,6 @@ export function estimatePlatformOffers({
   const ratio = Math.min(0.9, Math.max(0.18, catFactor * decay + jitter));
 
   const baseUsed = Math.max(minPrice, Math.round((basePrice * ratio) / 1000) * 1000 - 200);
-  // モデルごとに楽天が安いケースとYahooが安いケースを再現
   const yahooDelta = seed % 2 === 0 ? -1000 : 1000;
   const rakutenPrice = Math.max(minPrice, baseUsed);
   const yahooPrice = Math.max(minPrice, baseUsed + yahooDelta);
@@ -176,88 +392,131 @@ export function estimatePlatformOffers({
     ),
   );
 
+  const rakutenShop = MOCK_RAKUTEN_SHOPS[seed % MOCK_RAKUTEN_SHOPS.length];
+  const yahooShop = MOCK_YAHOO_SHOPS[seed % MOCK_YAHOO_SHOPS.length];
+  const unusedShop = MOCK_RAKUTEN_SHOPS[(seed + 1) % MOCK_RAKUTEN_SHOPS.length];
+
   const rakutenOffer = {
     price: rakutenPrice,
-    shopName: MOCK_RAKUTEN_SHOPS[seed % MOCK_RAKUTEN_SHOPS.length],
+    shopName: rakutenShop,
     url: buildRakutenWebSearchUrl({ productName, storage, category, launchPrice: basePrice, condition: '中古' }),
     updatedAt: today,
-    itemName: `【中古】${productName} ${storage} 本体`.trim(),
+    itemName: `${productName} ${storage} SIMフリー 本体`.trim(),
+    isTrustedShop: true,
     source: 'mock',
   };
 
   const yahooOffer = {
     price: yahooPrice,
-    shopName: MOCK_YAHOO_SHOPS[seed % MOCK_YAHOO_SHOPS.length],
+    shopName: yahooShop,
     url: buildYahooWebSearchUrl({ productName, storage, category, launchPrice: basePrice }),
     updatedAt: today,
-    itemName: `【中古】${productName} ${storage} 本体`.trim(),
+    itemName: `${productName} ${storage} SIMフリー 本体`.trim(),
+    isTrustedShop: true,
     source: 'mock',
   };
 
   const unusedOffer = {
     price: unusedPrice,
-    shopName: MOCK_RAKUTEN_SHOPS[(seed + 1) % MOCK_RAKUTEN_SHOPS.length],
+    shopName: unusedShop,
     url: buildRakutenWebSearchUrl({ productName, storage, category, launchPrice: basePrice, condition: '未使用' }),
     updatedAt: today,
-    itemName: `【未使用品】${productName} ${storage} 本体`.trim(),
+    itemName: `${productName} ${storage} 未使用品 本体`.trim(),
+    isTrustedShop: true,
     source: 'mock',
   };
 
   return { rakutenOffer, yahooOffer, unusedOffer };
 }
 
-/** 楽天APIレスポンスから最安1件を抽出 */
-export function pickCheapestRakutenItem(items, minPrice, today = new Date().toISOString().slice(0, 10)) {
+/**
+ * 候補リストから「大手ショップ (`isTrustedShop: true`) の最安値」を最優先で採用し、
+ * 大手ショップが0件の場合のみ「一般ショップの最安値（参考価格）」を採用する
+ */
+function selectBestValidatedCandidate(candidates) {
+  if (!candidates.length) return null;
+  const sorted = [...candidates].sort((a, b) => a.price - b.price);
+  const trusted = sorted.filter((c) => c.isTrustedShop);
+  if (trusted.length > 0) {
+    return {
+      ...trusted[0],
+      generalFallbackPrice: sorted[0].price < trusted[0].price ? sorted[0].price : undefined,
+    };
+  }
+  return {
+    ...sorted[0],
+    isReferenceGeneralShop: true,
+  };
+}
+
+/** 楽天APIレスポンス上位20件から厳密タイトル検証＋大手ショップ優先で最安1件を抽出 */
+export function pickCheapestRakutenItem(
+  items,
+  minPrice,
+  productName,
+  storage = '',
+  category = '',
+  today = new Date().toISOString().slice(0, 10),
+) {
   if (!Array.isArray(items)) return null;
   const candidates = [];
-  for (const raw of items) {
+  for (const raw of items.slice(0, 20)) {
     const it = raw?.Item ?? raw;
     if (!it) continue;
     const price = Number(it.itemPrice);
     const title = String(it.itemName ?? '');
+    const shopName = String(it.shopName || '楽天市場ショップ');
     if (!Number.isFinite(price) || price < minPrice) continue;
-    if (RAKUTEN_EXCLUDE_TITLE_RE.test(title)) continue;
+    if (!isValidProductTitle(title, productName, storage, category)) continue;
     candidates.push({
       price,
-      shopName: String(it.shopName || '楽天市場ショップ'),
+      shopName,
       url: String(it.affiliateUrl || it.itemUrl || ''),
       updatedAt: today,
       itemName: title,
+      isTrustedShop: isTrustedShop(shopName),
       source: 'api',
     });
   }
-  candidates.sort((a, b) => a.price - b.price);
-  return candidates[0] ?? null;
+  return selectBestValidatedCandidate(candidates);
 }
 
 /**
- * Yahoo!ショッピングAPI (v3) レスポンスの上位5件から
- * 商品名に「ジャンク」「難あり」「訳あり」等が含まれない最安の1件を採用する
+ * Yahoo!ショッピングAPI (v3) レスポンスの上位20件から
+ * 厳密タイトル検証 (`isValidProductTitle`) ＋大手ショップ優先 (`isTrustedShop`) で最安1件を採用する
  */
-export function pickCheapestYahooItem(hits, minPrice, today = new Date().toISOString().slice(0, 10)) {
+export function pickCheapestYahooItem(
+  hits,
+  minPrice,
+  productName,
+  storage = '',
+  category = '',
+  today = new Date().toISOString().slice(0, 10),
+) {
   if (!Array.isArray(hits)) return null;
   const candidates = [];
-  for (const hit of hits.slice(0, 5)) {
+  for (const hit of hits.slice(0, 20)) {
     if (!hit) continue;
     const price = Number(hit.price);
     const title = String(hit.name ?? '');
+    const shopName = String(hit.seller?.name || 'Yahoo!ショッピング店');
     if (!Number.isFinite(price) || price < minPrice) continue;
-    if (YAHOO_EXCLUDE_TITLE_RE.test(title)) continue;
+    if (!isValidProductTitle(title, productName, storage, category)) continue;
     candidates.push({
       price,
-      shopName: String(hit.seller?.name || 'Yahoo!ショッピング店'),
+      shopName,
       url: String(hit.url || ''),
       updatedAt: today,
       itemName: title,
+      isTrustedShop: isTrustedShop(shopName),
       source: 'api',
     });
   }
-  candidates.sort((a, b) => a.price - b.price);
-  return candidates[0] ?? null;
+  return selectBestValidatedCandidate(candidates);
 }
 
 /**
- * 楽天市場API 単体呼び出し
+ * 楽天市場API 単体呼び出し (hits=20)
  */
 export async function fetchFromRakutenApi({
   productName,
@@ -272,7 +531,7 @@ export async function fetchFromRakutenApi({
   if (!appId) return null;
   const minPrice = calcMinPrice(launchPrice);
   const genreId = getRakutenGenreId(category);
-  const kw = buildRakutenKeyword(productName, storage, condition);
+  const kw = buildRakutenKeyword(productName, storage, condition, category);
   const params = new URLSearchParams({
     applicationId: appId,
     format: 'json',
@@ -283,7 +542,7 @@ export async function fetchFromRakutenApi({
     minPrice: String(minPrice),
     sort: '+itemPrice',
     availability: '1',
-    hits: '10',
+    hits: '20',
   });
   if (affiliateId) params.set('affiliateId', affiliateId);
   if (accessKey) params.set('accessKey', accessKey);
@@ -292,11 +551,11 @@ export async function fetchFromRakutenApi({
   const res = await fetch(`${endpoint}?${params.toString()}`);
   if (!res.ok) throw new Error(`Rakuten API HTTP ${res.status}`);
   const json = await res.json();
-  return pickCheapestRakutenItem(json?.Items ?? [], minPrice);
+  return pickCheapestRakutenItem(json?.Items ?? [], minPrice, productName, storage, category);
 }
 
 /**
- * Yahoo!ショッピング 商品検索API (v3) 単体呼び出し
+ * Yahoo!ショッピング 商品検索API (v3) 単体呼び出し (results=20)
  * エンドポイント: https://shopping.yahooapis.jp/ShoppingWebService/V3/itemSearch
  */
 export async function fetchFromYahooApi({
@@ -309,7 +568,7 @@ export async function fetchFromYahooApi({
   if (!yahooAppId) return null;
   const priceFrom = calcMinPrice(launchPrice);
   const genreCategoryId = getYahooGenreCategoryId(category);
-  const query = buildYahooQuery(productName, storage);
+  const query = buildYahooQuery(productName, storage, category);
 
   const params = new URLSearchParams({
     appid: yahooAppId,
@@ -318,18 +577,19 @@ export async function fetchFromYahooApi({
     genre_category_id: genreCategoryId,
     price_from: String(priceFrom),
     sort: '+price',
-    results: '5',
+    results: '20',
   });
 
   const res = await fetch(`${YAHOO_API_ENDPOINT}?${params.toString()}`);
   if (!res.ok) throw new Error(`Yahoo! Shopping API HTTP ${res.status}`);
   const json = await res.json();
-  return pickCheapestYahooItem(json?.hits ?? [], priceFrom);
+  return pickCheapestYahooItem(json?.hits ?? [], priceFrom, productName, storage, category);
 }
 
 /**
  * 楽天とYahoo!の結果から横断比較データ `usedPricing` を組み立てる
- * 片方のAPIキーのみ設定されている場合は、実取得できたAPI側の価格を最優先して比較する
+ * - 実APIから取得できたオファーを優先
+ * - 両方とも実API（または両方ともフォールバック）の場合は、大手ショップ (`isTrustedShop: true`) を優先したうえで最安値を比較
  */
 export function buildUsedPricingObject({
   rakutenOffer,
@@ -339,21 +599,32 @@ export function buildUsedPricingObject({
 }) {
   const baseLaunch = Number(launchPrice) > 0 ? Number(launchPrice) : null;
 
-  // 実APIから取得できたオファーがあればそれを優先して最安判定（モック値が実API値を上書きしないようにする）
   const rIsApi = rakutenOffer?.source === 'api';
   const yIsApi = yahooOffer?.source === 'api';
+  const rTrusted = Boolean(rakutenOffer?.isTrustedShop);
+  const yTrusted = Boolean(yahooOffer?.isTrustedShop);
 
   let lowestPlatform = 'rakuten';
   let lowestPrice = rakutenOffer?.price ?? yahooOffer?.price ?? 0;
 
-  if (rIsApi && yIsApi) {
-    if (yahooOffer.price < rakutenOffer.price) {
+  const pickCheaper = () => {
+    if (rTrusted && !yTrusted) {
+      lowestPlatform = 'rakuten';
+      lowestPrice = rakutenOffer.price;
+    } else if (!rTrusted && yTrusted) {
+      lowestPlatform = 'yahoo';
+      lowestPrice = yahooOffer.price;
+    } else if (yahooOffer.price < rakutenOffer.price) {
       lowestPlatform = 'yahoo';
       lowestPrice = yahooOffer.price;
     } else {
       lowestPlatform = 'rakuten';
       lowestPrice = rakutenOffer.price;
     }
+  };
+
+  if (rIsApi && yIsApi) {
+    pickCheaper();
   } else if (rIsApi && !yIsApi) {
     lowestPlatform = 'rakuten';
     lowestPrice = rakutenOffer.price;
@@ -361,13 +632,7 @@ export function buildUsedPricingObject({
     lowestPlatform = 'yahoo';
     lowestPrice = yahooOffer.price;
   } else if (rakutenOffer && yahooOffer) {
-    if (yahooOffer.price < rakutenOffer.price) {
-      lowestPlatform = 'yahoo';
-      lowestPrice = yahooOffer.price;
-    } else {
-      lowestPlatform = 'rakuten';
-      lowestPrice = rakutenOffer.price;
-    }
+    pickCheaper();
   } else if (yahooOffer) {
     lowestPlatform = 'yahoo';
     lowestPrice = yahooOffer.price;
@@ -376,39 +641,31 @@ export function buildUsedPricingObject({
   const resaleValuePercent =
     baseLaunch && lowestPrice > 0 ? Math.round((lowestPrice / baseLaunch) * 100) : null;
 
+  const formatOffer = (offer) =>
+    offer
+      ? {
+          price: offer.price,
+          shopName: offer.shopName,
+          url: offer.url,
+          updatedAt: offer.updatedAt,
+          isTrustedShop: Boolean(offer.isTrustedShop),
+          ...(offer.itemName ? { itemName: offer.itemName } : {}),
+          ...(offer.source ? { source: offer.source } : {}),
+        }
+      : null;
+
   return {
     lowestPrice,
     lowestPlatform,
     resaleValuePercent,
-    rakuten: rakutenOffer
-      ? {
-          price: rakutenOffer.price,
-          shopName: rakutenOffer.shopName,
-          url: rakutenOffer.url,
-          updatedAt: rakutenOffer.updatedAt,
-          ...(rakutenOffer.itemName ? { itemName: rakutenOffer.itemName } : {}),
-          ...(rakutenOffer.source ? { source: rakutenOffer.source } : {}),
-        }
-      : null,
-    yahoo: yahooOffer
-      ? {
-          price: yahooOffer.price,
-          shopName: yahooOffer.shopName,
-          url: yahooOffer.url,
-          updatedAt: yahooOffer.updatedAt,
-          ...(yahooOffer.itemName ? { itemName: yahooOffer.itemName } : {}),
-          ...(yahooOffer.source ? { source: yahooOffer.source } : {}),
-        }
-      : null,
-    ...(unusedOffer ? { unused: unusedOffer } : {}),
+    rakuten: formatOffer(rakutenOffer),
+    yahoo: formatOffer(yahooOffer),
+    ...(unusedOffer ? { unused: formatOffer(unusedOffer) } : {}),
   };
 }
 
 /**
  * 楽天市場 ＆ Yahoo!ショッピング 横断検索メイン関数
- * - 両方のAPIキーがある場合は並列取得して最安値を比較
- * - 片方のAPIキーのみの場合は設定されている方のAPIで取得
- * - いずれも未設定またはエラー時はフォールバック推定値を返す
  */
 export async function searchRakutenUsedPrice({
   productName,
@@ -423,7 +680,7 @@ export async function searchRakutenUsedPrice({
 }) {
   const minPrice = calcMinPrice(launchPrice);
   const genreId = getRakutenGenreId(category);
-  const keyword = buildRakutenKeyword(productName, storage, '中古');
+  const keyword = buildRakutenKeyword(productName, storage, '中古', category);
   const fallback = estimatePlatformOffers({ productName, storage, category, launchPrice, releaseDate });
 
   let rakutenOffer = null;
@@ -509,12 +766,12 @@ export async function searchRakutenUsedPrice({
     minPrice,
     launchPrice: Number(launchPrice) > 0 ? Number(launchPrice) : null,
     usedPricing,
-    // 後方互換フィールド
     used: {
       price: usedPricing.lowestPrice,
       shopName: bestOffer.shopName,
       itemName: bestOffer.itemName ?? '',
       itemUrl: bestOffer.url,
+      isTrustedShop: Boolean(bestOffer.isTrustedShop),
     },
     unused: finalUnused
       ? {
@@ -522,6 +779,7 @@ export async function searchRakutenUsedPrice({
           shopName: finalUnused.shopName,
           itemName: finalUnused.itemName ?? '',
           itemUrl: finalUnused.url,
+          isTrustedShop: Boolean(finalUnused.isTrustedShop),
         }
       : null,
     resaleRate: usedPricing.resaleValuePercent,
@@ -550,7 +808,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
       { id: 'iphone-16', name: 'iPhone 16', category: 'iPhone', releaseDate: '2024-09-20', storage: '128GB', launchPrice: 124800 },
       { id: 'ipad-10', name: 'iPad (第10世代)', category: 'iPad', releaseDate: '2022-10-26', storage: '64GB', launchPrice: 68800 },
       { id: 'ipad-air-11-m2', name: 'iPad Air 11インチ (M2)', category: 'iPad', releaseDate: '2024-05-15', storage: '128GB', launchPrice: 98800 },
-      { id: 'watch-s10', name: 'Apple Watch Series 10', category: 'Apple Watch', releaseDate: '2024-09-20', storage: '64GB', launchPrice: 59800 },
+      { id: 'watch-s10', name: 'Apple Watch Series 10', category: 'Apple Watch', releaseDate: '2024-09-20', storage: '42mm GPS', launchPrice: 59800 },
       { id: 'mba-13-m2', name: 'MacBook Air 13インチ (M2)', category: 'Mac', releaseDate: '2022-07-15', storage: '256GB', launchPrice: 164800 },
     ];
 
@@ -568,7 +826,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
       const up = res.usedPricing;
       out[`${t.id}:${t.storage}`] = res;
       console.log(
-        `✓ ${t.name} (${t.storage}) 最安: ¥${up.lowestPrice.toLocaleString()} [${up.lowestPlatform.toUpperCase()}] (楽天: ¥${up.rakuten?.price.toLocaleString()} / Yahoo: ¥${up.yahoo?.price.toLocaleString()}) リセール率: ${up.resaleValuePercent}%`,
+        `✓ ${t.name} (${t.storage}) 最安: ¥${up.lowestPrice.toLocaleString()} [${up.lowestPlatform.toUpperCase()}] (楽天: ¥${up.rakuten?.price.toLocaleString()} ${up.rakuten?.isTrustedShop ? '✅大手' : '※一般'} / Yahoo: ¥${up.yahoo?.price.toLocaleString()} ${up.yahoo?.isTrustedShop ? '✅大手' : '※一般'}) リセール率: ${up.resaleValuePercent}%`,
       );
       if (appId || yahooAppId) await sleep(1100);
     }
