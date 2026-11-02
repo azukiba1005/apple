@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-02T10:31:49.229Z",
+  "updatedAt": "2026-11-02T10:51:57.324Z",
   "sources": {
     "rakutenMobileApi": "fallback",
     "carrierScraping": {

@@ -619,7 +619,17 @@ export async function callRakutenIchibaSearch({
 
   const cleanAffId = normalizeRakutenAffiliateId(affiliateId);
   const cleanAccessKey = String(accessKey ?? '').trim();
+  // 新API (openapi.rakuten.co.jp) は applicationId + accessKey が必須。
+  // accessKey 未設定時のみ旧エンドポイントを試行する（旧19桁アプリID向け）
   const endpoint = cleanAccessKey ? RAKUTEN_OPENAPI_ENDPOINT : RAKUTEN_API_ENDPOINT;
+  // 新APIは登録済み許可サイトの Referer / Origin をチェックするため明示的に付与
+  const siteUrl = String(process.env.RAKUTEN_REFERER ?? 'https://apple.azarin.me').trim().replace(/\/+$/, '');
+  const requestHeaders = {
+    Referer: `${siteUrl}/`,
+    Origin: siteUrl,
+    'User-Agent': 'ApplePriceAtlas/1.0 (+https://apple.azarin.me)',
+  };
+  if (cleanAccessKey) requestHeaders.Authorization = `Bearer ${cleanAccessKey}`;
 
   const buildParams = (simplified = false) => {
     const p = new URLSearchParams({
@@ -642,33 +652,54 @@ export async function callRakutenIchibaSearch({
     return p;
   };
 
-  const primaryParams = buildParams(useSimplifiedRakutenParams);
-  let res = await fetch(`${endpoint}?${primaryParams.toString()}`);
+  const doFetch = (params) => fetch(`${endpoint}?${params.toString()}`, { headers: requestHeaders });
 
-  if (res.status === 400 && !useSimplifiedRakutenParams) {
+  /** 認証・設定系の継続不能エラーを1回だけ分かりやすく出力し、以降の楽天APIをスキップ */
+  const markFatal = (status, errDesc) => {
+    rakutenApiFatalError = errDesc;
+    const hint = !cleanAccessKey
+      ? 'GitHub Secrets に RAKUTEN_ACCESS_KEY（楽天デベロッパーズで発行したアクセスキー）を追加してください。'
+      : /REFERRER|referer|origin/i.test(errDesc)
+        ? `楽天デベロッパーズのアプリ設定「許可されたWebサイト」に ${siteUrl} を登録してください。`
+        : 'RAKUTEN_APP_ID / RAKUTEN_ACCESS_KEY の値（前後の空白・改行含む）を確認してください。';
+    console.warn(
+      `[warn] 楽天API 認証/設定エラー (HTTP ${status}: ${errDesc})\n       → ${hint}\n       → 以降の楽天APIリクエストはスキップし、Yahoo!・既存データ・推定相場で安全に補完します。`,
+    );
+  };
+  const isAuthError = (status, errDesc) =>
+    status === 401 ||
+    status === 403 ||
+    /applicationId|accessKey|access_key|client_id|REFERRER|Configuration not found|unauthorized|forbidden/i.test(errDesc);
+
+  let res = await doFetch(buildParams(useSimplifiedRakutenParams));
+
+  if (!res.ok && !useSimplifiedRakutenParams) {
     const errBody = await res.json().catch(() => null);
-    const errDesc = errBody?.error_description || errBody?.error || 'Bad Request';
-    console.warn(`[warn] Rakuten API HTTP 400 (${cleanKeyword}): ${errDesc} → 最小パラメータで自動リトライします`);
+    const errDesc = errBody?.error_description || errBody?.errors?.errorMessage || errBody?.message || errBody?.error || `HTTP ${res.status}`;
 
-    if (/applicationId|accessKey|client_id/i.test(errDesc)) {
-      rakutenApiFatalError = errDesc;
+    if (isAuthError(res.status, errDesc)) {
+      markFatal(res.status, errDesc);
       return null;
     }
 
-    // affiliateId や genreId を外した最小パラメータで1回自動リトライ
-    const retryParams = buildParams(true);
-    res = await fetch(`${endpoint}?${retryParams.toString()}`);
-    if (res.ok) {
-      return await res.json();
+    if (res.status === 400) {
+      console.warn(`[warn] Rakuten API HTTP 400 (${cleanKeyword}): ${errDesc} → 最小パラメータで自動リトライします`);
+      // affiliateId や genreId を外した最小パラメータで1回自動リトライ
+      res = await doFetch(buildParams(true));
+      if (res.ok) {
+        useSimplifiedRakutenParams = true;
+        return await res.json();
+      }
     }
   }
 
   if (!res.ok) {
     const errBody = await res.json().catch(() => null);
-    const errDesc = errBody?.error_description || errBody?.error || `HTTP ${res.status}`;
-    console.warn(`[warn] Rakuten API エラー (${cleanKeyword}): ${errDesc}`);
-    if (/applicationId|accessKey|client_id/i.test(errDesc)) {
-      rakutenApiFatalError = errDesc;
+    const errDesc = errBody?.error_description || errBody?.errors?.errorMessage || errBody?.message || errBody?.error || `HTTP ${res.status}`;
+    if (isAuthError(res.status, errDesc)) {
+      markFatal(res.status, errDesc);
+    } else {
+      console.warn(`[warn] Rakuten API エラー (${cleanKeyword}): HTTP ${res.status} ${errDesc}`);
     }
     return null;
   }

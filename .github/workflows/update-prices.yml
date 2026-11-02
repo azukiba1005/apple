@@ -5,9 +5,22 @@ on:
     # 毎週月曜・木曜の午前4時 (JST) = 日曜・水曜の19:00 (UTC)
     - cron: '0 19 * * 0,3'
   workflow_dispatch:
+  # 価格収集スクリプトやワークフロー自体を更新したら、最新コードで自動的に新規実行する
+  push:
+    branches: [main]
+    paths:
+      - 'data/fetch-live-prices.mjs'
+      - 'data/fetch-used-prices.mjs'
+      - 'data/build-products.mjs'
+      - '.github/workflows/update-prices.yml'
 
 permissions:
   contents: write
+
+# 同時実行による push 競合を防止（古い実行は新しい実行でキャンセル）
+concurrency:
+  group: update-prices
+  cancel-in-progress: true
 
 jobs:
   update-prices:
@@ -15,8 +28,14 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository (latest main)
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Show target commit
+        run: git log -1 --oneline
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
@@ -30,29 +49,34 @@ jobs:
           npm install --no-save playwright
           npx playwright install --with-deps chromium
 
+      - name: Download AppleDB device data
+        run: |
+          curl -sSL --retry 3 --fail -o data/appledb-main.json https://api.appledb.dev/device/main.json || echo "AppleDB の事前取得に失敗（build-products.mjs 側で再試行します）"
+
       - name: Fetch live prices & rebuild products.json
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
           RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
-          YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
           YAHOO_VC_SID: ${{ secrets.YAHOO_VC_SID }}
           YAHOO_VC_PID: ${{ secrets.YAHOO_VC_PID }}
           YAHOO_MOSHIMO_AID: ${{ secrets.YAHOO_MOSHIMO_AID }}
-        run: |
-          if [ ! -f data/appledb-main.json ]; then
-            curl -sSL --retry 3 -o data/appledb-main.json https://api.appledb.dev/device/main.json
-          fi
-          npm run update:all
+        run: npm run update:all
 
       - name: Commit and push updated price data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/prices/live-prices-cache.json public/products.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore(data): 最新のキャリア価格・中古最安値を自動更新"
-            git push
-          else
+          if git diff --cached --quiet; then
             echo "価格データに変更はありませんでした。"
+            exit 0
           fi
+          git commit -m "chore(data): 最新のキャリア価格・中古最安値を自動更新"
+          for i in 1 2 3; do
+            git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0
+            echo "push に失敗しました。リトライします ($i/3)"
+            sleep 5
+          done
+          exit 1
