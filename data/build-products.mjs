@@ -6,7 +6,12 @@
 //       ④ data/prices/*.json (日本 Apple Store 価格履歴リサーチ) で SKU・価格改定履歴を統合
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { IPHONE, IPAD, WATCH, AIRPODS, MAC } from './presets.mjs';
-import { estimatePlatformOffers, buildUsedPricingObject } from './fetch-used-prices.mjs';
+import {
+  estimatePlatformOffers,
+  buildUsedPricingObject,
+  toRakutenAffiliateUrl,
+  toYahooAffiliateUrl,
+} from './fetch-used-prices.mjs';
 
 const db = JSON.parse(readFileSync('data/appledb-main.json', 'utf8'));
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -231,7 +236,7 @@ const toPoints = (hist) => fillEnd(hist)
   }));
 const priceStats = { families: 0, skus: 0, points: 0, unmatched: [] };
 if (existsSync('data/prices')) {
-  for (const f of readdirSync('data/prices').filter((f) => f.endsWith('.json'))) {
+  for (const f of readdirSync('data/prices').filter((f) => f.endsWith('.json') && f !== 'live-prices-cache.json')) {
     let ds;
     try { ds = JSON.parse(readFileSync(`data/prices/${f}`, 'utf8')); } catch (e) { report.push(`✗ ${f}: JSON 解析失敗 ${e.message}`); continue; }
     for (const [fam, entry] of Object.entries(ds.families ?? {})) {
@@ -284,23 +289,89 @@ if (existsSync('data/prices')) {
     }
   }
 }
+
+/* ---------- ⑤ 最新価格キャッシュ (data/prices/live-prices-cache.json) を最優先マージ ---------- */
+let liveCache = null;
+const LIVE_CACHE_FILE = 'data/prices/live-prices-cache.json';
+if (existsSync(LIVE_CACHE_FILE)) {
+  try {
+    liveCache = JSON.parse(readFileSync(LIVE_CACHE_FILE, 'utf8'));
+    report.push(`✓ 最新価格キャッシュ統合: ${LIVE_CACHE_FILE} (updatedAt: ${liveCache.updatedAt ?? 'unknown'})`);
+  } catch (e) {
+    report.push(`✗ ${LIVE_CACHE_FILE}: JSON 解析失敗 ${e.message}`);
+  }
+}
+
+function findCachedSku(cachedProd, sku) {
+  if (!cachedProd?.skus) return null;
+  if (cachedProd.skus[sku.id]) return cachedProd.skus[sku.id];
+  const skuEntries = Object.values(cachedProd.skus);
+  return (
+    skuEntries.find(
+      (cs) =>
+        cs.storage === sku.storage &&
+        (cs.connectivity === sku.connectivity || cs.connectivity === '-' || sku.connectivity === '-'),
+    ) ??
+    skuEntries.find((cs) => cs.label && cs.label === sku.label) ??
+    null
+  );
+}
+
 products.forEach((p) => {
   delete p._family;
+  const cachedProd =
+    liveCache?.products?.[p.id] ??
+    Object.values(liveCache?.products ?? {}).find((cp) => cp.name === p.name) ??
+    null;
+
   p.skus.forEach((s) => {
     const launchPrice = s.priceHistory?.[0]?.appleStorePrice ?? s.carriers?.apple?.launchPrice ?? null;
-    const offers = estimatePlatformOffers({
-      productName: p.name,
-      storage: s.storage || s.label,
-      category: p.category,
-      launchPrice: launchPrice || 98800,
-      releaseDate: p.releaseDate,
-    });
-    s.usedPricing = buildUsedPricingObject({
-      rakutenOffer: offers.rakutenOffer,
-      yahooOffer: offers.yahooOffer,
-      unusedOffer: offers.unusedOffer,
-      launchPrice,
-    });
+    const cachedSku = findCachedSku(cachedProd, s);
+
+    // 1) キャリア最新価格を最優先でマージ
+    if (cachedSku?.carriers && typeof cachedSku.carriers === 'object') {
+      const mergedCarriers = { ...(s.carriers ?? {}) };
+      for (const [cid, cVal] of Object.entries(cachedSku.carriers)) {
+        if (!cVal) continue;
+        const prev = mergedCarriers[cid] ?? {};
+        mergedCarriers[cid] = {
+          ...prev,
+          ...cVal,
+          launchPrice: cVal.launchPrice ?? prev.launchPrice ?? launchPrice,
+          returnProgram: cVal.returnProgram !== undefined ? cVal.returnProgram : (prev.returnProgram ?? null),
+        };
+        if (cid === 'rakuten' && mergedCarriers[cid].url) {
+          mergedCarriers[cid].url = toRakutenAffiliateUrl(mergedCarriers[cid].url);
+        }
+      }
+      s.carriers = mergedCarriers;
+    }
+
+    // 2) 中古最安値 (usedPricing) を最優先でマージ（キャッシュにないSKUは推定フォールバック）
+    if (cachedSku?.usedPricing && cachedSku.usedPricing.lowestPrice > 0) {
+      const cu = structuredClone(cachedSku.usedPricing);
+      if (cu.rakuten?.url) cu.rakuten.url = toRakutenAffiliateUrl(cu.rakuten.url);
+      if (cu.yahoo?.url) cu.yahoo.url = toYahooAffiliateUrl(cu.yahoo.url);
+      if (cu.unused?.url) cu.unused.url = toRakutenAffiliateUrl(cu.unused.url);
+      if (launchPrice && cu.lowestPrice > 0) {
+        cu.resaleValuePercent = Math.round((cu.lowestPrice / launchPrice) * 100);
+      }
+      s.usedPricing = cu;
+    } else {
+      const offers = estimatePlatformOffers({
+        productName: p.name,
+        storage: s.storage || s.label,
+        category: p.category,
+        launchPrice: launchPrice || 98800,
+        releaseDate: p.releaseDate,
+      });
+      s.usedPricing = buildUsedPricingObject({
+        rakutenOffer: offers.rakutenOffer,
+        yahooOffer: offers.yahooOffer,
+        unusedOffer: offers.unusedOffer,
+        launchPrice,
+      });
+    }
   });
 });
 

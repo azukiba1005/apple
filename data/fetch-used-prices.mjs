@@ -323,7 +323,14 @@ export function buildYahooQuery(productName, storage, category = '') {
   return [`"${cleanName}"`, cleanStorage, YAHOO_NEGATIVE_TERMS].filter(Boolean).join(' ');
 }
 
-export function buildRakutenWebSearchUrl({ productName, storage, category, launchPrice, condition = '中古' }) {
+export function buildRakutenWebSearchUrl({
+  productName,
+  storage,
+  category,
+  launchPrice,
+  condition = '中古',
+  affiliateId = process.env.RAKUTEN_AFFILIATE_ID,
+}) {
   const keyword = buildRakutenKeyword(productName, storage, condition, category);
   const genreId = getRakutenGenreId(category);
   const minPrice = calcMinPrice(launchPrice);
@@ -332,7 +339,8 @@ export function buildRakutenWebSearchUrl({ productName, storage, category, launc
     nitem: RAKUTEN_NG_KEYWORD,
     s: '2',
   });
-  return `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}/${genreId}/?${qs.toString()}`;
+  const rawUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}/${genreId}/?${qs.toString()}`;
+  return toRakutenAffiliateUrl(rawUrl, affiliateId);
 }
 
 export function buildYahooWebSearchUrl({ productName, storage, category, launchPrice }) {
@@ -348,7 +356,45 @@ export function buildYahooWebSearchUrl({ productName, storage, category, launchP
     used: '1',
     X: '2',
   });
-  return `https://shopping.yahoo.co.jp/search?${qs.toString()}`;
+  const rawUrl = `https://shopping.yahoo.co.jp/search?${qs.toString()}`;
+  return toYahooAffiliateUrl(rawUrl);
+}
+
+/**
+ * 楽天市場の商品URL・検索URLを楽天アフィリエイトURLに変換する
+ */
+export function toRakutenAffiliateUrl(rawUrl, affiliateId = process.env.RAKUTEN_AFFILIATE_ID) {
+  const url = String(rawUrl ?? '').trim();
+  const aid = String(affiliateId ?? '').trim();
+  if (!url || !aid) return url;
+  if (url.includes('hb.afl.rakuten.co.jp')) return url;
+  return `https://hb.afl.rakuten.co.jp/hgc/${encodeURIComponent(aid)}/?pc=${encodeURIComponent(url)}&m=${encodeURIComponent(url)}`;
+}
+
+/**
+ * Yahoo!ショッピングの商品URL・検索URLをバリューコマースまたはもしもアフィリエイトURLに変換する
+ */
+export function toYahooAffiliateUrl(
+  rawUrl,
+  {
+    vcSid = process.env.YAHOO_VC_SID,
+    vcPid = process.env.YAHOO_VC_PID,
+    moshimoAid = process.env.YAHOO_MOSHIMO_AID,
+  } = {},
+) {
+  const url = String(rawUrl ?? '').trim();
+  if (!url) return url;
+  if (url.includes('ck.jp.ap.valuecommerce.com') || url.includes('af.moshimo.com')) return url;
+  const sid = String(vcSid ?? '').trim();
+  const pid = String(vcPid ?? '').trim();
+  const maid = String(moshimoAid ?? '').trim();
+  if (sid && pid) {
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${encodeURIComponent(sid)}&pid=${encodeURIComponent(pid)}&vc_url=${encodeURIComponent(url)}`;
+  }
+  if (maid) {
+    return `https://af.moshimo.com/af/c/click?a_id=${encodeURIComponent(maid)}&p_id=1225&pc_id=1925&pl_id=18502&url=${encodeURIComponent(url)}`;
+  }
+  return url;
 }
 
 function hashCode(str) {
@@ -471,7 +517,7 @@ export function pickCheapestRakutenItem(
     candidates.push({
       price,
       shopName,
-      url: String(it.affiliateUrl || it.itemUrl || ''),
+      url: toRakutenAffiliateUrl(String(it.affiliateUrl || it.itemUrl || '')),
       updatedAt: today,
       itemName: title,
       isTrustedShop: isTrustedShop(shopName),
@@ -505,7 +551,7 @@ export function pickCheapestYahooItem(
     candidates.push({
       price,
       shopName,
-      url: String(hit.url || ''),
+      url: toYahooAffiliateUrl(String(hit.url || '')),
       updatedAt: today,
       itemName: title,
       isTrustedShop: isTrustedShop(shopName),
@@ -641,12 +687,12 @@ export function buildUsedPricingObject({
   const resaleValuePercent =
     baseLaunch && lowestPrice > 0 ? Math.round((lowestPrice / baseLaunch) * 100) : null;
 
-  const formatOffer = (offer) =>
+  const formatOffer = (offer, platform = 'rakuten') =>
     offer
       ? {
           price: offer.price,
           shopName: offer.shopName,
-          url: offer.url,
+          url: platform === 'yahoo' ? toYahooAffiliateUrl(offer.url) : toRakutenAffiliateUrl(offer.url),
           updatedAt: offer.updatedAt,
           isTrustedShop: Boolean(offer.isTrustedShop),
           ...(offer.itemName ? { itemName: offer.itemName } : {}),
@@ -658,9 +704,9 @@ export function buildUsedPricingObject({
     lowestPrice,
     lowestPlatform,
     resaleValuePercent,
-    rakuten: formatOffer(rakutenOffer),
-    yahoo: formatOffer(yahooOffer),
-    ...(unusedOffer ? { unused: formatOffer(unusedOffer) } : {}),
+    rakuten: formatOffer(rakutenOffer, 'rakuten'),
+    yahoo: formatOffer(yahooOffer, 'yahoo'),
+    ...(unusedOffer ? { unused: formatOffer(unusedOffer, 'rakuten') } : {}),
   };
 }
 
