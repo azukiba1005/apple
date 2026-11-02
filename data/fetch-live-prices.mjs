@@ -65,8 +65,8 @@ export const CARRIER_PRICE_URLS = {
     'Apple Watch': 'https://www.au.com/apple-watch/',
   },
   softbank: {
-    iPhone: 'https://www.softbank.jp/mobile/iphone/',
-    iPad: 'https://www.softbank.jp/mobile/ipad/',
+    iPhone: 'https://www.softbank.jp/iphone/',
+    iPad: 'https://www.softbank.jp/ipad/',
     'Apple Watch': 'https://www.softbank.jp/mobile/apple-watch/',
   },
 };
@@ -290,11 +290,12 @@ export async function fetchRakutenMobileOfficialPrice({
   connectivity = '-',
   category = 'iPhone',
   launchPrice = 98800,
-  appId = process.env.RAKUTEN_APP_ID,
-  affiliateId = process.env.RAKUTEN_AFFILIATE_ID,
-  accessKey = process.env.RAKUTEN_ACCESS_KEY,
+  appId = process.env.RAKUTEN_APP_ID?.trim(),
+  affiliateId = process.env.RAKUTEN_AFFILIATE_ID?.trim(),
+  accessKey = process.env.RAKUTEN_ACCESS_KEY?.trim(),
 }) {
-  if (!appId || isRakutenApiDisabled()) return null;
+  const cleanAppId = String(appId ?? '').trim();
+  if (!cleanAppId || isRakutenApiDisabled()) return null;
 
   // Wi-Fi専用iPadやGPS専用Watch、Macは楽天モバイルのキャリア端末対象外の場合はスキップ可能だが、
   // 楽天モバイル公式楽天市場店ではApple Watch GPSやiPadも扱うため検索を試みる
@@ -302,13 +303,23 @@ export async function fetchRakutenMobileOfficialPrice({
 
   const cleanName = cleanSearchProductName(productName);
   const cleanStorage = extractStorageToken(storage, category);
-  const keyword = [cleanName, cleanStorage].filter(Boolean).join(' ');
+  const keyword = [cleanName, cleanStorage]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/[()（）+/,-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
   // 新品端末のため発売時価格の50%を下限に設定（アクセサリーや極端な割引セット誤認防止）
   const minNewPrice = Math.max(Math.round((Number(launchPrice) || 80000) * 0.5), 25000);
 
+  const validAffId =
+    affiliateId && /^[0-9a-f]+\.[0-9a-f]+\.[0-9a-f]+\.[0-9a-f]+$/i.test(affiliateId.trim())
+      ? affiliateId.trim()
+      : '';
+
   const json = await callRakutenIchibaSearch({
-    appId,
-    affiliateId,
+    appId: cleanAppId,
+    affiliateId: validAffId,
     accessKey,
     keyword,
     shopCode: 'rakutenmobile',
@@ -624,10 +635,10 @@ export function mergeLiveCarrierPrice(baseCarrierObj, liveData, carrierId) {
  * ============================================================================ */
 
 export async function runFetchLivePrices() {
-  const appId = process.env.RAKUTEN_APP_ID;
-  const affiliateId = process.env.RAKUTEN_AFFILIATE_ID;
-  const accessKey = process.env.RAKUTEN_ACCESS_KEY;
-  const yahooAppId = process.env.YAHOO_APP_ID;
+  const appId = process.env.RAKUTEN_APP_ID?.trim();
+  const affiliateId = process.env.RAKUTEN_AFFILIATE_ID?.trim();
+  const accessKey = process.env.RAKUTEN_ACCESS_KEY?.trim();
+  const yahooAppId = process.env.YAHOO_APP_ID?.trim();
 
   console.log('================================================================');
   console.log('📦 Apple Price Atlas 自動価格収集バッチ (fetch-live-prices.mjs)');
