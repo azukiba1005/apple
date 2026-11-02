@@ -3,8 +3,8 @@ import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, Bar,
 } from 'recharts';
 import {
-  Smartphone, Tablet, Watch, Laptop, Sun, Moon, TrendingUp, TrendingDown, Minus, Copy, Download, Upload,
-  Trash2, RotateCcw, Check, Scale, LineChart as LineIcon, Database, Coins, Plus, X, Link2, AlertTriangle,
+  Smartphone, Tablet, Watch, Laptop, Sun, Moon, TrendingUp, TrendingDown, Minus, Copy, Download,
+  Check, Scale, LineChart as LineIcon, Coins, X, Link2, FileSpreadsheet,
   Info, Trophy, Apple, Headphones, Search,
 } from 'lucide-react';
 
@@ -86,7 +86,6 @@ export interface Dataset {
  * 2. 初期搭載サンプルデータ
  *    ※ Apple Store 価格は公開情報ベースですが、一部は概算(approx)です。キャリア価格は
  *      キャリアごとの係数・割引額から作ったモデル値(目安)で、実際の価格とは異なります。
- *      正確な運用には「データ管理」タブから実データ JSON を読み込んでください。
  * ===================================================================================== */
 
 type H = [date: string, event: string, jpy: number, usd: number, fx: number, approx?: boolean];
@@ -487,9 +486,399 @@ async function copyText(text: string) {
     const ok = document.execCommand('copy'); document.body.removeChild(ta); return ok;
   }
 }
+function downloadBlob(name: string, blob: Blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 function downloadFile(name: string, text: string, mime = 'application/json') {
-  const url = URL.createObjectURL(new Blob([text], { type: mime }));
-  const a = document.createElement('a'); a.href = url; a.download = name; a.click(); URL.revokeObjectURL(url);
+  downloadBlob(name, new Blob([text], { type: mime }));
+}
+
+/* ---------- Excel (.xlsx / OpenXML SpreadsheetML) 生成ユーティリティ ---------- */
+type XlsCellKind = 'header' | 'text' | 'yen' | 'yenBest' | 'int' | 'dec' | 'pct' | 'section' | 'yenDiff';
+type XlsCell = string | number | null | undefined | { v: string | number | null | undefined; k?: XlsCellKind };
+interface XlsSheet { name: string; rows: XlsCell[][]; freezeRows?: number; freezeCols?: number }
+
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    let c = i;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[i] = c >>> 0;
+  }
+  return t;
+})();
+
+function crc32(buf: Uint8Array): number {
+  let c = 0xffffffff;
+  for (let i = 0; i < buf.length; i++) c = CRC_TABLE[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+function zipStore(files: { path: string; data: Uint8Array }[]): Uint8Array<ArrayBuffer> {
+  const enc = new TextEncoder();
+  const now = new Date();
+  const dosTime = ((now.getHours() & 31) << 11) | ((now.getMinutes() & 63) << 5) | ((now.getSeconds() >> 1) & 31);
+  const yr = Math.max(1980, now.getFullYear()) - 1980;
+  const dosDate = ((yr & 127) << 9) | (((now.getMonth() + 1) & 15) << 5) | (now.getDate() & 31);
+
+  const locals: Uint8Array[] = [];
+  const centrals: Uint8Array[] = [];
+  let offset = 0;
+
+  for (const f of files) {
+    const name = enc.encode(f.path);
+    const crc = crc32(f.data);
+    const size = f.data.length;
+
+    const lh = new Uint8Array(30 + name.length);
+    const lv = new DataView(lh.buffer);
+    lv.setUint32(0, 0x04034b50, true);
+    lv.setUint16(4, 20, true);
+    lv.setUint16(10, dosTime, true);
+    lv.setUint16(12, dosDate, true);
+    lv.setUint32(14, crc, true);
+    lv.setUint32(18, size, true);
+    lv.setUint32(22, size, true);
+    lv.setUint16(26, name.length, true);
+    lh.set(name, 30);
+    locals.push(lh, f.data);
+
+    const ch = new Uint8Array(46 + name.length);
+    const cv = new DataView(ch.buffer);
+    cv.setUint32(0, 0x02014b50, true);
+    cv.setUint16(4, 20, true);
+    cv.setUint16(6, 20, true);
+    cv.setUint16(12, dosTime, true);
+    cv.setUint16(14, dosDate, true);
+    cv.setUint32(16, crc, true);
+    cv.setUint32(20, size, true);
+    cv.setUint32(24, size, true);
+    cv.setUint16(28, name.length, true);
+    cv.setUint32(42, offset, true);
+    ch.set(name, 46);
+    centrals.push(ch);
+
+    offset += lh.length + size;
+  }
+
+  const cdSize = centrals.reduce((a, b) => a + b.length, 0);
+  const eocd = new Uint8Array(22);
+  const ev = new DataView(eocd.buffer);
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, files.length, true);
+  ev.setUint16(10, files.length, true);
+  ev.setUint32(12, cdSize, true);
+  ev.setUint32(16, offset, true);
+
+  const out = new Uint8Array(offset + cdSize + 22);
+  let pos = 0;
+  for (const b of locals) { out.set(b, pos); pos += b.length; }
+  for (const b of centrals) { out.set(b, pos); pos += b.length; }
+  out.set(eocd, pos);
+  return out;
+}
+
+const xmlEsc = (s: string) =>
+  s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+function xlsCol(c: number): string {
+  let s = '', n = c + 1;
+  while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); }
+  return s;
+}
+
+const XLS_STYLE: Record<XlsCellKind, number> = { header: 1, text: 2, yen: 3, yenBest: 4, int: 5, dec: 6, pct: 7, section: 8, yenDiff: 9 };
+
+export function buildXlsx(inputSheets: XlsSheet[]): Uint8Array<ArrayBuffer> {
+  const sheets = inputSheets.length ? inputSheets : [{ name: 'Sheet1', rows: [['']] }];
+  const enc = new TextEncoder();
+  const strings: string[] = [];
+  const strMap = new Map<string, number>();
+  let strCount = 0;
+  const intern = (raw: string) => {
+    const clean = raw.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+    strCount++;
+    const hit = strMap.get(clean);
+    if (hit !== undefined) return hit;
+    const idx = strings.length;
+    strings.push(clean);
+    strMap.set(clean, idx);
+    return idx;
+  };
+
+  const usedNames = new Set<string>();
+  const safeName = (raw: string, idx: number) => {
+    let base = raw.replace(/[:\\/?*[\]]/g, ' ').replace(/^'+|'+$/g, '').trim() || `Sheet${idx + 1}`;
+    if (base.length > 31) base = base.slice(0, 31);
+    let candidate = base, n = 2;
+    while (usedNames.has(candidate.toLowerCase())) {
+      const suffix = ` (${n++})`;
+      candidate = base.slice(0, 31 - suffix.length) + suffix;
+    }
+    usedNames.add(candidate.toLowerCase());
+    return candidate;
+  };
+
+  const dispWidth = (s: string) => {
+    let max = 0;
+    for (const line of s.split('\n')) {
+      let w = 0;
+      for (const ch of line) w += ch.charCodeAt(0) > 0x7f ? 2 : 1;
+      if (w > max) max = w;
+    }
+    return max;
+  };
+
+  const sheetFiles: { path: string; data: Uint8Array }[] = [];
+  const sheetNames: string[] = [];
+
+  sheets.forEach((sh, si) => {
+    sheetNames.push(safeName(sh.name, si));
+    const colWidths: number[] = [];
+    const rowsXml = sh.rows.map((row, ri) => {
+      const cellsXml = row.map((cell, ci) => {
+        const ref = `${xlsCol(ci)}${ri + 1}`;
+        const isObj = cell !== null && typeof cell === 'object';
+        const val = isObj ? cell.v : cell;
+        const kind: XlsCellKind = isObj && cell.k ? cell.k : ri === 0 ? 'header' : 'text';
+        const sIdx = XLS_STYLE[kind] ?? 2;
+
+        if (typeof val === 'number' && Number.isFinite(val)) {
+          const w = kind === 'yen' || kind === 'yenBest' || kind === 'yenDiff' ? 14 : 11;
+          colWidths[ci] = Math.max(colWidths[ci] ?? 10, w);
+          return `<c r="${ref}" s="${sIdx}"><v>${val}</v></c>`;
+        }
+        const text = val == null ? '' : String(val);
+        colWidths[ci] = Math.max(colWidths[ci] ?? 10, dispWidth(text));
+        return `<c r="${ref}" s="${sIdx}" t="s"><v>${intern(text)}</v></c>`;
+      }).join('');
+      return `<row r="${ri + 1}">${cellsXml}</row>`;
+    }).join('');
+
+    const fr = sh.rows.length > 1 ? (sh.freezeRows ?? 1) : 0;
+    const fc = (sh.rows[0]?.length ?? 0) > 1 ? (sh.freezeCols ?? 0) : 0;
+    let viewsXml = '';
+    if (fr > 0 || fc > 0) {
+      const topLeft = `${xlsCol(fc)}${fr + 1}`;
+      const pane = fr > 0 && fc > 0 ? 'bottomRight' : fr > 0 ? 'bottomLeft' : 'topRight';
+      const splits = `${fc > 0 ? ` xSplit="${fc}"` : ''}${fr > 0 ? ` ySplit="${fr}"` : ''}`;
+      viewsXml = `<sheetViews><sheetView workbookViewId="0"><pane${splits} topLeftCell="${topLeft}" activePane="${pane}" state="frozen"/><selection pane="${pane}" activeCell="${topLeft}" sqref="${topLeft}"/></sheetView></sheetViews>`;
+    }
+
+    const colsXml = colWidths.length
+      ? `<cols>${colWidths.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${Math.min(48, Math.max(10, w + 3))}" customWidth="1"/>`).join('')}</cols>`
+      : '';
+
+    const xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+      `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">${viewsXml}${colsXml}<sheetData>${rowsXml}</sheetData></worksheet>`;
+    sheetFiles.push({ path: `xl/worksheets/sheet${si + 1}.xml`, data: enc.encode(xml) });
+  });
+
+  const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">` +
+    `<numFmts count="4">` +
+      `<numFmt numFmtId="164" formatCode="&quot;¥&quot;#,##0;-&quot;¥&quot;#,##0;&quot;¥&quot;0"/>` +
+      `<numFmt numFmtId="165" formatCode="0.0"/>` +
+      `<numFmt numFmtId="166" formatCode="+0.0%;-0.0%;0.0%"/>` +
+      `<numFmt numFmtId="167" formatCode="+&quot;¥&quot;#,##0;-&quot;¥&quot;#,##0;&quot;±¥&quot;0"/>` +
+    `</numFmts>` +
+    `<fonts count="2"><font><sz val="11"/><name val="Yu Gothic"/></font><font><b/><sz val="11"/><name val="Yu Gothic"/></font></fonts>` +
+    `<fills count="4">` +
+      `<fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>` +
+      `<fill><patternFill patternType="solid"><fgColor rgb="FFF4F4F5"/><bgColor indexed="64"/></patternFill></fill>` +
+      `<fill><patternFill patternType="solid"><fgColor rgb="FFECFDF5"/><bgColor indexed="64"/></patternFill></fill>` +
+    `</fills>` +
+    `<borders count="2">` +
+      `<border><left/><right/><top/><bottom/><diagonal/></border>` +
+      `<border><left style="thin"><color rgb="FFD4D4D8"/></left><right style="thin"><color rgb="FFD4D4D8"/></right><top style="thin"><color rgb="FFD4D4D8"/></top><bottom style="thin"><color rgb="FFD4D4D8"/></bottom><diagonal/></border>` +
+    `</borders>` +
+    `<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>` +
+    `<cellXfs count="10">` +
+      `<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>` +
+      `<xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>` +
+      `<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>` +
+      `<xf numFmtId="164" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="top"/></xf>` +
+      `<xf numFmtId="164" fontId="1" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="top"/></xf>` +
+      `<xf numFmtId="3" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="top"/></xf>` +
+      `<xf numFmtId="165" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="top"/></xf>` +
+      `<xf numFmtId="166" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="top"/></xf>` +
+      `<xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf>` +
+      `<xf numFmtId="167" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="top"/></xf>` +
+    `</cellXfs>` +
+    `<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>` +
+    `</styleSheet>`;
+
+  const sstXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${strCount}" uniqueCount="${strings.length}">` +
+    strings.map((s) => `<si><t xml:space="preserve">${xmlEsc(s)}</t></si>`).join('') +
+    `</sst>`;
+
+  const wbXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">` +
+    `<sheets>${sheetNames.map((n, i) => `<sheet name="${xmlEsc(n)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('')}</sheets>` +
+    `</workbook>`;
+
+  const n = sheetFiles.length;
+  const wbRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
+    sheetFiles.map((_, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join('') +
+    `<Relationship Id="rId${n + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>` +
+    `<Relationship Id="rId${n + 2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>` +
+    `</Relationships>`;
+
+  const rootRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
+    `<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>` +
+    `</Relationships>`;
+
+  const ctXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">` +
+    `<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>` +
+    `<Default Extension="xml" ContentType="application/xml"/>` +
+    `<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>` +
+    `<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>` +
+    `<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>` +
+    sheetFiles.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('') +
+    `</Types>`;
+
+  return zipStore([
+    { path: '[Content_Types].xml', data: enc.encode(ctXml) },
+    { path: '_rels/.rels', data: enc.encode(rootRelsXml) },
+    { path: 'xl/workbook.xml', data: enc.encode(wbXml) },
+    { path: 'xl/_rels/workbook.xml.rels', data: enc.encode(wbRelsXml) },
+    { path: 'xl/styles.xml', data: enc.encode(stylesXml) },
+    { path: 'xl/sharedStrings.xml', data: enc.encode(sstXml) },
+    ...sheetFiles,
+  ]);
+}
+
+function downloadXlsx(name: string, sheets: XlsSheet[]) {
+  const bytes = buildXlsx(sheets);
+  downloadBlob(
+    name.endsWith('.xlsx') ? name : `${name}.xlsx`,
+    new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
+  );
+}
+
+/** 選択機種の比較データから Excel ワークブック (比較表 / キャリア価格詳細 / 価格改定履歴) を組み立てる */
+function buildCompareExcelSheets(products: Product[], sel: Sel[], mode: Mode, mnp: boolean): XlsSheet[] {
+  const cols = sel
+    .filter((s) => products.some((x) => x.id === s.pid))
+    .map((s) => {
+      const p = products.find((x) => x.id === s.pid)!;
+      return { p, sku: p.skus.find((k) => k.id === s.sid) ?? p.skus[0] };
+    });
+
+  const cheapestFor = (sku: Sku) => {
+    const vals = CARRIER_ORDER.map((id) => ({ id, v: carrierValue(sku.carriers[id], mode, mnp) }))
+      .filter((x): x is { id: CarrierId; v: number } => x.v != null);
+    if (!vals.length) return { min: null as number | null, ids: [] as CarrierId[] };
+    const min = Math.min(...vals.map((x) => x.v));
+    return { min, ids: vals.filter((x) => x.v === min).map((x) => x.id) };
+  };
+
+  const modeLabel = `${mode === 'bulk' ? '一括価格' : '2年返却 実質負担額'}${mnp ? ' (MNP/新規割引後)' : ''}`;
+  const secRow = (title: string): XlsCell[] => [{ v: title, k: 'section' }, ...cols.map((): XlsCell => ({ v: '', k: 'section' }))];
+
+  const compareRows: XlsCell[][] = [
+    ['項目', ...cols.map((c) => `${c.p.name} (${c.sku.label})`)],
+    ['カテゴリ', ...cols.map((c) => c.p.category)],
+    ['世代', ...cols.map((c) => c.p.generation || '—')],
+    ['発売日', ...cols.map((c) => c.p.releaseDate || '—')],
+    ['容量', ...cols.map((c) => c.sku.storage || '—')],
+    ['通信方式', ...cols.map((c) => (c.sku.connectivity === '-' ? '共通 (本体仕様参照)' : c.sku.connectivity))],
+    secRow(`価格 — ${modeLabel}`),
+  ];
+
+  CARRIER_ORDER.forEach((id) => {
+    compareRows.push([
+      CARRIER_META[id].label,
+      ...cols.map((c): XlsCell => {
+        const cp = c.sku.carriers[id];
+        const v = carrierValue(cp, mode, mnp);
+        if (v == null) return cp && mode === 'return' ? '返却プログラム対象外' : '—';
+        const ch = cheapestFor(c.sku);
+        return { v, k: ch.ids.includes(id) ? 'yenBest' : 'yen' };
+      }),
+    ]);
+  });
+
+  compareRows.push(['最安キャリア', ...cols.map((c) => {
+    const ch = cheapestFor(c.sku);
+    return ch.ids.length ? ch.ids.map((id) => CARRIER_META[id].label).join(' / ') : '—';
+  })]);
+  compareRows.push(['最安価格', ...cols.map((c): XlsCell => {
+    const ch = cheapestFor(c.sku);
+    return ch.min != null ? { v: ch.min, k: 'yenBest' } : '—';
+  })]);
+
+  compareRows.push(secRow('スペック'));
+  SPEC_ROWS.forEach((r) => {
+    compareRows.push([r.label, ...cols.map((c) => specText(c.p.specs[r.key]))]);
+  });
+
+  const carrierRows: XlsCell[][] = [[
+    '機種', 'カテゴリ', 'SKU', 'キャリア', '発売時一括(円)', '現在一括(円)', 'MNP/新規割引後(円)',
+    '返却プログラム', '利用期間(月)', '2年返却実質(円)', 'MNP併用実質(円)', '免除残価(円)',
+  ]];
+  cols.forEach((c) => {
+    CARRIER_ORDER.forEach((id) => {
+      const cp = c.sku.carriers[id];
+      if (!cp) return;
+      const retMnp = carrierValue(cp, 'return', true);
+      carrierRows.push([
+        c.p.name,
+        c.p.category,
+        c.sku.label,
+        CARRIER_META[id].label,
+        { v: cp.launchPrice, k: 'yen' },
+        { v: cp.currentPrice, k: 'yen' },
+        cp.mnpPrice != null ? { v: cp.mnpPrice, k: 'yen' } : '—',
+        cp.returnProgram?.name ?? '—',
+        cp.returnProgram ? { v: cp.returnProgram.months, k: 'int' } : '—',
+        cp.returnProgram ? { v: cp.returnProgram.effectiveCost, k: 'yen' } : '—',
+        retMnp != null && cp.mnpPrice != null ? { v: retMnp, k: 'yen' } : '—',
+        cp.returnProgram?.residualValue != null ? { v: cp.returnProgram.residualValue, k: 'yen' } : '—',
+      ]);
+    });
+  });
+
+  const historyRows: XlsCell[][] = [[
+    '機種', 'カテゴリ', 'SKU', '日付', 'イベント', '日本価格(税込)', '前回比差額(円)', '変動率',
+    '米国価格(USD)', '市場為替(円/$)', '実質Appleレート(円/$)', '精度', '出典', '備考',
+  ]];
+  cols.forEach((c) => {
+    c.sku.priceHistory.forEach((pt, i) => {
+      const prev = i > 0 ? c.sku.priceHistory[i - 1].appleStorePrice : null;
+      const diff = prev != null ? pt.appleStorePrice - prev : null;
+      const ar = impliedRate(pt);
+      historyRows.push([
+        c.p.name,
+        c.p.category,
+        c.sku.label,
+        pt.date,
+        pt.event,
+        { v: pt.appleStorePrice, k: 'yen' },
+        diff != null && diff !== 0 ? { v: diff, k: 'yenDiff' } : '—',
+        prev != null && prev > 0 && diff !== 0 ? { v: pt.appleStorePrice / prev - 1, k: 'pct' } : '—',
+        pt.usdPrice != null ? { v: pt.usdPrice, k: 'int' } : '—',
+        pt.exchangeRate != null ? { v: pt.exchangeRate, k: 'dec' } : '—',
+        ar != null ? { v: ar, k: 'dec' } : '—',
+        pt.approx ? (pt.confidence === 'low' ? '要検証' : '概算') : pt.confidence === 'high' ? '出典確認済' : '',
+        pt.source ?? '',
+        pt.note ?? '',
+      ]);
+    });
+  });
+
+  return [
+    { name: 'スペック・価格比較', rows: compareRows, freezeRows: 1, freezeCols: 1 },
+    { name: 'キャリア価格詳細', rows: carrierRows, freezeRows: 1 },
+    { name: '価格改定履歴', rows: historyRows, freezeRows: 1 },
+  ];
 }
 
 /* =====================================================================================
@@ -497,16 +886,17 @@ function downloadFile(name: string, text: string, mime = 'application/json') {
  * ===================================================================================== */
 
 const card = 'rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900';
-const selectCls = 'rounded-lg border border-zinc-300 bg-white px-2.5 py-1.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-sky-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100';
-const btnCls = 'inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700';
+const selectCls = 'rounded-lg border border-zinc-300 bg-white px-2.5 py-1.5 text-base sm:text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-sky-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100';
+const btnCls = 'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs sm:text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700';
+const excelBtnCls = 'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-emerald-600 bg-emerald-600 px-3 py-1.5 text-xs sm:text-sm font-medium text-white transition hover:bg-emerald-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 dark:border-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500';
 
 function CarrierBadge({ id, small }: { id: CarrierId; small?: boolean }) {
   const dark = useDark();
   const c = carrierColor(id, dark);
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border font-semibold ${small ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs'}`}
+    <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border font-semibold ${small ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs'}`}
       style={{ color: c, borderColor: c + '66', backgroundColor: c + '1a' }}>
-      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c }} />
+      <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: c }} />
       {CARRIER_META[id].label}
     </span>
   );
@@ -518,18 +908,18 @@ function DeltaBadge({ diff, base }: { diff: number; base: number }) {
   const cls = up ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300' : down ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400';
   const Icon = up ? TrendingUp : down ? TrendingDown : Minus;
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold tabular-nums ${cls}`}>
-      <Icon className="h-3.5 w-3.5" />{signedYen(diff)} ({signedPct(pct)})
+    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] sm:text-xs font-bold tabular-nums ${cls}`}>
+      <Icon className="h-3.5 w-3.5 shrink-0" />{signedYen(diff)} ({signedPct(pct)})
     </span>
   );
 }
 
 function Segmented<T extends string>({ value, onChange, options }: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[] }) {
   return (
-    <div className="inline-flex rounded-xl bg-zinc-200/70 p-1 dark:bg-zinc-800">
+    <div className="no-scrollbar inline-flex max-w-full overflow-x-auto rounded-xl bg-zinc-200/70 p-1 dark:bg-zinc-800">
       {options.map((o) => (
         <button key={o.value} onClick={() => onChange(o.value)}
-          className={`rounded-lg px-3.5 py-1.5 text-sm font-semibold transition ${value === o.value ? 'bg-white text-zinc-900 shadow dark:bg-zinc-600 dark:text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'}`}>
+          className={`flex-1 sm:flex-initial whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs sm:px-3.5 sm:text-sm font-semibold transition ${value === o.value ? 'bg-white text-zinc-900 shadow dark:bg-zinc-600 dark:text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'}`}>
           {o.label}
         </button>
       ))}
@@ -539,9 +929,9 @@ function Segmented<T extends string>({ value, onChange, options }: { value: T; o
 
 function SectionTitle({ icon, title, desc }: { icon: React.ReactNode; title: string; desc?: string }) {
   return (
-    <div className="mb-4 flex items-start gap-3">
-      <div className="rounded-xl bg-zinc-900 p-2 text-white dark:bg-zinc-100 dark:text-zinc-900">{icon}</div>
-      <div><h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{title}</h2>{desc && <p className="text-sm text-zinc-500 dark:text-zinc-400">{desc}</p>}</div>
+    <div className="mb-3 sm:mb-4 flex items-start gap-2.5 sm:gap-3">
+      <div className="shrink-0 rounded-xl bg-zinc-900 p-2 text-white dark:bg-zinc-100 dark:text-zinc-900">{icon}</div>
+      <div className="min-w-0"><h2 className="text-base sm:text-lg font-bold leading-snug text-zinc-900 dark:text-zinc-50">{title}</h2>{desc && <p className="mt-0.5 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">{desc}</p>}</div>
     </div>
   );
 }
@@ -550,8 +940,8 @@ function ProductSkuPicker({ products, sel, onChange }: { products: Product[]; se
   const p = products.find((x) => x.id === sel.pid) ?? products[0];
   const cats = Array.from(new Set(products.map((x) => x.category)));
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <select className={selectCls} value={p.id} onChange={(e) => { const np = products.find((x) => x.id === e.target.value)!; onChange({ pid: np.id, sid: (pricedSkus(np)[0] ?? np.skus[0]).id }); }}>
+    <div className="flex w-full sm:w-auto flex-wrap items-center gap-2">
+      <select className={`${selectCls} min-w-0 flex-1 sm:flex-initial max-w-full`} value={p.id} onChange={(e) => { const np = products.find((x) => x.id === e.target.value)!; onChange({ pid: np.id, sid: (pricedSkus(np)[0] ?? np.skus[0]).id }); }}>
         {cats.map((c) => (<optgroup key={c} label={c}>{products.filter((x) => x.category === c).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</optgroup>))}
       </select>
       <select className={selectCls} value={sel.sid} onChange={(e) => onChange({ pid: p.id, sid: e.target.value })}>
@@ -577,15 +967,23 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
   const [adding, setAdding] = useState('');
   const [q, setQ] = useState('');
   const [catF, setCatF] = useState('');
+  const [mobileView, setMobileView] = useState<'stack' | 'table'>('stack');
   const available = products.filter((p) => !sels.some((s) => s.pid === p.id));
   const allCats = Array.from(new Set(products.map((x) => x.category)));
   const matched = available.filter((p) => (!catF || p.category === catF) && (!q.trim() || p.name.toLowerCase().includes(q.trim().toLowerCase()) || String(p.specs.identifier ?? '').toLowerCase().includes(q.trim().toLowerCase())));
 
   const doCopy = async (kind: 'md' | 'csv') => {
-    if (!sels.length) return;
-    const rows = buildCompareTable(all, sels, mode, mnp);
+    if (!cols.length) return;
+    const rows = buildCompareTable(all, cols.map((c) => c.sel), mode, mnp);
     const ok = await copyText(kind === 'md' ? toMarkdown(rows) : toCSV(rows));
     toast(ok ? `${kind === 'md' ? 'Markdown' : 'CSV'} をコピーしました` : 'コピーに失敗しました');
+  };
+
+  const doExportExcel = () => {
+    if (!cols.length) return;
+    const today = new Date().toISOString().slice(0, 10);
+    downloadXlsx(`apple-compare-${today}.xlsx`, buildCompareExcelSheets(all, cols.map((c) => c.sel), mode, mnp));
+    toast(`選択中の${cols.length}機種をExcelでダウンロードしました`);
   };
 
   const cheapest = (c: (typeof cols)[number]) => {
@@ -596,76 +994,157 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
   };
 
   return (
-    <div className="space-y-5">
-      <div className={`${card} p-5`}>
+    <div className="space-y-4 sm:space-y-5">
+      <div className={`${card} p-3.5 sm:p-5`}>
         <SectionTitle icon={<Scale className="h-5 w-5" />} title="スペック＆キャリア価格 比較" desc="機種を追加し、容量・通信方式を選んで横並び比較。最安キャリアを自動ハイライトします。" />
-        <div className="flex flex-wrap items-center gap-3">
-          <Segmented<Mode> value={mode} onChange={setMode} options={[{ value: 'bulk', label: '一括価格モード' }, { value: 'return', label: '2年返却（実質負担額）モード' }]} />
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <Segmented<Mode> value={mode} onChange={setMode} options={[{ value: 'bulk', label: '一括価格モード' }, { value: 'return', label: '2年返却（実質）モード' }]} />
           <label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
             <input type="checkbox" checked={mnp} onChange={(e) => setMnp(e.target.checked)} className="h-4 w-4 accent-sky-500" />MNP/新規割引を適用
           </label>
-          <div className="ml-auto flex gap-2">
-            <button className={btnCls} onClick={() => doCopy('md')}><Copy className="h-4 w-4" />Markdown</button>
-            <button className={btnCls} onClick={() => doCopy('csv')}><Copy className="h-4 w-4" />CSV</button>
+          <div className="grid grid-cols-3 gap-1.5 sm:ml-auto sm:flex sm:flex-wrap sm:gap-2">
+            <button className={excelBtnCls} disabled={!cols.length} onClick={doExportExcel}><FileSpreadsheet className="h-4 w-4 shrink-0" />Excel</button>
+            <button className={btnCls} disabled={!cols.length} onClick={() => doCopy('md')}><Copy className="h-4 w-4 shrink-0" />Markdown</button>
+            <button className={btnCls} disabled={!cols.length} onClick={() => doCopy('csv')}><Copy className="h-4 w-4 shrink-0" />CSV</button>
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-3.5 sm:mt-4 flex flex-wrap items-center gap-2">
           {cols.map((c) => (
-            <span key={c.sel.pid} className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 py-1 pl-3 pr-1.5 text-sm font-medium text-zinc-800 dark:bg-zinc-800 dark:text-zinc-100">
-              <CatIcon cat={c.p.category} className="h-3.5 w-3.5" />{c.p.name}
-              <button aria-label="削除" onClick={() => setSels(sels.filter((s) => s.pid !== c.sel.pid))} className="rounded-full p-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-600"><X className="h-3.5 w-3.5" /></button>
+            <span key={c.sel.pid} className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 py-1 pl-3 pr-1.5 text-xs sm:text-sm font-medium text-zinc-800 dark:bg-zinc-800 dark:text-zinc-100">
+              <CatIcon cat={c.p.category} className="h-3.5 w-3.5 shrink-0" />{c.p.name}
+              <button aria-label="削除" onClick={() => setSels(sels.filter((s) => s.pid !== c.sel.pid))} className="rounded-full p-1 hover:bg-zinc-300 dark:hover:bg-zinc-600"><X className="h-3.5 w-3.5" /></button>
             </span>
           ))}
           {available.length > 0 && (
-            <span className="inline-flex flex-wrap items-center gap-1.5">
-              <select className={selectCls} value={catF} onChange={(e) => setCatF(e.target.value)} aria-label="カテゴリ絞り込み">
+            <div className="grid w-full grid-cols-2 gap-2 sm:w-auto sm:inline-flex sm:flex-wrap sm:items-center sm:gap-1.5">
+              <select className={`${selectCls} w-full sm:w-auto`} value={catF} onChange={(e) => setCatF(e.target.value)} aria-label="カテゴリ絞り込み">
                 <option value="">全カテゴリ</option>{allCats.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <span className="relative"><Search className="pointer-events-none absolute left-2 top-2 h-4 w-4 text-zinc-400" />
-                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="機種名・識別子で検索" className={`${selectCls} w-44 pl-7`} /></span>
-              <select className={`${selectCls} max-w-[16rem]`} value={adding} onChange={(e) => { const p = all.find((x) => x.id === e.target.value); if (p) setSels([...sels, { pid: p.id, sid: (pricedSkus(p)[0] ?? p.skus[0]).id }]); setAdding(''); }}>
+              <span className="relative w-full sm:w-auto"><Search className="pointer-events-none absolute left-2.5 top-2.5 sm:top-2 h-4 w-4 text-zinc-400" />
+                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="機種名・識別子で検索" className={`${selectCls} w-full sm:w-44 pl-8`} /></span>
+              <select className={`${selectCls} col-span-2 w-full sm:col-span-1 sm:w-auto sm:max-w-[16rem]`} value={adding} onChange={(e) => { const p = all.find((x) => x.id === e.target.value); if (p) setSels([...sels, { pid: p.id, sid: (pricedSkus(p)[0] ?? p.skus[0]).id }]); setAdding(''); }}>
                 <option value="">＋ 機種を追加… ({matched.length}件)</option>
                 {Array.from(new Set(matched.map((x) => x.category))).map((cat) => (
                   <optgroup key={cat} label={cat}>{matched.filter((x) => x.category === cat).slice(0, 300).map((x) => <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)}){hasDetail(x) ? ' ★' : ''}</option>)}</optgroup>
                 ))}
               </select>
-            </span>
+            </div>
           )}
         </div>
       </div>
 
       {!cols.length ? (
-        <div className={`${card} p-10 text-center text-zinc-500`}>比較する機種を追加してください。</div>
+        <div className={`${card} p-8 sm:p-10 text-center text-sm text-zinc-500`}>比較する機種を追加してください。</div>
       ) : (
         <>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-2.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {cols.map((c) => {
               const ch = cheapest(c);
               const apple = carrierValue(c.sku.carriers.apple, mode, mnp);
               return (
-                <div key={c.sel.pid} className={`${card} p-4`}>
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400"><Trophy className="h-3.5 w-3.5 text-amber-500" />最安: {c.p.name} / {c.sku.label}</div>
-                  {ch.min == null ? <div className="mt-2 text-sm text-zinc-500">このモードで購入可能な窓口がありません</div> : (
-                    <>
-                      <div className="mt-2 flex flex-wrap items-center gap-1.5">{ch.ids.map((id) => <CarrierBadge key={id} id={id} />)}</div>
-                      <div className="mt-1 text-2xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(ch.min)}</div>
-                      {apple != null && !ch.ids.includes('apple') && <div className="text-xs text-emerald-600 dark:text-emerald-400">Apple Store比 {signedYen(ch.min - apple)}</div>}
-                    </>
+                <div key={c.sel.pid} className={`${card} p-3.5 sm:p-4`}>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex min-w-0 items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400"><Trophy className="h-3.5 w-3.5 shrink-0 text-amber-500" /><span className="truncate">最安: {c.p.name}</span></div>
+                    <select className={`${selectCls} !py-1 !px-2 !text-xs`} value={c.sku.id} aria-label={`${c.p.name} の容量・通信方式`} onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}>
+                      {c.p.skus.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
+                    </select>
+                  </div>
+                  {ch.min == null ? <div className="mt-2 text-xs sm:text-sm text-zinc-500">このモードで購入可能な窓口がありません</div> : (
+                    <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
+                      <div>
+                        <div className="text-xl sm:text-2xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(ch.min)}</div>
+                        {apple != null && !ch.ids.includes('apple') && <div className="text-xs text-emerald-600 dark:text-emerald-400">Apple Store比 {signedYen(ch.min - apple)}</div>}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-1">{ch.ids.map((id) => <CarrierBadge key={id} id={id} small />)}</div>
+                    </div>
                   )}
                 </div>
               );
             })}
           </div>
 
-          <div className={`${card} overflow-x-auto`}>
-            <table className="w-full min-w-[720px] border-collapse text-sm">
+          <div className="flex items-center justify-between gap-2 sm:hidden">
+            <span className="text-xs font-semibold text-zinc-500">スマホ表示モード</span>
+            <Segmented<'stack' | 'table'> value={mobileView} onChange={setMobileView} options={[
+              { value: 'stack', label: '縦並びカード' },
+              { value: 'table', label: '横並び表' },
+            ]} />
+          </div>
+
+          {mobileView === 'stack' && (
+            <div className="space-y-4 sm:hidden">
+              <div className={`${card} divide-y divide-zinc-100 overflow-hidden dark:divide-zinc-800`}>
+                <div className="bg-zinc-50 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:bg-zinc-800/50">
+                  キャリア別価格 — {mode === 'bulk' ? '一括' : '2年返却 実質負担額'}{mnp ? ' (MNP/新規割引後)' : ''}
+                </div>
+                {CARRIER_ORDER.map((id) => (
+                  <div key={id} className="p-3.5">
+                    <div className="mb-2.5"><CarrierBadge id={id} /></div>
+                    <div className="space-y-2">
+                      {cols.map((c) => {
+                        const cp = c.sku.carriers[id];
+                        const v = carrierValue(cp, mode, mnp);
+                        const ch = cheapest(c);
+                        const isMin = v != null && ch.ids.includes(id);
+                        const col = carrierColor(id, dark);
+                        return (
+                          <div key={c.sel.pid} className="rounded-xl p-2.5 text-xs" style={v == null ? { backgroundColor: dark ? '#27272a66' : '#f4f4f5' } : isMin ? { backgroundColor: '#10b9811f', boxShadow: 'inset 0 0 0 1.5px #10b981' } : { backgroundColor: dark ? '#27272a66' : '#fafafa', boxShadow: `inset 3px 0 0 ${col}` }}>
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="font-bold text-zinc-900 dark:text-zinc-100">{c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span></span>
+                              {v == null ? (
+                                <span className="text-zinc-400">{cp ? (mode === 'return' ? '返却対象外' : '—') : id === 'apple' ? '価格なし' : '取扱なし'}</span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1.5">
+                                  {isMin && <span className="rounded-full bg-emerald-500 px-1.5 py-0.5 text-[10px] font-bold text-white">最安</span>}
+                                  <span className="text-base font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(v)}</span>
+                                </span>
+                              )}
+                            </div>
+                            {v != null && cp && (
+                              <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
+                                <span>発売時 {yen(cp.launchPrice)} → 現在 {yen(cp.currentPrice)}</span>
+                                {cp.mnpPrice != null && <span>MNP: {yen(cp.mnpPrice)}</span>}
+                                {cp.returnProgram && <span>{cp.returnProgram.name} ({cp.returnProgram.months}ヶ月): {yen(cp.returnProgram.effectiveCost)}</span>}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className={`${card} divide-y divide-zinc-100 overflow-hidden dark:divide-zinc-800`}>
+                <div className="bg-zinc-50 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:bg-zinc-800/50">スペック比較</div>
+                {[{ key: '__conn', label: '通信方式' }, ...SPEC_ROWS].map((r) => (
+                  <div key={r.key} className="p-3.5">
+                    <div className="mb-1.5 text-xs font-bold text-zinc-500 dark:text-zinc-400">{r.label}</div>
+                    <div className="space-y-1.5 text-xs">
+                      {cols.map((c) => (
+                        <div key={c.sel.pid} className="flex items-baseline justify-between gap-3 rounded-lg bg-zinc-50 px-2.5 py-1.5 dark:bg-zinc-800/60">
+                          <span className="shrink-0 font-semibold text-zinc-700 dark:text-zinc-300">{c.p.name}</span>
+                          <span className="text-right text-zinc-900 dark:text-zinc-100">
+                            {r.key === '__conn' ? (c.sku.connectivity === '-' ? '共通 (本体仕様参照)' : c.sku.connectivity) : specText(c.p.specs[r.key])}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className={`${card} overflow-x-auto ${mobileView === 'stack' ? 'hidden sm:block' : 'block'}`}>
+            <table className="w-full min-w-[440px] sm:min-w-[720px] border-collapse text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-zinc-200 dark:border-zinc-800">
-                  <th className="sticky left-0 z-10 w-36 bg-white p-3 text-left text-xs font-semibold text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">項目</th>
+                  <th className="sticky left-0 z-10 w-24 sm:w-36 bg-white p-2 sm:p-3 text-left text-[11px] sm:text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-zinc-900 dark:text-zinc-400">項目</th>
                   {cols.map((c) => (
-                    <th key={c.sel.pid} className="min-w-[220px] p-3 text-left align-top">
-                      <div className="flex items-center gap-1.5 text-base font-bold text-zinc-900 dark:text-zinc-50"><CatIcon cat={c.p.category} className="h-4 w-4" />{c.p.name}</div>
-                      <div className="mb-2 text-xs font-normal text-zinc-500 dark:text-zinc-400">{c.p.generation} ・ {c.p.releaseDate} 発売</div>
+                    <th key={c.sel.pid} className="min-w-[160px] sm:min-w-[220px] p-2 sm:p-3 text-left align-top">
+                      <div className="flex items-center gap-1.5 text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-50"><CatIcon cat={c.p.category} className="h-4 w-4 shrink-0" />{c.p.name}</div>
+                      <div className="mb-2 text-[11px] sm:text-xs font-normal text-zinc-500 dark:text-zinc-400">{c.p.generation} ・ {c.p.releaseDate} 発売</div>
                       <select className={`${selectCls} w-full`} value={c.sku.id} onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}>
                         {c.p.skus.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
                       </select>
@@ -674,10 +1153,10 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-zinc-50 dark:bg-zinc-800/50"><td colSpan={cols.length + 1} className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-zinc-500">価格 — {mode === 'bulk' ? '一括' : '2年返却 実質負担額'}{mnp ? ' (MNP/新規割引後)' : ''}</td></tr>
+                <tr className="bg-zinc-50 dark:bg-zinc-800/50"><td colSpan={cols.length + 1} className="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">価格 — {mode === 'bulk' ? '一括' : '2年返却 実質負担額'}{mnp ? ' (MNP/新規割引後)' : ''}</td></tr>
                 {CARRIER_ORDER.map((id) => (
                   <tr key={id} className="border-b border-zinc-100 dark:border-zinc-800">
-                    <td className="sticky left-0 z-10 bg-white p-3 dark:bg-zinc-900"><CarrierBadge id={id} /></td>
+                    <td className="sticky left-0 z-10 bg-white p-2 sm:p-3 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-zinc-900"><CarrierBadge id={id} small /></td>
                     {cols.map((c) => {
                       const cp = c.sku.carriers[id];
                       const v = carrierValue(cp, mode, mnp);
@@ -685,16 +1164,16 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                       const isMin = v != null && ch.ids.includes(id);
                       const col = carrierColor(id, dark);
                       return (
-                        <td key={c.sel.pid} className="p-2 align-top">
+                        <td key={c.sel.pid} className="p-1.5 sm:p-2 align-top">
                           {v == null ? (
-                            <div className="rounded-xl p-2.5 text-zinc-400">{cp ? (mode === 'return' ? '返却プログラム対象外' : '—') : id === 'apple' ? <>日本 Apple Store 価格なし{c.p.specs.launchPriceUsd ? <span className="block text-[11px]">米国発売時 {String(c.p.specs.launchPriceUsd)}</span> : null}</> : '取扱なし'}</div>
+                            <div className="rounded-xl p-2 sm:p-2.5 text-zinc-400">{cp ? (mode === 'return' ? '返却プログラム対象外' : '—') : id === 'apple' ? <>日本 Apple Store 価格なし{c.p.specs.launchPriceUsd ? <span className="block text-[11px]">米国発売時 {String(c.p.specs.launchPriceUsd)}</span> : null}</> : '取扱なし'}</div>
                           ) : (
-                            <div className="rounded-xl p-2.5 transition" style={isMin ? { backgroundColor: '#10b9811f', boxShadow: 'inset 0 0 0 2px #10b981' } : { boxShadow: `inset 3px 0 0 ${col}` }}>
-                              <div className="flex items-center gap-2">
-                                <span className="text-lg font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(v)}</span>
+                            <div className="rounded-xl p-2 sm:p-2.5 transition" style={isMin ? { backgroundColor: '#10b9811f', boxShadow: 'inset 0 0 0 2px #10b981' } : { boxShadow: `inset 3px 0 0 ${col}` }}>
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <span className="text-base sm:text-lg font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(v)}</span>
                                 {isMin && <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white">最安</span>}
                               </div>
-                              {!isMin && ch.min != null && <div className="text-xs text-zinc-500 dark:text-zinc-400">最安比 {signedYen(v - ch.min)}</div>}
+                              {!isMin && ch.min != null && <div className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400">最安比 {signedYen(v - ch.min)}</div>}
                               {cp && (
                                 <div className="mt-1 space-y-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
                                   <div>発売時 {yen(cp.launchPrice)} → 現在 {yen(cp.currentPrice)}</div>
@@ -709,12 +1188,12 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                     })}
                   </tr>
                 ))}
-                <tr className="bg-zinc-50 dark:bg-zinc-800/50"><td colSpan={cols.length + 1} className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-zinc-500">スペック</td></tr>
-                <tr className="border-b border-zinc-100 dark:border-zinc-800"><td className="sticky left-0 bg-white p-3 text-xs font-semibold text-zinc-500 dark:bg-zinc-900">通信方式</td>{cols.map((c) => <td key={c.sel.pid} className="p-3 text-zinc-800 dark:text-zinc-200">{c.sku.connectivity === '-' ? '共通 (本体仕様参照)' : c.sku.connectivity}</td>)}</tr>
+                <tr className="bg-zinc-50 dark:bg-zinc-800/50"><td colSpan={cols.length + 1} className="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">スペック</td></tr>
+                <tr className="border-b border-zinc-100 dark:border-zinc-800"><td className="sticky left-0 bg-white p-2 sm:p-3 text-[11px] sm:text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-zinc-900">通信方式</td>{cols.map((c) => <td key={c.sel.pid} className="p-2 sm:p-3 text-zinc-800 dark:text-zinc-200">{c.sku.connectivity === '-' ? '共通 (本体仕様参照)' : c.sku.connectivity}</td>)}</tr>
                 {SPEC_ROWS.map((r) => (
                   <tr key={r.key} className="border-b border-zinc-100 dark:border-zinc-800">
-                    <td className="sticky left-0 bg-white p-3 text-xs font-semibold text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">{r.label}</td>
-                    {cols.map((c) => <td key={c.sel.pid} className="p-3 align-top text-zinc-800 dark:text-zinc-200">{specText(c.p.specs[r.key])}</td>)}
+                    <td className="sticky left-0 bg-white p-2 sm:p-3 text-[11px] sm:text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-zinc-900 dark:text-zinc-400">{r.label}</td>
+                    {cols.map((c) => <td key={c.sel.pid} className="p-2 sm:p-3 align-top text-zinc-800 dark:text-zinc-200">{specText(c.p.specs[r.key])}</td>)}
                   </tr>
                 ))}
               </tbody>
@@ -731,12 +1210,12 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
  * 6. タブ2: 価格改定タイムライン＆推移グラフ
  * ===================================================================================== */
 
-function TimelineView({ products }: { products: Product[] }) {
+function TimelineView({ products, toast }: { products: Product[]; toast: (m: string) => void }) {
   const priced = products.filter(hasPrice);
-  return priced.length ? <TimelineInner products={priced} /> : <EmptyNote text="価格データのある機種がありません (表示範囲を「歴代すべて」にするか、JSONを読み込んでください)" />;
+  return priced.length ? <TimelineInner products={priced} toast={toast} /> : <EmptyNote text="価格データのある機種がありません (表示範囲を「歴代すべて」にしてください)" />;
 }
 
-function TimelineInner({ products }: { products: Product[] }) {
+function TimelineInner({ products, toast }: { products: Product[]; toast: (m: string) => void }) {
   const c = useChartColors();
   const dark = useDark();
   const [sel, setSel] = useState<Sel>({ pid: products[0].id, sid: pricedSkus(products[0])[0].id });
@@ -761,12 +1240,68 @@ function TimelineInner({ products }: { products: Product[] }) {
     return i > 0 ? { pr, s, diff: s.priceHistory[i].appleStorePrice - s.priceHistory[i - 1].appleStorePrice, base: s.priceHistory[i - 1].appleStorePrice, ev: s.priceHistory[i].event } : null;
   }).filter(Boolean) as { pr: Product; s: Sku; diff: number; base: number; ev: string }[];
 
+  const exportModelTimeline = () => {
+    const rows: XlsCell[][] = [[
+      '日付', '機種', 'SKU', 'イベント', '日本価格(税込)', '前回比差額(円)', '変動率',
+      '米国価格(USD)', '市場為替(円/$)', '実質Appleレート(円/$)', '精度', '出典', '備考',
+    ]];
+    h.forEach((pt, i) => {
+      const prev = i > 0 ? h[i - 1].appleStorePrice : null;
+      const diff = prev != null ? pt.appleStorePrice - prev : null;
+      const ar = impliedRate(pt);
+      rows.push([
+        pt.date, p.name, sku.label, pt.event,
+        { v: pt.appleStorePrice, k: 'yen' },
+        diff != null && diff !== 0 ? { v: diff, k: 'yenDiff' } : '—',
+        prev != null && prev > 0 && diff !== 0 ? { v: pt.appleStorePrice / prev - 1, k: 'pct' } : '—',
+        pt.usdPrice != null ? { v: pt.usdPrice, k: 'int' } : '—',
+        pt.exchangeRate != null ? { v: pt.exchangeRate, k: 'dec' } : '—',
+        ar != null ? { v: ar, k: 'dec' } : '—',
+        pt.approx ? (pt.confidence === 'low' ? '要検証' : '概算') : pt.confidence === 'high' ? '出典確認済' : '',
+        pt.source ?? '',
+        pt.note ?? '',
+      ]);
+    });
+    const specRows: XlsCell[][] = [
+      ['項目', `${p.name} (${sku.label})`],
+      ['カテゴリ', p.category],
+      ['世代', p.generation || '—'],
+      ['発売日', p.releaseDate || '—'],
+      ['通信方式', sku.connectivity === '-' ? '共通 (本体仕様参照)' : sku.connectivity],
+      ...SPEC_ROWS.map((r): XlsCell[] => [r.label, specText(p.specs[r.key])]),
+    ];
+    downloadXlsx(`apple-timeline-${p.id}-${sku.id}.xlsx`, [
+      { name: '価格改定タイムライン', rows, freezeRows: 1 },
+      { name: 'スペック', rows: specRows, freezeRows: 1, freezeCols: 1 },
+    ]);
+    toast(`${p.name} (${sku.label}) の履歴をExcelでダウンロードしました`);
+  };
+
+  const exportDayRevision = () => {
+    if (!dayRows.length) return;
+    const rows: XlsCell[][] = [['改定日', 'カテゴリ', '製品', 'SKU', 'イベント', '改定前(円)', '改定後(円)', '差額(円)', '変動率']];
+    dayRows.forEach((r) => {
+      rows.push([
+        day, r.pr.category, r.pr.name, r.s.label, r.ev,
+        { v: r.base, k: 'yen' },
+        { v: r.base + r.diff, k: 'yen' },
+        { v: r.diff, k: 'yenDiff' },
+        r.base > 0 ? { v: r.diff / r.base, k: 'pct' } : '—',
+      ]);
+    });
+    downloadXlsx(`apple-revision-${day}.xlsx`, [{ name: `一斉改定_${day}`, rows, freezeRows: 1 }]);
+    toast(`${day} の改定データ(${dayRows.length}件)をExcelでダウンロードしました`);
+  };
+
   return (
-    <div className="space-y-5">
-      <div className={`${card} p-5`}>
+    <div className="space-y-4 sm:space-y-5">
+      <div className={`${card} p-3.5 sm:p-5`}>
         <SectionTitle icon={<LineIcon className="h-5 w-5" />} title="価格改定タイムライン＆推移グラフ" desc="Apple Store 直販価格 (税込) の変動を、改定ごとの差額・変動率つきで可視化します。" />
-        <ProductSkuPicker products={products} sel={{ pid: p.id, sid: sku.id }} onChange={setSel} />
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <ProductSkuPicker products={products} sel={{ pid: p.id, sid: sku.id }} onChange={setSel} />
+          <button className={`${excelBtnCls} w-full sm:w-auto`} onClick={exportModelTimeline}><FileSpreadsheet className="h-4 w-4" />Excel (.xlsx)</button>
+        </div>
+        <div className="mt-3.5 sm:mt-4 grid gap-2.5 sm:gap-3 sm:grid-cols-3">
           {[
             { label: '発売時 → 現在', node: <DeltaBadge diff={total} base={h[0].appleStorePrice} />, sub: `${yen(h[0].appleStorePrice)} → ${yen(lastOf(h).appleStorePrice)}` },
             { label: '最大の値上げ', node: maxHike ? <DeltaBadge diff={maxHike.diff} base={maxHike.prev} /> : <span className="text-sm text-zinc-400">値上げなし</span>, sub: maxHike ? maxHike.pt.date : '' },
@@ -777,36 +1312,36 @@ function TimelineInner({ products }: { products: Product[] }) {
             </div>
           ))}
         </div>
-        <div className="mt-5 h-72">
+        <div className="mt-4 sm:mt-5 h-56 sm:h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 0 }}>
+            <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid stroke={c.grid} strokeDasharray="3 3" />
-              <XAxis dataKey="t" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={ym} stroke={c.axis} fontSize={12} />
-              <YAxis stroke={c.axis} fontSize={12} domain={['auto', 'auto']} tickFormatter={(v) => `¥${(v / 1000).toFixed(0)}k`} width={56} />
+              <XAxis dataKey="t" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={ym} stroke={c.axis} fontSize={11} />
+              <YAxis stroke={c.axis} fontSize={11} domain={['auto', 'auto']} tickFormatter={(v) => `¥${(v / 1000).toFixed(0)}k`} width={48} />
               <Tooltip contentStyle={{ background: c.tipBg, border: `1px solid ${c.tipBorder}`, borderRadius: 12, color: c.text }}
                 labelFormatter={(t: any) => new Date(t).toISOString().slice(0, 10)} formatter={(v: any, _n: any, item: any) => [yen(v), item?.payload?.event]} />
-              <Line type="stepAfter" dataKey="price" name="Apple Store" stroke={carrierColor('apple', dark)} strokeWidth={3} dot={{ r: 5, fill: '#0ea5e9', stroke: c.tipBg, strokeWidth: 2 }} activeDot={{ r: 7 }} />
+              <Line type="stepAfter" dataKey="price" name="Apple Store" stroke={carrierColor('apple', dark)} strokeWidth={3} dot={{ r: 4, fill: '#0ea5e9', stroke: c.tipBg, strokeWidth: 2 }} activeDot={{ r: 6 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      <div className={`${card} p-5`}>
-        <h3 className="mb-4 text-sm font-bold text-zinc-900 dark:text-zinc-50">改定タイムライン — {p.name} {sku.label}</h3>
-        <ol className="relative ml-3 space-y-5 border-l-2 border-zinc-200 dark:border-zinc-700">
+      <div className={`${card} p-3.5 sm:p-5`}>
+        <h3 className="mb-3.5 sm:mb-4 text-sm font-bold text-zinc-900 dark:text-zinc-50">改定タイムライン — {p.name} {sku.label}</h3>
+        <ol className="relative ml-2.5 sm:ml-3 space-y-4 sm:space-y-5 border-l-2 border-zinc-200 dark:border-zinc-700">
           {events.map(({ pt, diff, prev }, i) => (
-            <li key={pt.date + i} className="ml-5">
+            <li key={pt.date + i} className="ml-4 sm:ml-5">
               <span className={`absolute -left-[9px] mt-1 h-4 w-4 rounded-full border-2 border-white dark:border-zinc-900 ${i === 0 ? 'bg-sky-500' : diff > 0 ? 'bg-rose-500' : diff < 0 ? 'bg-emerald-500' : 'bg-zinc-400'}`} />
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-50">{pt.date}</span>
-                <span className="text-sm text-zinc-600 dark:text-zinc-300">{pt.event}</span>
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span className="text-xs sm:text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-50">{pt.date}</span>
+                <span className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">{pt.event}</span>
                 {pt.approx && <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">{pt.confidence === 'low' ? '要検証' : '概算'}</span>}
                 {pt.confidence === 'high' && <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">出典確認済</span>}
                 {pt.source && <SourceLink src={pt.source} />}
               </div>
               {pt.note && <div className="mt-0.5 text-xs text-zinc-500">{pt.note}</div>}
               <div className="mt-1 flex flex-wrap items-center gap-2">
-                <span className="text-xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(pt.appleStorePrice)}</span>
+                <span className="text-lg sm:text-xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(pt.appleStorePrice)}</span>
                 {i > 0 && <DeltaBadge diff={diff} base={prev} />}
                 {pt.usdPrice != null && <span className="text-xs text-zinc-500">US ${pt.usdPrice} @ ¥{pt.exchangeRate}</span>}
               </div>
@@ -815,15 +1350,16 @@ function TimelineInner({ products }: { products: Product[] }) {
         </ol>
       </div>
 
-      <div className={`${card} p-5`}>
-        <div className="mb-3 flex flex-wrap items-center gap-3">
-          <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">一斉改定ビュー: この日の各製品の価格差 (最小容量SKU)</h3>
-          <select className={selectCls} value={day} onChange={(e) => setDay(e.target.value)}>{dates.map((d) => <option key={d} value={d}>{d} ({dateCounts.get(d)}製品)</option>)}</select>
+      <div className={`${card} p-3.5 sm:p-5`}>
+        <div className="mb-3 flex flex-wrap items-center gap-2 sm:gap-3">
+          <h3 className="w-full sm:w-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">一斉改定ビュー: この日の各製品の価格差 (最小容量SKU)</h3>
+          <select className={`${selectCls} min-w-0 flex-1 sm:flex-initial`} value={day} onChange={(e) => setDay(e.target.value)}>{dates.map((d) => <option key={d} value={d}>{d} ({dateCounts.get(d)}製品)</option>)}</select>
+          <button className={`${excelBtnCls} sm:ml-auto`} disabled={!dayRows.length} onClick={exportDayRevision}><FileSpreadsheet className="h-4 w-4" />Excel (.xlsx)</button>
         </div>
         <div className="grid gap-2 sm:grid-cols-2">
           {dayRows.map((r) => (
             <div key={r.pr.id} className="flex items-center justify-between gap-2 rounded-xl bg-zinc-50 p-3 dark:bg-zinc-800/60">
-              <div><div className="flex items-center gap-1.5 text-sm font-semibold text-zinc-900 dark:text-zinc-50"><CatIcon cat={r.pr.category} className="h-3.5 w-3.5" />{r.pr.name}</div>
+              <div className="min-w-0"><div className="flex items-center gap-1.5 truncate text-xs sm:text-sm font-semibold text-zinc-900 dark:text-zinc-50"><CatIcon cat={r.pr.category} className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{r.pr.name}</span></div>
                 <div className="text-xs tabular-nums text-zinc-500">{r.s.label}: {yen(r.base)} → {yen(r.base + r.diff)}</div></div>
               <DeltaBadge diff={r.diff} base={r.base} />
             </div>
@@ -832,7 +1368,7 @@ function TimelineInner({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      <AllEventsTable products={products} />
+      <AllEventsTable products={products} toast={toast} />
     </div>
   );
 }
@@ -847,16 +1383,17 @@ function SourceLink({ src }: { src: string }) {
 }
 
 type EvKind = 'all' | 'launch' | 'up' | 'down' | 'end';
-interface EvRow { date: string; product: Product; sku: Sku; event: string; kind: Exclude<EvKind, 'all'>; price: number; prev?: number; usd?: number; approx?: boolean; source?: string }
+interface EvRow { key: string; date: string; product: Product; sku: Sku; event: string; kind: Exclude<EvKind, 'all'>; price: number; prev?: number; usd?: number; approx?: boolean; source?: string }
 
 /** 全機種の価格イベント (発売・値上げ・値下げ・販売終了) を一覧化 */
-function AllEventsTable({ products }: { products: Product[] }) {
+function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: string) => void }) {
   const [kind, setKind] = useState<EvKind>('all');
   const [cat, setCat] = useState('');
   const [allSkus, setAllSkus] = useState(false);
   const [q, setQ] = useState('');
   const [limit, setLimit] = useState(150);
   const [sortDesc, setSortDesc] = useState(true);
+  const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const cats = Array.from(new Set(products.map((p) => p.category)));
   const rows = useMemo(() => {
     const out: EvRow[] = [];
@@ -865,59 +1402,182 @@ function AllEventsTable({ products }: { products: Product[] }) {
       skus.forEach((s) => s.priceHistory.forEach((h, i) => {
         const prev = i ? s.priceHistory[i - 1].appleStorePrice : undefined;
         const k: EvRow['kind'] = i === 0 ? 'launch' : /販売終了/.test(h.event) ? 'end' : prev != null && h.appleStorePrice > prev ? 'up' : prev != null && h.appleStorePrice < prev ? 'down' : 'end';
-        out.push({ date: h.date, product: p, sku: s, event: h.event, kind: k, price: h.appleStorePrice, prev, usd: h.usdPrice, approx: h.approx, source: h.source });
+        out.push({ key: `${p.id}|${s.id}|${h.date}|${i}`, date: h.date, product: p, sku: s, event: h.event, kind: k, price: h.appleStorePrice, prev, usd: h.usdPrice, approx: h.approx, source: h.source });
       }));
     });
     return out;
   }, [products, allSkus]);
+  const sortFn = (a: EvRow, b: EvRow) => (sortDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) || a.product.name.localeCompare(b.product.name);
   const ql = q.trim().toLowerCase();
   const filtered = rows
     .filter((r) => (kind === 'all' || r.kind === kind) && (!cat || r.product.category === cat) && (!ql || `${r.product.name} ${r.event}`.toLowerCase().includes(ql)))
-    .sort((a, b) => (sortDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) || a.product.name.localeCompare(b.product.name));
+    .sort(sortFn);
+  const picked = useMemo(() => rows.filter((r) => selected.has(r.key)).sort(sortFn), [rows, selected, sortDesc]);
+  const targetRows = picked.length > 0 ? picked : filtered;
+  const allFilteredSelected = filtered.length > 0 && filtered.every((r) => selected.has(r.key));
+
+  const toggleOne = (key: string) => setSelected((cur) => {
+    const next = new Set(cur);
+    if (next.has(key)) next.delete(key); else next.add(key);
+    return next;
+  });
+  const toggleFiltered = () => setSelected((cur) => {
+    const next = new Set(cur);
+    if (allFilteredSelected) filtered.forEach((r) => next.delete(r.key));
+    else filtered.forEach((r) => next.add(r.key));
+    return next;
+  });
+
   const counts = { up: rows.filter((r) => r.kind === 'up').length, down: rows.filter((r) => r.kind === 'down').length, launch: rows.filter((r) => r.kind === 'launch').length, end: rows.filter((r) => r.kind === 'end').length };
   const kindBadge: Record<EvRow['kind'], string> = {
     launch: 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300', up: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300',
     down: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300', end: 'bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300',
   };
   const kindLabel: Record<EvRow['kind'], string> = { launch: '発売', up: '値上げ', down: '値下げ', end: '販売終了/変更なし' };
+
   const exportCsv = () => {
+    if (!targetRows.length) return;
     const head = ['日付', 'カテゴリ', '製品', 'SKU', '種別', 'イベント', '改定前(円)', '改定後(円)', '差額(円)', '変動率(%)', 'USD', '概算', '出典'];
-    const lines = filtered.map((r) => [r.date, r.product.category, r.product.name, r.sku.label, kindLabel[r.kind], r.event, r.prev ?? '', r.price, r.prev != null ? r.price - r.prev : '', r.prev ? ((r.price / r.prev - 1) * 100).toFixed(1) : '', r.usd ?? '', r.approx ? '概算' : '', r.source ?? '']);
+    const lines = targetRows.map((r) => [r.date, r.product.category, r.product.name, r.sku.label, kindLabel[r.kind], r.event, r.prev ?? '', r.price, r.prev != null ? r.price - r.prev : '', r.prev ? ((r.price / r.prev - 1) * 100).toFixed(1) : '', r.usd ?? '', r.approx ? '概算' : '', r.source ?? '']);
     downloadFile('apple-price-events.csv', '\uFEFF' + toCSV([head, ...lines.map((l) => l.map(String))]), 'text/csv');
+    toast(`${picked.length ? `選択した${picked.length}件` : `${targetRows.length}件`}をCSVでダウンロードしました`);
   };
+
+  const exportExcel = () => {
+    if (!targetRows.length) return;
+    const xlsRows: XlsCell[][] = [['日付', 'カテゴリ', '製品', 'SKU', '種別', 'イベント', '改定前(円)', '改定後(円)', '差額(円)', '変動率', 'USD', '概算', '出典']];
+    targetRows.forEach((r) => {
+      const diff = r.prev != null ? r.price - r.prev : null;
+      xlsRows.push([
+        r.date, r.product.category, r.product.name, r.sku.label, kindLabel[r.kind], r.event,
+        r.prev != null ? { v: r.prev, k: 'yen' } : '—',
+        { v: r.price, k: 'yen' },
+        diff != null && diff !== 0 ? { v: diff, k: 'yenDiff' } : '—',
+        r.prev != null && r.prev > 0 && diff !== 0 ? { v: r.price / r.prev - 1, k: 'pct' } : '—',
+        r.usd != null ? { v: r.usd, k: 'int' } : '—',
+        r.approx ? '概算' : '',
+        r.source ?? '',
+      ]);
+    });
+    const today = new Date().toISOString().slice(0, 10);
+    downloadXlsx(`apple-price-events-${today}.xlsx`, [{ name: '価格イベント一覧', rows: xlsRows, freezeRows: 1 }]);
+    toast(`${picked.length ? `選択した${picked.length}件` : `${targetRows.length}件`}をExcelでダウンロードしました`);
+  };
+
   return (
-    <div className={`${card} p-5`}>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+    <div className={`${card} p-3.5 sm:p-5`}>
+      <div className="mb-3 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2">
         <h3 className="mr-2 text-sm font-bold text-zinc-900 dark:text-zinc-50">全機種 価格イベント一覧 ({filtered.length}件)</h3>
         <Segmented<EvKind> value={kind} onChange={(v) => { setKind(v); setLimit(150); }} options={[
           { value: 'all', label: 'すべて' }, { value: 'launch', label: `発売 ${counts.launch}` }, { value: 'up', label: `値上げ ${counts.up}` },
           { value: 'down', label: `値下げ ${counts.down}` }, { value: 'end', label: `終了 ${counts.end}` },
         ]} />
-        <select className={selectCls} value={cat} onChange={(e) => { setCat(e.target.value); setLimit(150); }}><option value="">全カテゴリ</option>{cats.map((c) => <option key={c} value={c}>{c}</option>)}</select>
-        <input value={q} onChange={(e) => { setQ(e.target.value); setLimit(150); }} placeholder="製品名・イベントで検索" className={`${selectCls} w-48`} />
-        <label className="inline-flex cursor-pointer items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300"><input type="checkbox" checked={allSkus} onChange={(e) => setAllSkus(e.target.checked)} className="h-4 w-4 accent-sky-500" />全容量SKU</label>
-        <button className={btnCls} onClick={() => setSortDesc(!sortDesc)}>{sortDesc ? '新しい順' : '古い順'}</button>
-        <button className={`${btnCls} ml-auto`} onClick={exportCsv}><Download className="h-4 w-4" />CSV</button>
+        <div className="grid grid-cols-2 gap-2 sm:contents">
+          <select className={`${selectCls} w-full sm:w-auto`} value={cat} onChange={(e) => { setCat(e.target.value); setLimit(150); }}><option value="">全カテゴリ</option>{cats.map((c) => <option key={c} value={c}>{c}</option>)}</select>
+          <input value={q} onChange={(e) => { setQ(e.target.value); setLimit(150); }} placeholder="製品名・イベントで検索" className={`${selectCls} w-full sm:w-48`} />
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-2 sm:contents">
+          <div className="flex items-center gap-3">
+            <label className="inline-flex cursor-pointer items-center gap-1.5 text-xs sm:text-sm text-zinc-700 dark:text-zinc-300"><input type="checkbox" checked={allSkus} onChange={(e) => setAllSkus(e.target.checked)} className="h-4 w-4 accent-sky-500" />全容量SKU</label>
+            <button className={btnCls} onClick={() => setSortDesc(!sortDesc)}>{sortDesc ? '新しい順' : '古い順'}</button>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5 sm:ml-auto sm:gap-2">
+            {picked.length > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-700 dark:bg-sky-500/20 dark:text-sky-300">
+                {picked.length}件選択中
+                <button onClick={() => setSelected(new Set())} className="underline hover:no-underline">解除</button>
+              </span>
+            )}
+            <button className={excelBtnCls} disabled={!targetRows.length} onClick={exportExcel}>
+              <FileSpreadsheet className="h-4 w-4" />Excel{picked.length > 0 ? ` (${picked.length}件)` : ' (.xlsx)'}
+            </button>
+            <button className={btnCls} disabled={!targetRows.length} onClick={exportCsv}>
+              <Download className="h-4 w-4" />CSV{picked.length > 0 ? ` (${picked.length}件)` : ''}
+            </button>
+          </div>
+        </div>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[820px] text-sm">
-          <thead><tr className="border-b border-zinc-200 text-left text-xs text-zinc-500 dark:border-zinc-800">{['日付', '製品 / SKU', '種別', 'イベント', '価格 (税込)', '差額', '出典'].map((x) => <th key={x} className="p-2 font-semibold">{x}</th>)}</tr></thead>
+
+      {/* スマホ向けカードリスト (md未満) */}
+      <div className="space-y-2 md:hidden">
+        {filtered.length > 0 && (
+          <label className="flex cursor-pointer items-center gap-2 rounded-xl bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-600 dark:bg-zinc-800/60 dark:text-zinc-300">
+            <input type="checkbox" checked={allFilteredSelected} onChange={toggleFiltered} className="h-4 w-4 accent-sky-500" />
+            表示中のすべてを選択 ({filtered.length}件)
+          </label>
+        )}
+        {filtered.slice(0, limit).map((r) => {
+          const isSel = selected.has(r.key);
+          return (
+            <div key={r.key} onClick={() => toggleOne(r.key)}
+              className={`cursor-pointer rounded-xl border p-3 text-xs transition ${isSel ? 'border-sky-400 bg-sky-50/70 dark:border-sky-500/60 dark:bg-sky-500/10' : 'border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-800/40'}`}>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" checked={isSel} onChange={() => {}} onClick={(e) => e.stopPropagation()} className="h-4 w-4 accent-sky-500" />
+                  <span className="font-bold tabular-nums text-zinc-700 dark:text-zinc-300">{r.date}</span>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${kindBadge[r.kind]}`}>{kindLabel[r.kind]}</span>
+                  {r.approx && <span className="rounded bg-amber-100 px-1 text-[10px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">概算</span>}
+                </div>
+                {r.source && <span onClick={(e) => e.stopPropagation()}><SourceLink src={r.source} /></span>}
+              </div>
+              <div className="mt-1.5 flex items-baseline justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1 font-bold text-sm text-zinc-900 dark:text-zinc-50">
+                    <CatIcon cat={r.product.category} className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">{r.product.name}</span>
+                    <span className="shrink-0 text-xs font-normal text-zinc-500">({r.sku.label})</span>
+                  </div>
+                  <div className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">{r.event}</div>
+                </div>
+                <div className="shrink-0 text-right tabular-nums">
+                  <div>
+                    {r.prev != null && r.prev !== r.price && <span className="text-[11px] text-zinc-400">{yen(r.prev)} → </span>}
+                    <span className="text-sm font-extrabold text-zinc-900 dark:text-zinc-50">{yen(r.price)}</span>
+                  </div>
+                  {r.usd != null && <div className="text-[10px] text-zinc-500">US ${r.usd}</div>}
+                </div>
+              </div>
+              {r.prev != null && r.prev !== r.price && (
+                <div className="mt-1.5 flex justify-end"><DeltaBadge diff={r.price - r.prev} base={r.prev} /></div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* PC/タブレット向けテーブル (md以上) */}
+      <div className="hidden overflow-x-auto md:block">
+        <table className="w-full min-w-[850px] text-sm">
+          <thead>
+            <tr className="border-b border-zinc-200 text-left text-xs text-zinc-500 dark:border-zinc-800">
+              <th className="w-9 p-2">
+                <input type="checkbox" aria-label="表示中のすべてを選択" checked={allFilteredSelected} onChange={toggleFiltered} className="h-4 w-4 accent-sky-500" />
+              </th>
+              {['日付', '製品 / SKU', '種別', 'イベント', '価格 (税込)', '差額', '出典'].map((x) => <th key={x} className="p-2 font-semibold">{x}</th>)}
+            </tr>
+          </thead>
           <tbody>
-            {filtered.slice(0, limit).map((r, i) => (
-              <tr key={`${r.product.id}-${r.sku.id}-${r.date}-${i}`} className="border-b border-zinc-100 align-top text-zinc-800 dark:border-zinc-800 dark:text-zinc-200">
-                <td className="whitespace-nowrap p-2 tabular-nums">{r.date}</td>
-                <td className="p-2"><div className="flex items-center gap-1.5 font-semibold"><CatIcon cat={r.product.category} className="h-3.5 w-3.5 shrink-0" />{r.product.name}</div><div className="text-xs text-zinc-500">{r.sku.label}</div></td>
-                <td className="p-2"><span className={`whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-bold ${kindBadge[r.kind]}`}>{kindLabel[r.kind]}</span></td>
-                <td className="p-2 text-xs">{r.event}{r.approx && <span className="ml-1 rounded bg-amber-100 px-1 text-[10px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">概算</span>}</td>
-                <td className="whitespace-nowrap p-2 tabular-nums">{r.prev != null && r.prev !== r.price && <span className="text-xs text-zinc-400">{yen(r.prev)} → </span>}<span className="font-bold">{yen(r.price)}</span>{r.usd != null && <div className="text-[11px] text-zinc-500">US ${r.usd}</div>}</td>
-                <td className="p-2">{r.prev != null && r.prev !== r.price ? <DeltaBadge diff={r.price - r.prev} base={r.prev} /> : <span className="text-xs text-zinc-400">—</span>}</td>
-                <td className="p-2">{r.source ? <SourceLink src={r.source} /> : <span className="text-xs text-zinc-400">—</span>}</td>
-              </tr>
-            ))}
+            {filtered.slice(0, limit).map((r) => {
+              const isSel = selected.has(r.key);
+              return (
+                <tr key={r.key} className={`border-b border-zinc-100 align-top text-zinc-800 dark:border-zinc-800 dark:text-zinc-200 ${isSel ? 'bg-sky-50/70 dark:bg-sky-500/10' : ''}`}>
+                  <td className="p-2">
+                    <input type="checkbox" aria-label={`${r.product.name} ${r.date} を選択`} checked={isSel} onChange={() => toggleOne(r.key)} className="mt-0.5 h-4 w-4 accent-sky-500" />
+                  </td>
+                  <td className="whitespace-nowrap p-2 tabular-nums">{r.date}</td>
+                  <td className="p-2"><div className="flex items-center gap-1.5 font-semibold"><CatIcon cat={r.product.category} className="h-3.5 w-3.5 shrink-0" />{r.product.name}</div><div className="text-xs text-zinc-500">{r.sku.label}</div></td>
+                  <td className="p-2"><span className={`whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-bold ${kindBadge[r.kind]}`}>{kindLabel[r.kind]}</span></td>
+                  <td className="p-2 text-xs">{r.event}{r.approx && <span className="ml-1 rounded bg-amber-100 px-1 text-[10px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">概算</span>}</td>
+                  <td className="whitespace-nowrap p-2 tabular-nums">{r.prev != null && r.prev !== r.price && <span className="text-xs text-zinc-400">{yen(r.prev)} → </span>}<span className="font-bold">{yen(r.price)}</span>{r.usd != null && <div className="text-[11px] text-zinc-500">US ${r.usd}</div>}</td>
+                  <td className="p-2">{r.prev != null && r.prev !== r.price ? <DeltaBadge diff={r.price - r.prev} base={r.prev} /> : <span className="text-xs text-zinc-400">—</span>}</td>
+                  <td className="p-2">{r.source ? <SourceLink src={r.source} /> : <span className="text-xs text-zinc-400">—</span>}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
-      {filtered.length > limit && <button className={`${btnCls} mt-3`} onClick={() => setLimit(limit + 300)}>さらに表示 ({limit}/{filtered.length})</button>}
+      {filtered.length > limit && <button className={`${btnCls} mt-3 w-full sm:w-auto`} onClick={() => setLimit(limit + 300)}>さらに表示 ({limit}/{filtered.length})</button>}
     </div>
   );
 }
@@ -938,23 +1598,67 @@ function verdict(prev: PricePoint, cur: PricePoint): { text: string; tone: 'up' 
   return { text: '変動なし', tone: 'flat' };
 }
 
-function FxView({ products }: { products: Product[] }) {
+function FxView({ products, toast }: { products: Product[]; toast: (m: string) => void }) {
   const priced = products.filter((p) => pricedSkus(p).some((s) => s.priceHistory.some((h) => h.usdPrice)));
-  return priced.length ? <FxInner products={priced} /> : <EmptyNote text="USD価格つきの機種がありません (表示範囲を「歴代すべて」にしてください)" />;
+  return priced.length ? <FxInner products={priced} toast={toast} /> : <EmptyNote text="USD価格つきの機種がありません (表示範囲を「歴代すべて」にしてください)" />;
 }
 
-function FxInner({ products }: { products: Product[] }) {
+function FxInner({ products, toast }: { products: Product[]; toast: (m: string) => void }) {
   const c = useChartColors();
   const dark = useDark();
   const cats = Array.from(new Set(products.map((x) => x.category)));
   const [catSel, setCat] = useState<string>(cats[0]);
   const cat = cats.includes(catSel) ? catSel : cats[0];
   const [sel, setSel] = useState<Sel>({ pid: products[0].id, sid: pricedSkus(products[0])[0].id });
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
 
-  const launchRows = products.filter((x) => x.category === cat).sort((a, b) => a.releaseDate.localeCompare(b.releaseDate)).map((pr) => {
+  const toLaunchRow = (pr: Product) => {
     const ps = pricedSkus(pr)[0]; const pt = ps.priceHistory[0]; const ar = impliedRate(pt);
-    return { name: pr.name, sku: ps.label, date: pt.date, jpy: pt.appleStorePrice, usd: pt.usdPrice, fx: pt.exchangeRate, apple: ar, premium: ar && pt.exchangeRate ? (ar / pt.exchangeRate - 1) * 100 : undefined };
+    return {
+      id: pr.id, category: pr.category, name: pr.name, sku: ps.label, date: pt.date,
+      jpy: pt.appleStorePrice, usd: pt.usdPrice, fx: pt.exchangeRate, apple: ar,
+      premium: ar && pt.exchangeRate ? (ar / pt.exchangeRate - 1) * 100 : undefined,
+      premiumRatio: ar && pt.exchangeRate ? ar / pt.exchangeRate - 1 : undefined,
+    };
+  };
+
+  const launchRows = products.filter((x) => x.category === cat).sort((a, b) => a.releaseDate.localeCompare(b.releaseDate)).map(toLaunchRow);
+  const pickedLaunch = useMemo(
+    () => products.filter((x) => selectedIds.has(x.id)).sort((a, b) => a.releaseDate.localeCompare(b.releaseDate)).map(toLaunchRow),
+    [products, selectedIds],
+  );
+  const targetLaunch = pickedLaunch.length > 0 ? pickedLaunch : launchRows;
+  const allCatSelected = launchRows.length > 0 && launchRows.every((r) => selectedIds.has(r.id));
+
+  const toggleLaunchOne = (id: string) => setSelectedIds((cur) => {
+    const next = new Set(cur);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    return next;
   });
+  const toggleLaunchCat = () => setSelectedIds((cur) => {
+    const next = new Set(cur);
+    if (allCatSelected) launchRows.forEach((r) => next.delete(r.id));
+    else launchRows.forEach((r) => next.add(r.id));
+    return next;
+  });
+
+  const exportLaunchExcel = () => {
+    if (!targetLaunch.length) return;
+    const rows: XlsCell[][] = [['カテゴリ', 'モデル', 'SKU', '発売日', '日本価格(税込)', 'USD価格', '市場為替(円/$)', 'Appleレート(円/$)', '為替比プレミアム']];
+    targetLaunch.forEach((r) => {
+      rows.push([
+        r.category, r.name, r.sku, r.date,
+        { v: r.jpy, k: 'yen' },
+        r.usd != null ? { v: r.usd, k: 'int' } : '—',
+        r.fx != null ? { v: r.fx, k: 'dec' } : '—',
+        r.apple != null ? { v: r.apple, k: 'dec' } : '—',
+        r.premiumRatio != null ? { v: r.premiumRatio, k: 'pct' } : '—',
+      ]);
+    });
+    const today = new Date().toISOString().slice(0, 10);
+    downloadXlsx(`apple-fx-launch-${today}.xlsx`, [{ name: '発売時価格と為替', rows, freezeRows: 1 }]);
+    toast(`${pickedLaunch.length ? `選択した${pickedLaunch.length}機種` : `${cat} (${targetLaunch.length}機種)`}をExcelでダウンロードしました`);
+  };
 
   const p = products.find((x) => x.id === sel.pid) ?? products[0];
   const sku = pricedSkus(p).find((s) => s.id === sel.sid) ?? pricedSkus(p)[0];
@@ -968,57 +1672,151 @@ function FxInner({ products }: { products: Product[] }) {
   }));
   const tip = { background: c.tipBg, border: `1px solid ${c.tipBorder}`, borderRadius: 12, color: c.text };
 
+  const exportBreakdownExcel = () => {
+    const rows: XlsCell[][] = [[
+      '日付', '機種', 'SKU', 'イベント', '日本価格(税込)', '前回比差額(円)', '円価格指数(発売時=100)',
+      'USD価格', 'USD指数(発売時=100)', '市場為替(円/$)', 'Appleレート(円/$)', '改定要因の判定',
+    ]];
+    h.forEach((pt, i) => {
+      const prev = i > 0 ? h[i - 1] : null;
+      const ar = impliedRate(pt);
+      rows.push([
+        pt.date, p.name, sku.label, pt.event,
+        { v: pt.appleStorePrice, k: 'yen' },
+        prev ? { v: pt.appleStorePrice - prev.appleStorePrice, k: 'yenDiff' } : '—',
+        { v: (pt.appleStorePrice / b.appleStorePrice) * 100, k: 'dec' },
+        pt.usdPrice != null ? { v: pt.usdPrice, k: 'int' } : '—',
+        pt.usdPrice && b.usdPrice ? { v: (pt.usdPrice / b.usdPrice) * 100, k: 'dec' } : '—',
+        pt.exchangeRate != null ? { v: pt.exchangeRate, k: 'dec' } : '—',
+        ar != null ? { v: ar, k: 'dec' } : '—',
+        prev ? verdict(prev, pt).text : '発売時',
+      ]);
+    });
+    downloadXlsx(`apple-fx-${p.id}-${sku.id}.xlsx`, [{ name: '価格改定と為替内訳', rows, freezeRows: 1 }]);
+    toast(`${p.name} (${sku.label}) の為替分析をExcelでダウンロードしました`);
+  };
+
   return (
-    <div className="space-y-5">
-      <div className={`${card} p-5`}>
+    <div className="space-y-4 sm:space-y-5">
+      <div className={`${card} p-3.5 sm:p-5`}>
         <SectionTitle icon={<Coins className="h-5 w-5" />} title="歴代モデル 発売時価格 vs 為替レート" desc={`Appleレート = 円価格 ÷ ${TAX}(当時の消費税率) ÷ USD価格。市場為替より高ければ「円建てに上乗せ」されています。`} />
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="text-sm text-zinc-500">カテゴリ</span>
+          <span className="hidden sm:inline text-sm text-zinc-500">カテゴリ</span>
           <Segmented value={cat} onChange={setCat} options={cats.map((x) => ({ value: x, label: x }))} />
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            {pickedLaunch.length > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-700 dark:bg-sky-500/20 dark:text-sky-300">
+                {pickedLaunch.length}機種選択中
+                <button onClick={() => setSelectedIds(new Set())} className="underline hover:no-underline">解除</button>
+              </span>
+            )}
+            <button className={excelBtnCls} disabled={!targetLaunch.length} onClick={exportLaunchExcel}>
+              <FileSpreadsheet className="h-4 w-4" />Excel{pickedLaunch.length > 0 ? ` (${pickedLaunch.length}件)` : ' (.xlsx)'}
+            </button>
+          </div>
         </div>
-        <div className="h-72">
+        <div className="h-60 sm:h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={launchRows} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <ComposedChart data={launchRows} margin={{ top: 10, right: 6, left: 0, bottom: 0 }}>
               <CartesianGrid stroke={c.grid} strokeDasharray="3 3" />
-              <XAxis dataKey="name" stroke={c.axis} fontSize={11} />
-              <YAxis yAxisId="l" stroke={c.axis} fontSize={12} tickFormatter={(v) => `¥${(v / 1000).toFixed(0)}k`} width={56} />
-              <YAxis yAxisId="r" orientation="right" stroke={c.axis} fontSize={12} domain={['auto', 'auto']} tickFormatter={(v) => `${v}`} width={40} />
+              <XAxis dataKey="name" stroke={c.axis} fontSize={10} interval="preserveStartEnd" />
+              <YAxis yAxisId="l" stroke={c.axis} fontSize={11} tickFormatter={(v) => `¥${(v / 1000).toFixed(0)}k`} width={48} />
+              <YAxis yAxisId="r" orientation="right" stroke={c.axis} fontSize={11} domain={['auto', 'auto']} tickFormatter={(v) => `${v}`} width={36} />
               <Tooltip contentStyle={tip} formatter={(v: any, n: any) => (n === '発売時価格(JPY)' ? yen(v) : typeof v === 'number' ? v.toFixed(1) : v)} />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar yAxisId="l" dataKey="jpy" name="発売時価格(JPY)" fill={carrierColor('apple', dark)} fillOpacity={0.25} radius={[6, 6, 0, 0]} />
               <Line yAxisId="r" type="monotone" dataKey="fx" name="市場為替 (円/$)" stroke={carrierColor('softbank', dark)} strokeWidth={2.5} dot />
               <Line yAxisId="r" type="monotone" dataKey="apple" name="実質Appleレート (円/$)" stroke={carrierColor('docomo', dark)} strokeWidth={2.5} dot />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[640px] text-sm">
-            <thead><tr className="border-b border-zinc-200 text-left text-xs text-zinc-500 dark:border-zinc-800">{['モデル', '発売日', '日本価格', 'USD価格', '市場為替', 'Appleレート', '為替比プレミアム'].map((x) => <th key={x} className="p-2 font-semibold">{x}</th>)}</tr></thead>
+
+        {/* スマホ向けカードリスト (md未満) */}
+        <div className="mt-4 space-y-2 md:hidden">
+          {launchRows.length > 0 && (
+            <label className="flex cursor-pointer items-center gap-2 rounded-xl bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-600 dark:bg-zinc-800/60 dark:text-zinc-300">
+              <input type="checkbox" checked={allCatSelected} onChange={toggleLaunchCat} className="h-4 w-4 accent-sky-500" />
+              表示カテゴリの全モデルを選択 ({launchRows.length}機種)
+            </label>
+          )}
+          {launchRows.map((r) => {
+            const isSel = selectedIds.has(r.id);
+            return (
+              <div key={r.id} onClick={() => toggleLaunchOne(r.id)}
+                className={`cursor-pointer rounded-xl border p-3 text-xs tabular-nums transition ${isSel ? 'border-sky-400 bg-sky-50/70 dark:border-sky-500/60 dark:bg-sky-500/10' : 'border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-800/40'}`}>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <input type="checkbox" checked={isSel} onChange={() => {}} onClick={(e) => e.stopPropagation()} className="h-4 w-4 shrink-0 accent-sky-500" />
+                    <span className="truncate text-sm font-bold text-zinc-900 dark:text-zinc-50">{r.name}</span>
+                    <span className="shrink-0 text-xs text-zinc-500">({r.sku})</span>
+                  </div>
+                  <span className="shrink-0 text-zinc-500">{r.date}</span>
+                </div>
+                <div className="mt-2 grid grid-cols-3 gap-2 rounded-lg bg-white/80 p-2 dark:bg-zinc-900/60">
+                  <div>
+                    <div className="text-[10px] text-zinc-500">発売時価格</div>
+                    <div className="font-bold text-zinc-900 dark:text-zinc-100">{yen(r.jpy)}</div>
+                    <div className="text-[10px] text-zinc-500">{r.usd != null ? `US $${r.usd}` : '—'}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-zinc-500">市場 / Appleレート</div>
+                    <div className="font-semibold text-zinc-800 dark:text-zinc-200">{r.fx != null ? `¥${r.fx.toFixed(1)}` : '—'} → {r.apple != null ? `¥${r.apple.toFixed(1)}` : '—'}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-zinc-500">為替比プレミアム</div>
+                    <div className="text-sm font-bold">{r.premium != null ? <span className={r.premium > 0 ? 'text-rose-500' : 'text-emerald-500'}>{signedPct(r.premium)}</span> : '—'}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* PC/タブレット向けテーブル (md以上) */}
+        <div className="mt-4 hidden overflow-x-auto md:block">
+          <table className="w-full min-w-[680px] text-sm">
+            <thead>
+              <tr className="border-b border-zinc-200 text-left text-xs text-zinc-500 dark:border-zinc-800">
+                <th className="w-9 p-2">
+                  <input type="checkbox" aria-label="表示カテゴリの全モデルを選択" checked={allCatSelected} onChange={toggleLaunchCat} className="h-4 w-4 accent-sky-500" />
+                </th>
+                {['モデル', '発売日', '日本価格', 'USD価格', '市場為替', 'Appleレート', '為替比プレミアム'].map((x) => <th key={x} className="p-2 font-semibold">{x}</th>)}
+              </tr>
+            </thead>
             <tbody>
-              {launchRows.map((r) => (
-                <tr key={r.name} className="border-b border-zinc-100 tabular-nums text-zinc-800 dark:border-zinc-800 dark:text-zinc-200">
-                  <td className="p-2 font-semibold">{r.name} <span className="text-xs font-normal text-zinc-500">{r.sku}</span></td><td className="p-2">{r.date}</td><td className="p-2">{yen(r.jpy)}</td>
-                  <td className="p-2">{r.usd != null ? `$${r.usd}` : '—'}</td><td className="p-2">{r.fx != null ? `¥${r.fx.toFixed(1)}` : '—'}</td>
-                  <td className="p-2">{r.apple != null ? `¥${r.apple.toFixed(1)}` : '—'}</td>
-                  <td className="p-2">{r.premium != null ? <span className={r.premium > 0 ? 'font-bold text-rose-500' : 'font-bold text-emerald-500'}>{signedPct(r.premium)}</span> : '—'}</td>
-                </tr>
-              ))}
+              {launchRows.map((r) => {
+                const isSel = selectedIds.has(r.id);
+                return (
+                  <tr key={r.id} className={`border-b border-zinc-100 tabular-nums text-zinc-800 dark:border-zinc-800 dark:text-zinc-200 ${isSel ? 'bg-sky-50/70 dark:bg-sky-500/10' : ''}`}>
+                    <td className="p-2">
+                      <input type="checkbox" aria-label={`${r.name} を選択`} checked={isSel} onChange={() => toggleLaunchOne(r.id)} className="h-4 w-4 accent-sky-500" />
+                    </td>
+                    <td className="p-2 font-semibold">{r.name} <span className="text-xs font-normal text-zinc-500">{r.sku}</span></td><td className="p-2">{r.date}</td><td className="p-2">{yen(r.jpy)}</td>
+                    <td className="p-2">{r.usd != null ? `$${r.usd}` : '—'}</td><td className="p-2">{r.fx != null ? `¥${r.fx.toFixed(1)}` : '—'}</td>
+                    <td className="p-2">{r.apple != null ? `¥${r.apple.toFixed(1)}` : '—'}</td>
+                    <td className="p-2">{r.premium != null ? <span className={r.premium > 0 ? 'font-bold text-rose-500' : 'font-bold text-emerald-500'}>{signedPct(r.premium)}</span> : '—'}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
 
-      <div className={`${card} p-5`}>
+      <div className={`${card} p-3.5 sm:p-5`}>
         <h3 className="mb-3 text-sm font-bold text-zinc-900 dark:text-zinc-50">価格改定の内訳: ドル建て据え置き？ それともドル自体が値上がり？</h3>
-        <ProductSkuPicker products={products} sel={{ pid: p.id, sid: sku.id }} onChange={setSel} />
-        <div className="mt-4 h-64">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <ProductSkuPicker products={products} sel={{ pid: p.id, sid: sku.id }} onChange={setSel} />
+          <button className={`${excelBtnCls} w-full sm:w-auto`} onClick={exportBreakdownExcel}><FileSpreadsheet className="h-4 w-4" />Excel (.xlsx)</button>
+        </div>
+        <div className="mt-4 h-56 sm:h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={idx} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+            <LineChart data={idx} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid stroke={c.grid} strokeDasharray="3 3" />
-              <XAxis dataKey="t" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={ym} stroke={c.axis} fontSize={12} />
-              <YAxis stroke={c.axis} fontSize={12} domain={['auto', 'auto']} tickFormatter={(v) => `${Math.round(v)}`} width={40} />
+              <XAxis dataKey="t" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={ym} stroke={c.axis} fontSize={11} />
+              <YAxis stroke={c.axis} fontSize={11} domain={['auto', 'auto']} tickFormatter={(v) => `${Math.round(v)}`} width={36} />
               <Tooltip contentStyle={tip} labelFormatter={(t: any) => new Date(t).toISOString().slice(0, 10)} formatter={(v: any) => (typeof v === 'number' ? v.toFixed(1) : v)} />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
               <Line type="stepAfter" dataKey="JPY" name="円価格 (発売時=100)" stroke={carrierColor('apple', dark)} strokeWidth={3} dot />
               <Line type="stepAfter" dataKey="USD" name="USD価格" stroke={carrierColor('au', dark)} strokeWidth={2} dot connectNulls />
               <Line type="monotone" dataKey="市場為替" name="市場為替" stroke={carrierColor('softbank', dark)} strokeWidth={2} strokeDasharray="5 4" dot connectNulls />
@@ -1033,10 +1831,10 @@ function FxInner({ products }: { products: Product[] }) {
             const ar = impliedRate(pt); const pr = impliedRate(prev);
             return (
               <div key={pt.date} className="rounded-xl bg-zinc-50 p-3 dark:bg-zinc-800/60">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-50">{pt.date}</span>
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <span className="text-xs sm:text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-50">{pt.date}</span>
                   <DeltaBadge diff={pt.appleStorePrice - prev.appleStorePrice} base={prev.appleStorePrice} />
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${v.tone === 'up' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300' : v.tone === 'down' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300'}`}>{v.text}</span>
+                  <span className={`rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] sm:text-xs font-bold ${v.tone === 'up' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300' : v.tone === 'down' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300'}`}>{v.text}</span>
                 </div>
                 <div className="mt-1.5 grid gap-x-6 gap-y-0.5 text-xs tabular-nums text-zinc-600 dark:text-zinc-400 sm:grid-cols-3">
                   <div>USD: {prev.usdPrice != null ? `$${prev.usdPrice}` : '—'} → {pt.usdPrice != null ? `$${pt.usdPrice}` : '—'}</div>
@@ -1054,152 +1852,7 @@ function FxInner({ products }: { products: Product[] }) {
 }
 
 /* =====================================================================================
- * 8. タブ4: データ管理 (JSON インポート / エクスポート)
- * ===================================================================================== */
-
-const SCHEMA_EXAMPLE = `{
-  "schemaVersion": 1,
-  "products": [{
-    "id": "iphone-17", "category": "iPhone", "name": "iPhone 17",
-    "generation": "第18世代 (2025)", "releaseDate": "2025-09-19",
-    "specs": { "soc": "A19", "ram": "8GB", "display": "...", "battery": "...", "weight": "...",
-               "connectivity": ["5G", "Wi-Fi 7"], "bands": "..." },
-    "skus": [{
-      "id": "256", "label": "256GB", "storage": "256GB", "connectivity": "-",
-      "priceHistory": [
-        { "date": "2025-09-19", "event": "発売時", "appleStorePrice": 129800, "usdPrice": 799, "exchangeRate": 147.5 }
-      ],
-      "carriers": {
-        "docomo": { "launchPrice": 150000, "currentPrice": 150000, "mnpPrice": 128000,
-          "returnProgram": { "name": "いつでもカエドキプログラム", "months": 23, "effectiveCost": 85000 } }
-      }
-    }]
-  }]
-}`;
-
-function DataView({ products, onReplace, onMerge, onReset, onRemove, onAppleDb, autoDb, setAutoDb, sels, mode, mnp, toast }: {
-  products: Product[]; onReplace: (p: Product[]) => void; onMerge: (p: Product[]) => void; onReset: () => void; onRemove: (id: string) => void;
-  onAppleDb: (raw: unknown) => string[]; autoDb: boolean; setAutoDb: (b: boolean) => void;
-  sels: Sel[]; mode: Mode; mnp: boolean; toast: (m: string) => void;
-}) {
-  const [text, setText] = useState('');
-  const [url, setUrl] = useState('');
-  const [errors, setErrors] = useState<string[]>([]);
-  const [dbReport, setDbReport] = useState<string[]>([]);
-  const [listQ, setListQ] = useState('');
-  const [listLimit, setListLimit] = useState(60);
-  const [busy, setBusy] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const runAppleDb = (raw: unknown) => { const rep = onAppleDb(raw); setDbReport(rep); toast(rep[0] ?? 'AppleDB を適用しました'); };
-  const fetchAppleDb = async () => {
-    setBusy(true);
-    try { const r = await fetch(APPLEDB_URL); if (!r.ok) throw new Error(`HTTP ${r.status}`); runAppleDb(await r.json()); }
-    catch (e) { setDbReport([`✗ AppleDB の取得に失敗しました: ${(e as Error).message}`]); }
-    setBusy(false);
-  };
-
-  const apply = (raw: string, how: 'merge' | 'replace') => {
-    let parsed: unknown;
-    try { parsed = JSON.parse(raw); } catch (e) { setErrors([`JSON の構文エラー: ${(e as Error).message}`]); return; }
-    // AppleDB 形式 (機種配列に identifier / info がある) は自動判別して補強用に適用
-    if (Array.isArray(parsed) && parsed.some((d) => d && (d as AppleDbDevice).identifier && (d as AppleDbDevice).info)) { setErrors([]); runAppleDb(parsed); return; }
-    const { products: ps, errors: errs } = normalizeDataset(parsed);
-    setErrors(errs);
-    if (!ps.length) return;
-    (how === 'merge' ? onMerge : onReplace)(ps);
-    toast(`${ps.length}製品を${how === 'merge' ? 'マージ' : '置換'}しました${errs.length ? `（${errs.length}件スキップ）` : ''}`);
-  };
-  const onFile = async (f?: File | null) => { if (!f) return; const t = await f.text(); setText(t); apply(t, 'merge'); if (fileRef.current) fileRef.current.value = ''; };
-  const fetchUrl = async () => {
-    setBusy(true);
-    try { const r = await fetch(url); if (!r.ok) throw new Error(`HTTP ${r.status}`); const t = await r.text(); setText(t); apply(t, 'merge'); }
-    catch (e) { setErrors([`取得に失敗しました: ${(e as Error).message} (CORS許可されたURLのみ読み込めます)`]); }
-    setBusy(false);
-  };
-  const exportJson = () => { const ds: Dataset = { ...BUILTIN_DATASET, meta: { ...BUILTIN_DATASET.meta, generatedAt: new Date().toISOString().slice(0, 10) }, products }; downloadFile('apple-products.json', JSON.stringify(ds, null, 2)); };
-  const copyTable = async (kind: 'md' | 'csv') => {
-    if (!sels.length) return toast('比較タブで機種を選択してください');
-    const rows = buildCompareTable(products, sels, mode, mnp);
-    toast((await copyText(kind === 'md' ? toMarkdown(rows) : toCSV(rows))) ? `${kind === 'md' ? 'Markdown' : 'CSV'} をコピーしました` : 'コピーに失敗しました');
-  };
-
-  return (
-    <div className="space-y-5">
-      <div className={`${card} p-5`}>
-        <SectionTitle icon={<Database className="h-5 w-5" />} title="データ管理" desc="外部JSON(オープンデータ・追加生成データ)を読み込むだけで全機能が新製品に対応します。" />
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div className="space-y-3">
-            <div className="flex flex-wrap gap-2">
-              <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
-              <button className={btnCls} onClick={() => fileRef.current?.click()}><Upload className="h-4 w-4" />JSONファイルを読み込む (マージ)</button>
-              <button className={btnCls} onClick={exportJson}><Download className="h-4 w-4" />JSONエクスポート</button>
-              <button className={btnCls} onClick={() => { if (confirm('初期サンプルデータに戻します。よろしいですか？')) { onReset(); setErrors([]); toast('初期データに戻しました'); } }}><RotateCcw className="h-4 w-4" />初期化</button>
-            </div>
-            <div className="flex gap-2">
-              <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://example.com/products.json" className={`${selectCls} flex-1`} />
-              <button className={btnCls} disabled={!url || busy} onClick={fetchUrl}><Link2 className="h-4 w-4" />URL取得</button>
-            </div>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} rows={9} placeholder="JSONをここに貼り付け…" className={`${selectCls} w-full font-mono text-xs`} />
-            <div className="flex gap-2">
-              <button className={`${btnCls} !bg-sky-600 !text-white !border-sky-600 hover:!bg-sky-500`} disabled={!text.trim()} onClick={() => apply(text, 'merge')}><Plus className="h-4 w-4" />マージ (同一IDは上書き)</button>
-              <button className={btnCls} disabled={!text.trim()} onClick={() => apply(text, 'replace')}>全置換</button>
-            </div>
-            {errors.length > 0 && (
-              <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200">
-                <div className="mb-1 flex items-center gap-1 font-bold"><AlertTriangle className="h-4 w-4" />検証メッセージ</div>
-                <ul className="list-disc pl-5">{errors.slice(0, 8).map((e, i) => <li key={i}>{e}</li>)}</ul>
-              </div>
-            )}
-          </div>
-          <div>
-            <div className="mb-1 text-xs font-bold text-zinc-500">スキーマ例 (carriers は省略可。Apple Store は priceHistory から自動補完)</div>
-            <pre className="max-h-80 overflow-auto rounded-xl bg-zinc-900 p-3 text-[11px] leading-relaxed text-zinc-100">{SCHEMA_EXAMPLE}</pre>
-          </div>
-        </div>
-      </div>
-
-      <div className={`${card} p-5`}>
-        <SectionTitle icon={<Database className="h-5 w-5" />} title="AppleDB 連携" desc="appledb.dev の機種データでスペック(SoC・RAM・バッテリー・型番等)と販売終了日を自動補強します。価格は変更しません。" />
-        <div className="flex flex-wrap items-center gap-3">
-          <button className={`${btnCls} !bg-sky-600 !text-white !border-sky-600 hover:!bg-sky-500`} disabled={busy} onClick={fetchAppleDb}><Download className="h-4 w-4" />AppleDB から取得して適用</button>
-          <label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            <input type="checkbox" checked={autoDb} onChange={(e) => setAutoDb(e.target.checked)} className="h-4 w-4 accent-sky-500" />起動時に自動で適用する
-          </label>
-          <span className="text-xs text-zinc-500">{APPLEDB_URL} ／ main.json をファイル読み込み・貼り付けしても自動判別されます</span>
-        </div>
-        {dbReport.length > 0 && <pre className="mt-3 max-h-48 overflow-auto whitespace-pre-wrap rounded-xl bg-zinc-100 p-3 text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">{dbReport.join('\n')}</pre>}
-        <p className="mt-2 text-xs text-zinc-500">突き合わせは <code>specs.identifier</code>(例 iPhone14,5)または機種名の完全一致。AppleDB の日付は米国基準のため、販売終了日は +1日で日本時間に換算しています。</p>
-      </div>
-
-      <div className={`${card} p-5`}>
-        <h3 className="mb-3 text-sm font-bold text-zinc-900 dark:text-zinc-50">現在の比較表をコピー</h3>
-        <div className="flex gap-2"><button className={btnCls} onClick={() => copyTable('md')}><Copy className="h-4 w-4" />Markdown</button><button className={btnCls} onClick={() => copyTable('csv')}><Copy className="h-4 w-4" />CSV</button></div>
-        <p className="mt-2 text-xs text-zinc-500">比較タブで選択中の機種・モード({mode === 'bulk' ? '一括' : '2年返却'}{mnp ? '・MNP割引' : ''})がそのまま出力されます。</p>
-      </div>
-
-      <div className={`${card} p-5`}>
-        <div className="mb-3 flex flex-wrap items-center gap-3">
-          <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">読み込み済み製品 ({products.length} / 詳細あり {products.filter(hasDetail).length})</h3>
-          <input value={listQ} onChange={(e) => { setListQ(e.target.value); setListLimit(60); }} placeholder="機種名・カテゴリで絞り込み" className={`${selectCls} w-56`} />
-        </div>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {products.filter((p) => !listQ.trim() || `${p.name} ${p.category}`.toLowerCase().includes(listQ.trim().toLowerCase())).slice(0, listLimit).map((p) => (
-            <div key={p.id} className="flex items-center justify-between rounded-xl bg-zinc-50 p-3 dark:bg-zinc-800/60">
-              <div className="min-w-0"><div className="flex items-center gap-1.5 truncate text-sm font-semibold text-zinc-900 dark:text-zinc-50"><CatIcon cat={p.category} className="h-3.5 w-3.5" />{p.name}</div>
-                <div className="text-xs text-zinc-500">{p.releaseDate} ・ {p.category} ・ {p.skus.length} SKU{hasDetail(p) ? ' ・ ★詳細' : hasPrice(p) ? ' ・ 基本価格' : ''}</div></div>
-              <button aria-label="削除" disabled={products.length <= 1} onClick={() => onRemove(p.id)} className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-200 hover:text-rose-500 disabled:opacity-30 dark:hover:bg-zinc-700"><Trash2 className="h-4 w-4" /></button>
-            </div>
-          ))}
-        </div>
-        {products.length > listLimit && <button className={`${btnCls} mt-3`} onClick={() => setListLimit(listLimit + 100)}>さらに表示 ({listLimit}/{products.length})</button>}
-      </div>
-    </div>
-  );
-}
-
-/* =====================================================================================
- * 9. App
+ * 8. App
  * ===================================================================================== */
 
 const LS_DATA = 'apple-price-atlas:data:v1';
@@ -1208,7 +1861,7 @@ const LS_EXT = 'apple-price-atlas:ext-version';
 const LS_AUTODB = 'apple-price-atlas:appledb-auto';
 const LS_SCOPE = 'apple-price-atlas:scope';
 type Scope = 'all' | 'detail';
-type Tab = 'compare' | 'timeline' | 'fx' | 'data';
+type Tab = 'compare' | 'timeline' | 'fx';
 
 export default function App() {
   const [dark, setDark] = useState<boolean>(() => {
@@ -1225,7 +1878,6 @@ export default function App() {
   const visible = useMemo(() => (scope === 'all' ? products : products.filter(hasDetail)), [products, scope]);
   const productsRef = useRef(products);
   productsRef.current = products;
-  const [autoDb, setAutoDb] = useState<boolean>(() => { try { return localStorage.getItem(LS_AUTODB) !== 'off'; } catch { return true; } });
   const [tab, setTab] = useState<Tab>('compare');
   const [mode, setMode] = useState<Mode>('bulk');
   const [mnp, setMnp] = useState(false);
@@ -1243,6 +1895,7 @@ export default function App() {
   //  2) AppleDB が有効なら api.appledb.dev から取得してスペック/販売終了日を補強
   //  いずれも失敗時は静かに無視 (オフライン・未配置でも動作)
   useEffect(() => {
+    const autoDb = (() => { try { return localStorage.getItem(LS_AUTODB) !== 'off'; } catch { return true; } })();
     (async () => {
       let cur = productsRef.current; let dirty = false; const notes: string[] = [];
       try {
@@ -1266,10 +1919,6 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const applyAppleDbNow = (raw: unknown) => {
-    const res = applyAppleDb(productsRef.current, raw); setProducts(res.products); return res.report;
-  };
-
   // 製品が変わったとき選択を整合させる
   useEffect(() => {
     setSels((cur) => {
@@ -1279,67 +1928,65 @@ export default function App() {
     });
   }, [products]);
 
-  const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-    { id: 'compare', label: 'スペック＆キャリア比較', icon: <Scale className="h-4 w-4" /> },
-    { id: 'timeline', label: '価格改定タイムライン', icon: <LineIcon className="h-4 w-4" /> },
-    { id: 'fx', label: '発売時価格 × 為替', icon: <Coins className="h-4 w-4" /> },
-    { id: 'data', label: 'データ管理', icon: <Database className="h-4 w-4" /> },
+  const tabs: { id: Tab; label: string; shortLabel: string; icon: React.ReactNode }[] = [
+    { id: 'compare', label: 'スペック＆キャリア比較', shortLabel: '価格・スペック比較', icon: <Scale className="h-4 w-4 shrink-0" /> },
+    { id: 'timeline', label: '価格改定タイムライン', shortLabel: '価格改定履歴', icon: <LineIcon className="h-4 w-4 shrink-0" /> },
+    { id: 'fx', label: '発売時価格 × 為替', shortLabel: '発売価格×為替', icon: <Coins className="h-4 w-4 shrink-0" /> },
   ];
-
-  const body = useMemo(() => null, []); void body;
 
   return (
     <ThemeCtx.Provider value={dark}>
       <div className="min-h-screen text-zinc-900 dark:text-zinc-100">
-        <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3">
-            <div className="flex items-center gap-2">
-              <div className="rounded-xl bg-zinc-900 p-1.5 text-white dark:bg-white dark:text-zinc-900"><Apple className="h-5 w-5" /></div>
-              <div><div className="text-base font-extrabold leading-tight">Apple Price Atlas</div><div className="text-[11px] text-zinc-500">スペック・キャリア価格・価格改定の完全比較</div></div>
+        <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/85 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85">
+          <div className="mx-auto flex max-w-7xl items-center gap-2 sm:gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <div className="shrink-0 rounded-xl bg-zinc-900 p-1.5 text-white dark:bg-white dark:text-zinc-900"><Apple className="h-5 w-5" /></div>
+              <div className="min-w-0">
+                <div className="truncate text-sm sm:text-base font-extrabold leading-tight">Apple Price Atlas</div>
+                <div className="truncate text-[10px] sm:text-[11px] text-zinc-500">スペック・キャリア価格・価格改定の完全比較</div>
+              </div>
             </div>
-            <div className="ml-2 hidden items-center gap-1.5 md:flex">{CARRIER_ORDER.map((id) => <CarrierBadge key={id} id={id} small />)}</div>
-            <button onClick={() => setDark(!dark)} aria-label="テーマ切替" className={`${btnCls} ml-auto`}>{dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}{dark ? 'ライト' : 'ダーク'}</button>
+            <div className="ml-2 hidden items-center gap-1.5 lg:flex">{CARRIER_ORDER.map((id) => <CarrierBadge key={id} id={id} small />)}</div>
+            <button onClick={() => setDark(!dark)} aria-label="テーマ切替" className={`${btnCls} ml-auto shrink-0 !px-2.5 !py-1.5`}>
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              <span className="hidden xs:inline sm:inline">{dark ? 'ライト' : 'ダーク'}</span>
+            </button>
           </div>
-          <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4">
+          <nav className="mx-auto grid max-w-7xl grid-cols-3 sm:flex sm:gap-1 px-2 sm:px-4">
             {tabs.map((t) => (
               <button key={t.id} onClick={() => setTab(t.id)}
-                className={`inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3.5 py-2.5 text-sm font-semibold transition ${tab === t.id ? 'border-sky-500 text-sky-600 dark:text-sky-400' : 'border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'}`}>
-                {t.icon}{t.label}
+                className={`inline-flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap border-b-2 px-1 sm:px-3.5 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold transition ${tab === t.id ? 'border-sky-500 text-sky-600 dark:text-sky-400' : 'border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'}`}>
+                {t.icon}
+                <span className="sm:hidden">{t.shortLabel}</span>
+                <span className="hidden sm:inline">{t.label}</span>
               </button>
             ))}
           </nav>
         </header>
 
-        <main className="mx-auto max-w-7xl px-4 py-6">
-          {tab !== 'data' && (
-            <div className="mb-4 flex flex-wrap items-center gap-3">
-              <span className="text-xs font-semibold text-zinc-500">表示範囲</span>
+        <main className="mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-6">
+          <div className="mb-3.5 sm:mb-4 flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-xs font-semibold text-zinc-500">表示範囲</span>
               <Segmented<Scope> value={scope} onChange={setScope} options={[
                 { value: 'detail', label: `★ 価格履歴あり (${nDetail})` },
                 { value: 'all', label: `歴代すべて (${products.length})` },
               ]} />
-              <span className="text-xs text-zinc-500">{scope === 'detail' ? '発売時・値上げ/値下げ履歴（またはキャリア価格）を持つ機種のみ' : 'AppleDB の全機種(スペック中心・価格のない機種も含む)。★は価格履歴あり'}</span>
             </div>
-          )}
+            <span className="text-[11px] sm:text-xs text-zinc-500">{scope === 'detail' ? '発売時・値上げ/値下げ履歴（またはキャリア価格）を持つ機種のみ' : 'AppleDB の全機種(スペック中心・価格のない機種も含む)。★は価格履歴あり'}</span>
+          </div>
           {tab === 'compare' && <CompareView products={visible} all={products} sels={sels} setSels={setSels} mode={mode} setMode={setMode} mnp={mnp} setMnp={setMnp} toast={toast} />}
-          {tab === 'timeline' && <TimelineView products={visible} />}
-          {tab === 'fx' && <FxView products={visible} />}
-          {tab === 'data' && (
-            <DataView products={products} sels={sels} mode={mode} mnp={mnp} toast={toast}
-              onAppleDb={applyAppleDbNow} autoDb={autoDb} setAutoDb={(b) => { setAutoDb(b); try { localStorage.setItem(LS_AUTODB, b ? 'on' : 'off'); } catch { /* noop */ } }}
-              onReplace={(ps) => setProducts(ps)} onMerge={(ps) => setProducts((cur) => mergeProducts(cur, ps))}
-              onReset={() => setProducts(normalizeDataset(BUILTIN_DATASET).products)}
-              onRemove={(id) => setProducts((cur) => cur.filter((p) => p.id !== id))} />
-          )}
+          {tab === 'timeline' && <TimelineView products={visible} toast={toast} />}
+          {tab === 'fx' && <FxView products={visible} toast={toast} />}
         </main>
 
-        <footer className="mx-auto max-w-7xl px-4 pb-10 text-xs text-zinc-500">
+        <footer className="mx-auto max-w-7xl px-3 sm:px-4 pb-10 text-[11px] sm:text-xs text-zinc-500">
           ※ 価格は日本国内の税込表示。為替・USD価格・キャリア価格には概算/モデル値を含みます。購入前に各公式サイトで最新情報をご確認ください。
         </footer>
 
         {toastMsg && (
-          <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-lg dark:bg-white dark:text-zinc-900">
-            <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4 text-emerald-400" />{toastMsg}</span>
+          <div className="fixed bottom-4 left-1/2 z-50 w-max max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-full bg-zinc-900 px-4 py-2 text-center text-xs sm:text-sm font-medium text-white shadow-lg dark:bg-white dark:text-zinc-900">
+            <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4 shrink-0 text-emerald-400" /><span>{toastMsg}</span></span>
           </div>
         )}
       </div>
