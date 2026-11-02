@@ -498,6 +498,127 @@ const hasPrice = (p: Product) => p.skus.some(skuPriced);
 /** 詳細価格データ(複数回の改定 or キャリア価格)があるか */
 const hasDetail = (p: Product) => hasPrice(p) && (!!p.detail || !!p.priceResearched) || p.skus.some((s) => new Set(s.priceHistory.map((h) => h.appleStorePrice)).size > 1 || Object.keys(s.carriers).some((k) => k !== 'apple'));
 
+const CATEGORY_ORDER = ['iPhone', 'iPad', 'Apple Watch', 'Mac', 'AirPods'] as const;
+const catRank = (c: string): number => {
+  const idx = (CATEGORY_ORDER as readonly string[]).indexOf(c);
+  return idx >= 0 ? idx : CATEGORY_ORDER.length;
+};
+const sortCategories = (cats: string[]): string[] =>
+  [...cats].sort((a, b) => catRank(a) - catRank(b) || a.localeCompare(b, 'ja'));
+
+function skuConnRank(conn = ''): number {
+  const c = String(conn).toUpperCase();
+  if (!c || c === '-') return 0;
+  if (c === 'WI-FI' || c === 'GPS') return 1;
+  if (c.includes('CELLULAR')) return 2;
+  return 3;
+}
+
+function skuRamRank(label = '', storage = ''): number {
+  const m = `${label} ${storage}`.match(/(\d+)\s*GB\s*[/／]/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+function skuStorRank(label = '', storage = ''): number {
+  const s = `${storage} ${label}`;
+  const matches = [...s.matchAll(/([\d.]+)\s*(TB|GB|MB)/gi)];
+  if (!matches.length) return 0;
+  const last = matches[matches.length - 1];
+  const mult: Record<string, number> = { TB: 1e6, GB: 1e3, MB: 1 };
+  return parseFloat(last[1]) * (mult[last[2].toUpperCase()] ?? 1);
+}
+
+function skuMmRank(label = ''): number {
+  const m = String(label).match(/(\d+)\s*mm/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+function compareSkus(a: Sku, b: Sku): number {
+  return (
+    skuMmRank(a.label) - skuMmRank(b.label) ||
+    skuConnRank(a.connectivity) - skuConnRank(b.connectivity) ||
+    skuRamRank(a.label, a.storage) - skuRamRank(b.label, b.storage) ||
+    skuStorRank(a.label, a.storage) - skuStorRank(b.label, b.storage) ||
+    String(a.label).localeCompare(String(b.label), 'ja', { numeric: true })
+  );
+}
+
+function deviceSubfamilyRank(p: Product): number {
+  const n = String(p.name ?? '').normalize('NFKC');
+  switch (p.category) {
+    case 'iPhone':
+      if (/\bSE\b/i.test(n)) return 1;
+      if (/^iPhone\s*\d+e\b/i.test(n)) return 2;
+      if (/\bmini\b/i.test(n)) return 3;
+      if (/\bPlus\b/i.test(n)) return 5;
+      if (/\bAir\b/i.test(n)) return 6;
+      if (/\bPro\s+Max\b/i.test(n)) return 8;
+      if (/\bPro\b/i.test(n)) return 7;
+      if (/\b(Ultra|Duo)\b/i.test(n)) return 9;
+      return 4;
+    case 'iPad':
+      if (/\bmini\b/i.test(n)) return 2;
+      if (/\bAir\b/i.test(n)) return 3;
+      if (/\bPro\b/i.test(n)) return 4;
+      return 1;
+    case 'Apple Watch':
+      if (/\bSE\b/i.test(n)) return 1;
+      if (/\bUltra\b/i.test(n)) return 3;
+      return 2;
+    case 'Mac':
+      if (/^MacBook\s*(Neo|\(|$)/i.test(n)) return 1;
+      if (/^MacBook\s*Air/i.test(n)) return 2;
+      if (/^MacBook\s*Pro/i.test(n)) return 3;
+      if (/^iMac\s*Pro/i.test(n)) return 5;
+      if (/^iMac/i.test(n)) return 4;
+      if (/^Mac\s*mini/i.test(n)) return 6;
+      if (/^Mac\s*Studio/i.test(n)) return 7;
+      if (/^Mac\s*Pro/i.test(n)) return 8;
+      return 9;
+    case 'AirPods':
+      if (/\bMax\b/i.test(n)) return 4;
+      if (/\bPro\b/i.test(n)) return 3;
+      if (/Noise|Wireless/i.test(n)) return 2;
+      return 1;
+    default:
+      return 5;
+  }
+}
+
+function screenSizeRank(name = ''): number {
+  const m = String(name).normalize('NFKC').match(/(\d+(?:\.\d+)?)\s*(?:インチ|-inch|mm)\b/i);
+  return m ? parseFloat(m[1]) : 0;
+}
+
+function chipTierRank(name = ''): number {
+  const n = String(name).normalize('NFKC');
+  if (/\bM\d+\s+Ultra\b/i.test(n)) return 4;
+  if (/\bM\d+\s+Max\b/i.test(n)) return 3;
+  if (/\bM\d+\s+Pro\b/i.test(n)) return 2;
+  if (/\bM\d+\b/i.test(n)) return 1;
+  return 0;
+}
+
+function portVariantRank(name = ''): number {
+  const n = String(name);
+  if (/Two\s+(Ports|Thunderbolt)/i.test(n)) return 1;
+  if (/Four\s+(Ports|Thunderbolt)/i.test(n)) return 2;
+  if (/\bRack\b/i.test(n)) return 2;
+  return 0;
+}
+
+function compareProducts(a: Product, b: Product): number {
+  return (
+    catRank(a.category) - catRank(b.category) ||
+    String(a.releaseDate ?? '').localeCompare(String(b.releaseDate ?? '')) ||
+    deviceSubfamilyRank(a) - deviceSubfamilyRank(b) ||
+    screenSizeRank(a.name) - screenSizeRank(b.name) ||
+    chipTierRank(a.name) - chipTierRank(b.name) ||
+    portVariantRank(a.name) - portVariantRank(b.name) ||
+    String(a.name ?? '').localeCompare(String(b.name ?? ''), 'ja', { numeric: true })
+  );
+}
+
 const CATEGORY_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
   iPhone: Smartphone, iPad: Tablet, 'Apple Watch': Watch, Mac: Laptop, AirPods: Headphones,
 };
@@ -538,11 +659,13 @@ function normalizeDataset(raw: unknown): { products: Product[]; errors: string[]
       });
     });
     if (!skus.length) return;
+    skus.sort(compareSkus);
     products.push({
       id: String(p.id), category: p.category, name: p.name, generation: p.generation ?? '', releaseDate: p.releaseDate ?? skus[0].priceHistory[0]?.date ?? '',
       specs: p.specs ?? {}, skus, ...(typeof p.detail === 'boolean' ? { detail: p.detail } : {}), ...(p.priceResearched ? { priceResearched: true } : {}),
     });
   });
+  products.sort(compareProducts);
   return { products, errors };
 }
 
@@ -624,6 +747,7 @@ function applyAppleDb(products: Product[], raw: unknown): { products: Product[];
   report.unshift(`✓ ${out.length - unmatched.length}製品を突き合わせ (更新 ${updatedLines.length} / 変更なし ${same}) ／ 該当なし ${unmatched.length}${unmatched.length ? ` (例: ${unmatched.slice(0, 5).join(', ')})` : ''}`);
   report.push(...updatedLines.slice(0, 40));
   if (updatedLines.length > 40) report.push(`… ほか ${updatedLines.length - 40} 製品を更新`);
+  out.sort(compareProducts);
   return { products: out, report };
 }
 const specText = (v: string | string[] | undefined) => (Array.isArray(v) ? v.join(' / ') : v || '—');
@@ -1185,15 +1309,17 @@ function SectionTitle({ icon, title, desc }: { icon: React.ReactNode; title: str
 }
 
 function ProductSkuPicker({ products, sel, onChange }: { products: Product[]; sel: Sel; onChange: (s: Sel) => void }) {
-  const p = products.find((x) => x.id === sel.pid) ?? products[0];
-  const cats = Array.from(new Set(products.map((x) => x.category)));
+  const sortedProducts = useMemo(() => [...products].sort(compareProducts), [products]);
+  const p = sortedProducts.find((x) => x.id === sel.pid) ?? sortedProducts[0];
+  const cats = useMemo(() => sortCategories(Array.from(new Set(sortedProducts.map((x) => x.category)))), [sortedProducts]);
+  const skus = useMemo(() => [...(pricedSkus(p).length ? pricedSkus(p) : p.skus)].sort(compareSkus), [p]);
   return (
     <div className="flex w-full sm:w-auto flex-wrap items-center gap-2">
-      <select className={`${selectCls} min-w-0 flex-1 sm:flex-initial max-w-full`} value={p.id} onChange={(e) => { const np = products.find((x) => x.id === e.target.value)!; onChange({ pid: np.id, sid: (pricedSkus(np)[0] ?? np.skus[0]).id }); }}>
-        {cats.map((c) => (<optgroup key={c} label={c}>{products.filter((x) => x.category === c).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</optgroup>))}
+      <select className={`${selectCls} min-w-0 flex-1 sm:flex-initial max-w-full`} value={p.id} onChange={(e) => { const np = sortedProducts.find((x) => x.id === e.target.value)!; const nextSkus = [...(pricedSkus(np).length ? pricedSkus(np) : np.skus)].sort(compareSkus); onChange({ pid: np.id, sid: nextSkus[0].id }); }}>
+        {cats.map((c) => (<optgroup key={c} label={c}>{sortedProducts.filter((x) => x.category === c).map((x) => <option key={x.id} value={x.id}>{x.name}{x.releaseDate ? ` (${x.releaseDate.slice(0, 4)})` : ''}{hasDetail(x) ? ' ★' : ''}</option>)}</optgroup>))}
       </select>
       <select className={selectCls} value={sel.sid} onChange={(e) => onChange({ pid: p.id, sid: e.target.value })}>
-        {(pricedSkus(p).length ? pricedSkus(p) : p.skus).map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+        {skus.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
       </select>
     </div>
   );
@@ -1217,9 +1343,26 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
   const [catF, setCatF] = useState('');
   const [mobileView, setMobileView] = useState<'stack' | 'table'>('stack');
   const [usedMap, setUsedMap] = useState<Record<string, UsedMarketData>>({});
-  const available = products.filter((p) => !sels.some((s) => s.pid === p.id));
-  const allCats = Array.from(new Set(products.map((x) => x.category)));
-  const matched = available.filter((p) => (!catF || p.category === catF) && (!q.trim() || p.name.toLowerCase().includes(q.trim().toLowerCase()) || String(p.specs.identifier ?? '').toLowerCase().includes(q.trim().toLowerCase())));
+  const available = useMemo(
+    () => products.filter((p) => !sels.some((s) => s.pid === p.id)).sort(compareProducts),
+    [products, sels],
+  );
+  const allCats = useMemo(() => sortCategories(Array.from(new Set(products.map((x) => x.category)))), [products]);
+  const matched = useMemo(
+    () =>
+      available
+        .filter(
+          (p) =>
+            (!catF || p.category === catF) &&
+            (!q.trim() ||
+              p.name.toLowerCase().includes(q.trim().toLowerCase()) ||
+              String(p.specs.identifier ?? '')
+                .toLowerCase()
+                .includes(q.trim().toLowerCase())),
+        )
+        .sort(compareProducts),
+    [available, catF, q],
+  );
 
   // 選択中の各機種・容量に対して楽天市場API（未設定時は推定フォールバック）から中古・未使用品最安値を取得
   const colsKey = cols.map((c) => `${c.p.id}__${c.sku.id}`).join('|');
@@ -1290,10 +1433,10 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
               </select>
               <span className="relative w-full sm:w-auto"><Search className="pointer-events-none absolute left-2.5 top-2.5 sm:top-2 h-4 w-4 text-zinc-400" />
                 <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="機種名・識別子で検索" className={`${selectCls} w-full sm:w-44 pl-8`} /></span>
-              <select className={`${selectCls} col-span-2 w-full sm:col-span-1 sm:w-auto sm:max-w-[16rem]`} value={adding} onChange={(e) => { const p = all.find((x) => x.id === e.target.value); if (p) setSels([...sels, { pid: p.id, sid: (pricedSkus(p)[0] ?? p.skus[0]).id }]); setAdding(''); }}>
+              <select className={`${selectCls} col-span-2 w-full sm:col-span-1 sm:w-auto sm:max-w-[16rem]`} value={adding} onChange={(e) => { const p = all.find((x) => x.id === e.target.value); if (p) { const nextSkus = [...(pricedSkus(p).length ? pricedSkus(p) : p.skus)].sort(compareSkus); setSels([...sels, { pid: p.id, sid: nextSkus[0].id }]); } setAdding(''); }}>
                 <option value="">＋ 機種を追加… ({matched.length}件)</option>
-                {Array.from(new Set(matched.map((x) => x.category))).map((cat) => (
-                  <optgroup key={cat} label={cat}>{matched.filter((x) => x.category === cat).slice(0, 300).map((x) => <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)}){hasDetail(x) ? ' ★' : ''}</option>)}</optgroup>
+                {sortCategories(Array.from(new Set(matched.map((x) => x.category)))).map((cat) => (
+                  <optgroup key={cat} label={cat}>{matched.filter((x) => x.category === cat).sort(compareProducts).map((x) => <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)}){hasDetail(x) ? ' ★' : ''}</option>)}</optgroup>
                 ))}
               </select>
             </div>
@@ -1316,7 +1459,7 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex min-w-0 items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400"><Trophy className="h-3.5 w-3.5 shrink-0 text-amber-500" /><span className="truncate">最安: {c.p.name}</span></div>
                       <select className={`${selectCls} !py-1 !px-2 !text-xs`} value={c.sku.id} aria-label={`${c.p.name} の容量・通信方式`} onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}>
-                        {c.p.skus.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
+                        {[...c.p.skus].sort(compareSkus).map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
                       </select>
                     </div>
                     {ch.min == null ? <div className="mt-2 text-xs sm:text-sm text-zinc-500">このモードで購入可能な窓口がありません</div> : (
@@ -2028,7 +2171,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
   const [limit, setLimit] = useState(150);
   const [sortDesc, setSortDesc] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
-  const cats = Array.from(new Set(products.map((p) => p.category)));
+  const cats = useMemo(() => sortCategories(Array.from(new Set(products.map((p) => p.category)))), [products]);
   const rows = useMemo(() => {
     const out: EvRow[] = [];
     products.forEach((p) => {
@@ -2240,7 +2383,7 @@ function FxView({ products, toast }: { products: Product[]; toast: (m: string) =
 function FxInner({ products, toast }: { products: Product[]; toast: (m: string) => void }) {
   const c = useChartColors();
   const dark = useDark();
-  const cats = Array.from(new Set(products.map((x) => x.category)));
+  const cats = useMemo(() => sortCategories(Array.from(new Set(products.map((x) => x.category)))), [products]);
   const [catSel, setCat] = useState<string>(cats[0]);
   const cat = cats.includes(catSel) ? catSel : cats[0];
   const [sel, setSel] = useState<Sel>({ pid: products[0].id, sid: pricedSkus(products[0])[0].id });
@@ -2256,9 +2399,9 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
     };
   };
 
-  const launchRows = products.filter((x) => x.category === cat).sort((a, b) => a.releaseDate.localeCompare(b.releaseDate)).map(toLaunchRow);
+  const launchRows = products.filter((x) => x.category === cat).sort(compareProducts).map(toLaunchRow);
   const pickedLaunch = useMemo(
-    () => products.filter((x) => selectedIds.has(x.id)).sort((a, b) => a.releaseDate.localeCompare(b.releaseDate)).map(toLaunchRow),
+    () => products.filter((x) => selectedIds.has(x.id)).sort(compareProducts).map(toLaunchRow),
     [products, selectedIds],
   );
   const targetLaunch = pickedLaunch.length > 0 ? pickedLaunch : launchRows;
@@ -2655,7 +2798,7 @@ export default function App() {
 function mergeProducts(cur: Product[], incoming: Product[]): Product[] {
   const map = new Map(cur.map((p) => [p.id, p]));
   incoming.forEach((p) => map.set(p.id, p));
-  return Array.from(map.values());
+  return Array.from(map.values()).sort(compareProducts);
 }
 
 

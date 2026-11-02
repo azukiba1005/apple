@@ -257,9 +257,17 @@ if (existsSync('data/prices')) {
         };
       });
       if (p.detail) {
-        // 既存 SKU (キャリア価格つき) は storage+connectivity で突き合わせて priceHistory を差し替え
+        // 既存 SKU (キャリア価格つき) は label または storage+connectivity で突き合わせて priceHistory を差し替え
+        const matchDetailSku = (n, s) => {
+          if (n.label && s.label && n.label === s.label) return true;
+          const nNorm = String(n.label ?? '').replace(/\s+|SSD/gi, '').toUpperCase();
+          const sNorm = String(s.label ?? '').replace(/\s+|SSD/gi, '').toUpperCase();
+          if (nNorm && nNorm === sNorm) return true;
+          const connMatch = n.connectivity === s.connectivity || n.connectivity === '-' || s.connectivity === '-';
+          return Boolean(n.storage && s.storage && n.storage === s.storage && connMatch);
+        };
         const merged = p.skus.map((s) => {
-          const hit = newSkus.find((n) => n.storage === s.storage && (n.connectivity === s.connectivity || n.connectivity === '-' || s.connectivity === '-'));
+          const hit = newSkus.find((n) => matchDetailSku(n, s));
           if (!hit || !hit.priceHistory.length) return s;
           const ph = hit.priceHistory;
           // キャリア価格(推定モデル値)は Apple 価格の補正比率でスケール
@@ -273,7 +281,7 @@ if (existsSync('data/prices')) {
           }));
           return { ...s, priceHistory: ph, carriers: { ...carriers, apple: { launchPrice: ph[0].appleStorePrice, currentPrice: newCur, mnpPrice: null, returnProgram: null } } };
         });
-        const extra = newSkus.filter((n) => !p.skus.some((s) => s.storage === n.storage && (n.connectivity === s.connectivity || n.connectivity === '-' || s.connectivity === '-')));
+        const extra = newSkus.filter((n) => !p.skus.some((s) => matchDetailSku(n, s)));
         p.skus = [...merged, ...extra];
       } else {
         p.skus = newSkus;
@@ -375,7 +383,129 @@ products.forEach((p) => {
   });
 });
 
-products.sort((a, b) => a.category.localeCompare(b.category) || a.releaseDate.localeCompare(b.releaseDate) || a.name.localeCompare(b.name));
+/* ---------- ⑥ デバイス種別・発売日・グレード・容量順ソート ---------- */
+const CATEGORY_ORDER = ['iPhone', 'iPad', 'Apple Watch', 'Mac', 'AirPods'];
+const catRank = (c) => {
+  const idx = CATEGORY_ORDER.indexOf(c);
+  return idx >= 0 ? idx : CATEGORY_ORDER.length;
+};
+
+function skuConnRank(conn = '') {
+  const c = String(conn).toUpperCase();
+  if (!c || c === '-') return 0;
+  if (c === 'WI-FI' || c === 'GPS') return 1;
+  if (c.includes('CELLULAR')) return 2;
+  return 3;
+}
+
+function skuRamRank(label = '', storage = '') {
+  const m = `${label} ${storage}`.match(/(\d+)\s*GB\s*[/／]/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+function skuStorRank(label = '', storage = '') {
+  const s = `${storage} ${label}`;
+  const matches = [...s.matchAll(/([\d.]+)\s*(TB|GB|MB)/gi)];
+  if (!matches.length) return 0;
+  const last = matches.at(-1);
+  return parseFloat(last[1]) * ({ TB: 1e6, GB: 1e3, MB: 1 }[last[2].toUpperCase()] ?? 1);
+}
+
+function skuMmRank(label = '') {
+  const m = String(label).match(/(\d+)\s*mm/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+function compareSkus(a, b) {
+  return (
+    skuMmRank(a.label) - skuMmRank(b.label) ||
+    skuConnRank(a.connectivity) - skuConnRank(b.connectivity) ||
+    skuRamRank(a.label, a.storage) - skuRamRank(b.label, b.storage) ||
+    skuStorRank(a.label, a.storage) - skuStorRank(b.label, b.storage) ||
+    String(a.label).localeCompare(String(b.label), 'ja', { numeric: true })
+  );
+}
+
+function deviceSubfamilyRank(p) {
+  const n = String(p.name ?? '').normalize('NFKC');
+  switch (p.category) {
+    case 'iPhone':
+      if (/\bSE\b/i.test(n)) return 1;
+      if (/^iPhone\s*\d+e\b/i.test(n)) return 2;
+      if (/\bmini\b/i.test(n)) return 3;
+      if (/\bPlus\b/i.test(n)) return 5;
+      if (/\bAir\b/i.test(n)) return 6;
+      if (/\bPro\s+Max\b/i.test(n)) return 8;
+      if (/\bPro\b/i.test(n)) return 7;
+      if (/\b(Ultra|Duo)\b/i.test(n)) return 9;
+      return 4; // 標準 (無印)
+    case 'iPad':
+      if (/\bmini\b/i.test(n)) return 2;
+      if (/\bAir\b/i.test(n)) return 3;
+      if (/\bPro\b/i.test(n)) return 4;
+      return 1; // iPad (無印)
+    case 'Apple Watch':
+      if (/\bSE\b/i.test(n)) return 1;
+      if (/\bUltra\b/i.test(n)) return 3;
+      return 2; // Series
+    case 'Mac':
+      if (/^MacBook\s*(Neo|\(|$)/i.test(n)) return 1;
+      if (/^MacBook\s*Air/i.test(n)) return 2;
+      if (/^MacBook\s*Pro/i.test(n)) return 3;
+      if (/^iMac\s*Pro/i.test(n)) return 5;
+      if (/^iMac/i.test(n)) return 4;
+      if (/^Mac\s*mini/i.test(n)) return 6;
+      if (/^Mac\s*Studio/i.test(n)) return 7;
+      if (/^Mac\s*Pro/i.test(n)) return 8;
+      return 9;
+    case 'AirPods':
+      if (/\bMax\b/i.test(n)) return 4;
+      if (/\bPro\b/i.test(n)) return 3;
+      if (/Noise|Wireless/i.test(n)) return 2;
+      return 1;
+    default:
+      return 5;
+  }
+}
+
+function screenSizeRank(name = '') {
+  const m = String(name).normalize('NFKC').match(/(\d+(?:\.\d+)?)\s*(?:インチ|-inch|mm)\b/i);
+  return m ? parseFloat(m[1]) : 0;
+}
+
+function chipTierRank(name = '') {
+  const n = String(name).normalize('NFKC');
+  if (/\bM\d+\s+Ultra\b/i.test(n)) return 4;
+  if (/\bM\d+\s+Max\b/i.test(n)) return 3;
+  if (/\bM\d+\s+Pro\b/i.test(n)) return 2;
+  if (/\bM\d+\b/i.test(n)) return 1;
+  return 0;
+}
+
+function portVariantRank(name = '') {
+  const n = String(name);
+  if (/Two\s+(Ports|Thunderbolt)/i.test(n)) return 1;
+  if (/Four\s+(Ports|Thunderbolt)/i.test(n)) return 2;
+  if (/\bRack\b/i.test(n)) return 2;
+  return 0;
+}
+
+function compareProducts(a, b) {
+  return (
+    catRank(a.category) - catRank(b.category) ||
+    String(a.releaseDate ?? '').localeCompare(String(b.releaseDate ?? '')) ||
+    deviceSubfamilyRank(a) - deviceSubfamilyRank(b) ||
+    screenSizeRank(a.name) - screenSizeRank(b.name) ||
+    chipTierRank(a.name) - chipTierRank(b.name) ||
+    portVariantRank(a.name) - portVariantRank(b.name) ||
+    String(a.name ?? '').localeCompare(String(b.name ?? ''), 'ja', { numeric: true })
+  );
+}
+
+products.forEach((p) => {
+  p.skus.sort(compareSkus);
+});
+products.sort(compareProducts);
 mkdirSync('public', { recursive: true });
 const out = { schemaVersion: 1, meta: { title: 'Apple Price Atlas 全製品データ', generatedAt: new Date().toISOString(), source: 'AppleDB (api.appledb.dev) + data/prices (価格リサーチ) + presets + data/detail', disclaimer: '価格履歴は報道・公式情報を元に収集(confidence が high 以外は概算)。プリセット由来の値とキャリア価格は推定値を含みます。公式情報で要確認。' }, products };
 writeFileSync('public/products.json', JSON.stringify(out));
