@@ -1,0 +1,173 @@
+{
+  "generatedAt": "2026-11-02T07:32:28.068Z",
+  "items": {
+    "iphone-13:128GB": {
+      "keyword": "iPhone 13 128GB 中古",
+      "genreId": "560202",
+      "minPrice": 14820,
+      "launchPrice": 98800,
+      "used": {
+        "price": 38800,
+        "shopName": "じゃんぱら 楽天市場店",
+        "itemName": "【中古】iPhone 13 128GB 本体 A〜Bランク",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "unused": {
+        "price": 43800,
+        "shopName": "ゲオモバイル 楽天市場店",
+        "itemName": "【未使用品】iPhone 13 128GB 本体 開封済み未使用",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2013%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "resaleRate": 39,
+      "source": "mock",
+      "fetchedAt": "2026-11-02T07:32:28.031Z"
+    },
+    "iphone-14:128GB": {
+      "keyword": "iPhone 14 128GB 中古",
+      "genreId": "560202",
+      "minPrice": 17970,
+      "launchPrice": 119800,
+      "used": {
+        "price": 56800,
+        "shopName": "にこスマ 楽天市場店",
+        "itemName": "【中古】iPhone 14 128GB 本体 A〜Bランク",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2014%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=17970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "unused": {
+        "price": 64800,
+        "shopName": "イオシス 楽天市場店",
+        "itemName": "【未使用品】iPhone 14 128GB 本体 開封済み未使用",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2014%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=17970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "resaleRate": 47,
+      "source": "mock",
+      "fetchedAt": "2026-11-02T07:32:28.067Z"
+    },
+    "iphone-15:128GB": {
+      "keyword": "iPhone 15 128GB 中古",
+      "genreId": "560202",
+      "minPrice": 18720,
+      "launchPrice": 124800,
+      "used": {
+        "price": 67800,
+        "shopName": "ソフマップ 楽天市場店",
+        "itemName": "【中古】iPhone 15 128GB 本体 A〜Bランク",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "unused": {
+        "price": 76800,
+        "shopName": "にこスマ 楽天市場店",
+        "itemName": "【未使用品】iPhone 15 128GB 本体 開封済み未使用",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2015%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "resaleRate": 54,
+      "source": "mock",
+      "fetchedAt": "2026-11-02T07:32:28.067Z"
+    },
+    "iphone-16:128GB": {
+      "keyword": "iPhone 16 128GB 中古",
+      "genreId": "560202",
+      "minPrice": 18720,
+      "launchPrice": 124800,
+      "used": {
+        "price": 76800,
+        "shopName": "ゲオモバイル 楽天市場店",
+        "itemName": "【中古】iPhone 16 128GB 本体 A〜Bランク",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2016%20128GB%20%E4%B8%AD%E5%8F%A4/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "unused": {
+        "price": 87800,
+        "shopName": "ソフマップ 楽天市場店",
+        "itemName": "【未使用品】iPhone 16 128GB 本体 開封済み未使用",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPhone%2016%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560202/?min=18720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "resaleRate": 62,
+      "source": "mock",
+      "fetchedAt": "2026-11-02T07:32:28.067Z"
+    },
+    "ipad-10:64GB": {
+      "keyword": "iPad (第10世代) 64GB 中古",
+      "genreId": "560029",
+      "minPrice": 10320,
+      "launchPrice": 68800,
+      "used": {
+        "price": 29800,
+        "shopName": "じゃんぱら 楽天市場店",
+        "itemName": "【中古】iPad (第10世代) 64GB 本体 A〜Bランク",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPad%20(%E7%AC%AC10%E4%B8%96%E4%BB%A3)%2064GB%20%E4%B8%AD%E5%8F%A4/560029/?min=10320&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "unused": {
+        "price": 33800,
+        "shopName": "ゲオモバイル 楽天市場店",
+        "itemName": "【未使用品】iPad (第10世代) 64GB 本体 開封済み未使用",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPad%20(%E7%AC%AC10%E4%B8%96%E4%BB%A3)%2064GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=10320&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "resaleRate": 43,
+      "source": "mock",
+      "fetchedAt": "2026-11-02T07:32:28.067Z"
+    },
+    "ipad-air-11-m2:128GB": {
+      "keyword": "iPad Air 11インチ (M2) 128GB 中古",
+      "genreId": "560029",
+      "minPrice": 14820,
+      "launchPrice": 98800,
+      "used": {
+        "price": 54800,
+        "shopName": "にこスマ 楽天市場店",
+        "itemName": "【中古】iPad Air 11インチ (M2) 128GB 本体 A〜Bランク",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPad%20Air%2011%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20128GB%20%E4%B8%AD%E5%8F%A4/560029/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "unused": {
+        "price": 61800,
+        "shopName": "イオシス 楽天市場店",
+        "itemName": "【未使用品】iPad Air 11インチ (M2) 128GB 本体 開封済み未使用",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/iPad%20Air%2011%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20128GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/560029/?min=14820&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "resaleRate": 55,
+      "source": "mock",
+      "fetchedAt": "2026-11-02T07:32:28.067Z"
+    },
+    "watch-s10:64GB": {
+      "keyword": "Apple Watch Series 10 64GB 中古",
+      "genreId": "564500",
+      "minPrice": 8970,
+      "launchPrice": 59800,
+      "used": {
+        "price": 27800,
+        "shopName": "じゃんぱら 楽天市場店",
+        "itemName": "【中古】Apple Watch Series 10 64GB 本体 A〜Bランク",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2064GB%20%E4%B8%AD%E5%8F%A4/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "unused": {
+        "price": 31800,
+        "shopName": "ゲオモバイル 楽天市場店",
+        "itemName": "【未使用品】Apple Watch Series 10 64GB 本体 開封済み未使用",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/Apple%20Watch%20Series%2010%2064GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/564500/?min=8970&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "resaleRate": 46,
+      "source": "mock",
+      "fetchedAt": "2026-11-02T07:32:28.067Z"
+    },
+    "mba-13-m2:256GB": {
+      "keyword": "MacBook Air 13インチ (M2) 256GB 中古",
+      "genreId": "100040",
+      "minPrice": 24720,
+      "launchPrice": 164800,
+      "used": {
+        "price": 64800,
+        "shopName": "ゲオモバイル 楽天市場店",
+        "itemName": "【中古】MacBook Air 13インチ (M2) 256GB 本体 A〜Bランク",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/MacBook%20Air%2013%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20256GB%20%E4%B8%AD%E5%8F%A4/100040/?min=24720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "unused": {
+        "price": 73800,
+        "shopName": "ソフマップ 楽天市場店",
+        "itemName": "【未使用品】MacBook Air 13インチ (M2) 256GB 本体 開封済み未使用",
+        "itemUrl": "https://search.rakuten.co.jp/search/mall/MacBook%20Air%2013%E3%82%A4%E3%83%B3%E3%83%81%20(M2)%20256GB%20%E6%9C%AA%E4%BD%BF%E7%94%A8/100040/?min=24720&nitem=%E3%82%B1%E3%83%BC%E3%82%B9+%E3%83%95%E3%82%A3%E3%83%AB%E3%83%A0+%E3%82%AB%E3%83%90%E3%83%BC+%E4%BF%9D%E8%AD%B7+%E3%82%AC%E3%83%A9%E3%82%B9+%E4%BF%AE%E7%90%86+%E3%83%AC%E3%83%B3%E3%82%BF%E3%83%AB+%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AF+%E9%83%A8%E5%93%81+%E4%BA%A4%E6%8F%9B+%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E3%83%90%E3%83%B3%E3%83%89+%E3%83%99%E3%83%AB%E3%83%88&s=2"
+      },
+      "resaleRate": 39,
+      "source": "mock",
+      "fetchedAt": "2026-11-02T07:32:28.068Z"
+    }
+  }
+}

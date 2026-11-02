@@ -5,8 +5,13 @@ import {
 import {
   Smartphone, Tablet, Watch, Laptop, Sun, Moon, TrendingUp, TrendingDown, Minus, Copy, Download,
   Check, Scale, LineChart as LineIcon, Coins, X, Link2, FileSpreadsheet,
-  Info, Trophy, Apple, Headphones, Search,
+  Info, Trophy, Apple, Headphones, Search, ShoppingBag, ExternalLink, Sparkles,
 } from 'lucide-react';
+import {
+  estimateUsedMarketData,
+  fetchUsedMarketPrice,
+  type UsedMarketData,
+} from './usedPrice';
 
 /* =====================================================================================
  * 1. データスキーマ (TypeScript インターフェース)
@@ -614,10 +619,17 @@ function applyAppleDb(products: Product[], raw: unknown): { products: Product[];
 const specText = (v: string | string[] | undefined) => (Array.isArray(v) ? v.join(' / ') : v || '—');
 
 /** 比較表 (コピー用) のデータ行を組み立てる */
-function buildCompareTable(products: Product[], sel: Sel[], mode: Mode, mnp: boolean): string[][] {
+function buildCompareTable(
+  products: Product[],
+  sel: Sel[],
+  mode: Mode,
+  mnp: boolean,
+  usedMap?: Record<string, UsedMarketData>,
+): string[][] {
   const cols = sel.map((s) => {
     const p = products.find((x) => x.id === s.pid)!; return { p, sku: p.skus.find((k) => k.id === s.sid) ?? p.skus[0] };
   });
+  const getUsed = (p: Product, sku: Sku) => usedMap?.[`${p.id}__${sku.id}`] ?? estimateUsedMarketData(p, sku);
   const rows: string[][] = [['項目', ...cols.map((c) => `${c.p.name} ${c.sku.label}`)]];
   rows.push(['発売日', ...cols.map((c) => c.p.releaseDate)]);
   rows.push(['通信方式', ...cols.map((c) => c.sku.connectivity)]);
@@ -630,6 +642,9 @@ function buildCompareTable(products: Product[], sel: Sel[], mode: Mode, mnp: boo
     const min = Math.min(...vals.map((x) => x.v));
     return vals.filter((x) => x.v === min).map((x) => CARRIER_META[x.id].label).join(' / ');
   })]);
+  rows.push(['現在の中古最安値', ...cols.map((c) => `${yen(getUsed(c.p, c.sku).used.price)} (${getUsed(c.p, c.sku).used.shopName})`)]);
+  rows.push(['未使用品最安値', ...cols.map((c) => { const u = getUsed(c.p, c.sku).unused; return u ? `${yen(u.price)} (${u.shopName})` : '—'; })]);
+  rows.push(['リセールバリュー (残価率)', ...cols.map((c) => { const r = getUsed(c.p, c.sku).resaleRate; return r != null ? `リセール率 ${r}%` : '—'; })]);
   return rows;
 }
 const toMarkdown = (rows: string[][]) => {
@@ -972,6 +987,14 @@ function buildCompareExcelSheets(products: Product[], sel: Sel[], mode: Mode, mn
     return ch.min != null ? { v: ch.min, k: 'yenBest' } : '—';
   })]);
 
+  const usedForCols = cols.map((c) => estimateUsedMarketData(c.p, c.sku));
+  compareRows.push(secRow('中古相場・資産価値 (楽天市場)'));
+  compareRows.push(['現在の中古最安値', ...usedForCols.map((u): XlsCell => ({ v: u.used.price, k: 'yen' }))]);
+  compareRows.push(['未使用品最安値', ...usedForCols.map((u): XlsCell => (u.unused ? { v: u.unused.price, k: 'yen' } : '—'))]);
+  compareRows.push(['リセールバリュー (残価率)', ...usedForCols.map((u): XlsCell => (u.resaleRate != null ? `リセール率 ${u.resaleRate}%` : '—'))]);
+  compareRows.push(['中古最安ショップ', ...usedForCols.map((u): XlsCell => u.used.shopName)]);
+  compareRows.push(['商品検索リンク', ...usedForCols.map((u): XlsCell => u.used.itemUrl)]);
+
   compareRows.push(secRow('スペック'));
   SPEC_ROWS.forEach((r) => {
     compareRows.push([r.label, ...cols.map((c) => specText(c.p.specs[r.key]))]);
@@ -1071,6 +1094,32 @@ function DeltaBadge({ diff, base }: { diff: number; base: number }) {
   );
 }
 
+/** リセールバリュー（残価率）バッジ: （現在の中古最安値 ÷ 発売時Apple直販価格）× 100 */
+function ResaleBadge({ rate, launchPrice }: { rate: number | null; launchPrice?: number | null }) {
+  if (rate == null || !Number.isFinite(rate)) {
+    return (
+      <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+        リセール率 —
+      </span>
+    );
+  }
+  const tone =
+    rate >= 65
+      ? 'border-emerald-500/40 bg-emerald-50 text-emerald-700 dark:border-emerald-400/40 dark:bg-emerald-500/15 dark:text-emerald-300'
+      : rate >= 45
+        ? 'border-sky-500/40 bg-sky-50 text-sky-700 dark:border-sky-400/40 dark:bg-sky-500/15 dark:text-sky-300'
+        : 'border-amber-500/40 bg-amber-50 text-amber-700 dark:border-amber-400/40 dark:bg-amber-500/15 dark:text-amber-300';
+  return (
+    <span
+      title={launchPrice ? `（現在の中古最安値 ÷ 発売時Apple直販価格 ${yen(launchPrice)}）× 100` : '（現在の中古最安値 ÷ 発売時Apple直販価格）× 100'}
+      className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11px] sm:text-xs font-extrabold tabular-nums ${tone}`}
+    >
+      <Sparkles className="h-3 w-3 shrink-0" />
+      リセール率 {rate}%
+    </span>
+  );
+}
+
 function Segmented<T extends string>({ value, onChange, options }: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[] }) {
   return (
     <div className="no-scrollbar inline-flex max-w-full overflow-x-auto rounded-xl bg-zinc-200/70 p-1 dark:bg-zinc-800">
@@ -1125,13 +1174,33 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
   const [q, setQ] = useState('');
   const [catF, setCatF] = useState('');
   const [mobileView, setMobileView] = useState<'stack' | 'table'>('stack');
+  const [usedMap, setUsedMap] = useState<Record<string, UsedMarketData>>({});
   const available = products.filter((p) => !sels.some((s) => s.pid === p.id));
   const allCats = Array.from(new Set(products.map((x) => x.category)));
   const matched = available.filter((p) => (!catF || p.category === catF) && (!q.trim() || p.name.toLowerCase().includes(q.trim().toLowerCase()) || String(p.specs.identifier ?? '').toLowerCase().includes(q.trim().toLowerCase())));
 
+  // 選択中の各機種・容量に対して楽天市場API（未設定時は推定フォールバック）から中古・未使用品最安値を取得
+  const colsKey = cols.map((c) => `${c.p.id}__${c.sku.id}`).join('|');
+  useEffect(() => {
+    let cancelled = false;
+    cols.forEach((c) => {
+      const k = `${c.p.id}__${c.sku.id}`;
+      fetchUsedMarketPrice(c.p, c.sku).then((data) => {
+        if (!cancelled) {
+          setUsedMap((prev) => (prev[k] === data ? prev : { ...prev, [k]: data }));
+        }
+      });
+    });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [colsKey]);
+
+  const getUsedData = (c: (typeof cols)[number]): UsedMarketData =>
+    usedMap[`${c.p.id}__${c.sku.id}`] ?? estimateUsedMarketData(c.p, c.sku);
+
   const doCopy = async (kind: 'md' | 'csv') => {
     if (!cols.length) return;
-    const rows = buildCompareTable(all, cols.map((c) => c.sel), mode, mnp);
+    const rows = buildCompareTable(all, cols.map((c) => c.sel), mode, mnp, usedMap);
     const ok = await copyText(kind === 'md' ? toMarkdown(rows) : toCSV(rows));
     toast(ok ? `${kind === 'md' ? 'Markdown' : 'CSV'} をコピーしました` : 'コピーに失敗しました');
   };
@@ -1198,23 +1267,71 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
             {cols.map((c) => {
               const ch = cheapest(c);
               const apple = carrierValue(c.sku.carriers.apple, mode, mnp);
+              const usedInfo = getUsedData(c);
               return (
-                <div key={c.sel.pid} className={`${card} p-3.5 sm:p-4`}>
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex min-w-0 items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400"><Trophy className="h-3.5 w-3.5 shrink-0 text-amber-500" /><span className="truncate">最安: {c.p.name}</span></div>
-                    <select className={`${selectCls} !py-1 !px-2 !text-xs`} value={c.sku.id} aria-label={`${c.p.name} の容量・通信方式`} onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}>
-                      {c.p.skus.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
-                    </select>
-                  </div>
-                  {ch.min == null ? <div className="mt-2 text-xs sm:text-sm text-zinc-500">このモードで購入可能な窓口がありません</div> : (
-                    <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
-                      <div>
-                        <div className="text-xl sm:text-2xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(ch.min)}</div>
-                        {apple != null && !ch.ids.includes('apple') && <div className="text-xs text-emerald-600 dark:text-emerald-400">Apple Store比 {signedYen(ch.min - apple)}</div>}
-                      </div>
-                      <div className="flex flex-wrap items-center gap-1">{ch.ids.map((id) => <CarrierBadge key={id} id={id} small />)}</div>
+                <div key={c.sel.pid} className={`${card} flex flex-col justify-between p-3.5 sm:p-4`}>
+                  <div>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex min-w-0 items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400"><Trophy className="h-3.5 w-3.5 shrink-0 text-amber-500" /><span className="truncate">最安: {c.p.name}</span></div>
+                      <select className={`${selectCls} !py-1 !px-2 !text-xs`} value={c.sku.id} aria-label={`${c.p.name} の容量・通信方式`} onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}>
+                        {c.p.skus.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
+                      </select>
                     </div>
-                  )}
+                    {ch.min == null ? <div className="mt-2 text-xs sm:text-sm text-zinc-500">このモードで購入可能な窓口がありません</div> : (
+                      <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
+                        <div>
+                          <div className="text-xl sm:text-2xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">{yen(ch.min)}</div>
+                          {apple != null && !ch.ids.includes('apple') && <div className="text-xs text-emerald-600 dark:text-emerald-400">Apple Store比 {signedYen(ch.min - apple)}</div>}
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1">{ch.ids.map((id) => <CarrierBadge key={id} id={id} small />)}</div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 現在の中古相場（最安値・未使用品最安値）・リセールバリュー・ショップリンク枠 */}
+                  <div className="mt-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-2.5 dark:border-zinc-800 dark:bg-zinc-800/50">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-zinc-600 dark:text-zinc-300">
+                        <ShoppingBag className="h-3.5 w-3.5 shrink-0 text-rose-500" />
+                        現在の中古相場 (最安値)
+                        {usedInfo.source === 'mock' && (
+                          <span className="rounded bg-zinc-200/80 px-1 py-0.2 text-[10px] font-normal text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">推定</span>
+                        )}
+                      </span>
+                      <ResaleBadge rate={usedInfo.resaleRate} launchPrice={usedInfo.launchPrice} />
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-base sm:text-lg font-extrabold tabular-nums text-rose-600 dark:text-rose-400">
+                          {yen(usedInfo.used.price)}
+                        </span>
+                        {usedInfo.unused && (
+                          <span className="text-[11px] tabular-nums text-zinc-500 dark:text-zinc-400">
+                            未使用品: <strong className="font-bold text-zinc-700 dark:text-zinc-200">{yen(usedInfo.unused.price)}</strong>
+                          </span>
+                        )}
+                      </div>
+                      {usedInfo.launchPrice && (
+                        <span className="text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">
+                          発売時直販 {yen(usedInfo.launchPrice)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-zinc-200/60 pt-1.5 text-[11px] dark:border-zinc-700/60">
+                      <span className="truncate font-medium text-zinc-600 dark:text-zinc-300" title={usedInfo.used.shopName}>
+                        {usedInfo.used.shopName}
+                      </span>
+                      <a
+                        href={usedInfo.used.itemUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex shrink-0 items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400"
+                      >
+                        商品リンク
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -1270,6 +1387,53 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* スマホ縦並び: 中古相場・リセールバリュー */}
+              <div className={`${card} divide-y divide-zinc-100 overflow-hidden dark:divide-zinc-800`}>
+                <div className="bg-zinc-50 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:bg-zinc-800/50">
+                  現在の中古相場（最安値）・リセールバリュー (楽天市場)
+                </div>
+                <div className="space-y-2.5 p-3.5">
+                  {cols.map((c) => {
+                    const u = getUsedData(c);
+                    return (
+                      <div key={c.sel.pid} className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-2.5 text-xs dark:border-zinc-800 dark:bg-zinc-800/50">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="font-bold text-zinc-900 dark:text-zinc-100">
+                            {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
+                          </span>
+                          <ResaleBadge rate={u.resaleRate} launchPrice={u.launchPrice} />
+                        </div>
+                        <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-2">
+                          <div className="flex flex-wrap items-baseline gap-2">
+                            <span className="text-[11px] text-zinc-500">中古最安:</span>
+                            <span className="text-base font-extrabold tabular-nums text-rose-600 dark:text-rose-400">{yen(u.used.price)}</span>
+                            {u.unused && (
+                              <span className="text-[11px] tabular-nums text-zinc-500">
+                                / 未使用最安: <strong className="font-bold text-zinc-800 dark:text-zinc-200">{yen(u.unused.price)}</strong>
+                              </span>
+                            )}
+                          </div>
+                          {u.launchPrice && (
+                            <span className="text-[10px] tabular-nums text-zinc-400">発売時直販 {yen(u.launchPrice)}</span>
+                          )}
+                        </div>
+                        <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-zinc-200/60 pt-1.5 text-[11px] dark:border-zinc-700/60">
+                          <span className="truncate text-zinc-600 dark:text-zinc-300">{u.used.shopName}</span>
+                          <a
+                            href={u.used.itemUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex shrink-0 items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400"
+                          >
+                            商品リンク <ExternalLink className="h-3 w-3" />
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className={`${card} divide-y divide-zinc-100 overflow-hidden dark:divide-zinc-800`}>
@@ -1345,6 +1509,73 @@ function CompareView({ products, all, sels, setSels, mode, setMode, mnp, setMnp,
                     })}
                   </tr>
                 ))}
+                <tr className="bg-zinc-50 dark:bg-zinc-800/50">
+                  <td colSpan={cols.length + 1} className="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">
+                    中古相場・資産価値 — 楽天市場 (ケース・ジャンク除外 / 本体最安値)
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                  <td className="sticky left-0 z-10 bg-white p-2 sm:p-3 align-top shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-zinc-900">
+                    <div className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-600 dark:text-rose-400">
+                      <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
+                      現在の中古相場
+                    </div>
+                    <div className="mt-0.5 text-[10px] text-zinc-400">最安値・リセール率</div>
+                  </td>
+                  {cols.map((c) => {
+                    const u = getUsedData(c);
+                    return (
+                      <td key={c.sel.pid} className="p-1.5 sm:p-2 align-top">
+                        <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-2 sm:p-2.5 dark:border-zinc-800 dark:bg-zinc-800/40">
+                          <div className="flex flex-wrap items-center justify-between gap-1.5">
+                            <div>
+                              <div className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
+                                中古最安値 {u.source === 'mock' && <span className="rounded bg-zinc-200/80 px-1 text-[9px] font-normal dark:bg-zinc-700">推定</span>}
+                              </div>
+                              <div className="text-base sm:text-lg font-extrabold tabular-nums text-rose-600 dark:text-rose-400">
+                                {yen(u.used.price)}
+                              </div>
+                            </div>
+                            <ResaleBadge rate={u.resaleRate} launchPrice={u.launchPrice} />
+                          </div>
+                          {u.unused && (
+                            <div className="mt-1 flex items-center justify-between text-[11px] tabular-nums text-zinc-600 dark:text-zinc-300">
+                              <span className="text-zinc-500">未使用品最安値:</span>
+                              <a
+                                href={u.unused.itemUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-bold hover:text-sky-600 hover:underline dark:hover:text-sky-400"
+                                title={`${u.unused.shopName}: ${u.unused.itemName}`}
+                              >
+                                {yen(u.unused.price)}
+                              </a>
+                            </div>
+                          )}
+                          {u.launchPrice && (
+                            <div className="mt-0.5 text-[11px] tabular-nums text-zinc-500 dark:text-zinc-400">
+                              発売時Apple直販: {yen(u.launchPrice)} (下限除外 {yen(u.minPrice)})
+                            </div>
+                          )}
+                          <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-zinc-200/70 pt-1.5 text-[11px] dark:border-zinc-700/70">
+                            <span className="truncate font-medium text-zinc-700 dark:text-zinc-300" title={u.used.shopName}>
+                              {u.used.shopName}
+                            </span>
+                            <a
+                              href={u.used.itemUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex shrink-0 items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400"
+                            >
+                              商品リンク
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
                 <tr className="bg-zinc-50 dark:bg-zinc-800/50"><td colSpan={cols.length + 1} className="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-zinc-500">スペック</td></tr>
                 <tr className="border-b border-zinc-100 dark:border-zinc-800"><td className="sticky left-0 bg-white p-2 sm:p-3 text-[11px] sm:text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-zinc-900">通信方式</td>{cols.map((c) => <td key={c.sel.pid} className="p-2 sm:p-3 text-zinc-800 dark:text-zinc-200">{c.sku.connectivity === '-' ? '共通 (本体仕様参照)' : c.sku.connectivity}</td>)}</tr>
                 {SPEC_ROWS.map((r) => (
