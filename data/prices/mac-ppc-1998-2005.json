@@ -1,0 +1,1120 @@
+{
+  "meta": {
+    "group": "mac-ppc-1998-2005",
+    "researchedAt": "2026-11-03",
+    "notes": "PowerPC搭載コンシューマMac（iMac G3 / iMac G4 Flat Panel / iMac G5 / Mac mini G4、1998〜2005年）の日本Apple Store・Apple Japan標準価格（5%税込換算）および米国発表時MSRP履歴。1998年〜2004年3月までは税別発表のため5%消費税を加算した税込価格をjpyに記録し、税別価格をnoteに併記。2004年4月の総額表示義務化以降はApple Store税込表示価格を記録。販売終了日は後継モデルの発表・発売日を基準に記載。"
+  },
+  "families": {
+    "iMac (Revision A)": {
+      "skus": [
+        {
+          "storage": "32MB/4GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "1998-08-15",
+              "event": "発売時",
+              "jpy": 186900,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (1998年8月19日 初代iMac国内発表記事)",
+              "note": "税別178,000円（消費税5%込 186,900円）。PowerPC G3 233MHz、ATI RAGE IIc (2MB VRAM)、Bondi Blue（ボンダイブルー）、国内発売日は1998-08-29"
+            },
+            {
+              "date": "1998-10-01",
+              "event": "販売終了",
+              "jpy": 186900,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Apple history",
+              "note": "iMac (Revision B) への移行により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Revision B)": {
+      "skus": [
+        {
+          "storage": "32MB/4GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "1998-10-01",
+              "event": "発売時",
+              "jpy": 186900,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (1998年10月 iMac Rev.B仕様変更記事)",
+              "note": "税別178,000円（消費税5%込 186,900円）。PowerPC G3 233MHz、ATI RAGE PRO (6MB VRAM)、Mac OS 8.5搭載に刷新、価格据え置き"
+            },
+            {
+              "date": "1999-01-06",
+              "event": "価格改定（値下げ）",
+              "jpy": 134400,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (1999年1月6日 5色iMac発表・ボンダイブルー値下げ記事)",
+              "note": "5色iMac (266MHz) 発表に伴い税別128,000円（消費税5%込 134,400円）に値下げして併売"
+            },
+            {
+              "date": "1999-04-15",
+              "event": "販売終了",
+              "jpy": 134400,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "PC Watch",
+              "note": "5色iMacへの移行完了に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (1999)": {
+      "skus": [
+        {
+          "storage": "32MB/6GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "1999-01-05",
+              "event": "発売時",
+              "jpy": 165900,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (1999年1月6日 5色キャンディカラーiMac発表記事 / 1999年4月15日 333MHz発表記事)",
+              "note": "税別158,000円（消費税5%込 165,900円）。5色カラー（ストロベリー、ライム、タンジェリン、グレープ、ブルーベリー）。PowerPC G3 266MHz（1999-04-15より同価格のまま333MHzへクロックアップ）"
+            },
+            {
+              "date": "1999-10-05",
+              "event": "販売終了",
+              "jpy": 165900,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (1999年10月6日 スロットローディングiMac発表記事)",
+              "note": "iMac (Slot Loading) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Slot Loading)": {
+      "skus": [
+        {
+          "storage": "64MB/6GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "1999-10-05",
+              "event": "発売時",
+              "jpy": 123900,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (1999年10月6日 新iMac / iMac DV発表記事)",
+              "note": "税別118,000円（消費税5%込 123,900円）。iMac 350MHz（ブルーベリー、CD-ROMドライブ、FireWire非搭載）"
+            },
+            {
+              "date": "2000-07-19",
+              "event": "販売終了",
+              "jpy": 123900,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2000年7月 新iMacシリーズ発表記事)",
+              "note": "iMac (Summer 2000) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "64MB/10GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "1999-10-05",
+              "event": "発売時",
+              "jpy": 155400,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (1999年10月6日 新iMac / iMac DV発表記事)",
+              "note": "税別148,000円（消費税5%込 155,400円）。iMac DV 400MHz（5色展開、スロットローディングDVD-ROM、FireWire搭載）"
+            },
+            {
+              "date": "2000-07-19",
+              "event": "販売終了",
+              "jpy": 155400,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2000年7月 新iMacシリーズ発表記事)",
+              "note": "iMac (Summer 2000) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "128MB/13GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "1999-10-05",
+              "event": "発売時",
+              "jpy": 186900,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (1999年10月6日 新iMac / iMac DV発表記事)",
+              "note": "税別178,000円（消費税5%込 186,900円）。iMac DV Special Edition 400MHz（グラファイト、スロットローディングDVD-ROM、FireWire搭載）"
+            },
+            {
+              "date": "2000-07-19",
+              "event": "販売終了",
+              "jpy": 186900,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2000年7月 新iMacシリーズ発表記事)",
+              "note": "iMac (Summer 2000) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Summer 2000)": {
+      "skus": [
+        {
+          "storage": "64MB/7GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2000-07-19",
+              "event": "発売時",
+              "jpy": 102900,
+              "usd": 799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2000年7月21日・7月28日 新iMac国内価格発表記事)",
+              "note": "税別98,000円（消費税5%込 102,900円）。iMac 350MHz（インディゴ、CD-ROMドライブ）"
+            },
+            {
+              "date": "2001-02-22",
+              "event": "販売終了",
+              "jpy": 102900,
+              "usd": 799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年2月22日 Macworld Expo Tokyo 新iMac発表記事)",
+              "note": "iMac (Early 2001) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "64MB/10GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2000-07-19",
+              "event": "発売時",
+              "jpy": 123900,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2000年7月21日・7月28日 新iMac国内価格発表記事)",
+              "note": "税別118,000円（消費税5%込 123,900円）。iMac DV 400MHz（インディゴ/ルビー、CD-ROMドライブ、FireWire搭載）"
+            },
+            {
+              "date": "2001-02-22",
+              "event": "販売終了",
+              "jpy": 123900,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年2月22日 Macworld Expo Tokyo 新iMac発表記事)",
+              "note": "iMac (Early 2001) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "64MB/20GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2000-07-19",
+              "event": "発売時",
+              "jpy": 155400,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2000年7月21日・7月28日 新iMac国内価格発表記事)",
+              "note": "税別148,000円（消費税5%込 155,400円）。iMac DV+ 450MHz（インディゴ/ルビー/セージ、DVD-ROMドライブ）"
+            },
+            {
+              "date": "2001-02-22",
+              "event": "販売終了",
+              "jpy": 155400,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年2月22日 Macworld Expo Tokyo 新iMac発表記事)",
+              "note": "iMac (Early 2001) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "128MB/30GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2000-07-19",
+              "event": "発売時",
+              "jpy": 186900,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2000年7月21日・7月28日 新iMac国内価格発表記事)",
+              "note": "税別178,000円（消費税5%込 186,900円）。iMac DV Special Edition 500MHz（グラファイト/スノー、DVD-ROMドライブ）"
+            },
+            {
+              "date": "2001-02-22",
+              "event": "販売終了",
+              "jpy": 186900,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年2月22日 Macworld Expo Tokyo 新iMac発表記事)",
+              "note": "iMac (Early 2001) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Early 2001)": {
+      "skus": [
+        {
+          "storage": "64MB/10GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2001-02-22",
+              "event": "発売時",
+              "jpy": 113400,
+              "usd": 899,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年2月22日 Macworld Expo Tokyo 新iMac発表記事)",
+              "note": "税別108,000円（消費税5%込 113,400円）。iMac 400MHz（インディゴ、CD-ROMドライブ）"
+            },
+            {
+              "date": "2001-07-18",
+              "event": "販売終了",
+              "jpy": 113400,
+              "usd": 899,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年7月19日 Macworld Expo NY 新iMac発表記事)",
+              "note": "iMac (Summer 2001) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "64MB/20GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2001-02-22",
+              "event": "発売時",
+              "jpy": 144900,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年2月22日 Macworld Expo Tokyo 新iMac発表記事)",
+              "note": "税別138,000円（消費税5%込 144,900円）。iMac 500MHz（インディゴ/Blue Dalmatian/Flower Power、CD-RWドライブ）"
+            },
+            {
+              "date": "2001-07-18",
+              "event": "販売終了",
+              "jpy": 144900,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年7月19日 Macworld Expo NY 新iMac発表記事)",
+              "note": "iMac (Summer 2001) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "128MB/40GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2001-02-22",
+              "event": "発売時",
+              "jpy": 165900,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年2月22日 Macworld Expo Tokyo 新iMac発表記事)",
+              "note": "税別158,000円（消費税5%込 165,900円）。iMac Special Edition 600MHz（グラファイト/Blue Dalmatian/Flower Power、CD-RWドライブ）"
+            },
+            {
+              "date": "2001-07-18",
+              "event": "販売終了",
+              "jpy": 165900,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年7月19日 Macworld Expo NY 新iMac発表記事)",
+              "note": "iMac (Summer 2001) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Summer 2001)": {
+      "skus": [
+        {
+          "storage": "128MB/20GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2001-07-18",
+              "event": "発売時",
+              "jpy": 125790,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年7月19日 Macworld Expo NY 新iMac発表記事)",
+              "note": "税別119,800円（消費税5%込 125,790円）。PowerPC G3 500MHz（インディゴ/スノー、CD-RWドライブ）"
+            },
+            {
+              "date": "2002-01-07",
+              "event": "販売終了",
+              "jpy": 125790,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年1月8日 新型iMac Flat Panel発表記事)",
+              "note": "iMac (Flat Panel) 発表により主力ライン交代（一部廉価・教育向けは2003年3月まで継続）"
+            }
+          ]
+        },
+        {
+          "storage": "256MB/40GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2001-07-18",
+              "event": "発売時",
+              "jpy": 157290,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年7月19日 Macworld Expo NY 新iMac発表記事)",
+              "note": "税別149,800円（消費税5%込 157,290円）。PowerPC G3 600MHz（グラファイト/スノー、CD-RWドライブ）"
+            },
+            {
+              "date": "2002-01-07",
+              "event": "販売終了",
+              "jpy": 157290,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年1月8日 新型iMac Flat Panel発表記事)",
+              "note": "iMac (Flat Panel) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "256MB/60GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2001-07-18",
+              "event": "発売時",
+              "jpy": 188790,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2001年7月19日 Macworld Expo NY 新iMac発表記事)",
+              "note": "税別179,800円（消費税5%込 188,790円）。PowerPC G3 700MHz（グラファイト/スノー、CD-RWドライブ）"
+            },
+            {
+              "date": "2002-01-07",
+              "event": "販売終了",
+              "jpy": 188790,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年1月8日 新型iMac Flat Panel発表記事)",
+              "note": "iMac (Flat Panel) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Flat Panel)": {
+      "skus": [
+        {
+          "storage": "128MB/40GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2002-01-07",
+              "event": "発売時",
+              "jpy": 167790,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年1月8日 新型iMac G4 15インチ発表記事)",
+              "note": "税別159,800円（消費税5%込 167,790円）。15インチ液晶、PowerPC G4 700MHz、CD-RWドライブ"
+            },
+            {
+              "date": "2002-03-22",
+              "event": "部材高騰に伴う価格改定（値上げ）",
+              "jpy": 188790,
+              "usd": 1399,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年3月22日 新iMac一律2万円値上げ記事)",
+              "note": "メモリおよび液晶パネル高騰により税別179,800円（消費税5%込 188,790円、米国$1,399）に改定"
+            },
+            {
+              "date": "2003-02-04",
+              "event": "販売終了",
+              "jpy": 188790,
+              "usd": 1399,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年2月5日 新iMac発表記事)",
+              "note": "iMac (15-inch Early 2003) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "256MB/40GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2002-01-07",
+              "event": "発売時",
+              "jpy": 199290,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年1月8日 新型iMac G4 15インチ発表記事)",
+              "note": "税別189,800円（消費税5%込 199,290円）。15インチ液晶、PowerPC G4 700MHz、Comboドライブ（DVD-ROM/CD-RW）"
+            },
+            {
+              "date": "2002-03-22",
+              "event": "部材高騰に伴う価格改定（値上げ）",
+              "jpy": 220290,
+              "usd": 1599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年3月22日 新iMac一律2万円値上げ記事)",
+              "note": "メモリおよび液晶パネル高騰により税別209,800円（消費税5%込 220,290円、米国$1,599）に改定"
+            },
+            {
+              "date": "2003-02-04",
+              "event": "販売終了",
+              "jpy": 220290,
+              "usd": 1599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年2月5日 新iMac発表記事)",
+              "note": "iMac (15-inch Early 2003) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "256MB/60GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2002-01-07",
+              "event": "発売時",
+              "jpy": 236040,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年1月8日 新型iMac G4 15インチ発表記事)",
+              "note": "税別224,800円（消費税5%込 236,040円）。15インチ液晶、PowerPC G4 800MHz、SuperDrive（DVD-R/CD-RW）"
+            },
+            {
+              "date": "2002-03-22",
+              "event": "部材高騰に伴う価格改定（値上げ）",
+              "jpy": 257040,
+              "usd": 1899,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年3月22日 新iMac一律2万円値上げ記事)",
+              "note": "メモリおよび液晶パネル高騰により税別244,800円（消費税5%込 257,040円、米国$1,899）に改定"
+            },
+            {
+              "date": "2003-02-04",
+              "event": "販売終了",
+              "jpy": 257040,
+              "usd": 1899,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年2月5日 新iMac発表記事)",
+              "note": "iMac (15-inch Early 2003) / iMac (17-inch) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (17-inch Flat Panel)": {
+      "skus": [
+        {
+          "storage": "256MB/80GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2002-07-18",
+              "event": "発売時",
+              "jpy": 262290,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2002年7月18日 17型ワイド液晶iMac発表記事)",
+              "note": "税別249,800円（消費税5%込 262,290円）。17インチワイド液晶（1440×900）、PowerPC G4 800MHz、SuperDrive搭載"
+            },
+            {
+              "date": "2003-02-04",
+              "event": "販売終了",
+              "jpy": 262290,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年2月5日 新iMac発表記事)",
+              "note": "iMac (17-inch) 1GHzモデル発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (15-inch Early 2003)": {
+      "skus": [
+        {
+          "storage": "256MB/60GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2003-02-04",
+              "event": "発売時",
+              "jpy": 167790,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年2月5日 iMacラインアップ一新記事)",
+              "note": "税別159,800円（消費税5%込 167,790円）。15インチ液晶、PowerPC G4 800MHz、Comboドライブ"
+            },
+            {
+              "date": "2003-09-08",
+              "event": "販売終了",
+              "jpy": 167790,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年9月9日 USB 2.0対応iMac発表記事)",
+              "note": "iMac (15-inch USB 2.0) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (17-inch)": {
+      "skus": [
+        {
+          "storage": "256MB/80GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2003-02-04",
+              "event": "発売時",
+              "jpy": 230790,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年2月5日 iMacラインアップ一新記事)",
+              "note": "税別219,800円（消費税5%込 230,790円）。17インチワイド液晶、PowerPC G4 1GHz、4倍速SuperDrive、AirMac Extreme / Bluetooth対応"
+            },
+            {
+              "date": "2003-09-08",
+              "event": "販売終了",
+              "jpy": 230790,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年9月9日 USB 2.0対応iMac発表記事)",
+              "note": "iMac (17-inch USB 2.0) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (15-inch USB 2.0)": {
+      "skus": [
+        {
+          "storage": "256MB/80GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2003-09-08",
+              "event": "発売時",
+              "jpy": 167790,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年9月9日 USB 2.0対応iMac発表記事)",
+              "note": "税別159,800円（消費税5%込 167,790円）。15インチ液晶、PowerPC G4 1GHz、Comboドライブ、USB 2.0搭載"
+            },
+            {
+              "date": "2003-11-18",
+              "event": "価格改定（値下げ）",
+              "jpy": 157290,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年11月18日 20インチiMac発表・既存モデル値下げ記事)",
+              "note": "20インチモデル追加に伴い税別149,800円（消費税5%込 157,290円）へ値下げ"
+            },
+            {
+              "date": "2004-08-31",
+              "event": "販売終了",
+              "jpy": 157290,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2004年8月31日 iMac G5発表記事)",
+              "note": "iMac G5発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (17-inch USB 2.0)": {
+      "skus": [
+        {
+          "storage": "256MB/80GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2003-09-08",
+              "event": "発売時",
+              "jpy": 230790,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年9月9日 USB 2.0対応iMac発表記事)",
+              "note": "税別219,800円（消費税5%込 230,790円）。17インチワイド液晶、PowerPC G4 1.25GHz、SuperDrive、USB 2.0搭載"
+            },
+            {
+              "date": "2003-11-18",
+              "event": "価格改定（値下げ）",
+              "jpy": 209790,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年11月18日 20インチiMac発表・既存モデル値下げ記事)",
+              "note": "20インチモデル追加に伴い税別199,800円（消費税5%込 209,790円）へ値下げ"
+            },
+            {
+              "date": "2004-08-31",
+              "event": "販売終了",
+              "jpy": 209790,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2004年8月31日 iMac G5発表記事)",
+              "note": "iMac G5発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (20-inch USB 2.0)": {
+      "skus": [
+        {
+          "storage": "256MB/80GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2003-11-01",
+              "event": "発売時",
+              "jpy": 262290,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2003年11月18日 20インチワイド液晶iMac発表記事)",
+              "note": "税別249,800円（消費税5%込 262,290円）。20インチワイド液晶（1680×1050）、PowerPC G4 1.25GHz、SuperDrive、国内発表・発売は2003-11-18"
+            },
+            {
+              "date": "2004-08-31",
+              "event": "販売終了",
+              "jpy": 262290,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2004年8月31日 iMac G5発表記事)",
+              "note": "iMac G5 (20-inch) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac G5 (17-inch)": {
+      "skus": [
+        {
+          "storage": "256MB/80GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2004-08-31",
+              "event": "発売時",
+              "jpy": 157290,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2004年8月31日 初代iMac G5発表記事)",
+              "note": "税別149,800円（総額表示5%税込 157,290円）。17インチワイド液晶、PowerPC G5 1.6GHz、Comboドライブ（M9248J/A）"
+            },
+            {
+              "date": "2005-05-03",
+              "event": "販売終了",
+              "jpy": 157290,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年5月3日 iMac G5 ALS発表記事)",
+              "note": "iMac G5 (17-inch, ALS) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "256MB/80GB (SuperDrive)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2004-08-31",
+              "event": "発売時",
+              "jpy": 183540,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2004年8月31日 初代iMac G5発表記事)",
+              "note": "税別174,800円（総額表示5%税込 183,540円）。17インチワイド液晶、PowerPC G5 1.8GHz、SuperDrive（M9249J/A）"
+            },
+            {
+              "date": "2005-05-03",
+              "event": "販売終了",
+              "jpy": 183540,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年5月3日 iMac G5 ALS発表記事)",
+              "note": "iMac G5 (17-inch, ALS) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac G5 (20-inch)": {
+      "skus": [
+        {
+          "storage": "256MB/160GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2004-08-31",
+              "event": "発売時",
+              "jpy": 230790,
+              "usd": 1899,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2004年8月31日 初代iMac G5発表記事)",
+              "note": "税別219,800円（総額表示5%税込 230,790円）。20インチワイド液晶、PowerPC G5 1.8GHz、SuperDrive（M9250J/A）"
+            },
+            {
+              "date": "2005-05-03",
+              "event": "販売終了",
+              "jpy": 230790,
+              "usd": 1899,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年5月3日 iMac G5 ALS発表記事)",
+              "note": "iMac G5 (20-inch, ALS) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac mini (Early 2005)": {
+      "skus": [
+        {
+          "storage": "256MB/40GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-01-11",
+              "event": "発売時",
+              "jpy": 58590,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年1月12日 初代Mac mini発表記事)",
+              "note": "税別55,800円（総額表示5%税込 58,590円）。PowerPC G4 1.25GHz、Comboドライブ（M9686J/A）。2005-07-27のマイナーチェンジでメモリ512MB標準化・58,800円に改定"
+            },
+            {
+              "date": "2005-09-27",
+              "event": "販売終了",
+              "jpy": 58590,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Apple history",
+              "note": "Mac mini (Late 2005) サイレントアップデートにより終了"
+            }
+          ]
+        },
+        {
+          "storage": "256MB/80GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-01-11",
+              "event": "発売時",
+              "jpy": 70140,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年1月12日 初代Mac mini発表記事)",
+              "note": "税別66,800円（総額表示5%税込 70,140円）。PowerPC G4 1.42GHz、Comboドライブ（M9687J/A）。2005-07-27にメモリ512MB・無線LAN/Bluetooth標準搭載で69,800円（SuperDrive搭載上位81,800円 / $699追加）に改定"
+            },
+            {
+              "date": "2005-09-27",
+              "event": "販売終了",
+              "jpy": 70140,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Apple history",
+              "note": "Mac mini (Late 2005) サイレントアップデートにより終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac G5 (17-inch, ALS)": {
+      "skus": [
+        {
+          "storage": "512MB/160GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-05-03",
+              "event": "発売時",
+              "jpy": 152040,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年5月3日 iMac G5 Ambient Light Sensor搭載モデル発表記事)",
+              "note": "税別144,800円（総額表示5%税込 152,040円）。17インチワイド液晶、PowerPC G5 1.8GHz、Comboドライブ、Radeon 9600 (128MB)、Mac OS X 10.4 Tiger搭載"
+            },
+            {
+              "date": "2005-10-12",
+              "event": "販売終了",
+              "jpy": 152040,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年10月13日 iMac G5 iSight内蔵モデル発表記事)",
+              "note": "iMac G5 (17-inch, iSight) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "512MB/160GB (SuperDrive)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-05-03",
+              "event": "発売時",
+              "jpy": 173040,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年5月3日 iMac G5 Ambient Light Sensor搭載モデル発表記事)",
+              "note": "税別164,800円（総額表示5%税込 173,040円）。17インチワイド液晶、PowerPC G5 2.0GHz、8倍速SuperDrive、AirMac Extreme / Bluetooth 2.0+EDR標準搭載"
+            },
+            {
+              "date": "2005-10-12",
+              "event": "販売終了",
+              "jpy": 173040,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年10月13日 iMac G5 iSight内蔵モデル発表記事)",
+              "note": "iMac G5 (17-inch, iSight) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac G5 (20-inch, ALS)": {
+      "skus": [
+        {
+          "storage": "512MB/250GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-05-03",
+              "event": "発売時",
+              "jpy": 209790,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年5月3日 iMac G5 Ambient Light Sensor搭載モデル発表記事)",
+              "note": "税別199,800円（総額表示5%税込 209,790円）。20インチワイド液晶、PowerPC G5 2.0GHz、8倍速SuperDrive、AirMac Extreme / Bluetooth 2.0+EDR標準搭載"
+            },
+            {
+              "date": "2005-10-12",
+              "event": "販売終了",
+              "jpy": 209790,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年10月13日 iMac G5 iSight内蔵モデル発表記事)",
+              "note": "iMac G5 (20-inch, iSight) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac mini (Late 2005)": {
+      "skus": [
+        {
+          "storage": "512MB/40GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-09-27",
+              "event": "発売時",
+              "jpy": 58800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年7月27日 Mac mini価格改定記事 / 2005年9月27日 サイレントアップデート仕様)",
+              "note": "総額表示5%税込 58,800円。PowerPC G4 1.33GHz、Comboドライブ（2005年7月改定価格を据え置きでCPU等をサイレントアップグレード）"
+            },
+            {
+              "date": "2006-02-28",
+              "event": "販売終了",
+              "jpy": 58800,
+              "usd": 499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2006年3月1日 Intel Core搭載Mac mini発表記事)",
+              "note": "Mac mini (Early 2006 / Intel Core) 発表により終了"
+            }
+          ]
+        },
+        {
+          "storage": "512MB/80GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-09-27",
+              "event": "発売時",
+              "jpy": 69800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年7月27日 Mac mini価格改定記事 / 2005年9月27日 サイレントアップデート仕様)",
+              "note": "総額表示5%税込 69,800円。PowerPC G4 1.5GHz、64MB VRAM、Comboドライブ、AirMac Extreme / Bluetooth標準搭載（SuperDriveモデルは税込81,800円 / $699）"
+            },
+            {
+              "date": "2006-02-28",
+              "event": "販売終了",
+              "jpy": 69800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2006年3月1日 Intel Core搭載Mac mini発表記事)",
+              "note": "Mac mini (Early 2006 / Intel Core) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac G5 (17-inch, iSight)": {
+      "skus": [
+        {
+          "storage": "512MB/160GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-10-12",
+              "event": "発売時",
+              "jpy": 152800,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年10月13日 iSight・Front Row搭載iMac G5発表記事)",
+              "note": "総額表示5%税込 152,800円。17インチワイド液晶、PowerPC G5 1.9GHz、DDR2 533MHz、SuperDrive、iSight内蔵・Apple Remote付属"
+            },
+            {
+              "date": "2006-01-10",
+              "event": "販売終了",
+              "jpy": 152800,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2006年1月11日 Intel Core Duo搭載iMac発表記事)",
+              "note": "iMac (Early 2006 / Intel Core Duo) 発表により終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac G5 (20-inch, iSight)": {
+      "skus": [
+        {
+          "storage": "512MB/250GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2005-10-12",
+              "event": "発売時",
+              "jpy": 199800,
+              "usd": 1699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2005年10月13日 iSight・Front Row搭載iMac G5発表記事)",
+              "note": "総額表示5%税込 199,800円。20インチワイド液晶、PowerPC G5 2.1GHz、DDR2 533MHz、SuperDrive、iSight内蔵・Apple Remote付属"
+            },
+            {
+              "date": "2006-01-10",
+              "event": "販売終了",
+              "jpy": 199800,
+              "usd": 1699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2006年1月11日 Intel Core Duo搭載iMac発表記事)",
+              "note": "iMac (Early 2006 / Intel Core Duo) 発表により主力ライン移行（2006年3月まで併売）"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+

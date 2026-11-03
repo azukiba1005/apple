@@ -415,7 +415,8 @@
               "taxRate": 0.1,
               "confidence": "low",
               "source": "businessinsider.jp (2021年 MacBook Pro 14 M1 Max 構成価格)",
-              "note": "10コアCPU/24コアGPU。14インチのM1 Maxは標準構成ではなくCTO構成。価格は二次情報のみで要確認"
+              "note": "10コアCPU/24コアGPU。14インチのM1 Maxは標準構成ではなくCTO構成。価格は二次情報のみで要確認",
+              "usd": 3099
             },
             {
               "date": "2023-01-18",
@@ -424,7 +425,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "https://www.apple.com/jp/newsroom/2023/01/apple-unveils-macbook-pro-featuring-m2-pro-and-m2-max/",
-              "note": "M2 Pro/Max MacBook Pro発表により終了。2022-06-07改定後のCTO価格は未確認"
+              "note": "M2 Pro/Max MacBook Pro発表により終了。2022-06-07改定後のCTO価格は未確認",
+              "usd": 3099
             }
           ],
           "note": "CTO構成(標準構成なし)"
@@ -1420,24 +1422,55 @@
             {
               "date": "2023-11-09",
               "event": "発売時",
-              "jpy": 498800,
+              "jpy": 538800,
               "usd": 3199,
               "taxRate": 0.1,
-              "confidence": "medium",
+              "confidence": "high",
               "source": "impress.co.jp / apple.com/jp (2023年11月 MacBook Pro M3ファミリー 価格)",
-              "note": "14コアCPU/30コアGPU。M3 Max搭載モデルは11月中旬発売。538,800円とする情報(taisy0.com)もあり"
+              "note": "14コアCPU/30コアGPU。M3 Max搭載モデルは11月中旬発売"
             },
             {
               "date": "2024-10-31",
               "event": "販売終了",
-              "jpy": 498800,
+              "jpy": 538800,
               "usd": 3199,
               "taxRate": 0.1,
-              "confidence": "medium",
+              "confidence": "high",
               "source": "https://www.apple.com/jp/newsroom/2024/10/new-macbook-pro-features-m4-family-of-chips-and-apple-intelligence/"
             }
           ],
           "note": "14コアCPU/30コアGPU"
+        }
+      ]
+    },
+    "MacBook Pro (14-inch, 16-core M3 Max, Nov 2023)": {
+      "skus": [
+        {
+          "storage": "48GB/1TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2023-11-09",
+              "event": "発売時",
+              "jpy": 644800,
+              "usd": 3699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "businessinsider.jp / apple.com/jp (14インチMacBook Pro M3 Max 16コアCPU/40コアGPU 48GB/1TB 価格)",
+              "note": "16コアCPU/40コアGPU・48GBユニファイドメモリ構成"
+            },
+            {
+              "date": "2024-10-31",
+              "event": "販売終了",
+              "jpy": 644800,
+              "usd": 3699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "https://www.apple.com/jp/newsroom/2024/10/new-macbook-pro-features-m4-family-of-chips-and-apple-intelligence/",
+              "note": "M4 MacBook Pro発表により終了"
+            }
+          ],
+          "note": "16コアCPU/40コアGPU"
         }
       ]
     },
@@ -2543,7 +2576,8 @@
               "taxRate": 0.1,
               "confidence": "high",
               "source": "https://www.apple.com/jp/newsroom/2026/03/ (MacBook Air M5発表) / impress.co.jp",
-              "note": "10コアCPU/10コアGPU"
+              "note": "10コアCPU/10コアGPU",
+              "usd": 1299
             },
             {
               "date": "2026-06-25",
@@ -2552,7 +2586,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "saboten-blog.com / applech2.com (2026年6月 MacBook Air 値上げ)",
-              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)"
+              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)",
+              "usd": 1299
             }
           ]
         }
@@ -2625,7 +2660,8 @@
               "taxRate": 0.1,
               "confidence": "high",
               "source": "news-coffee.com / apple.com (2026年3月 MacBook Pro M5 Pro/Max 価格)",
-              "note": "15コアCPU/16コアGPU"
+              "note": "15コアCPU/16コアGPU",
+              "usd": 1999
             },
             {
               "date": "2026-06-25",
@@ -2634,7 +2670,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "applech2.com / itmedia.co.jp / apple-gadget.jp (2026年6月25日 Mac価格改定 新旧比較)",
-              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)"
+              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)",
+              "usd": 1999
             }
           ],
           "note": "15コアCPU/16コアGPU"
@@ -2654,7 +2691,8 @@
               "taxRate": 0.1,
               "confidence": "high",
               "source": "news-coffee.com / apple.com (2026年3月 MacBook Pro M5 Pro/Max 価格)",
-              "note": "18コアCPU/20コアGPU"
+              "note": "18コアCPU/20コアGPU",
+              "usd": 2499
             },
             {
               "date": "2026-06-25",
@@ -2663,7 +2701,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "apple-gadget.jp (2026年6月 MacBook Pro 値上げ)",
-              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)"
+              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)",
+              "usd": 2499
             }
           ],
           "note": "18コアCPU/20コアGPU"
@@ -2683,7 +2722,8 @@
               "taxRate": 0.1,
               "confidence": "high",
               "source": "news-coffee.com / apple.com (2026年3月 MacBook Pro M5 Pro/Max 価格)",
-              "note": "18コアCPU/32コアGPU"
+              "note": "18コアCPU/32コアGPU",
+              "usd": 3199
             },
             {
               "date": "2026-06-25",
@@ -2692,7 +2732,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "apple-gadget.jp (2026年6月 MacBook Pro 値上げ)",
-              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)"
+              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)",
+              "usd": 3199
             }
           ],
           "note": "18コアCPU/32コアGPU"
@@ -2712,7 +2753,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "apple.com/jp / applech2.com (16インチMacBook Pro M5 Max 開始価格)",
-              "note": "開始価格。標準構成のRAM/GPU構成は未確認(14インチ同等の18コアCPU/32コアGPU・36GB/2TBと仮定)"
+              "note": "開始価格。標準構成のRAM/GPU構成は未確認(14インチ同等の18コアCPU/32コアGPU・36GB/2TBと仮定)",
+              "usd": 3499
             },
             {
               "date": "2026-06-25",
@@ -2721,7 +2763,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "applech2.com / itmedia.co.jp / apple-gadget.jp (2026年6月25日 Mac価格改定 新旧比較)",
-              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)"
+              "note": "2026-06-25 生成AI需要によるDRAM/NAND価格高騰を理由とするMac/iPad一斉値上げ(円安要因も含むと報道)",
+              "usd": 3499
             }
           ],
           "note": "構成詳細未確認"
@@ -2741,7 +2784,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "impress.co.jp (2026年8月 Mac mini/Mac Studio 発表記事)",
-              "note": "12コアCPU/12コアGPU"
+              "note": "12コアCPU/12コアGPU",
+              "usd": 799
             }
           ]
         }
@@ -2760,7 +2804,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "impress.co.jp (2026年8月 Mac mini/Mac Studio 発表記事)",
-              "note": "15コアCPU/16コアGPU"
+              "note": "15コアCPU/16コアGPU",
+              "usd": 1599
             }
           ]
         }
@@ -2779,7 +2824,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "impress.co.jp (2026年8月 Mac mini/Mac Studio 発表記事)",
-              "note": "18コアCPU/32コアGPU"
+              "note": "18コアCPU/32コアGPU",
+              "usd": 1999
             }
           ]
         }
@@ -2798,7 +2844,8 @@
               "taxRate": 0.1,
               "confidence": "medium",
               "source": "impress.co.jp / netaful.jp / kakaku.com (Mac Studio M5 Ultra 価格)",
-              "note": "30コアCPU/64コアGPU"
+              "note": "30コアCPU/64コアGPU",
+              "usd": 3999
             }
           ]
         }

@@ -122,22 +122,22 @@
             {
               "date": "2010-05-28",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 58320,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "softbank.jp / gihyo.jp / impress.co.jp",
-              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク直営店 現金販売価格（一括税込58,320円） (日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2011-03-03",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 48800,
               "usd": 529,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
-              "note": "iPad 2 発表。Apple Store 直販価格なし"
+              "note": "iPad 2発表に伴う値下げ・販売終了 (iPad 2 発表。Apple Store 直販価格なし)"
             }
           ]
         },
@@ -148,22 +148,22 @@
             {
               "date": "2010-05-28",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 67920,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "softbank.jp / gihyo.jp / impress.co.jp",
-              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク直営店 現金販売価格（一括税込67,920円） (日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2011-03-03",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 58320,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
-              "note": "iPad 2 発表。Apple Store 直販価格なし"
+              "note": "iPad 2発表に伴う値下げ・販売終了 (iPad 2 発表。Apple Store 直販価格なし)"
             }
           ]
         },
@@ -174,22 +174,22 @@
             {
               "date": "2010-05-28",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 77520,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "softbank.jp / gihyo.jp / impress.co.jp",
-              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク直営店 現金販売価格（一括税込77,520円） (日本では「Wi-Fi + 3G」モデル。ソフトバンクモバイル独占販売で Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2011-03-03",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 67920,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "itmedia.co.jp / gigazine.net (iPad 2 発表に伴う初代 iPad 値下げ 2011-03)",
-              "note": "iPad 2 発表。Apple Store 直販価格なし"
+              "note": "iPad 2発表に伴う値下げ・販売終了 (iPad 2 発表。Apple Store 直販価格なし)"
             }
           ]
         }
@@ -299,22 +299,22 @@
             {
               "date": "2011-04-28",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 56640,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "impress.co.jp / softbank.jp",
-              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク 現金販売価格（一括税込56,640円） (日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2014-03-19",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 46800,
               "usd": 529,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "gigazine.net / impress.co.jp / livedoor.com (2014-03 iPad 2 販売終了・iPad Retina 16GB 再販)",
-              "note": "Apple Store 直販価格なし"
+              "note": "販売終了（キャリア参考価格） (Apple Store 直販価格なし)"
             }
           ]
         },
@@ -325,22 +325,22 @@
             {
               "date": "2011-04-28",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 64800,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "impress.co.jp / softbank.jp",
-              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク 現金販売価格（一括税込64,800円） (日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2012-03-08",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 64800,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "apple.com / mynavi.jp (新しい iPad 発表時の iPad 2 価格 2012-03)",
-              "note": "Apple Store 直販価格なし"
+              "note": "新しいiPad発表に伴い販売終了 (Apple Store 直販価格なし)"
             }
           ]
         },
@@ -351,22 +351,22 @@
             {
               "date": "2011-04-28",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 72960,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "impress.co.jp / softbank.jp",
-              "note": "日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク 現金販売価格（一括税込72,960円） (日本では「Wi-Fi + 3G」モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2012-03-08",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 72960,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "apple.com / mynavi.jp (新しい iPad 発表時の iPad 2 価格 2012-03)",
-              "note": "Apple Store 直販価格なし"
+              "note": "新しいiPad発表に伴い販売終了 (Apple Store 直販価格なし)"
             }
           ]
         }
@@ -459,21 +459,22 @@
             {
               "date": "2012-03-16",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 53760,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "softbank.jp / impress.co.jp",
-              "note": "Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク Wi-Fi + 4G 現金販売価格（一括税込53,760円） (Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2012-10-24",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 53760,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)"
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "第4世代iPad発表に伴い販売終了"
             }
           ]
         },
@@ -484,21 +485,22 @@
             {
               "date": "2012-03-16",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 61680,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "softbank.jp / impress.co.jp",
-              "note": "Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク Wi-Fi + 4G 現金販売価格（一括税込61,680円） (Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2012-10-24",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 61680,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)"
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "第4世代iPad発表に伴い販売終了"
             }
           ]
         },
@@ -509,21 +511,22 @@
             {
               "date": "2012-03-16",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 69600,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "softbank.jp / impress.co.jp",
-              "note": "Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク Wi-Fi + 4G 現金販売価格（一括税込69,600円） (Wi-Fi + 4G モデル。ソフトバンク販売のみで Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2012-10-24",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 69600,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)"
+              "source": "apple.com / impress.co.jp (iPad Retina ディスプレイモデル 日本発売 2012-11-02)",
+              "note": "第4世代iPad発表に伴い販売終了"
             }
           ]
         }
@@ -707,41 +710,42 @@
             {
               "date": "2012-11-02",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 53760,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "impress.co.jp / softbank.jp / kddi.com",
-              "note": "ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク/au 現金販売価格（一括税込53,760円） (ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2013-10-23",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 53760,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "iPad Air発表に伴い一旦販売終了"
             },
             {
               "date": "2014-03-19",
               "event": "容量ラインナップ変更",
-              "jpy": null,
+              "jpy": 53800,
               "usd": 529,
               "taxRate": 0.05,
               "confidence": "low",
               "source": "gigazine.net / impress.co.jp / livedoor.com (2014-03 iPad 2 販売終了・iPad Retina 16GB 再販)",
-              "note": "16GB 再販。報道では Wi-Fi + Cellular 53,800円 とされるが、Apple Store の SIM フリー販売開始 (2014-07-01) 前のためキャリア向け参考価格の可能性が高い"
+              "note": "16GBモデル再販（税込参考価格53,800円） (16GB 再販。報道では Wi-Fi + Cellular 53,800円 とされるが、Apple Store の SIM フリー販売開始 (2014-07-01) 前のためキャリア向け参考価格の可能性が高い)"
             },
             {
               "date": "2014-10-17",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 53800,
               "usd": 529,
               "taxRate": 0.08,
               "confidence": "low",
               "source": "ipodwave.com / impress.co.jp / gigazine.net (2014-10 iPad Air 2・mini 3 発表と旧モデル値下げ)",
-              "note": "2014-07-01 以降 Apple Store で SIM フリー版が販売された可能性があるが価格未確認"
+              "note": "iPad Air 2発表に伴い販売終了 (2014-07-01 以降 Apple Store で SIM フリー版が販売された可能性があるが価格未確認)"
             }
           ]
         },
@@ -752,21 +756,22 @@
             {
               "date": "2012-11-02",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 61680,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "impress.co.jp / softbank.jp / kddi.com",
-              "note": "ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク/au 現金販売価格（一括税込61,680円） (ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2013-10-23",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 61680,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "iPad Air発表に伴い販売終了"
             }
           ]
         },
@@ -777,21 +782,22 @@
             {
               "date": "2012-11-02",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 69600,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "impress.co.jp / softbank.jp / kddi.com",
-              "note": "ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク/au 現金販売価格（一括税込69,600円） (ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2013-10-23",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 69600,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "iPad Air発表に伴い販売終了"
             }
           ]
         },
@@ -802,21 +808,22 @@
             {
               "date": "2013-02-05",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 77520,
               "usd": 929,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "impress.co.jp / softbank.jp / kddi.com",
-              "note": "ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク/au 現金販売価格（一括税込77,520円） (ソフトバンク / au 販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2013-10-23",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 77520,
               "usd": 929,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)"
+              "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
+              "note": "iPad Air発表に伴い販売終了"
             }
           ]
         }
@@ -962,12 +969,12 @@
             {
               "date": "2012-11-30",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 39600,
               "usd": 459,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 39,800円)"
+              "note": "ソフトバンク/au 現金販売価格（一括税込39,600円） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 39,800円))"
             },
             {
               "date": "2014-10-17",
@@ -998,21 +1005,22 @@
             {
               "date": "2012-11-30",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 47520,
               "usd": 559,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク 現金販売価格（一括税込47,520円 / auは47,760円） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2013-10-23",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 47520,
               "usd": 559,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)"
+              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)",
+              "note": "iPad mini Retina発表に伴い販売終了"
             }
           ]
         },
@@ -1023,21 +1031,22 @@
             {
               "date": "2012-11-30",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 55440,
               "usd": 659,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "sbbit.jp / applenurture.com / wikipedia.org (iPad mini 日本発売 2012-11-02)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ)"
+              "note": "ソフトバンク 現金販売価格（一括税込55,440円 / auは55,920円） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ))"
             },
             {
               "date": "2013-10-23",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 55440,
               "usd": 659,
               "taxRate": 0.05,
               "confidence": "medium",
-              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)"
+              "source": "mynavi.jp / taisy0.com (2013-10 iPad mini 値下げ)",
+              "note": "iPad mini Retina発表に伴い販売終了"
             }
           ]
         }
@@ -1098,12 +1107,12 @@
             {
               "date": "2013-11-01",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 65800,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜)"
+              "note": "Apple発表参考価格（税込65,800円 / キャリア販売） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜))"
             },
             {
               "date": "2014-07-01",
@@ -1190,12 +1199,12 @@
             {
               "date": "2013-11-01",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 75800,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜)"
+              "note": "Apple発表参考価格（税込75,800円 / キャリア販売） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜))"
             },
             {
               "date": "2014-07-01",
@@ -1272,12 +1281,12 @@
             {
               "date": "2013-11-01",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 85800,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜)"
+              "note": "Apple発表参考価格（税込85,800円 / キャリア販売） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜))"
             },
             {
               "date": "2014-07-01",
@@ -1344,12 +1353,12 @@
             {
               "date": "2013-11-01",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 95800,
               "usd": 929,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜)"
+              "note": "Apple発表参考価格（税込95,800円 / キャリア販売） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 65,800円〜))"
             },
             {
               "date": "2014-07-01",
@@ -1429,12 +1438,12 @@
             {
               "date": "2013-11-14",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 55800,
               "usd": 529,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜)"
+              "note": "Apple発表参考価格（税込55,800円 / キャリア販売） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜))"
             },
             {
               "date": "2014-07-01",
@@ -1528,12 +1537,12 @@
             {
               "date": "2013-11-14",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 65800,
               "usd": 629,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜)"
+              "note": "Apple発表参考価格（税込65,800円 / キャリア販売） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜))"
             },
             {
               "date": "2014-07-01",
@@ -1618,12 +1627,12 @@
             {
               "date": "2013-11-14",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 75800,
               "usd": 729,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜)"
+              "note": "Apple発表参考価格（税込75,800円 / キャリア販売） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜))"
             },
             {
               "date": "2014-07-01",
@@ -1690,12 +1699,12 @@
             {
               "date": "2013-11-14",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 85800,
               "usd": 829,
               "taxRate": 0.05,
               "confidence": "medium",
               "source": "zaikei.co.jp / apple.com / impress.co.jp (iPad Air・iPad mini Retina 日本価格 2013-10)",
-              "note": "au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜)"
+              "note": "Apple発表参考価格（税込85,800円 / キャリア販売） (au / ソフトバンク販売。Apple Store (直販) では Cellular モデル非販売(キャリア販売のみ) (Apple 発表の参考価格 16GB 55,800円〜))"
             },
             {
               "date": "2014-07-01",

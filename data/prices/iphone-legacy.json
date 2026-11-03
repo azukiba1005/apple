@@ -14,20 +14,20 @@
             {
               "date": "2007-06-29",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 64400,
               "usd": 499,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "low",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本未発売（米国等のみ） / usdはAT&T 2年契約前提の本体価格"
+              "note": "日本未発売（米国$499を当時為替¥123/$・税込5%相当で参考換算） / usdはAT&T 2年契約前提の本体価格"
             },
             {
               "date": "2007-09-06",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 64400,
               "usd": 499,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "low",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
               "note": "日本未発売 / 2007-09-05(米国時間)に4GB販売終了・8GB値下げ"
             }
@@ -40,30 +40,30 @@
             {
               "date": "2007-06-29",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 77300,
               "usd": 599,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "low",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本未発売（米国等のみ）"
+              "note": "日本未発売（米国$599を当時為替¥123/$・税込5%相当で参考換算）"
             },
             {
               "date": "2007-09-06",
               "event": "価格改定（値下げ）",
-              "jpy": null,
+              "jpy": 48800,
               "usd": 399,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "low",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本未発売 / 2007-09-05(米国時間)の値下げ"
+              "note": "日本未発売（米国$399への値下げを参考換算） / 2007-09-05(米国時間)の値下げ"
             },
             {
               "date": "2008-06-10",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 48800,
               "usd": 399,
               "taxRate": 0.05,
-              "confidence": "medium",
+              "confidence": "low",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
               "note": "日本未発売 / iPhone 3G発表に伴い販売終了(AppleDB日付)"
             }
@@ -76,20 +76,20 @@
             {
               "date": "2008-02-06",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 58200,
               "usd": 499,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "low",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本未発売 / 2008-02-05(米国時間)追加"
+              "note": "日本未発売（米国$499を当時為替・税込5%相当で参考換算） / 2008-02-05(米国時間)追加"
             },
             {
               "date": "2008-06-10",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 58200,
               "usd": 499,
               "taxRate": 0.05,
-              "confidence": "medium",
+              "confidence": "low",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
               "note": "日本未発売 / iPhone 3G発表に伴い販売終了(AppleDB日付)"
             }
@@ -106,32 +106,32 @@
             {
               "date": "2008-07-11",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 69120,
               "usd": 199,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク / usdは米国2年契約時の価格"
+              "source": "softbank.jp / macotakara.jp (iPhone 3G ソフトバンク現金販売価格 69,120円)",
+              "note": "ソフトバンク専売の現金販売価格（一括税込69,120円・実質負担約23,040円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2009-06-09",
               "event": "iPhone 3GS発表に伴う価格改定（値下げ）",
-              "jpy": null,
+              "jpy": 46080,
               "usd": 99,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / usdは米国2年契約時の価格"
+              "source": "softbank.jp / impress.co.jp (iPhone 3G 8GB 値下げ)",
+              "note": "ソフトバンク一括価格改定（46,080円・キャンペーン実質0円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2010-06-08",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 46080,
               "usd": 99,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 4発表に伴い販売終了"
+              "note": "iPhone 4発表に伴い販売終了"
             }
           ]
         },
@@ -142,22 +142,22 @@
             {
               "date": "2008-07-11",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 80640,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク / usdは米国2年契約時の価格"
+              "source": "softbank.jp / macotakara.jp (iPhone 3G 16GB ソフトバンク現金販売価格 80,640円)",
+              "note": "ソフトバンク専売の現金販売価格（一括税込80,640円・実質負担約34,560円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2009-06-09",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 80640,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 3GS発表に伴い販売終了"
+              "note": "iPhone 3GS発表に伴い販売終了"
             }
           ]
         }
@@ -172,32 +172,32 @@
             {
               "date": "2010-06-24",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 46080,
               "usd": 99,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / 2010-06-07(米国時間)発表の廉価容量 / usdは米国2年契約時の価格"
+              "source": "softbank.jp / impress.co.jp (iPhone 3GS 8GB 一括46,080円)",
+              "note": "ソフトバンク現金販売価格（一括税込46,080円） / 2010-06発表の廉価容量 / usdは米国2年契約時の価格"
             },
             {
               "date": "2011-10-05",
               "event": "iPhone 4S発表に伴う価格改定（値下げ）",
-              "jpy": null,
+              "jpy": 34560,
               "usd": 0,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "medium",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / 2年契約で0ドル"
+              "note": "キャリア一括価格改定 / 米国は2年契約で0ドル"
             },
             {
               "date": "2012-09-13",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 34560,
               "usd": 0,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "medium",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 5発表に伴い販売終了"
+              "note": "iPhone 5発表に伴い販売終了"
             }
           ]
         },
@@ -208,22 +208,22 @@
             {
               "date": "2009-06-19",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 57600,
               "usd": 199,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク / usdは米国2年契約時の価格"
+              "source": "softbank.jp / impress.co.jp (iPhone 3GS ソフトバンク一括価格 57,600円)",
+              "note": "ソフトバンク専売の現金販売価格（一括税込57,600円・日本発売日は2009-06-26） / usdは米国2年契約時の価格"
             },
             {
               "date": "2010-06-08",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 57600,
               "usd": 199,
               "taxRate": 0.05,
-              "confidence": "medium",
+              "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 4発表に伴い販売終了（8GBに置換）"
+              "note": "iPhone 4発表に伴い販売終了（8GBに置換）"
             }
           ]
         },
@@ -234,22 +234,22 @@
             {
               "date": "2009-06-19",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 69120,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク / usdは米国2年契約時の価格"
+              "source": "softbank.jp / impress.co.jp (iPhone 3GS ソフトバンク一括価格 69,120円)",
+              "note": "ソフトバンク専売の現金販売価格（一括税込69,120円・日本発売日は2009-06-26） / usdは米国2年契約時の価格"
             },
             {
               "date": "2010-06-08",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 69120,
               "usd": 299,
               "taxRate": 0.05,
-              "confidence": "medium",
+              "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 4発表に伴い販売終了"
+              "note": "iPhone 4発表に伴い販売終了"
             }
           ]
         }
@@ -264,32 +264,32 @@
             {
               "date": "2011-10-05",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 42000,
               "usd": 99,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 4S発表時に追加された廉価容量 / usdは米国2年契約時の価格"
+              "source": "softbank.jp / impress.co.jp (iPhone 4 8GB 一括42,000円)",
+              "note": "ソフトバンク現金販売価格（一括税込42,000円） / iPhone 4S発表時に追加された廉価容量"
             },
             {
               "date": "2012-09-13",
               "event": "iPhone 5発表に伴う価格改定（値下げ）",
-              "jpy": null,
+              "jpy": 35280,
               "usd": 0,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "medium",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / 2年契約で0ドル"
+              "note": "キャリア一括価格改定 / 米国は2年契約で0ドル"
             },
             {
               "date": "2013-09-11",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 35280,
               "usd": 0,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "medium",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 5s/5c発表に伴い販売終了"
+              "note": "iPhone 5s/5c発表に伴い販売終了"
             }
           ]
         },
@@ -300,22 +300,22 @@
             {
               "date": "2010-06-24",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 46080,
               "usd": 199,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク / usdは米国2年契約時の価格"
+              "source": "softbank.jp / mynavi.jp / itmedia.co.jp (iPhone 4 ソフトバンク一括価格 46,080円)",
+              "note": "ソフトバンク専売の現金販売価格（一括税込46,080円・実質0円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2011-10-05",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 46080,
               "usd": 199,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 4S発表に伴い販売終了"
+              "note": "iPhone 4S発表に伴い販売終了（8GBに置換）"
             }
           ]
         },
@@ -326,22 +326,22 @@
             {
               "date": "2010-06-24",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 57600,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク / usdは米国2年契約時の価格"
+              "source": "softbank.jp / mynavi.jp / itmedia.co.jp (iPhone 4 ソフトバンク一括価格 57,600円)",
+              "note": "ソフトバンク専売の現金販売価格（一括税込57,600円・実質11,520円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2011-10-05",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 57600,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 4S発表に伴い販売終了"
+              "note": "iPhone 4S発表に伴い販売終了"
             }
           ]
         }
@@ -356,22 +356,22 @@
             {
               "date": "2013-09-11",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 40320,
               "usd": 0,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "medium",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 5s/5c発表時に追加された廉価容量 / 2年契約で0ドル"
+              "note": "キャリア専売（ソフトバンク/au 一括参考価格40,320円） / iPhone 5s/5c発表時に追加された廉価容量 / 米国は2年契約で0ドル"
             },
             {
               "date": "2014-09-10",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 40320,
               "usd": 0,
               "taxRate": 0.08,
-              "confidence": "high",
+              "confidence": "medium",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 6発表に伴い販売終了"
+              "note": "iPhone 6発表に伴い販売終了"
             }
           ]
         },
@@ -382,32 +382,32 @@
             {
               "date": "2011-10-14",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 46080,
               "usd": 199,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク/au / usdは米国2年契約時の価格"
+              "source": "impress.co.jp / itmedia.co.jp (iPhone 4S ソフトバンク一括46,080円 / au一括51,360円)",
+              "note": "ソフトバンク現金販売価格（一括税込46,080円、auは51,360円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2012-09-13",
               "event": "iPhone 5発表に伴う価格改定（値下げ）",
-              "jpy": null,
+              "jpy": 42000,
               "usd": 99,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "medium",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / usdは米国2年契約時の価格"
+              "note": "キャリア一括価格改定 / usdは米国2年契約時の価格"
             },
             {
               "date": "2013-09-11",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 42000,
               "usd": 99,
               "taxRate": 0.05,
-              "confidence": "high",
+              "confidence": "medium",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / 8GBに置換"
+              "note": "8GBに置換"
             }
           ]
         },
@@ -418,22 +418,22 @@
             {
               "date": "2011-10-14",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 57600,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク/au / usdは米国2年契約時の価格"
+              "source": "impress.co.jp / itmedia.co.jp (iPhone 4S ソフトバンク一括57,600円 / au一括61,680円)",
+              "note": "ソフトバンク現金販売価格（一括税込57,600円、auは61,680円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2012-09-13",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 57600,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 5発表に伴い販売終了"
+              "note": "iPhone 5発表に伴い販売終了"
             }
           ]
         },
@@ -444,22 +444,22 @@
             {
               "date": "2011-10-14",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 67200,
               "usd": 399,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク/au / usdは米国2年契約時の価格"
+              "source": "impress.co.jp / itmedia.co.jp (iPhone 4S ソフトバンク一括67,200円 / au一括72,000円)",
+              "note": "ソフトバンク現金販売価格（一括税込67,200円、auは72,000円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2012-09-13",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 67200,
               "usd": 399,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 5発表に伴い販売終了"
+              "note": "iPhone 5発表に伴い販売終了"
             }
           ]
         }
@@ -474,22 +474,22 @@
             {
               "date": "2012-09-21",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 51360,
               "usd": 199,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク/au / usdは米国2年契約時の価格"
+              "source": "impress.co.jp / teradas.jp (iPhone 5 ソフトバンク・au 一括51,360円)",
+              "note": "ソフトバンク/au 現金販売価格（一括税込51,360円・実質0円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2013-09-11",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 51360,
               "usd": 199,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 5s/5c発表に伴い販売終了"
+              "note": "iPhone 5s/5c発表に伴い販売終了"
             }
           ]
         },
@@ -500,22 +500,22 @@
             {
               "date": "2012-09-21",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 61680,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク/au / usdは米国2年契約時の価格"
+              "source": "impress.co.jp / teradas.jp (iPhone 5 ソフトバンク・au 一括61,680円)",
+              "note": "ソフトバンク/au 現金販売価格（一括税込61,680円・実質10,320円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2013-09-11",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 61680,
               "usd": 299,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 5s/5c発表に伴い販売終了"
+              "note": "iPhone 5s/5c発表に伴い販売終了"
             }
           ]
         },
@@ -526,22 +526,22 @@
             {
               "date": "2012-09-21",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 72000,
               "usd": 399,
               "taxRate": 0.05,
               "confidence": "high",
-              "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売）・ソフトバンク/au / usdは米国2年契約時の価格"
+              "source": "impress.co.jp / teradas.jp (iPhone 5 ソフトバンク・au 一括72,000円)",
+              "note": "ソフトバンク/au 現金販売価格（一括税込72,000円・実質20,640円） / usdは米国2年契約時の価格"
             },
             {
               "date": "2013-09-11",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 72000,
               "usd": 399,
               "taxRate": 0.05,
               "confidence": "high",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store 未販売（キャリア専売） / iPhone 5s/5c発表に伴い販売終了"
+              "note": "iPhone 5s/5c発表に伴い販売終了"
             }
           ]
         }
@@ -556,17 +556,17 @@
             {
               "date": "2014-09-10",
               "event": "発売時",
-              "jpy": null,
+              "jpy": 49464,
               "usd": 450,
               "taxRate": 0.08,
-              "confidence": "medium",
+              "confidence": "low",
               "source": "https://en.wikipedia.org/wiki/List_of_iPhone_models",
-              "note": "日本 Apple Store での販売は確認できず（米国等で iPhone 6 発表時に追加） / usdは米国SIMフリー(契約なし)価格"
+              "note": "米国等で iPhone 6 発表時に追加（税別45,800円相当・税込49,464円参考換算） / usdは米国SIMフリー(契約なし)価格"
             },
             {
               "date": "2015-09-10",
               "event": "販売終了",
-              "jpy": null,
+              "jpy": 49464,
               "usd": 450,
               "taxRate": 0.08,
               "confidence": "medium",

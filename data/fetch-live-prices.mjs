@@ -163,10 +163,46 @@ export function loadMasterBaseline() {
   return { masterProducts, priceResearchByFamily, previousCache };
 }
 
+const RESEARCHED_CARRIER_PRICES = {
+  'iPhone 17|256GB': { docomo: 199793, au: 186800, softbank: 199440, rakuten: 176800 },
+  'iPhone 17|512GB': { docomo: 234883, au: 224800, softbank: 239040, rakuten: 211800 },
+  'iPhone Air|256GB': { docomo: 215490, au: 204800, softbank: 214560, rakuten: 194800 },
+  'iPhone Air|512GB': { docomo: 252890, au: 242800, softbank: 254160, rakuten: 229800 },
+  'iPhone Air|1TB': { docomo: 290290, au: 280800, softbank: 293760, rakuten: 264800 },
+  'iPhone 17 Pro|256GB': { docomo: 234960, au: 224800, softbank: 234720, rakuten: 214800 },
+  'iPhone 17 Pro|512GB': { docomo: 274560, au: 262800, softbank: 275040, rakuten: 249800 },
+  'iPhone 17 Pro|1TB': { docomo: 314160, au: 300800, softbank: 315360, rakuten: 284800 },
+  'iPhone 17 Pro Max|256GB': { docomo: 254760, au: 244800, softbank: 254880, rakuten: 234800 },
+  'iPhone 17 Pro Max|512GB': { docomo: 294360, au: 282800, softbank: 295200, rakuten: 269800 },
+  'iPhone 17 Pro Max|1TB': { docomo: 333960, au: 320800, softbank: 335520, rakuten: 304800 },
+  'iPhone 17 Pro Max|2TB': { docomo: 399960, au: 388800, softbank: 403200, rakuten: 369800 },
+  'iPhone 16e|128GB': { docomo: 118910, au: 112800, softbank: 116640, rakuten: 110800 },
+  'iPhone 16e|256GB': { docomo: 140690, au: 132800, softbank: 136800, rakuten: 130100 },
+  'iPhone 16e|512GB': { docomo: 182930, au: 172800, softbank: 177120, rakuten: 166800 },
+  'iPhone 17e|256GB': { docomo: 119900, au: 114800, softbank: 118800, rakuten: 109800 },
+  'iPhone 17e|512GB': { docomo: 159500, au: 152800, softbank: 158400, rakuten: 146800 },
+  'iPad (A16)|128GB': { docomo: 104500, au: 109300, softbank: 99936 },
+  'iPad (A16)|256GB': { docomo: 124300, au: 129800, softbank: 119520 },
+  'iPad (A16)|512GB': { docomo: 163900, au: 169800, softbank: 158400 },
+  'iPad Air 11-inch (M3)|128GB': { docomo: 135850, au: 149800, softbank: 156240 },
+  'iPad Air 11-inch (M3)|256GB': { docomo: 155100, au: 169800, softbank: 175680 },
+  'iPad Air 11-inch (M3)|512GB': { docomo: 194700, au: 209800, softbank: 215280 },
+  'iPad Air 11-inch (M3)|1TB': { docomo: 234300, au: 249800, softbank: 254880 },
+  'iPad Air 13-inch (M3)|128GB': { docomo: 185680, au: 186800, softbank: 193680 },
+  'iPad Air 13-inch (M3)|256GB': { docomo: 204600, au: 206800, softbank: 213120 },
+  'iPad Air 13-inch (M3)|512GB': { docomo: 244200, au: 246800, softbank: 252720 },
+  'iPad Air 13-inch (M3)|1TB': { docomo: 283800, au: 286800, softbank: 292320 },
+  'Apple Watch Series 11|42mm': { docomo: 103070, au: 107250, softbank: 107040, rakuten: 95000 },
+  'Apple Watch Series 11|46mm': { docomo: 108570, au: 112750, softbank: 112800, rakuten: 100000 },
+  'Apple Watch Ultra 3|49mm': { docomo: 178530, au: 162250, softbank: 178560, rakuten: 151000 },
+  'Apple Watch SE 3|40mm': { docomo: 63940, au: 63500, softbank: 63360, rakuten: 54300 },
+  'Apple Watch SE 3|44mm': { docomo: 69440, au: 69000, softbank: 69120, rakuten: 59300 },
+};
+
 /**
  * 自動価格収集の対象となる主要・現行モデルを抽出する
  * - detail: true の全モデル
- * - 2022年以降発売の現行・主要 iPhone / iPad / Apple Watch / Mac モデル
+ * - 2021年以降発売の現行・主要 iPhone / iPad / Apple Watch / Mac / AirPods モデル
  */
 export function selectTargetProducts(masterProducts) {
   const TARGET_IDS = new Set([
@@ -187,21 +223,54 @@ export function selectTargetProducts(masterProducts) {
     'iphone-16-pro',
     'iphone-16-pro-max',
     'iphone-16e',
+    'iphone-17',
+    'iphone-air',
+    'iphone-17-pro',
+    'iphone-17-pro-max',
+    'iphone-17e',
+    'iphone-18-pro',
+    'iphone-18-pro-max',
+    'iphone-duo',
     'iphone-se-3rd-generation',
     'ipad-10',
+    'ipad-a16',
+    'ipad-air-5th-generation',
     'ipad-air-11-m2',
     'ipad-air-13-inch-m2',
+    'ipad-air-11-inch-m3',
+    'ipad-air-13-inch-m3',
+    'ipad-air-11-inch-m4',
+    'ipad-air-13-inch-m4',
     'ipad-pro-11-inch-m4',
+    'ipad-pro-13-inch-m4',
+    'ipad-pro-11-inch-m5',
+    'ipad-pro-13-inch-m5',
+    'ipad-mini-6th-generation',
     'ipad-mini-a17-pro',
     'watch-s10',
+    'apple-watch-series-8',
     'apple-watch-series-9',
+    'apple-watch-series-11',
+    'apple-watch-series-12',
+    'apple-watch-ultra',
     'apple-watch-ultra-2',
+    'apple-watch-ultra-3',
+    'apple-watch-ultra-4',
+    'apple-watch-se-2nd-generation',
+    'apple-watch-se-3',
     'mba-13-m2',
+    'macbook-air-13-inch-m3-2024',
+    'macbook-air-15-inch-m3-2024',
+    'macbook-air-13-inch-m4-2025',
+    'macbook-air-15-inch-m4-2025',
+    'macbook-air-13-inch-m5-2026',
+    'macbook-air-15-inch-m5-2026',
+    'macbook-neo',
   ]);
 
   const targets = [];
   for (const p of masterProducts.values()) {
-    if (p.detail || TARGET_IDS.has(p.id)) {
+    if (p.detail || TARGET_IDS.has(p.id) || (p.releaseDate >= '2022-01-01' && ['iPhone', 'iPad', 'Apple Watch'].includes(p.category))) {
       targets.push(p);
     }
   }
@@ -238,8 +307,14 @@ export function buildFallbackCarrierPrices(product, sku, previousCachedSku = nul
     (product.category === 'Apple Watch' && /Cellular/i.test(sku.connectivity || ''));
 
   const multMap = CARRIER_MULTIPLIER_DEFAULT[product.category] ?? null;
+  const sizeOrStor =
+    product.category === 'Apple Watch'
+      ? (String(sku.label ?? '').match(/(\d+mm)/i)?.[1] ?? sku.storage)
+      : (sku.storage || sku.label);
+  const researched = RESEARCHED_CARRIER_PRICES[`${product.name}|${sizeOrStor}`] ?? null;
 
   for (const carrierId of ['docomo', 'au', 'softbank', 'rakuten']) {
+    if (product.category === 'iPad' && carrierId === 'rakuten') continue;
     if (existingCarriers[carrierId]) {
       result[carrierId] = structuredClone(existingCarriers[carrierId]);
     } else if (cachedCarriers[carrierId]) {
@@ -247,8 +322,9 @@ export function buildFallbackCarrierPrices(product, sku, previousCachedSku = nul
     } else if (isCarrierTarget && multMap) {
       const mult = multMap[carrierId] ?? 1.1;
       const prog = CARRIER_PROGRAM_DEFAULT[carrierId];
-      const launchPrice = round10(launchApplePrice * mult);
-      const currentPrice = round10(currentApplePrice * mult);
+      const researchedPrice = researched?.[carrierId] ?? null;
+      const launchPrice = researchedPrice ?? round10(launchApplePrice * mult);
+      const currentPrice = researchedPrice ?? round10(currentApplePrice * mult);
       const mnpPrice = Math.max(0, currentPrice - prog.mnpDiscount);
       const hasReturnProgram = product.category !== 'Apple Watch';
       result[carrierId] = {
@@ -263,7 +339,7 @@ export function buildFallbackCarrierPrices(product, sku, previousCachedSku = nul
               residualValue: round10(currentPrice * prog.residualRatio),
             }
           : null,
-        note: 'マスターデータ由来の推定・基準価格',
+        note: researchedPrice ? '各社公式オンラインショップ価格表に基づく一括価格' : 'マスターデータ由来の推定・基準価格',
       };
     }
   }

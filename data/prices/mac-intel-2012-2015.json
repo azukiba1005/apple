@@ -1,0 +1,2919 @@
+{
+  "meta": {
+    "group": "mac-intel-2012-2015",
+    "researchedAt": "2026-11-03",
+    "notes": "Intel搭載Mac (2012〜2015年発売、計43モデル) の日本Apple Store税込価格履歴および米国発売時MSRP(税抜USD)。2014-03-31以前は消費税5%税込表示(taxRate: 0.05)、2014-04-01以降は消費税8%税別表示への移行に伴い税込価格(exTax * 1.08)を算出しnoteに税別価格を併記(Mac Pro Late 2013のみ2019-10-01の消費税10%改定も反映)。2013-02-14、2013-06-11、2014-04-01、2014-06-18、2014-10-17、2015-03-10、2015-05-20、2016-10-28等の主要な価格改定を収録。"
+  },
+  "families": {
+    "MacBook Air (11-inch, Mid 2012)": {
+      "skus": [
+        {
+          "storage": "4GB/64GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 84800,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2012-06-12 WWDC12発表記事)",
+              "note": "MD223J/A。1.7GHz Core i5。5%税込表示"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 88800,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2013-02-14 価格改定記事)",
+              "note": "円安に伴う価格改定(+4,000円)"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "販売終了",
+              "jpy": 88800,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-06-11 Mid 2013発表記事)",
+              "note": "Mid 2013発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "4GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 94800,
+              "usd": 1099,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2012-06-12 WWDC12発表記事)",
+              "note": "MD224J/A。1.7GHz Core i5。5%税込表示"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 98800,
+              "usd": 1099,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2013-02-14 価格改定記事)",
+              "note": "円安に伴う価格改定(+4,000円)"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "販売終了",
+              "jpy": 98800,
+              "usd": 1099,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-06-11 Mid 2013発表記事)",
+              "note": "Mid 2013発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Air (13-inch, Mid 2012)": {
+      "skus": [
+        {
+          "storage": "4GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 102800,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2012-06-12 WWDC12発表記事)",
+              "note": "MD231J/A。1.8GHz Core i5。5%税込表示"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 108800,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2013-02-14 価格改定記事)",
+              "note": "円安に伴う価格改定(+6,000円)"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "販売終了",
+              "jpy": 108800,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-06-11 Mid 2013発表記事)",
+              "note": "Mid 2013発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "4GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 128800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2012-06-12 WWDC12発表記事)",
+              "note": "MD232J/A。1.8GHz Core i5。5%税込表示"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "価格改定（値下げ）",
+              "jpy": 124800,
+              "usd": 1399,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "Apple Newsroom (2013-02-13 価格改定発表) / ITmedia",
+              "note": "米国で$1,499→$1,399へ値下げ、日本でも価格改定"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "販売終了",
+              "jpy": 124800,
+              "usd": 1399,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-06-11 Mid 2013発表記事)",
+              "note": "Mid 2013発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (13-inch, Mid 2012)": {
+      "skus": [
+        {
+          "storage": "4GB/500GB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 102800,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Macお宝鑑定団 (2012-06-12 WWDC12発表記事)",
+              "note": "MD101J/A。2.5GHz Core i5、SuperDrive搭載。5%税込表示"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 108800,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2013-02-14 価格改定記事)",
+              "note": "円安に伴う価格改定(+6,000円)"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 118800,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う再値上げ(+10,000円)"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 121824,
+              "usd": 1199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別112,800円"
+            },
+            {
+              "date": "2014-07-29",
+              "event": "価格改定（値下げ）",
+              "jpy": 117504,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP (2014-07-29 Mid 2014発表プレスリリース)",
+              "note": "税別108,800円(4,000円値下げ、米国でも$1,099へ値下げ)"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 136944,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / 価格.com (2015-03-10 価格改定記事)",
+              "note": "税別126,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "販売終了",
+              "jpy": 136944,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-10-28 Late 2016発表記事)",
+              "note": "光学ドライブ搭載最後のMacBook Proとして販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/750GB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 128800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Macお宝鑑定団 (2012-06-12 WWDC12発表記事)",
+              "note": "MD102J/A。2.9GHz Core i7。5%税込表示"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 138800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2013-02-14 価格改定記事)",
+              "note": "円安に伴う価格改定(+10,000円)"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 148800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う再値上げ(+10,000円)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 148800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "Apple Store (Late 2013発表時のラインナップ整理)",
+              "note": "上位構成(MD102J/A)は先行終了、下位(MD101J/A)のみ2016-10-28まで継続販売"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (15-inch, Mid 2012)": {
+      "skus": [
+        {
+          "storage": "4GB/500GB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 154800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Macお宝鑑定団 (2012-06-12 WWDC12発表記事)",
+              "note": "MD103J/A。2.3GHz 4コアCore i7、GeForce GT 650M(512MB)"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 168800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2013-02-14 価格改定記事)",
+              "note": "円安に伴う価格改定(+14,000円)"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 178800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う再値上げ(+10,000円)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 178800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-10-23 Late 2013発表記事)",
+              "note": "15インチ非Retinaモデル販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/750GB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 184800,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Macお宝鑑定団 (2012-06-12 WWDC12発表記事)",
+              "note": "MD104J/A。2.6GHz 4コアCore i7、GeForce GT 650M(1GB)"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "販売終了",
+              "jpy": 184800,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2013-02-14 ラインナップ整理記事)",
+              "note": "上位構成(MD104J/A)はEarly 2013発表時に先行終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 15-inch, Mid 2012)": {
+      "skus": [
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 184800,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2012-06-12 WWDC12発表記事)",
+              "note": "MC975J/A。2.3GHz 4コアCore i7、GeForce GT 650M"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "販売終了",
+              "jpy": 184800,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia (2013-02-14 Early 2013発表記事)",
+              "note": "Early 2013への移行に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 238800,
+              "usd": 2799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2012-06-12 WWDC12発表記事)",
+              "note": "MC976J/A。2.6GHz 4コアCore i7、GeForce GT 650M"
+            },
+            {
+              "date": "2013-02-14",
+              "event": "販売終了",
+              "jpy": 238800,
+              "usd": 2799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia (2013-02-14 Early 2013発表記事)",
+              "note": "Early 2013への移行に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac Pro (Mid 2012)": {
+      "skus": [
+        {
+          "storage": "6GB/1TB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 218800,
+              "usd": 2499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2012-06-12 Mac Pro Mid 2012記事)",
+              "note": "MD770J/A。3.2GHz 4コアXeon W3565、Radeon HD 5770"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 248800,
+              "usd": 2499,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴うMac一斉価格改定"
+            },
+            {
+              "date": "2013-10-24",
+              "event": "販売終了",
+              "jpy": 248800,
+              "usd": 2499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp (2013-10-23 新型Mac Pro発表記事)",
+              "note": "Late 2013正式発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "12GB/1TB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 323800,
+              "usd": 3799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2012-06-12 Mac Pro Mid 2012記事)",
+              "note": "MD771J/A。2.4GHz 6コアXeon E5645×2(12コア)、Radeon HD 5770"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 368800,
+              "usd": 3799,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴うMac一斉価格改定"
+            },
+            {
+              "date": "2013-10-24",
+              "event": "販売終了",
+              "jpy": 368800,
+              "usd": 3799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp (2013-10-23 新型Mac Pro発表記事)",
+              "note": "Late 2013正式発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac Pro Server (Mid 2012)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDDx2",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-06-11",
+              "event": "発売時",
+              "jpy": 258800,
+              "usd": 2999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2012-06-12 Mac Pro Mid 2012記事)",
+              "note": "MD772J/A。3.2GHz 4コアXeon、OS X Server搭載"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 298800,
+              "usd": 2999,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴うMac一斉価格改定"
+            },
+            {
+              "date": "2013-10-24",
+              "event": "販売終了",
+              "jpy": 298800,
+              "usd": 2999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp (2013-10-23 新型Mac Pro発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 13-inch, Late 2012)": {
+      "skus": [
+        {
+          "storage": "8GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 144800,
+              "usd": 1699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Macお宝鑑定団 (2012-10-24 発表記事)",
+              "note": "MD212J/A。2.5GHz Core i5。日本時間2012-10-24発売"
+            },
+            {
+              "date": "2013-02-13",
+              "event": "価格改定（値下げ）",
+              "jpy": 138800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Apple Newsroom (2013-02-13 価格改定記事)",
+              "note": "128GBモデル(MD212J/A)はEarly 2013と併売のまま6,000円値下げ(米国$1,699→$1,499)"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 148800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+10,000円)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 148800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-10-23 Late 2013発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 168800,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch / Macお宝鑑定団 (2012-10-24 発表記事)",
+              "note": "MD213J/A。2.5GHz Core i5"
+            },
+            {
+              "date": "2013-02-13",
+              "event": "販売終了",
+              "jpy": 168800,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia (2013-02-14 Early 2013発表記事)",
+              "note": "256GB構成は2.6GHz化したEarly 2013(ME662J/A・158,800円)へ移行"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (21.5-inch, Late 2012)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD (2.7GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 108800,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp / Macお宝鑑定団 (2012-10-24 発表記事)",
+              "note": "MD093J/A。2.7GHz Core i5、GeForce GT 640M。11月30日発売"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 128800,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+20,000円)"
+            },
+            {
+              "date": "2013-09-25",
+              "event": "販売終了",
+              "jpy": 128800,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-09-24 Late 2013発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/1TB HDD (2.9GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 128800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp / Macお宝鑑定団 (2012-10-24 発表記事)",
+              "note": "MD094J/A。2.9GHz Core i5、GeForce GT 650M。11月30日発売"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 148800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+20,000円)"
+            },
+            {
+              "date": "2013-09-25",
+              "event": "販売終了",
+              "jpy": 148800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-09-24 Late 2013発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (27-inch, Late 2012)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD (2.9GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 154800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp / Macお宝鑑定団 (2012-10-24 発表記事)",
+              "note": "MD095J/A。2.9GHz Core i5、GeForce GTX 660M。2012年12月発売"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 178800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+24,000円)"
+            },
+            {
+              "date": "2013-09-25",
+              "event": "販売終了",
+              "jpy": 178800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-09-24 Late 2013発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/1TB HDD (3.2GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 168800,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp / Macお宝鑑定団 (2012-10-24 発表記事)",
+              "note": "MD096J/A。3.2GHz Core i5、GeForce GTX 675MX。2012年12月発売"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 198800,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+30,000円)"
+            },
+            {
+              "date": "2013-09-25",
+              "event": "販売終了",
+              "jpy": 198800,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-09-24 Late 2013発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac mini (Late 2012, Core i5)": {
+      "skus": [
+        {
+          "storage": "4GB/500GB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 52800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "GIGAZINE / ASCII.jp (2012-10-24 発表記事)",
+              "note": "MD387J/A。2.5GHz デュアルコアCore i5"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 59800,
+              "usd": 599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+7,000円)"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 61344,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別56,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 61344,
+              "usd": 599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-10-17 Late 2014発表記事)",
+              "note": "Late 2014発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac mini (Late 2012, Core i7)": {
+      "skus": [
+        {
+          "storage": "4GB/1TB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 68800,
+              "usd": 799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "GIGAZINE / ASCII.jp (2012-10-24 発表記事)",
+              "note": "MD388J/A。2.3GHz 4コアCore i7"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 79800,
+              "usd": 799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+11,000円)"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 81864,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別75,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 81864,
+              "usd": 799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-10-17 Late 2014発表記事)",
+              "note": "Late 2014発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac mini Server (Late 2012)": {
+      "skus": [
+        {
+          "storage": "4GB/1TB HDDx2",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2012-10-23",
+              "event": "発売時",
+              "jpy": 88800,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "GIGAZINE / ASCII.jp (2012-10-24 発表記事)",
+              "note": "MD389J/A。2.3GHz 4コアCore i7、OS X Server搭載"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 99800,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "マイナビニュース / Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+11,000円)"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 102384,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別94,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "販売終了",
+              "jpy": 102384,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-10-17 Late 2014発表記事)",
+              "note": "Late 2014発表に伴いServerモデル廃止"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 13-inch, Early 2013)": {
+      "skus": [
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-02-13",
+              "event": "発売時",
+              "jpy": 158800,
+              "usd": 1699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Apple Newsroom (2013-02-14 発表記事)",
+              "note": "ME662J/A。2.6GHz Core i5(128GB下位構成はLate 2012 MD212J/Aを138,800円で継続併売)"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 168800,
+              "usd": 1699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+10,000円)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 168800,
+              "usd": 1699,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-10-23 Late 2013発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 15-inch, Early 2013)": {
+      "skus": [
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-02-13",
+              "event": "発売時",
+              "jpy": 198800,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Apple Newsroom (2013-02-14 発表記事)",
+              "note": "ME664J/A。2.4GHz 4コアCore i7、GeForce GT 650M"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 218800,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+20,000円)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 218800,
+              "usd": 2199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-10-23 Late 2013発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "16GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-02-13",
+              "event": "発売時",
+              "jpy": 254800,
+              "usd": 2799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ITmedia / Apple Newsroom (2013-02-14 発表記事)",
+              "note": "ME665J/A。2.7GHz 4コアCore i7、GeForce GT 650M"
+            },
+            {
+              "date": "2013-06-11",
+              "event": "為替変動に伴う価格改定（値上げ）",
+              "jpy": 278800,
+              "usd": 2799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2013-06-11 価格改定記事)",
+              "note": "円安に伴う価格改定(+24,000円)"
+            },
+            {
+              "date": "2013-10-23",
+              "event": "販売終了",
+              "jpy": 278800,
+              "usd": 2799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-10-23 Late 2013発表記事)",
+              "note": "Late 2013発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (21.5-inch, Early 2013)": {
+      "skus": [
+        {
+          "storage": "4GB/500GB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-03-05",
+              "event": "発売時",
+              "jpy": 94800,
+              "usd": 1099,
+              "taxRate": 0.05,
+              "confidence": "medium",
+              "source": "MacRumors / EveryMac (ME699J/A 教育機関向け限定モデル)",
+              "note": "ME699J/A。3.3GHz デュアルコアCore i3、Intel HD Graphics 4000。教育機関向け限定モデル"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 98064,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "Apple Store for Education (2014-04-01 税別表示移行)",
+              "note": "教育機関向けモデル(税別90,800円相当)"
+            },
+            {
+              "date": "2014-06-19",
+              "event": "販売終了",
+              "jpy": 98064,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2014-06-18 iMac Mid 2014廉価モデル発表記事)",
+              "note": "一般向け廉価版iMac (21.5-inch, Mid 2014)登場に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Air (11-inch, Mid 2013)": {
+      "skus": [
+        {
+          "storage": "4GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-06-10",
+              "event": "発売時",
+              "jpy": 98800,
+              "usd": 999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "価格.com / ASCII.jp (2013-06-11 WWDC13発表記事)",
+              "note": "MD711J/A。1.3GHz Core i5(Haswell)。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 101304,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別93,800円"
+            },
+            {
+              "date": "2014-04-30",
+              "event": "販売終了",
+              "jpy": 101304,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-04-29 Early 2014発表記事)",
+              "note": "Early 2014発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "4GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-06-10",
+              "event": "発売時",
+              "jpy": 118800,
+              "usd": 1199,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "価格.com / ASCII.jp (2013-06-11 WWDC13発表記事)",
+              "note": "MD712J/A。1.3GHz Core i5(Haswell)。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 121824,
+              "usd": 1199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別112,800円"
+            },
+            {
+              "date": "2014-04-30",
+              "event": "販売終了",
+              "jpy": 121824,
+              "usd": 1199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-04-29 Early 2014発表記事)",
+              "note": "Early 2014発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Air (13-inch, Mid 2013)": {
+      "skus": [
+        {
+          "storage": "4GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-06-10",
+              "event": "発売時",
+              "jpy": 108800,
+              "usd": 1099,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "価格.com / ASCII.jp (2013-06-11 WWDC13発表記事)",
+              "note": "MD760J/A。1.3GHz Core i5(Haswell)。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 112104,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別103,800円"
+            },
+            {
+              "date": "2014-04-30",
+              "event": "販売終了",
+              "jpy": 112104,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-04-29 Early 2014発表記事)",
+              "note": "Early 2014発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "4GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-06-10",
+              "event": "発売時",
+              "jpy": 128800,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "価格.com / ASCII.jp (2013-06-11 WWDC13発表記事)",
+              "note": "MD761J/A。1.3GHz Core i5(Haswell)。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 132624,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別122,800円"
+            },
+            {
+              "date": "2014-04-30",
+              "event": "販売終了",
+              "jpy": 132624,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-04-29 Early 2014発表記事)",
+              "note": "Early 2014発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (21.5-inch, Late 2013, Dedicated Graphics)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-09-24",
+              "event": "発売時",
+              "jpy": 158800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "価格.com / PC Watch (2013-09-24 発表記事)",
+              "note": "ME087J/A。2.9GHz 4コアCore i5、GeForce GT 750M(1GB)。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 162864,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2014-04-01 税別価格一覧)",
+              "note": "税別150,800円"
+            },
+            {
+              "date": "2014-06-18",
+              "event": "価格改定（値下げ）",
+              "jpy": 160704,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2014-06-18 Mid 2014発表・既存モデル価格改定記事)",
+              "note": "税別148,800円(-2,000円)"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 171504,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース (2014-10-17 iMac価格改定記事)",
+              "note": "税別158,800円(+10,000円)"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 186624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別172,800円(+14,000円)"
+            },
+            {
+              "date": "2015-10-14",
+              "event": "販売終了",
+              "jpy": 186624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-10-13 Late 2015発表記事)",
+              "note": "Late 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (21.5-inch, Late 2013, Integrated Graphics)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-09-24",
+              "event": "発売時",
+              "jpy": 138800,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "価格.com / PC Watch (2013-09-24 発表記事)",
+              "note": "ME086J/A。2.7GHz 4コアCore i5、Intel Iris Pro Graphics。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 142344,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2014-04-01 税別価格一覧)",
+              "note": "税別131,800円"
+            },
+            {
+              "date": "2014-06-18",
+              "event": "価格改定（値下げ）",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2014-06-18 Mid 2014発表・既存モデル価格改定記事)",
+              "note": "税別128,800円(-3,000円)"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 149904,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース (2014-10-17 iMac価格改定記事)",
+              "note": "税別138,800円(+10,000円)"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 160704,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別148,800円(+10,000円)"
+            },
+            {
+              "date": "2015-10-14",
+              "event": "販売終了",
+              "jpy": 160704,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-10-13 Late 2015発表記事)",
+              "note": "Late 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (27-inch, Late 2013)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD (3.2GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-09-24",
+              "event": "発売時",
+              "jpy": 189800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-09-24 発表記事)",
+              "note": "ME088J/A。3.2GHz 4コアCore i5、GeForce GT 755M。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 195264,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2014-04-01 税別価格一覧)",
+              "note": "税別180,800円"
+            },
+            {
+              "date": "2014-06-18",
+              "event": "価格改定（値下げ）",
+              "jpy": 193104,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2014-06-18 価格改定記事)",
+              "note": "税別178,800円(-2,000円)"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 210384,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース (2014-10-17 iMac価格改定記事)",
+              "note": "税別194,800円(+16,000円)"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 225504,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別208,800円(+14,000円)"
+            },
+            {
+              "date": "2015-10-14",
+              "event": "販売終了",
+              "jpy": 225504,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-10-13 Late 2015発表記事)",
+              "note": "27インチ全モデルのRetina 5K化に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/1TB HDD (3.4GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-09-24",
+              "event": "発売時",
+              "jpy": 208800,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "PC Watch (2013-09-24 発表記事)",
+              "note": "ME089J/A。3.4GHz 4コアCore i5、GeForce GTX 775M。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 214704,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Macお宝鑑定団 (2014-04-01 税別価格一覧)",
+              "note": "税別198,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 231984,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース (2014-10-17 iMac価格改定記事)",
+              "note": "税別214,800円(+16,000円)"
+            },
+            {
+              "date": "2015-05-19",
+              "event": "販売終了",
+              "jpy": 231984,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia (2015-05-20 27インチiMac Retina 5K廉価版登場記事)",
+              "note": "上位非Retina構成はRetina 5K廉価モデル(Mid 2015)投入に伴い先行終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 13-inch, Late 2013)": {
+      "skus": [
+        {
+          "storage": "4GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-10-22",
+              "event": "発売時",
+              "jpy": 134800,
+              "usd": 1299,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2013-10-23 発表記事)",
+              "note": "ME864J/A。2.4GHz Core i5。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別128,800円"
+            },
+            {
+              "date": "2014-07-30",
+              "event": "販売終了",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-07-29 Mid 2014発表記事)",
+              "note": "Mid 2014発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-10-22",
+              "event": "発売時",
+              "jpy": 158800,
+              "usd": 1499,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2013-10-23 発表記事)",
+              "note": "ME865J/A。2.4GHz Core i5。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 159624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別147,800円"
+            },
+            {
+              "date": "2014-07-30",
+              "event": "販売終了",
+              "jpy": 159624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-07-29 Mid 2014発表記事)",
+              "note": "Mid 2014発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-10-22",
+              "event": "発売時",
+              "jpy": 188800,
+              "usd": 1799,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2013-10-23 発表記事)",
+              "note": "ME866J/A。2.6GHz Core i5。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 189864,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別175,800円"
+            },
+            {
+              "date": "2014-07-30",
+              "event": "販売終了",
+              "jpy": 189864,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-07-29 Mid 2014発表記事)",
+              "note": "Mid 2014発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 15-inch, Late 2013, Dedicated graphics)": {
+      "skus": [
+        {
+          "storage": "16GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-10-22",
+              "event": "発売時",
+              "jpy": 259800,
+              "usd": 2599,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2013-10-23 発表記事)",
+              "note": "ME294J/A。2.3GHz 4コアCore i7、GeForce GT 750M(2GB)。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 271944,
+              "usd": 2599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別251,800円"
+            },
+            {
+              "date": "2014-07-30",
+              "event": "販売終了",
+              "jpy": 271944,
+              "usd": 2599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-07-29 Mid 2014発表記事)",
+              "note": "Mid 2014発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 15-inch, Late 2013, Integrated graphics)": {
+      "skus": [
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-10-22",
+              "event": "発売時",
+              "jpy": 205800,
+              "usd": 1999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2013-10-23 発表記事)",
+              "note": "ME293J/A。2.0GHz 4コアCore i7、Intel Iris Pro Graphics。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 210384,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別194,800円"
+            },
+            {
+              "date": "2014-07-30",
+              "event": "販売終了",
+              "jpy": 210384,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2014-07-29 Mid 2014発表記事)",
+              "note": "Mid 2014発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac Pro (Late 2013)": {
+      "skus": [
+        {
+          "storage": "12GB/256GB (4-Core)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-11-23",
+              "event": "発売時",
+              "jpy": 318800,
+              "usd": 2999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp / ITmedia (2013-10-23発表・2013-12-19受注開始記事)",
+              "note": "ME253J/A。3.7GHz 4コアXeon E5、デュアルFirePro D300。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 333504,
+              "usd": 2999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別308,800円"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 376704,
+              "usd": 2999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別348,800円(+40,000円)"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 322704,
+              "usd": 2999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch / 男子ハック (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別298,800円(-50,000円)"
+            },
+            {
+              "date": "2017-04-05",
+              "event": "販売終了",
+              "jpy": 322704,
+              "usd": 2999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ASCII.jp / Macお宝鑑定団 (2017-04-05 仕様改定記事)",
+              "note": "4コア標準構成廃止、6コア構成が税別298,800円へ実質値下げ"
+            }
+          ]
+        },
+        {
+          "storage": "16GB/256GB (6-Core)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2013-11-23",
+              "event": "発売時",
+              "jpy": 418800,
+              "usd": 3999,
+              "taxRate": 0.05,
+              "confidence": "high",
+              "source": "ASCII.jp / ITmedia (2013-10-23発表・2013-12-19受注開始記事)",
+              "note": "MD878J/A。3.5GHz 6コアXeon E5、デュアルFirePro D500。5%税込表示"
+            },
+            {
+              "date": "2014-04-01",
+              "event": "消費税率変更（5%→8%）および税別表示移行",
+              "jpy": 452304,
+              "usd": 3999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Store (2014-04-01 税別表示移行)",
+              "note": "税別418,800円"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 506304,
+              "usd": 3999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別468,800円(+50,000円)"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 430704,
+              "usd": 3999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch / 男子ハック (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別398,800円(-70,000円)"
+            },
+            {
+              "date": "2017-04-05",
+              "event": "仕様・価格改定（値下げ）",
+              "jpy": 322704,
+              "usd": 2999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ASCII.jp / Macお宝鑑定団 (2017-04-05 仕様改定記事)",
+              "note": "税別298,800円。6コア/D500構成が新ベースモデルへ移行(上位8コア/D700が税別398,800円/$3,999)"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更（8%→10%）",
+              "jpy": 328680,
+              "usd": 2999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "Apple Store (2019-10-01 消費税10%改定)",
+              "note": "税別298,800円据え置き"
+            },
+            {
+              "date": "2019-12-11",
+              "event": "販売終了",
+              "jpy": 328680,
+              "usd": 2999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "PC Watch (2019-12-11 Mac Pro 2019受注開始記事)",
+              "note": "Mac Pro (2019)発売に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Air (11-inch, Early 2014)": {
+      "skus": [
+        {
+          "storage": "4GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-04-29",
+              "event": "発売時",
+              "jpy": 95904,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2014-04-29 発表記事)",
+              "note": "MD711J/B。1.4GHz Core i5。税別88,800円"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "販売終了",
+              "jpy": 95904,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-03-10 Early 2015発表記事)",
+              "note": "Early 2015発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "4GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-04-29",
+              "event": "発売時",
+              "jpy": 117504,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2014-04-29 発表記事)",
+              "note": "MD712J/B。1.4GHz Core i5。税別108,800円"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "販売終了",
+              "jpy": 117504,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-03-10 Early 2015発表記事)",
+              "note": "Early 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Air (13-inch, Early 2014)": {
+      "skus": [
+        {
+          "storage": "4GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-04-29",
+              "event": "発売時",
+              "jpy": 106704,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2014-04-29 発表記事)",
+              "note": "MD760J/B。1.4GHz Core i5。税別98,800円"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "販売終了",
+              "jpy": 106704,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-03-10 Early 2015発表記事)",
+              "note": "Early 2015発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "4GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-04-29",
+              "event": "発売時",
+              "jpy": 128304,
+              "usd": 1199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / PC Watch (2014-04-29 発表記事)",
+              "note": "MD761J/B。1.4GHz Core i5。税別118,800円"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "販売終了",
+              "jpy": 128304,
+              "usd": 1199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-03-10 Early 2015発表記事)",
+              "note": "Early 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (21.5-inch, Mid 2014)": {
+      "skus": [
+        {
+          "storage": "8GB/500GB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-06-18",
+              "event": "発売時",
+              "jpy": 117504,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / Macお宝鑑定団 (2014-06-18 発表記事)",
+              "note": "MF883J/A。1.4GHz デュアルコアCore i5、Intel HD Graphics 5000。税別108,800円"
+            },
+            {
+              "date": "2014-10-17",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 126144,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース (2014-10-17 iMac価格改定記事)",
+              "note": "税別116,800円(+8,000円)"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 136944,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別126,800円(+10,000円)"
+            },
+            {
+              "date": "2015-10-14",
+              "event": "販売終了",
+              "jpy": 136944,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-10-13 Late 2015発表記事)",
+              "note": "Late 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 13-inch, Mid 2014)": {
+      "skus": [
+        {
+          "storage": "8GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-07-29",
+              "event": "発売時",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / 価格.com (2014-07-29 発表記事)",
+              "note": "MGX72J/A。2.6GHz Core i5。税別128,800円"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "販売終了",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-03-10 Early 2015発表記事)",
+              "note": "Early 2015発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-07-29",
+              "event": "発売時",
+              "jpy": 159624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / 価格.com (2014-07-29 発表記事)",
+              "note": "MGX82J/A。2.6GHz Core i5。税別147,800円"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "販売終了",
+              "jpy": 159624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-03-10 Early 2015発表記事)",
+              "note": "Early 2015発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-07-29",
+              "event": "発売時",
+              "jpy": 189864,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / 価格.com (2014-07-29 発表記事)",
+              "note": "MGX92J/A。2.8GHz Core i5。税別175,800円"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "販売終了",
+              "jpy": 189864,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-03-10 Early 2015発表記事)",
+              "note": "Early 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 15-inch, Mid 2014, Dedicated graphics)": {
+      "skus": [
+        {
+          "storage": "16GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-07-29",
+              "event": "発売時",
+              "jpy": 268704,
+              "usd": 2499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP (2014-07-29 発表記事)",
+              "note": "MGXC2J/A。2.5GHz 4コアCore i7、GeForce GT 750M(2GB)。税別248,800円(前モデルから値下げ)"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 305424,
+              "usd": 2499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース (2015-03-10 MacBook Pro価格改定記事)",
+              "note": "税別282,800円(+34,000円)"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "販売終了",
+              "jpy": 305424,
+              "usd": 2499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-05-19 Mid 2015発表記事)",
+              "note": "Mid 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 15-inch, Mid 2014, Integrated graphics)": {
+      "skus": [
+        {
+          "storage": "16GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-07-29",
+              "event": "発売時",
+              "jpy": 210384,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP (2014-07-29 発表記事)",
+              "note": "MGXA2J/A。2.2GHz 4コアCore i7、Intel Iris Pro Graphics。税別194,800円"
+            },
+            {
+              "date": "2015-03-10",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 242784,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース (2015-03-10 MacBook Pro価格改定記事)",
+              "note": "税別224,800円(+30,000円)"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "販売終了",
+              "jpy": 242784,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-05-19 Mid 2015発表記事)",
+              "note": "Mid 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Retina 5K, 27-inch, Late 2014)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB Fusion",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-10-16",
+              "event": "発売時",
+              "jpy": 279504,
+              "usd": 2499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "GIGAZINE / マイナビニュース (2014-10-17 発表記事)",
+              "note": "MF886J/A。3.5GHz 4コアCore i5、Radeon R9 M290X(2GB)。税別258,800円"
+            },
+            {
+              "date": "2015-10-14",
+              "event": "販売終了",
+              "jpy": 279504,
+              "usd": 2499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-10-13 Late 2015発表記事)",
+              "note": "Late 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "Mac mini (Late 2014)": {
+      "skus": [
+        {
+          "storage": "4GB/500GB HDD (1.4GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-10-16",
+              "event": "発売時",
+              "jpy": 57024,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "GIGAZINE / マイナビニュース (2014-10-17 発表記事)",
+              "note": "MGEM2J/A。1.4GHz Core i5。税別52,800円"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 63504,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別58,800円(+6,000円)"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 52704,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別48,800円(-10,000円)"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 52704,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2018-10-30 Mac mini 2018発表記事)",
+              "note": "Mac mini (2018)発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/1TB HDD (2.6GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-10-16",
+              "event": "発売時",
+              "jpy": 80784,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "GIGAZINE / マイナビニュース (2014-10-17 発表記事)",
+              "note": "MGEN2J/A。2.6GHz Core i5。税別74,800円"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 89424,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別82,800円(+8,000円)"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 74304,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別68,800円(-14,000円)"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 74304,
+              "usd": 699,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2018-10-30 Mac mini 2018発表記事)",
+              "note": "Mac mini (2018)発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/1TB Fusion (2.8GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2014-10-16",
+              "event": "発売時",
+              "jpy": 115344,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "GIGAZINE / マイナビニュース (2014-10-17 発表記事)",
+              "note": "MGEQ2J/A。2.8GHz Core i5。税別106,800円"
+            },
+            {
+              "date": "2015-05-20",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 128304,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / Macお宝鑑定団 (2015-05-20 価格改定記事)",
+              "note": "税別118,800円(+12,000円)"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 106704,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別98,800円(-20,000円)"
+            },
+            {
+              "date": "2018-10-31",
+              "event": "販売終了",
+              "jpy": 106704,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2018-10-30 Mac mini 2018発表記事)",
+              "note": "Mac mini (2018)発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Air (11-inch, Early 2015)": {
+      "skus": [
+        {
+          "storage": "4GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-03-09",
+              "event": "発売時",
+              "jpy": 111024,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース / ASCII.jp (2015-03-10 発表記事)",
+              "note": "MJVM2J/A。1.6GHz Core i5(Broadwell)。税別102,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "販売終了",
+              "jpy": 111024,
+              "usd": 899,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-10-28 11インチモデル廃止記事)",
+              "note": "MacBook Pro (Late 2016)発表に伴い11インチモデル廃止"
+            }
+          ]
+        },
+        {
+          "storage": "4GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-03-09",
+              "event": "発売時",
+              "jpy": 136944,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース / ASCII.jp (2015-03-10 発表記事)",
+              "note": "MJVP2J/A。1.6GHz Core i5(Broadwell)。税別126,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "販売終了",
+              "jpy": 136944,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-10-28 11インチモデル廃止記事)",
+              "note": "MacBook Pro (Late 2016)発表に伴い11インチモデル廃止"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Air (13-inch, Early 2015)": {
+      "skus": [
+        {
+          "storage": "4GB/128GB (2016年4月以降8GB/128GB)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-03-09",
+              "event": "発売時",
+              "jpy": 121824,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース / ASCII.jp (2015-03-10 発表記事)",
+              "note": "MJVE2J/A。1.6GHz Core i5。税別112,800円(2016-04-19より価格据え置きで8GB標準のMMGF2J/Aへ移行)"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 106704,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "価格.com / PC Watch (2016-10-28 価格改定記事)",
+              "note": "税別98,800円(-14,000円)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 106704,
+              "usd": 999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17 1.8GHzモデル移行記事)",
+              "note": "2017モデル(1.8GHz)への移行に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "4GB/256GB (2016年4月以降8GB/256GB)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-03-09",
+              "event": "発売時",
+              "jpy": 147744,
+              "usd": 1199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース / ASCII.jp (2015-03-10 発表記事)",
+              "note": "MJVG2J/A。1.6GHz Core i5。税別136,800円(2016-04-19より価格据え置きで8GB標準のMMGG2J/Aへ移行)"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 128304,
+              "usd": 1199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "価格.com / PC Watch (2016-10-28 価格改定記事)",
+              "note": "税別118,800円(-18,000円)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 128304,
+              "usd": 1199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17 1.8GHzモデル移行記事)",
+              "note": "2017モデル(1.8GHz)への移行に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 13-inch, Early 2015)": {
+      "skus": [
+        {
+          "storage": "8GB/128GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-03-09",
+              "event": "発売時",
+              "jpy": 160704,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース / ASCII.jp (2015-03-10 発表記事)",
+              "note": "MF839J/A。2.7GHz Core i5、感圧タッチトラックパッド搭載。税別148,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-10-28 Late 2016発表時の併売価格改定)",
+              "note": "税別128,800円(-20,000円、Late 2016発表後もエントリー機として併売)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17発表記事)",
+              "note": "2017モデル発表に伴い販売終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-03-09",
+              "event": "発売時",
+              "jpy": 186624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース / ASCII.jp (2015-03-10 発表記事)",
+              "note": "MF840J/A。2.7GHz Core i5。税別172,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "販売終了",
+              "jpy": 186624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-10-28 Late 2016発表記事)",
+              "note": "256GB/512GB構成はLate 2016登場時に先行終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-03-09",
+              "event": "発売時",
+              "jpy": 225504,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "マイナビニュース / ASCII.jp (2015-03-10 発表記事)",
+              "note": "MF841J/A。2.9GHz Core i5。税別208,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "販売終了",
+              "jpy": 225504,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-10-28 Late 2016発表記事)",
+              "note": "256GB/512GB構成はLate 2016登場時に先行終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook (Retina, 12-inch, Early 2015)": {
+      "skus": [
+        {
+          "storage": "8GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-04-10",
+              "event": "発売時",
+              "jpy": 160704,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / 価格.com (2015-03-10発表・2015-04-10発売記事)",
+              "note": "MF855J/A等。1.1GHz Core M。税別148,800円"
+            },
+            {
+              "date": "2016-04-20",
+              "event": "販売終了",
+              "jpy": 160704,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-04-19 Early 2016発表記事)",
+              "note": "Early 2016発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-04-10",
+              "event": "発売時",
+              "jpy": 199584,
+              "usd": 1599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "ITmedia / 価格.com (2015-03-10発表・2015-04-10発売記事)",
+              "note": "MF865J/A等。1.2GHz Core M。税別184,800円"
+            },
+            {
+              "date": "2016-04-20",
+              "event": "販売終了",
+              "jpy": 199584,
+              "usd": 1599,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-04-19 Early 2016発表記事)",
+              "note": "Early 2016発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 15-inch, Mid 2015, Dedicated graphics)": {
+      "skus": [
+        {
+          "storage": "16GB/512GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-05-19",
+              "event": "発売時",
+              "jpy": 305424,
+              "usd": 2499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / マイナビニュース (2015-05-19 発表記事)",
+              "note": "MJLT2J/A。2.5GHz 4コアCore i7、Radeon R9 M370X(2GB)。税別282,800円"
+            },
+            {
+              "date": "2018-07-13",
+              "event": "販売終了",
+              "jpy": 305424,
+              "usd": 2499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2016-10-28 Late 2016発表 / 2018-07-12 Mid 2015シリーズ終了記事)",
+              "note": "店頭標準構成MJLT2J/Aは2016-10-28に先行終了、Mid 2015 15インチシリーズ全体は2018-07-13終了"
+            }
+          ]
+        }
+      ]
+    },
+    "MacBook Pro (Retina, 15-inch, Mid 2015, Integrated graphics)": {
+      "skus": [
+        {
+          "storage": "16GB/256GB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-05-19",
+              "event": "発売時",
+              "jpy": 242784,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / マイナビニュース (2015-05-19 発表記事)",
+              "note": "MJLQ2J/A。2.2GHz 4コアCore i7、Intel Iris Pro Graphics。税別224,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 214704,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "価格.com / PC Watch (2016-10-28 Late 2016発表時の併売価格改定)",
+              "note": "税別198,800円(-26,000円、Late 2016発表後も廉価15インチ機として継続販売)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "価格改定（値上げ）",
+              "jpy": 240624,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "Apple Store (2017-06-06 WWDC17 為替レート調整)",
+              "note": "税別222,800円"
+            },
+            {
+              "date": "2018-07-13",
+              "event": "販売終了",
+              "jpy": 240624,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2018-07-12 MacBook Pro 2018発表記事)",
+              "note": "MacBook Pro (2018)発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Retina 5K, 27-inch, Mid 2015)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-05-19",
+              "event": "発売時",
+              "jpy": 257904,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "Apple Newsroom JP / ITmedia (2015-05-19 発表記事)",
+              "note": "MF885J/A。3.3GHz 4コアCore i5、Radeon R9 M290。税別238,800円"
+            },
+            {
+              "date": "2015-10-14",
+              "event": "販売終了",
+              "jpy": 257904,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2015-10-13 Late 2015発表記事)",
+              "note": "Late 2015発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (21.5-inch, Late 2015)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD (1.6GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-10-13",
+              "event": "発売時",
+              "jpy": 136944,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2015-10-13 発表記事)",
+              "note": "MK142J/A(iMac16,1)。1.6GHz デュアルコアCore i5、Intel HD Graphics 6000。税別126,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 117504,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック / PC Watch (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別108,800円(-18,000円)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 117504,
+              "usd": 1099,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17 iMac 2017発表記事)",
+              "note": "iMac (2017)発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/1TB HDD (2.8GHz)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-10-13",
+              "event": "発売時",
+              "jpy": 160704,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2015-10-13 発表記事)",
+              "note": "MK442J/A(iMac16,2)。2.8GHz 4コアCore i5、Intel Iris Pro Graphics 6200。税別148,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック / PC Watch (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別128,800円(-20,000円)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 139104,
+              "usd": 1299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17 iMac 2017発表記事)",
+              "note": "iMac (2017)発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Retina 4K, 21.5-inch, Late 2015)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-10-13",
+              "event": "発売時",
+              "jpy": 186624,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch / ASCII.jp (2015-10-13 発表記事)",
+              "note": "MK452J/A。3.1GHz 4コアCore i5、Intel Iris Pro Graphics 6200。税別172,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 160704,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック / PC Watch (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別148,800円(-24,000円)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 160704,
+              "usd": 1499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17 iMac 2017発表記事)",
+              "note": "iMac (2017)発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    },
+    "iMac (Retina 5K, 27-inch, Late 2015)": {
+      "skus": [
+        {
+          "storage": "8GB/1TB HDD (M380)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-10-13",
+              "event": "発売時",
+              "jpy": 225504,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch / マイナビニュース (2015-10-13 発表記事)",
+              "note": "MK462J/A。3.2GHz 4コアCore i5、Radeon R9 M380(2GB)。税別208,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 193104,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック / PC Watch (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別178,800円(-30,000円)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 193104,
+              "usd": 1799,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17 iMac 2017発表記事)",
+              "note": "iMac (2017)発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/1TB Fusion (M390)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-10-13",
+              "event": "発売時",
+              "jpy": 257904,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch / マイナビニュース (2015-10-13 発表記事)",
+              "note": "MK472J/A。3.2GHz 4コアCore i5、Radeon R9 M390(2GB)。税別238,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 214704,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック / PC Watch (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別198,800円(-40,000円)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 214704,
+              "usd": 1999,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17 iMac 2017発表記事)",
+              "note": "iMac (2017)発表に伴い終了"
+            }
+          ]
+        },
+        {
+          "storage": "8GB/2TB Fusion (M395)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-10-13",
+              "event": "発売時",
+              "jpy": 279504,
+              "usd": 2299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch / マイナビニュース (2015-10-13 発表記事)",
+              "note": "MK482J/A。3.3GHz 4コアCore i5、Radeon R9 M395(2GB)。税別258,800円"
+            },
+            {
+              "date": "2016-10-28",
+              "event": "為替変動に伴う価格改定（値下げ）",
+              "jpy": 247104,
+              "usd": 2299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "男子ハック / PC Watch (2016-10-28 Mac一斉値下げ記事)",
+              "note": "税別228,800円(-30,000円)"
+            },
+            {
+              "date": "2017-06-06",
+              "event": "販売終了",
+              "jpy": 247104,
+              "usd": 2299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "PC Watch (2017-06-06 WWDC17 iMac 2017発表記事)",
+              "note": "iMac (2017)発表に伴い終了"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -7,12 +7,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' };</script>
     <style>
-      html, body { -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+      html {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        scrollbar-gutter: stable;
+      }
+      html, body { overflow-x: hidden; }
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
   </head>
-  <body class="bg-zinc-50 dark:bg-zinc-950 antialiased">
+  <body class="bg-zinc-50 text-zinc-900 antialiased selection:bg-sky-500 selection:text-white dark:bg-zinc-950 dark:text-zinc-100">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
