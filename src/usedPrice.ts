@@ -60,6 +60,19 @@ const ALL_CAPACITIES = ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB'
 
 export type UsedPlatformId = 'rakuten' | 'yahoo';
 
+export type UsedConditionRank = 'unused' | 'rankA' | 'rankB' | 'rankC' | 'used';
+
+export interface UsedShopOffer {
+  platform: UsedPlatformId;
+  price: number;
+  title: string;
+  shopName: string;
+  isTrusted: boolean;
+  conditionRank: UsedConditionRank;
+  simFree: boolean;
+  url: string;
+}
+
 export interface UsedPlatformOffer {
   price: number;
   shopName: string;
@@ -68,6 +81,7 @@ export interface UsedPlatformOffer {
   isTrustedShop?: boolean;
   itemName?: string;
   source?: 'api' | 'mock';
+  offers?: UsedShopOffer[];
 }
 
 export interface UsedPricing {
@@ -75,8 +89,11 @@ export interface UsedPricing {
   lowestPlatform: UsedPlatformId;
   /** (lowestPrice / launchApplePrice) * 100 */
   resaleValuePercent: number | null;
+  /** 実APIデータがなく発売時価格・年式からの推定相場である場合 true */
+  isEstimated?: boolean;
   rakuten: UsedPlatformOffer | null;
   yahoo: UsedPlatformOffer | null;
+  offers?: UsedShopOffer[];
 }
 
 export interface UsedItemOffer {
@@ -95,13 +112,84 @@ export interface UsedMarketData {
   minPrice: number;
   launchPrice: number | null;
   usedPricing: UsedPricing;
+  offers: UsedShopOffer[];
   used: UsedItemOffer;
   unused: UsedItemOffer | null;
   /** （現在の中古最安値 ÷ 発売時Apple直販価格）× 100 */
   resaleRate: number | null;
   /** 'api' = 楽天またはYahoo! APIから実取得, 'mock' = キー未設定時の推定フォールバック */
   source: 'api' | 'mock';
+  /** 実APIから取得した実在庫データがない推定相場の場合 true */
+  isEstimated: boolean;
+  /** 楽天市場の条件付き検索URL（アフィリエイト対応） */
+  rakutenSearchUrl: string;
+  /** Yahoo!ショッピングの条件付き検索URL（アフィリエイト対応） */
+  yahooSearchUrl: string;
   fetchedAt: string;
+}
+
+/**
+ * 商品タイトルから状態ランク (`conditionRank`) を自動判定する
+ * - `"unused"`: タイトルに `未使用` / `新古` / `未開封` を含む
+ * - `"rankA"`: タイトルに `Aランク` / `ランクA` / `超美品` / `極美品` / `美品` / `Sランク` を含む
+ * - `"rankB"`: タイトルに `Bランク` / `ランクB` / `良品` を含む
+ * - `"rankC"`: タイトルに `Cランク` / `ランクC` を含む
+ * - `"used"`: 上記以外の一般中古品
+ */
+export function inferConditionRank(title: string, defaultRank: UsedConditionRank = 'used'): UsedConditionRank {
+  const norm = String(title ?? '').normalize('NFKC');
+  if (/未使用|新古|未開封/i.test(norm)) return 'unused';
+  if (/Aランク|ランクA|超美品|極美品|美品|Sランク|ランクS/i.test(norm)) return 'rankA';
+  if (/Bランク|ランクB|良品/i.test(norm)) return 'rankB';
+  if (/Cランク|ランクC/i.test(norm)) return 'rankC';
+  return defaultRank;
+}
+
+/**
+ * 商品タイトルに `SIMフリー` または `SIMロック解除` を含むか判定する
+ */
+export function inferSimFree(title: string): boolean {
+  const norm = String(title ?? '').normalize('NFKC');
+  return /SIMフリー|SIMロック解除/i.test(norm);
+}
+
+/**
+ * 複数の出品リストを結合・重複排除・価格昇順ソートし、最大 `maxOffers` 件（デフォルト15件）を返す
+ */
+export function mergeAndSortShopOffers(
+  offerLists: Array<UsedShopOffer[] | undefined | null>,
+  maxOffers = 15,
+): UsedShopOffer[] {
+  const seen = new Set<string>();
+  const merged: UsedShopOffer[] = [];
+  for (const list of offerLists) {
+    if (!Array.isArray(list)) continue;
+    for (const raw of list) {
+      if (!raw || !Number.isFinite(Number(raw.price)) || Number(raw.price) <= 0) continue;
+      const platform: UsedPlatformId = raw.platform === 'yahoo' ? 'yahoo' : 'rakuten';
+      const price = Number(raw.price);
+      const title = String(raw.title ?? '').trim();
+      const shopName = String(raw.shopName || (platform === 'yahoo' ? 'Yahoo!ショッピング店' : '楽天市場ショップ')).trim();
+      const dedupeKey = `${platform}:${price}:${shopName}:${title.slice(0, 48)}`;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      const isTrusted = typeof raw.isTrusted === 'boolean' ? raw.isTrusted : isTrustedShop(shopName);
+      const conditionRank: UsedConditionRank = raw.conditionRank || inferConditionRank(title, 'used');
+      const simFree = typeof raw.simFree === 'boolean' ? raw.simFree : inferSimFree(title);
+      merged.push({
+        platform,
+        price,
+        title,
+        shopName,
+        isTrusted,
+        conditionRank,
+        simFree,
+        url: String(raw.url || ''),
+      });
+    }
+  }
+  merged.sort((a, b) => a.price - b.price);
+  return merged.slice(0, maxOffers);
 }
 
 /**
@@ -462,12 +550,15 @@ export function buildYahooWebUrl(opts: {
  * 候補リストから「大手ショップ (`isTrustedShop: true`) の最安値」を最優先で採用し、
  * 大手ショップが0件の場合のみ「一般ショップの最安値（参考価格）」を採用する
  */
-function selectBestValidatedCandidate(candidates: UsedPlatformOffer[]): UsedPlatformOffer | null {
+function selectBestValidatedCandidate(
+  candidates: UsedPlatformOffer[],
+  offers: UsedShopOffer[] = [],
+): UsedPlatformOffer | null {
   if (!candidates.length) return null;
   const sorted = [...candidates].sort((a, b) => a.price - b.price);
   const trusted = sorted.filter((c) => c.isTrustedShop);
-  if (trusted.length > 0) return trusted[0];
-  return sorted[0];
+  if (trusted.length > 0) return { ...trusted[0], offers };
+  return { ...sorted[0], offers };
 }
 
 export function pickCheapestRakutenOffer(
@@ -476,10 +567,12 @@ export function pickCheapestRakutenOffer(
   productName: string,
   storage = '',
   category = '',
+  defaultRank: UsedConditionRank = 'used',
 ): UsedPlatformOffer | null {
   if (!Array.isArray(items)) return null;
   const today = new Date().toISOString().slice(0, 10);
   const candidates: UsedPlatformOffer[] = [];
+  const rawOffers: UsedShopOffer[] = [];
   for (const raw of items.slice(0, 20)) {
     const it = raw?.Item ?? raw;
     if (!it) continue;
@@ -488,17 +581,30 @@ export function pickCheapestRakutenOffer(
     const shopName = String(it.shopName || '楽天市場ショップ');
     if (!Number.isFinite(price) || price < minPrice) continue;
     if (!isValidProductTitle(title, productName, storage, category)) continue;
+    const url = String(it.affiliateUrl || it.itemUrl || '');
+    const trusted = isTrustedShop(shopName);
     candidates.push({
       price,
       shopName,
-      url: String(it.affiliateUrl || it.itemUrl || ''),
+      url,
       updatedAt: today,
       itemName: title,
-      isTrustedShop: isTrustedShop(shopName),
+      isTrustedShop: trusted,
       source: 'api',
     });
+    rawOffers.push({
+      platform: 'rakuten',
+      price,
+      title,
+      shopName,
+      isTrusted: trusted,
+      conditionRank: inferConditionRank(title, defaultRank),
+      simFree: inferSimFree(title),
+      url,
+    });
   }
-  return selectBestValidatedCandidate(candidates);
+  const offers = mergeAndSortShopOffers([rawOffers], 15);
+  return selectBestValidatedCandidate(candidates, offers);
 }
 
 /**
@@ -511,10 +617,12 @@ export function pickCheapestYahooOffer(
   productName: string,
   storage = '',
   category = '',
+  defaultRank: UsedConditionRank = 'used',
 ): UsedPlatformOffer | null {
   if (!Array.isArray(hits)) return null;
   const today = new Date().toISOString().slice(0, 10);
   const candidates: UsedPlatformOffer[] = [];
+  const rawOffers: UsedShopOffer[] = [];
   for (const hit of hits.slice(0, 20)) {
     if (!hit) continue;
     const price = Number(hit.price);
@@ -522,17 +630,30 @@ export function pickCheapestYahooOffer(
     const shopName = String(hit.seller?.name || 'Yahoo!ショッピング店');
     if (!Number.isFinite(price) || price < minPrice) continue;
     if (!isValidProductTitle(title, productName, storage, category)) continue;
+    const url = String(hit.url || '');
+    const trusted = isTrustedShop(shopName);
     candidates.push({
       price,
       shopName,
-      url: String(hit.url || ''),
+      url,
       updatedAt: today,
       itemName: title,
-      isTrustedShop: isTrustedShop(shopName),
+      isTrustedShop: trusted,
       source: 'api',
     });
+    rawOffers.push({
+      platform: 'yahoo',
+      price,
+      title,
+      shopName,
+      isTrusted: trusted,
+      conditionRank: inferConditionRank(title, defaultRank),
+      simFree: inferSimFree(title),
+      url,
+    });
   }
-  return selectBestValidatedCandidate(candidates);
+  const offers = mergeAndSortShopOffers([rawOffers], 15);
+  return selectBestValidatedCandidate(candidates, offers);
 }
 
 /** 環境変数から RAKUTEN_APP_ID / YAHOO_APP_ID を取得する (Node / Vite 両対応) */
@@ -564,22 +685,6 @@ export function resolveYahooAppId(): string {
   return '';
 }
 
-const MOCK_RAKUTEN_SHOPS = [
-  'イオシス楽天市場店',
-  'じゃんぱら楽天市場店',
-  'ゲオモバイル楽天市場店',
-  'ソフマップ楽天市場店',
-  'にこスマ楽天市場店',
-];
-
-const MOCK_YAHOO_SHOPS = [
-  'じゃんぱら Yahoo!店',
-  'イオシス Yahoo!店',
-  'ゲオオンラインストア Yahoo!店',
-  'ソフマップ Yahoo!店',
-  'カメラのキタムラ Yahoo!店',
-];
-
 function hashCode(str: string): number {
   let h = 0;
   for (let i = 0; i < str.length; i++) {
@@ -588,16 +693,76 @@ function hashCode(str: string): number {
   return Math.abs(h);
 }
 
+function isRealApiOffer(offer: UsedPlatformOffer | null | undefined): boolean {
+  if (!offer) return false;
+  const src = String(offer.source ?? '');
+  return src === 'api' || src === 'live';
+}
+
+/**
+ * 実APIから取得されたオファーのみから出品リスト（最大15件）を構築する。
+ * 推定相場時（実APIデータ未取得時）には架空の店舗名やダミー出品を一切生成せず空配列を返す。
+ */
+export function buildRealShopOffers(params: {
+  rakutenOffer: UsedPlatformOffer | null;
+  yahooOffer: UsedPlatformOffer | null;
+  existingOffers?: UsedShopOffer[];
+  isEstimated: boolean;
+}): UsedShopOffer[] {
+  const { rakutenOffer, yahooOffer, existingOffers, isEstimated } = params;
+  if (isEstimated) return [];
+
+  const directOffers: UsedShopOffer[] = [];
+  if (rakutenOffer && isRealApiOffer(rakutenOffer) && rakutenOffer.price > 0 && rakutenOffer.shopName) {
+    const rTitle = rakutenOffer.itemName || `${rakutenOffer.shopName} 出品`;
+    directOffers.push({
+      platform: 'rakuten',
+      price: rakutenOffer.price,
+      title: rTitle,
+      shopName: rakutenOffer.shopName,
+      isTrusted: rakutenOffer.isTrustedShop ?? isTrustedShop(rakutenOffer.shopName),
+      conditionRank: inferConditionRank(rTitle, 'used'),
+      simFree: inferSimFree(rTitle),
+      url: rakutenOffer.url,
+    });
+  }
+  if (yahooOffer && isRealApiOffer(yahooOffer) && yahooOffer.price > 0 && yahooOffer.shopName) {
+    const yTitle = yahooOffer.itemName || `${yahooOffer.shopName} 出品`;
+    directOffers.push({
+      platform: 'yahoo',
+      price: yahooOffer.price,
+      title: yTitle,
+      shopName: yahooOffer.shopName,
+      isTrusted: yahooOffer.isTrustedShop ?? isTrustedShop(yahooOffer.shopName),
+      conditionRank: inferConditionRank(yTitle, 'used'),
+      simFree: inferSimFree(yTitle),
+      url: yahooOffer.url,
+    });
+  }
+
+  return mergeAndSortShopOffers(
+    [
+      existingOffers,
+      isRealApiOffer(rakutenOffer) ? rakutenOffer?.offers : undefined,
+      isRealApiOffer(yahooOffer) ? yahooOffer?.offers : undefined,
+      directOffers,
+    ],
+    15,
+  );
+}
+
 /** 楽天・Yahoo!のオファーから `UsedPricing` 横断比較オブジェクトを組み立てる */
 export function buildUsedPricing(
   rakutenOffer: UsedPlatformOffer | null,
   yahooOffer: UsedPlatformOffer | null,
   launchPrice: number | null | undefined,
+  extraOffers?: UsedShopOffer[],
 ): UsedPricing {
-  const rIsApi = rakutenOffer?.source === 'api';
-  const yIsApi = yahooOffer?.source === 'api';
-  const rTrusted = Boolean(rakutenOffer?.isTrustedShop);
-  const yTrusted = Boolean(yahooOffer?.isTrustedShop);
+  const rIsApi = isRealApiOffer(rakutenOffer);
+  const yIsApi = isRealApiOffer(yahooOffer);
+  const anyApi = rIsApi || yIsApi;
+  const rTrusted = rIsApi && Boolean(rakutenOffer?.isTrustedShop);
+  const yTrusted = yIsApi && Boolean(yahooOffer?.isTrustedShop);
 
   let lowestPlatform: UsedPlatformId = 'rakuten';
   let lowestPrice = rakutenOffer?.price ?? yahooOffer?.price ?? 0;
@@ -633,21 +798,45 @@ export function buildUsedPricing(
     lowestPrice = yahooOffer.price;
   }
 
+  const offers = anyApi
+    ? mergeAndSortShopOffers(
+        [
+          extraOffers,
+          rIsApi ? rakutenOffer?.offers : undefined,
+          yIsApi ? yahooOffer?.offers : undefined,
+        ],
+        15,
+      )
+    : [];
+
   return {
     lowestPrice,
     lowestPlatform,
     resaleValuePercent: calcResaleRate(lowestPrice, launchPrice),
+    isEstimated: !anyApi,
     rakuten: rakutenOffer
-      ? { ...rakutenOffer, isTrustedShop: rakutenOffer.isTrustedShop ?? isTrustedShop(rakutenOffer.shopName) }
+      ? {
+          ...rakutenOffer,
+          shopName: rIsApi ? rakutenOffer.shopName : '',
+          isTrustedShop: rIsApi ? (rakutenOffer.isTrustedShop ?? isTrustedShop(rakutenOffer.shopName)) : false,
+          source: rIsApi ? 'api' : 'mock',
+        }
       : null,
     yahoo: yahooOffer
-      ? { ...yahooOffer, isTrustedShop: yahooOffer.isTrustedShop ?? isTrustedShop(yahooOffer.shopName) }
+      ? {
+          ...yahooOffer,
+          shopName: yIsApi ? yahooOffer.shopName : '',
+          isTrustedShop: yIsApi ? (yahooOffer.isTrustedShop ?? isTrustedShop(yahooOffer.shopName)) : false,
+          source: yIsApi ? 'api' : 'mock',
+        }
       : null,
+    ...(offers.length > 0 ? { offers } : {}),
   };
 }
 
 /**
  * APIキー未設定時またはオフライン時の推定中古・未使用品最安値ジェネレータ
+ * （実データ未取得時は特定の店舗名や「大手認定」を一切付与しない）
  */
 export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketData {
   const launchPrice = getLaunchApplePrice(product, sku);
@@ -661,28 +850,66 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
   const storageLabel = sku.storage || sku.label;
   const keyword = buildSearchKeyword(product.name, storageLabel, '中古', product.category);
   const today = new Date().toISOString().slice(0, 10);
+  const seed = hashCode(`${product.id}:${sku.id}`);
+
+  const rakutenSearchUrl = buildRakutenWebUrl({
+    productName: product.name,
+    storage: storageLabel,
+    category: product.category,
+    launchPrice,
+    condition: '中古',
+  });
+  const yahooSearchUrl = buildYahooWebUrl({
+    productName: product.name,
+    storage: storageLabel,
+    category: product.category,
+    launchPrice,
+  });
 
   if (sku.usedPricing && sku.usedPricing.lowestPrice > 0) {
+    const rIsApi = isRealApiOffer(sku.usedPricing.rakuten);
+    const yIsApi = isRealApiOffer(sku.usedPricing.yahoo);
+    const hasRealApi = !sku.usedPricing.isEstimated && (rIsApi || yIsApi);
+
+    const normalizedRakuten: UsedPlatformOffer | null = sku.usedPricing.rakuten
+      ? {
+          ...sku.usedPricing.rakuten,
+          shopName: rIsApi ? sku.usedPricing.rakuten.shopName : '',
+          url: sku.usedPricing.rakuten.url || rakutenSearchUrl,
+          isTrustedShop: rIsApi
+            ? (sku.usedPricing.rakuten.isTrustedShop ?? isTrustedShop(sku.usedPricing.rakuten.shopName))
+            : false,
+          source: rIsApi ? 'api' : 'mock',
+        }
+      : null;
+    const normalizedYahoo: UsedPlatformOffer | null = sku.usedPricing.yahoo
+      ? {
+          ...sku.usedPricing.yahoo,
+          shopName: yIsApi ? sku.usedPricing.yahoo.shopName : '',
+          url: sku.usedPricing.yahoo.url || yahooSearchUrl,
+          isTrustedShop: yIsApi
+            ? (sku.usedPricing.yahoo.isTrustedShop ?? isTrustedShop(sku.usedPricing.yahoo.shopName))
+            : false,
+          source: yIsApi ? 'api' : 'mock',
+        }
+      : null;
+
+    const offers = buildRealShopOffers({
+      rakutenOffer: normalizedRakuten,
+      yahooOffer: normalizedYahoo,
+      existingOffers: hasRealApi ? sku.usedPricing.offers : [],
+      isEstimated: !hasRealApi,
+    });
+
     const up: UsedPricing = {
       ...sku.usedPricing,
-      rakuten: sku.usedPricing.rakuten
-        ? {
-            ...sku.usedPricing.rakuten,
-            isTrustedShop: sku.usedPricing.rakuten.isTrustedShop ?? isTrustedShop(sku.usedPricing.rakuten.shopName),
-          }
-        : null,
-      yahoo: sku.usedPricing.yahoo
-        ? {
-            ...sku.usedPricing.yahoo,
-            isTrustedShop: sku.usedPricing.yahoo.isTrustedShop ?? isTrustedShop(sku.usedPricing.yahoo.shopName),
-          }
-        : null,
+      isEstimated: !hasRealApi,
+      rakuten: normalizedRakuten,
+      yahoo: normalizedYahoo,
+      offers,
     };
     const best = up.lowestPlatform === 'yahoo' ? up.yahoo ?? up.rakuten : up.rakuten ?? up.yahoo;
-    const unusedPrice = Math.min(
-      Math.round((latestPrice * 0.96) / 1000) * 1000 - 200,
-      Math.round((up.lowestPrice * 1.14) / 1000) * 1000 - 200,
-    );
+    const unusedOfferFromOffers = offers.find((o) => o.conditionRank === 'unused');
     return {
       productId: product.id,
       skuId: sku.id,
@@ -691,36 +918,29 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
       minPrice,
       launchPrice,
       usedPricing: up,
+      offers,
       used: {
         price: up.lowestPrice,
-        shopName: best?.shopName ?? 'イオシス楽天市場店',
-        itemName: best?.itemName ?? `${product.name} ${storageLabel}`,
-        itemUrl:
-          best?.url ??
-          buildRakutenWebUrl({
-            productName: product.name,
-            storage: storageLabel,
-            category: product.category,
-            launchPrice,
-            condition: '中古',
-          }),
-        isTrustedShop: best?.isTrustedShop ?? true,
+        shopName: hasRealApi ? (best?.shopName ?? '') : '',
+        itemName: hasRealApi ? (best?.itemName ?? '') : '',
+        itemUrl: best?.url ?? (up.lowestPlatform === 'yahoo' ? yahooSearchUrl : rakutenSearchUrl),
+        isTrustedShop: hasRealApi ? Boolean(best?.isTrustedShop) : false,
       },
-      unused: {
-        price: Math.max(up.lowestPrice + 3000, unusedPrice),
-        shopName: up.rakuten?.shopName ?? 'イオシス楽天市場店',
-        itemName: `${product.name} ${storageLabel} 未使用品 本体`,
-        itemUrl: buildRakutenWebUrl({
-          productName: product.name,
-          storage: storageLabel,
-          category: product.category,
-          launchPrice,
-          condition: '未使用',
-        }),
-        isTrustedShop: true,
-      },
+      unused:
+        hasRealApi && unusedOfferFromOffers
+          ? {
+              price: unusedOfferFromOffers.price,
+              shopName: unusedOfferFromOffers.shopName,
+              itemName: unusedOfferFromOffers.title,
+              itemUrl: unusedOfferFromOffers.url,
+              isTrustedShop: unusedOfferFromOffers.isTrusted,
+            }
+          : null,
       resaleRate: up.resaleValuePercent ?? calcResaleRate(up.lowestPrice, launchPrice),
-      source: up.rakuten?.source === 'api' || up.yahoo?.source === 'api' ? 'api' : 'mock',
+      source: hasRealApi ? 'api' : 'mock',
+      isEstimated: !hasRealApi,
+      rakutenSearchUrl,
+      yahooSearchUrl,
       fetchedAt: today,
     };
   }
@@ -739,7 +959,6 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
           : 0.68;
 
   const decay = Math.pow(0.86, ageYears);
-  const seed = hashCode(`${product.id}:${sku.id}`);
   const jitter = ((seed % 7) - 3) * 0.008;
   const rawRatio = Math.min(0.9, Math.max(0.18, catFactor * decay + jitter));
 
@@ -748,44 +967,25 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
   const rakutenPrice = Math.max(minPrice, baseUsed);
   const yahooPrice = Math.max(minPrice, baseUsed + yahooDelta);
 
-  const rawUnused = Math.min(
-    Math.round((latestPrice * 0.96) / 1000) * 1000 - 200,
-    Math.round((baseUsed * 1.14) / 1000) * 1000 - 200,
-  );
-  const unusedPrice = Math.max(Math.max(rakutenPrice, yahooPrice) + 3000, rawUnused);
-
   const rakutenOffer: UsedPlatformOffer = {
     price: rakutenPrice,
-    shopName: MOCK_RAKUTEN_SHOPS[seed % MOCK_RAKUTEN_SHOPS.length],
-    url: buildRakutenWebUrl({
-      productName: product.name,
-      storage: storageLabel,
-      category: product.category,
-      launchPrice,
-      condition: '中古',
-    }),
+    shopName: '',
+    url: rakutenSearchUrl,
     updatedAt: today,
-    itemName: `${product.name} ${storageLabel} SIMフリー 本体`,
-    isTrustedShop: true,
+    isTrustedShop: false,
     source: 'mock',
   };
 
   const yahooOffer: UsedPlatformOffer = {
     price: yahooPrice,
-    shopName: MOCK_YAHOO_SHOPS[seed % MOCK_YAHOO_SHOPS.length],
-    url: buildYahooWebUrl({
-      productName: product.name,
-      storage: storageLabel,
-      category: product.category,
-      launchPrice,
-    }),
+    shopName: '',
+    url: yahooSearchUrl,
     updatedAt: today,
-    itemName: `${product.name} ${storageLabel} SIMフリー 本体`,
-    isTrustedShop: true,
+    isTrustedShop: false,
     source: 'mock',
   };
 
-  const usedPricing = buildUsedPricing(rakutenOffer, yahooOffer, launchPrice);
+  const usedPricing = buildUsedPricing(rakutenOffer, yahooOffer, launchPrice, []);
   const bestOffer = usedPricing.lowestPlatform === 'yahoo' ? yahooOffer : rakutenOffer;
 
   return {
@@ -796,28 +996,20 @@ export function estimateUsedMarketData(product: Product, sku: Sku): UsedMarketDa
     minPrice,
     launchPrice,
     usedPricing,
+    offers: [],
     used: {
       price: usedPricing.lowestPrice,
-      shopName: bestOffer.shopName,
-      itemName: bestOffer.itemName ?? '',
+      shopName: '',
+      itemName: '',
       itemUrl: bestOffer.url,
-      isTrustedShop: true,
+      isTrustedShop: false,
     },
-    unused: {
-      price: unusedPrice,
-      shopName: MOCK_RAKUTEN_SHOPS[(seed + 1) % MOCK_RAKUTEN_SHOPS.length],
-      itemName: `${product.name} ${storageLabel} 未使用品 本体`,
-      itemUrl: buildRakutenWebUrl({
-        productName: product.name,
-        storage: storageLabel,
-        category: product.category,
-        launchPrice,
-        condition: '未使用',
-      }),
-      isTrustedShop: true,
-    },
+    unused: null,
     resaleRate: usedPricing.resaleValuePercent,
     source: 'mock',
+    isEstimated: true,
+    rakutenSearchUrl,
+    yahooSearchUrl,
     fetchedAt: new Date().toISOString(),
   };
 }
@@ -860,21 +1052,36 @@ export async function fetchUsedMarketPrice(
       if (res.ok) {
         const data = await res.json();
         if (data && data.usedPricing && typeof data.usedPricing.lowestPrice === 'number') {
+          const isApiSource =
+            data.source === 'api' ||
+            isRealApiOffer(data.usedPricing.rakuten) ||
+            isRealApiOffer(data.usedPricing.yahoo);
           const rOffer = data.usedPricing.rakuten
             ? {
                 ...data.usedPricing.rakuten,
-                isTrustedShop:
-                  data.usedPricing.rakuten.isTrustedShop ?? isTrustedShop(data.usedPricing.rakuten.shopName),
+                shopName: isRealApiOffer(data.usedPricing.rakuten) ? data.usedPricing.rakuten.shopName : '',
+                isTrustedShop: isRealApiOffer(data.usedPricing.rakuten)
+                  ? (data.usedPricing.rakuten.isTrustedShop ?? isTrustedShop(data.usedPricing.rakuten.shopName))
+                  : false,
               }
             : fallback.usedPricing.rakuten;
           const yOffer = data.usedPricing.yahoo
             ? {
                 ...data.usedPricing.yahoo,
-                isTrustedShop:
-                  data.usedPricing.yahoo.isTrustedShop ?? isTrustedShop(data.usedPricing.yahoo.shopName),
+                shopName: isRealApiOffer(data.usedPricing.yahoo) ? data.usedPricing.yahoo.shopName : '',
+                isTrustedShop: isRealApiOffer(data.usedPricing.yahoo)
+                  ? (data.usedPricing.yahoo.isTrustedShop ?? isTrustedShop(data.usedPricing.yahoo.shopName))
+                  : false,
               }
             : fallback.usedPricing.yahoo;
-          const up = buildUsedPricing(rOffer, yOffer, launchPrice);
+          const apiOffers: UsedShopOffer[] = isApiSource
+            ? Array.isArray(data.usedPricing.offers)
+              ? data.usedPricing.offers
+              : Array.isArray(data.offers)
+                ? data.offers
+                : []
+            : [];
+          const up = buildUsedPricing(rOffer, yOffer, launchPrice, apiOffers);
           const best = up.lowestPlatform === 'yahoo' ? up.yahoo ?? up.rakuten! : up.rakuten ?? up.yahoo!;
           const result: UsedMarketData = {
             productId: product.id,
@@ -884,16 +1091,20 @@ export async function fetchUsedMarketPrice(
             minPrice,
             launchPrice,
             usedPricing: up,
+            offers: isApiSource ? (up.offers ?? []) : [],
             used: {
               price: up.lowestPrice,
-              shopName: best.shopName,
-              itemName: best.itemName ?? '',
+              shopName: isApiSource ? best.shopName : '',
+              itemName: isApiSource ? (best.itemName ?? '') : '',
               itemUrl: best.url,
-              isTrustedShop: Boolean(best.isTrustedShop),
+              isTrustedShop: isApiSource ? Boolean(best.isTrustedShop) : false,
             },
-            unused: data.unused ?? fallback.unused,
+            unused: isApiSource ? (data.unused ?? null) : null,
             resaleRate: up.resaleValuePercent,
-            source: data.source === 'api' ? 'api' : 'mock',
+            source: isApiSource ? 'api' : 'mock',
+            isEstimated: !isApiSource,
+            rakutenSearchUrl: fallback.rakutenSearchUrl,
+            yahooSearchUrl: fallback.yahooSearchUrl,
             fetchedAt: data.fetchedAt ?? new Date().toISOString(),
           };
           memoryCache.set(cacheKey, result);
@@ -907,9 +1118,10 @@ export async function fetchUsedMarketPrice(
 
   // 2) RAKUTEN_APP_ID または YAHOO_APP_ID が設定されている場合
   if (appId || yahooAppId) {
-    let rakutenOffer: UsedPlatformOffer | null = null;
-    let yahooOffer: UsedPlatformOffer | null = null;
-    let unusedOffer: UsedItemOffer | null = null;
+    let rakutenOffer = null as UsedPlatformOffer | null;
+    let yahooOffer = null as UsedPlatformOffer | null;
+    let unusedOffer = null as UsedItemOffer | null;
+    let unusedOffersList: UsedShopOffer[] = [];
 
     const metaEnv = (import.meta as any)?.env;
     const affiliateId = String(metaEnv?.RAKUTEN_AFFILIATE_ID || '').trim();
@@ -939,6 +1151,7 @@ export async function fetchUsedMarketPrice(
                   product.name,
                   storageTerm,
                   product.category,
+                  'used',
                 );
               }
             } catch {
@@ -964,8 +1177,10 @@ export async function fetchUsedMarketPrice(
                   product.name,
                   storageTerm,
                   product.category,
+                  'unused',
                 );
                 if (u) {
+                  unusedOffersList = u.offers ?? [];
                   unusedOffer = {
                     price: u.price,
                     shopName: u.shopName,
@@ -999,6 +1214,7 @@ export async function fetchUsedMarketPrice(
                   product.name,
                   storageTerm,
                   product.category,
+                  'used',
                 );
               }
             } catch {
@@ -1011,7 +1227,16 @@ export async function fetchUsedMarketPrice(
     if (rakutenOffer || yahooOffer) {
       const finalRakuten = rakutenOffer ?? fallback.usedPricing.rakuten;
       const finalYahoo = yahooOffer ?? fallback.usedPricing.yahoo;
-      const usedPricing = buildUsedPricing(finalRakuten, finalYahoo, launchPrice);
+      const combinedOffers = mergeAndSortShopOffers(
+        [rakutenOffer?.offers, yahooOffer?.offers, unusedOffersList],
+        15,
+      );
+      const usedPricing = buildUsedPricing(
+        finalRakuten,
+        finalYahoo,
+        launchPrice,
+        combinedOffers,
+      );
       const best = usedPricing.lowestPlatform === 'yahoo' ? finalYahoo! : finalRakuten!;
       const result: UsedMarketData = {
         productId: product.id,
@@ -1021,6 +1246,7 @@ export async function fetchUsedMarketPrice(
         minPrice,
         launchPrice,
         usedPricing,
+        offers: usedPricing.offers ?? [],
         used: {
           price: usedPricing.lowestPrice,
           shopName: best.shopName,
@@ -1028,9 +1254,12 @@ export async function fetchUsedMarketPrice(
           itemUrl: best.url,
           isTrustedShop: Boolean(best.isTrustedShop),
         },
-        unused: unusedOffer ?? fallback.unused,
+        unused: unusedOffer ?? null,
         resaleRate: usedPricing.resaleValuePercent,
         source: 'api',
+        isEstimated: false,
+        rakutenSearchUrl: fallback.rakutenSearchUrl,
+        yahooSearchUrl: fallback.yahooSearchUrl,
         fetchedAt: new Date().toISOString(),
       };
       memoryCache.set(cacheKey, result);

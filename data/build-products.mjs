@@ -856,12 +856,45 @@ products.forEach((p) => {
       }
     }
 
-    // 2) 中古最安値 (usedPricing) を最優先でマージ（キャッシュにないSKUは推定フォールバック）
+    // 2) 中古最安値 (usedPricing) を最優先でマージ（キャッシュにないSKUまたは実API未取得時は推定フォールバック・店舗名なし）
     if (cachedSku?.usedPricing && cachedSku.usedPricing.lowestPrice > 0) {
       const cu = structuredClone(cachedSku.usedPricing);
-      if (cu.rakuten?.url) cu.rakuten.url = toRakutenAffiliateUrl(cu.rakuten.url);
-      if (cu.yahoo?.url) cu.yahoo.url = toYahooAffiliateUrl(cu.yahoo.url);
-      if (cu.unused?.url) cu.unused.url = toRakutenAffiliateUrl(cu.unused.url);
+      const rIsApi = cu.rakuten?.source === 'api' || cu.rakuten?.source === 'live';
+      const yIsApi = cu.yahoo?.source === 'api' || cu.yahoo?.source === 'live';
+      const uIsApi = cu.unused?.source === 'api' || cu.unused?.source === 'live';
+      const anyApi = rIsApi || yIsApi || uIsApi;
+
+      if (cu.rakuten) {
+        cu.rakuten.url = toRakutenAffiliateUrl(cu.rakuten.url);
+        if (!rIsApi) {
+          cu.rakuten.shopName = '';
+          cu.rakuten.isTrustedShop = false;
+          cu.rakuten.source = 'mock';
+          delete cu.rakuten.itemName;
+        }
+      }
+      if (cu.yahoo) {
+        cu.yahoo.url = toYahooAffiliateUrl(cu.yahoo.url);
+        if (!yIsApi) {
+          cu.yahoo.shopName = '';
+          cu.yahoo.isTrustedShop = false;
+          cu.yahoo.source = 'mock';
+          delete cu.yahoo.itemName;
+        }
+      }
+      if (cu.unused) {
+        if (uIsApi) {
+          cu.unused.url = toRakutenAffiliateUrl(cu.unused.url);
+        } else {
+          delete cu.unused;
+        }
+      }
+      if (!anyApi) {
+        cu.isEstimated = true;
+        cu.offers = [];
+      } else {
+        cu.isEstimated = false;
+      }
       if (launchPrice && cu.lowestPrice > 0) {
         cu.resaleValuePercent = Math.round((cu.lowestPrice / launchPrice) * 100);
       }

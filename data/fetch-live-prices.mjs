@@ -910,6 +910,15 @@ export async function runFetchLivePrices() {
         if (usedPricing.unused?.url) {
           usedPricing.unused.url = toRakutenAffiliateUrl(usedPricing.unused.url, affiliateId);
         }
+        if (Array.isArray(usedPricing.offers)) {
+          usedPricing.offers = usedPricing.offers.slice(0, 15).map((offer) => ({
+            ...offer,
+            url:
+              offer.platform === 'yahoo'
+                ? toYahooAffiliateUrl(offer.url)
+                : toRakutenAffiliateUrl(offer.url, affiliateId),
+          }));
+        }
         usedPricing.resaleValuePercent =
           launchPrice > 0 && usedPricing.lowestPrice > 0
             ? Math.round((usedPricing.lowestPrice / launchPrice) * 100)
