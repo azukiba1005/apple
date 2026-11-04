@@ -1,27 +1,29 @@
 // AppleDB の全商用モデル → public/products.json を生成するビルドスクリプト
-//   curl -sSL -o data/appledb-main.json https://api.appledb.dev/device/main.json
-//   node data/build-products.mjs
-// 処理: ① AppleDB から対象カテゴリの全モデルを製品ファミリー単位に集約 (internal 除外/未発売除外)
-//       ② presets.mjs で基本スペック・発売時価格を補完  ③ data/detail/*.json の詳細データで上書き統合
-//       ④ data/prices/*.json (日本 Apple Store 価格履歴リサーチ) で SKU・価格改定履歴を統合
+//   curl -sSL -o data/cache/appledb-main.json https://api.appledb.dev/device/main.json
+//   node scripts/build-products.mjs
+// 処理: ① AppleDB (data/cache/appledb-main.json) から対象カテゴリの全モデルを製品ファミリー単位に集約 (internal 除外/未発売除外)
+//       ② data/presets.mjs で基本スペック・発売時価格を補完
+//       ③ data/catalog/*.json 内の detail メタデータで詳細スペック・SKUを上書き統合
+//       ④ data/catalog/*.json (iphone / ipad / mac / watch / airpods) で SKU・価格改定履歴・キャリア価格を統合
+//       ⑤ data/cache/live-prices-cache.json および data/cache/fx-cache.json を統合して public/products.json を出力
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
-import { IPHONE, IPAD, WATCH, AIRPODS, MAC } from './presets.mjs';
+import { IPHONE, IPAD, WATCH, AIRPODS, MAC } from '../data/presets.mjs';
 import {
   estimatePlatformOffers,
   buildUsedPricingObject,
   toRakutenAffiliateUrl,
   toYahooAffiliateUrl,
-} from './fetch-used-prices.mjs';
+} from './fetch-live-prices.mjs';
 
-const APPLEDB_PATH = 'data/appledb-main.json';
+const APPLEDB_PATH = 'data/cache/appledb-main.json';
 if (!existsSync(APPLEDB_PATH)) {
-  console.log('[info] data/appledb-main.json が存在しないため api.appledb.dev から取得します...');
+  console.log(`[info] ${APPLEDB_PATH} が存在しないため api.appledb.dev から取得します...`);
   const res = await fetch('https://api.appledb.dev/device/main.json');
   if (!res.ok) {
     throw new Error(`Failed to fetch AppleDB main.json: HTTP ${res.status}`);
   }
   const text = await res.text();
-  mkdirSync('data', { recursive: true });
+  mkdirSync('data/cache', { recursive: true });
   writeFileSync(APPLEDB_PATH, text);
 }
 const db = JSON.parse(readFileSync(APPLEDB_PATH, 'utf8'));
@@ -29,7 +31,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const first = (v) => (Array.isArray(v) ? v[0] : v);
 const addDays = (d, n) => new Date(Date.parse(d + 'T00:00:00Z') + n * 864e5).toISOString().slice(0, 10);
 
-/* ---------- 為替(Frankfurter API + fx-cache.json)・消費税 ---------- */
+/* ---------- 為替(Frankfurter API + data/cache/fx-cache.json)・消費税 ---------- */
 const FX = [['1998-08-15', 145.2], ['2000-07-01', 108.1], ['2003-06-01', 118.0], ['2005-01-01', 103.5], ['2007-06-01', 123], ['2008-07-01', 106], ['2009-07-01', 95], ['2010-06-01', 90], ['2011-06-01', 80], ['2012-06-01', 79], ['2013-06-01', 97], ['2014-06-01', 102],
   ['2015-06-01', 123], ['2016-06-01', 106], ['2017-06-01', 111], ['2018-06-01', 110], ['2019-06-01', 108], ['2020-06-01', 107], ['2021-06-01', 110], ['2022-03-01', 116],
   ['2022-07-01', 136], ['2022-10-01', 147], ['2023-06-01', 140], ['2024-01-01', 146], ['2024-07-01', 158], ['2025-01-01', 156], ['2025-09-01', 148], ['2026-06-01', 150]];
@@ -51,7 +53,7 @@ function fxAt(date) {
  */
 const taxAt = (date) => (date >= '2019-10-01' ? 0.10 : date >= '2014-04-01' ? 0.08 : date >= '1997-04-01' ? 0.05 : 0.03);
 
-const FX_CACHE_FILE = 'data/prices/fx-cache.json';
+const FX_CACHE_FILE = 'data/cache/fx-cache.json';
 let fxCache = { updatedAt: null, latestDate: null, latest: 152.8, rates: {} };
 if (existsSync(FX_CACHE_FILE)) {
   try {
@@ -87,7 +89,6 @@ async function ensureFxRatesCached(dates) {
   let fetchedCount = 0;
   let cachedCount = 0;
 
-  // 1) 今日の最新レート (latest)
   if (fxCache.latestDate !== TODAY || typeof fxCache.latest !== 'number') {
     try {
       const latestRate = await fetchFrankfurterRate('latest');
@@ -102,7 +103,6 @@ async function ensureFxRatesCached(dates) {
     }
   }
 
-  // 2) 日付別レート (YYYY-MM-DD): キャッシュにあればAPIを叩かず参照、未キャッシュの日付のみ取得
   const uncached = [...dates].filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d) && typeof fxCache.rates[d] !== 'number').sort();
   cachedCount = [...dates].filter((d) => typeof fxCache.rates[d] === 'number').length;
 
@@ -111,7 +111,6 @@ async function ensureFxRatesCached(dates) {
     const batch = uncached.slice(i, i + BATCH_SIZE);
     await Promise.all(
       batch.map(async (d) => {
-        // Frankfurter API (ECB) は 1999-01-04 以降対応
         if (d < '1999-01-04') {
           fxCache.rates[d] = fxAt(d);
           dirty = true;
@@ -134,7 +133,7 @@ async function ensureFxRatesCached(dates) {
     fxCache.updatedAt = new Date().toISOString();
     const sortedRates = Object.fromEntries(Object.entries(fxCache.rates).sort(([a], [b]) => a.localeCompare(b)));
     fxCache.rates = sortedRates;
-    mkdirSync('data/prices', { recursive: true });
+    mkdirSync('data/cache', { recursive: true });
     writeFileSync(
       FX_CACHE_FILE,
       JSON.stringify(
@@ -200,7 +199,7 @@ function classify(x) {
     }
     case 'AirPods': {
       const lr = /\((Left|Right)/.test(n);
-      if (!lr && !/AirPods Max/.test(n)) return null; // 充電ケース単体は除外
+      if (!lr && !/AirPods Max/.test(n)) return null;
       return { cat: 'AirPods', family: n.replace(/\s*\((Left|Right)(?:,\s*([^)]*))?\)/, (_m, _l, rest) => (rest ? ` (${rest})` : '')).trim() };
     }
     case 'MacBook': case 'MacBook Air': case 'MacBook Pro': case 'iMac': case 'Mac mini': case 'Mac Pro': case 'Mac Studio': case 'MacBook Neo':
@@ -215,7 +214,7 @@ const groups = new Map();
 for (const x of db) {
   if (x.internal || !x.released) continue;
   const rel = first(x.released);
-  if (!rel || rel > TODAY) continue; // 未発売(将来日付)は除外
+  if (!rel || rel > TODAY) continue;
   const c = classify(x);
   if (!c) continue;
   const key = `${c.cat}|${c.family}`;
@@ -226,7 +225,6 @@ for (const x of db) {
 }
 
 /* ---------- スペック構築 ---------- */
-/* Mac のチップ違い・旧世代 Intel / PowerPC モデル用フォールバック (筐体が同じなら重量・画面・端子・バッテリーは共通) */
 function macSocFallback(n, rel = '') {
   if (/PowerBook G4|iBook G4|Power Mac G4|iMac G4|eMac/.test(n) || (/Mac mini/.test(n) && rel < '2006-01-01')) return 'PowerPC G4 (7400 / 7450 / 7447A)';
   if (/Power Mac G5|iMac G5/.test(n)) return 'PowerPC G5 (970 / 970FX / 970MP)';
@@ -272,7 +270,6 @@ function macFallback(n, rel = '') {
   if (/^MacBook Pro \(16-inch, 2019/.test(n)) return ['16"', null, '2,000g', 'Thunderbolt 3 ×4', '100Wh (最大11時間)', null, null, null];
   if (/^iMac \(Retina 5K, 27-inch, 2020/.test(n)) return ['27" 5K', null, '8,920g', 'Thunderbolt 3 ×2 / USB-A ×4 / SDXC / Ethernet', 'AC電源 (デスクトップ)', null, null, null];
 
-  // Intel / PowerPC ノートブック系
   if (/^MacBook \(Retina, 12-inch/.test(n)) return ['12" Retina (2304×1440)', '8GB', '920g', 'USB-C ×1 / 3.5mmジャック', '41.4Wh (最大10時間)', null, null, null];
   if (/^MacBook Air/.test(n)) {
     if (/Retina, 13-inch/.test(n)) return ['13.3" Retina (2560×1600)', '8GB', '1,250g', 'Thunderbolt 3 (USB-C) ×2', '49.9Wh (最大12時間)', null, null, null];
@@ -307,7 +304,6 @@ function macFallback(n, rel = '') {
     return ['12.1" (800×600 / 1024×768)', '64MB〜512MB', '2,200g', 'FireWire 400 / USB ×1〜2 / 光学ドライブ', '45Wh〜50Wh (最大5〜6時間)', null, null, null];
   }
 
-  // デスクトップ系
   if (/^iMac Pro/.test(n)) return ['27" Retina 5K (5120×2880)', '32GB', '9,700g', 'Thunderbolt 3 ×4 / USB-A ×4 / SDXC / 10Gb Ethernet', 'AC電源 (デスクトップ)', null, null, null];
   if (/^iMac/.test(n)) {
     if (/27-inch/.test(n)) {
@@ -385,7 +381,6 @@ function buildProduct(g) {
   if (jpy) put('launchPriceJpy', `${yenStr(jpy)} (税込・発売時最小構成)`);
   if (usd) put('launchPriceUsd', `$${usd}`);
 
-  /* SKU */
   const fx = fxAt(rel), tax = taxAt(rel);
   const stor = (mem.Storage?.[0]) ?? pre?.[7];
   const pricePoint = () => ({
@@ -422,30 +417,10 @@ const products = [...groups.values()].map(buildProduct);
 const ids = new Set();
 products.forEach((p) => { let id = p.id, n = 2; while (ids.has(id)) id = `${p.id}-${n++}`; p.id = id; ids.add(id); });
 
-/* ---------- ③ 詳細データで上書き統合 ---------- */
-// 詳細データ側に identifier が無い製品用の明示マッピング (詳細ID → AppleDB ファミリー名)
+/* ---------- ③ & ④ カタログデータ (data/catalog/*.json) から詳細メタデータ・価格履歴・キャリア価格を統合 ---------- */
+const CATALOG_DIR = 'data/catalog';
 const DETAIL_MATCH = { 'ipad-air-11-m2': 'iPad Air 11-inch (M2)', 'mba-13-m2': 'MacBook Air (M2, 2022)', 'ipad-10': 'iPad (10th generation)', 'watch-s10': 'Apple Watch Series 10' };
 const report = [];
-for (const f of readdirSync('data/detail').filter((f) => f.endsWith('.json'))) {
-  const ds = JSON.parse(readFileSync(`data/detail/${f}`, 'utf8'));
-  for (const d of ds.products) {
-    const idents = String(d.specs?.identifier ?? '').split(';').filter(Boolean);
-    let idx = products.findIndex((p) => idents.length && String(p.specs.identifier ?? '').split(';').some((i) => idents.includes(i)));
-    if (idx < 0 && DETAIL_MATCH[d.id]) idx = products.findIndex((p) => p.name === DETAIL_MATCH[d.id]);
-    if (idx < 0) idx = products.findIndex((p) => p.name === d.name);
-    if (idx >= 0) {
-      const g = products[idx];
-      products[idx] = { ...g, ...d, id: d.id, specs: { ...g.specs, ...d.specs }, skus: d.skus, detail: true, _family: g._family };
-      report.push(`✓ 詳細統合 ${f}: ${d.name} ← ${g.name}`);
-    } else {
-      products.push({ ...d, detail: true });
-      report.push(`＋ 詳細追加 ${f}: ${d.name} (AppleDB に対応なし)`);
-    }
-  }
-}
-
-/* ---------- ④ 価格リサーチデータ (data/prices/*.json) で価格履歴を統合 ---------- */
-// families のキーは AppleDB ファミリー名 (= _family)。detail 製品はキャリア価格を保持したまま priceHistory だけ差し替える。
 const storBytes = (s) => { const m = String(s).match(/([\d.]+)\s*(TB|GB|MB)/i); return m ? parseFloat(m[1]) * ({ TB: 1e6, GB: 1e3, MB: 1 }[m[2].toUpperCase()]) : 0; };
 const skuLabel = (r) => [r.size, r.storage && r.storage !== '-' ? r.storage : '', r.connectivity && r.connectivity !== '-' ? r.connectivity : ''].filter(Boolean).join(' ') || '標準';
 const EVENT_ALIAS = [
@@ -453,7 +428,6 @@ const EVENT_ALIAS = [
   [/^Apple ?Store ?(で )?SIM ?フリー(版)?販売開始$/, 'Apple Store で SIM フリー版販売開始'],
 ];
 const normEvent = (e) => EVENT_ALIAS.reduce((s, [re, to]) => (re.test(s) ? to : s), String(e ?? '').trim());
-// 販売終了で価格不明 (jpy:null) の点は直前の価格を引き継ぎ approx 扱いにする。米国据え置き改定等で usd が省略された点も直前の usd を引き継ぐ
 const fillEnd = (hist) => {
   const hs = hist.filter((h) => /^\d{4}-\d{2}-\d{2}$/.test(h.date)).sort((a, b) => a.date.localeCompare(b.date));
   let last = null;
@@ -476,86 +450,115 @@ const toPoints = (hist) => fillEnd(hist)
     ...(h.confidence ? { confidence: h.confidence } : {}),
     ...(h.note ? { note: h.note } : {}), ...(h.source ? { source: h.source } : {}),
   }));
+
 const priceStats = { families: 0, skus: 0, points: 0, unmatched: [] };
-if (existsSync('data/prices')) {
-  for (const f of readdirSync('data/prices').filter((f) => f.endsWith('.json') && f !== 'live-prices-cache.json' && f !== 'fx-cache.json')) {
-    let ds;
-    try { ds = JSON.parse(readFileSync(`data/prices/${f}`, 'utf8')); } catch (e) { report.push(`✗ ${f}: JSON 解析失敗 ${e.message}`); continue; }
-    for (const [fam, entry] of Object.entries(ds.families ?? {})) {
-      const p = products.find((x) => x._family === fam) ?? products.find((x) => x.name === fam);
-      if (!p) { priceStats.unmatched.push(`${f}:${fam}`); continue; }
-      const rs = (entry.skus ?? []).filter((r) => Array.isArray(r.history));
-      if (!rs.length) continue;
-      priceStats.families++;
-      const sorted = rs.slice().sort((a, b) => parseInt(a.size ?? 0) - parseInt(b.size ?? 0) || String(a.connectivity).localeCompare(String(b.connectivity)) || storBytes(a.storage) - storBytes(b.storage));
-      const newSkus = sorted.map((r) => {
-        const priceHistory = toPoints(r.history);
-        priceStats.skus++; priceStats.points += priceHistory.length;
-        const usdOnly = r.history.filter((h) => h.jpy == null && typeof h.usd === 'number');
-        return {
-          id: slug(`${r.size ?? ''}-${r.storage ?? ''}-${r.connectivity ?? ''}`) || 'base', label: skuLabel(r), storage: r.storage === '-' ? '' : (r.storage ?? ''),
-          connectivity: r.connectivity ?? '-', priceHistory, carriers: {},
-          ...(usdOnly.length && !priceHistory.length ? { note: `日本 Apple Store 未販売。米国価格 $${usdOnly[0].usd}` } : {}),
-        };
-      });
-      if (p.detail) {
-        // 既存 SKU (キャリア価格つき) は label または storage+connectivity で突き合わせて priceHistory を差し替え
-        const matchDetailSku = (n, s) => {
-          if (n.label && s.label && n.label === s.label) return true;
-          const nNorm = String(n.label ?? '').replace(/\s+|SSD/gi, '').toUpperCase();
-          const sNorm = String(s.label ?? '').replace(/\s+|SSD/gi, '').toUpperCase();
-          if (nNorm && nNorm === sNorm) return true;
-          const connMatch = n.connectivity === s.connectivity || n.connectivity === '-' || s.connectivity === '-';
-          return Boolean(n.storage && s.storage && n.storage === s.storage && connMatch);
-        };
-        const merged = p.skus.map((s) => {
-          const hit = newSkus.find((n) => matchDetailSku(n, s));
-          if (!hit || !hit.priceHistory.length) return s;
-          const ph = hit.priceHistory;
-          // キャリア価格(推定モデル値)は Apple 価格の補正比率でスケール
-          const oldCur = s.priceHistory.at(-1)?.appleStorePrice, newCur = ph.at(-1).appleStorePrice;
-          const k = oldCur ? newCur / oldCur : 1;
-          const r10 = (n) => Math.round(n / 10) * 10;
-          const carriers = Object.fromEntries(Object.entries(s.carriers).filter(([id]) => id !== 'apple').map(([id, c]) => {
-            const cur = r10(c.currentPrice * k), disc = c.mnpPrice != null ? c.currentPrice - c.mnpPrice : null;
-            const rp = c.returnProgram ? { ...c.returnProgram, effectiveCost: r10(c.returnProgram.effectiveCost * k), ...(c.returnProgram.residualValue != null ? { residualValue: r10(c.returnProgram.residualValue * k) } : {}) } : c.returnProgram;
-            return [id, { ...c, currentPrice: cur, mnpPrice: disc != null ? cur - disc : c.mnpPrice, returnProgram: rp }];
-          }));
-          return { ...s, priceHistory: ph, carriers: { ...carriers, apple: { launchPrice: ph[0].appleStorePrice, currentPrice: newCur, mnpPrice: null, returnProgram: null } } };
-        });
-        const extra = newSkus.filter((n) => !p.skus.some((s) => matchDetailSku(n, s)));
-        p.skus = [...merged, ...extra];
-      } else {
-        p.skus = newSkus;
-      }
-      // 発売時価格(最小構成)を specs に反映
-      const launches = p.skus.map((s) => s.priceHistory[0]).filter(Boolean).sort((a, b) => a.date.localeCompare(b.date) || a.appleStorePrice - b.appleStorePrice);
-      if (launches.length) {
-        const l0 = launches.filter((l) => l.date === launches[0].date).sort((a, b) => a.appleStorePrice - b.appleStorePrice)[0];
-        p.specs.launchPriceJpy = `${yenStr(l0.appleStorePrice)} (税込・発売時最小構成)`;
-        if (l0.usdPrice) p.specs.launchPriceUsd = `$${l0.usdPrice}`;
-      }
-      // Mac 等の SKU 表記 ("8GB/256GB" など) から RAM・販売終了日を補完
-      if (!p.specs.ram) {
-        const ramMatch = p.skus.map((s) => `${s.storage} ${s.label}`.match(/^(\d+(?:\.\d+)?\s*(?:MB|GB|TB))\s*[/／]/i)?.[1]).find(Boolean);
-        if (ramMatch) p.specs.ram = ramMatch.replace(/\s+/g, '');
-      }
-      if (!p.specs.discontinued) {
-        const endDates = p.skus
-          .map((s) => s.priceHistory.filter((h) => /販売終了|終売/.test(h.event)).at(-1)?.date)
-          .filter(Boolean);
-        if (endDates.length > 0 && endDates.length === p.skus.filter((s) => s.priceHistory.length > 0).length) {
-          p.specs.discontinued = endDates.sort().at(-1);
-        }
-      }
-      p.priceResearched = true;
+const catalogFiles = existsSync(CATALOG_DIR)
+  ? readdirSync(CATALOG_DIR).filter((f) => f.endsWith('.json')).sort()
+  : [];
+
+// Step ③: カタログ内の detail メタデータをまず反映
+for (const f of catalogFiles) {
+  let ds;
+  try { ds = JSON.parse(readFileSync(`${CATALOG_DIR}/${f}`, 'utf8')); } catch (e) { report.push(`✗ ${f}: JSON 解析失敗 ${e.message}`); continue; }
+  for (const [fam, entry] of Object.entries(ds.families ?? {})) {
+    const d = entry.detail;
+    if (!d) continue;
+    const idents = String(d.specs?.identifier ?? '').split(';').filter(Boolean);
+    let idx = products.findIndex((p) => p._family === fam);
+    if (idx < 0) idx = products.findIndex((p) => idents.length && String(p.specs.identifier ?? '').split(';').some((i) => idents.includes(i)));
+    if (idx < 0 && DETAIL_MATCH[d.id]) idx = products.findIndex((p) => p.name === DETAIL_MATCH[d.id]);
+    if (idx < 0) idx = products.findIndex((p) => p.name === d.name);
+    if (idx >= 0) {
+      const g = products[idx];
+      products[idx] = { ...g, ...d, id: d.id, specs: { ...g.specs, ...d.specs }, skus: d.skus, detail: true, _family: g._family };
+      report.push(`✓ 詳細統合 ${f}: ${d.name} ← ${g.name}`);
+    } else {
+      products.push({ ...d, detail: true, _family: fam });
+      report.push(`＋ 詳細追加 ${f}: ${d.name} (AppleDB に対応なし)`);
     }
   }
 }
 
-/* ---------- ⑤ 最新価格キャッシュ (data/prices/live-prices-cache.json) とキャリア価格補完 ---------- */
+// Step ④: カタログ内の価格履歴・carrierPricing を統合
+for (const f of catalogFiles) {
+  let ds;
+  try { ds = JSON.parse(readFileSync(`${CATALOG_DIR}/${f}`, 'utf8')); } catch { continue; }
+  for (const [fam, entry] of Object.entries(ds.families ?? {})) {
+    const p = products.find((x) => x._family === fam) ?? products.find((x) => x.name === fam);
+    if (!p) { priceStats.unmatched.push(`${f}:${fam}`); continue; }
+    const rs = (entry.skus ?? []).filter((r) => Array.isArray(r.history));
+    if (!rs.length) continue;
+    priceStats.families++;
+    const sorted = rs.slice().sort((a, b) => parseInt(a.size ?? 0) - parseInt(b.size ?? 0) || String(a.connectivity).localeCompare(String(b.connectivity)) || storBytes(a.storage) - storBytes(b.storage));
+    const newSkus = sorted.map((r) => {
+      const priceHistory = toPoints(r.history);
+      priceStats.skus++; priceStats.points += priceHistory.length;
+      const usdOnly = r.history.filter((h) => h.jpy == null && typeof h.usd === 'number');
+      return {
+        id: slug(`${r.size ?? ''}-${r.storage ?? ''}-${r.connectivity ?? ''}`) || 'base', label: skuLabel(r), storage: r.storage === '-' ? '' : (r.storage ?? ''),
+        connectivity: r.connectivity ?? '-', priceHistory, carriers: {},
+        ...(r.carrierPricing !== undefined ? { carrierPricing: r.carrierPricing } : {}),
+        ...(usdOnly.length && !priceHistory.length ? { note: `日本 Apple Store 未販売。米国価格 $${usdOnly[0].usd}` } : {}),
+      };
+    });
+    if (p.detail) {
+      const matchDetailSku = (n, s) => {
+        if (n.label && s.label && n.label === s.label) return true;
+        const nNorm = String(n.label ?? '').replace(/\s+|SSD/gi, '').toUpperCase();
+        const sNorm = String(s.label ?? '').replace(/\s+|SSD/gi, '').toUpperCase();
+        if (nNorm && nNorm === sNorm) return true;
+        const connMatch = n.connectivity === s.connectivity || n.connectivity === '-' || s.connectivity === '-';
+        return Boolean(n.storage && s.storage && n.storage === s.storage && connMatch);
+      };
+      const merged = p.skus.map((s) => {
+        const hit = newSkus.find((n) => matchDetailSku(n, s));
+        if (!hit || !hit.priceHistory.length) return s;
+        const ph = hit.priceHistory;
+        const oldCur = s.priceHistory.at(-1)?.appleStorePrice, newCur = ph.at(-1).appleStorePrice;
+        const k = oldCur ? newCur / oldCur : 1;
+        const r10 = (n) => Math.round(n / 10) * 10;
+        const carriers = Object.fromEntries(Object.entries(s.carriers).filter(([id]) => id !== 'apple').map(([id, c]) => {
+          const cur = r10(c.currentPrice * k), disc = c.mnpPrice != null ? c.currentPrice - c.mnpPrice : null;
+          const rp = c.returnProgram ? { ...c.returnProgram, effectiveCost: r10(c.returnProgram.effectiveCost * k), ...(c.returnProgram.residualValue != null ? { residualValue: r10(c.returnProgram.residualValue * k) } : {}) } : c.returnProgram;
+          return [id, { ...c, currentPrice: cur, mnpPrice: disc != null ? cur - disc : c.mnpPrice, returnProgram: rp }];
+        }));
+        return {
+          ...s,
+          priceHistory: ph,
+          ...(hit.carrierPricing !== undefined ? { carrierPricing: hit.carrierPricing } : {}),
+          carriers: { ...carriers, apple: { launchPrice: ph[0].appleStorePrice, currentPrice: newCur, mnpPrice: null, returnProgram: null } },
+        };
+      });
+      const extra = newSkus.filter((n) => !p.skus.some((s) => matchDetailSku(n, s)));
+      p.skus = [...merged, ...extra];
+    } else {
+      p.skus = newSkus;
+    }
+    const launches = p.skus.map((s) => s.priceHistory[0]).filter(Boolean).sort((a, b) => a.date.localeCompare(b.date) || a.appleStorePrice - b.appleStorePrice);
+    if (launches.length) {
+      const l0 = launches.filter((l) => l.date === launches[0].date).sort((a, b) => a.appleStorePrice - b.appleStorePrice)[0];
+      p.specs.launchPriceJpy = `${yenStr(l0.appleStorePrice)} (税込・発売時最小構成)`;
+      if (l0.usdPrice) p.specs.launchPriceUsd = `$${l0.usdPrice}`;
+    }
+    if (!p.specs.ram) {
+      const ramMatch = p.skus.map((s) => `${s.storage} ${s.label}`.match(/^(\d+(?:\.\d+)?\s*(?:MB|GB|TB))\s*[/／]/i)?.[1]).find(Boolean);
+      if (ramMatch) p.specs.ram = ramMatch.replace(/\s+/g, '');
+    }
+    if (!p.specs.discontinued) {
+      const endDates = p.skus
+        .map((s) => s.priceHistory.filter((h) => /販売終了|終売/.test(h.event)).at(-1)?.date)
+        .filter(Boolean);
+      if (endDates.length > 0 && endDates.length === p.skus.filter((s) => s.priceHistory.length > 0).length) {
+        p.specs.discontinued = endDates.sort().at(-1);
+      }
+    }
+    p.priceResearched = true;
+  }
+}
+
+/* ---------- ⑤ 最新価格キャッシュ (data/cache/live-prices-cache.json) とキャリア価格補完 ---------- */
 let liveCache = null;
-const LIVE_CACHE_FILE = 'data/prices/live-prices-cache.json';
+const LIVE_CACHE_FILE = 'data/cache/live-prices-cache.json';
 if (existsSync(LIVE_CACHE_FILE)) {
   try {
     liveCache = JSON.parse(readFileSync(LIVE_CACHE_FILE, 'utf8'));
@@ -565,7 +568,6 @@ if (existsSync(LIVE_CACHE_FILE)) {
   }
 }
 
-// 主要・現行モデルの各社公式リサーチ済み一括価格 (税込円)
 const RESEARCHED_CARRIER_PRICES = {
   'iPhone 17|256GB': { docomo: 199793, au: 186800, softbank: 199440, rakuten: 176800 },
   'iPhone 17|512GB': { docomo: 234883, au: 224800, softbank: 239040, rakuten: 211800 },
@@ -584,22 +586,76 @@ const RESEARCHED_CARRIER_PRICES = {
   'iPhone 16e|512GB': { docomo: 182930, au: 172800, softbank: 177120, rakuten: 166800 },
   'iPhone 17e|256GB': { docomo: 119900, au: 114800, softbank: 118800, rakuten: 109800 },
   'iPhone 17e|512GB': { docomo: 159500, au: 152800, softbank: 158400, rakuten: 146800 },
-  'iPad (A16)|128GB': { docomo: 104500, au: 109300, softbank: 99936 },
-  'iPad (A16)|256GB': { docomo: 124300, au: 129800, softbank: 119520 },
-  'iPad (A16)|512GB': { docomo: 163900, au: 169800, softbank: 158400 },
-  'iPad Air 11-inch (M3)|128GB': { docomo: 135850, au: 149800, softbank: 156240 },
-  'iPad Air 11-inch (M3)|256GB': { docomo: 155100, au: 169800, softbank: 175680 },
-  'iPad Air 11-inch (M3)|512GB': { docomo: 194700, au: 209800, softbank: 215280 },
-  'iPad Air 11-inch (M3)|1TB': { docomo: 234300, au: 249800, softbank: 254880 },
-  'iPad Air 13-inch (M3)|128GB': { docomo: 185680, au: 186800, softbank: 193680 },
-  'iPad Air 13-inch (M3)|256GB': { docomo: 204600, au: 206800, softbank: 213120 },
-  'iPad Air 13-inch (M3)|512GB': { docomo: 244200, au: 246800, softbank: 252720 },
-  'iPad Air 13-inch (M3)|1TB': { docomo: 283800, au: 286800, softbank: 292320 },
-  'Apple Watch Series 11|42mm': { docomo: 103070, au: 107250, softbank: 107040, rakuten: 95000 },
-  'Apple Watch Series 11|46mm': { docomo: 108570, au: 112750, softbank: 112800, rakuten: 100000 },
-  'Apple Watch Ultra 3|49mm': { docomo: 178530, au: 162250, softbank: 178560, rakuten: 151000 },
-  'Apple Watch SE 3|40mm': { docomo: 63940, au: 63500, softbank: 63360, rakuten: 54300 },
-  'Apple Watch SE 3|44mm': { docomo: 69440, au: 69000, softbank: 69120, rakuten: 59300 },
+  'iPad (10th generation)|64GB': { docomo: 97680, au: 96000, softbank: 97920 },
+  'iPad (10th generation)|256GB': { docomo: 127380, au: 125400, softbank: 127440 },
+  'iPad (第10世代)|64GB': { docomo: 97680, au: 96000, softbank: 97920 },
+  'iPad (第10世代)|256GB': { docomo: 127380, au: 125400, softbank: 127440 },
+  'iPad (A16)|128GB': { docomo: 115500, au: 113400, softbank: 115920 },
+  'iPad (A16)|256GB': { docomo: 134970, au: 132800, softbank: 135360 },
+  'iPad (A16)|512GB': { docomo: 175560, au: 172800, softbank: 176400 },
+  'iPad mini (6th generation)|64GB': { docomo: 127380, au: 125400, softbank: 128160 },
+  'iPad mini (6th generation)|256GB': { docomo: 157410, au: 154800, softbank: 157680 },
+  'iPad mini (A17 Pro)|128GB': { docomo: 144870, au: 142200, softbank: 145440 },
+  'iPad mini (A17 Pro)|256GB': { docomo: 164340, au: 161400, softbank: 164880 },
+  'iPad mini (A17 Pro)|512GB': { docomo: 204600, au: 201000, softbank: 205200 },
+  'iPad Air 11-inch (M2)|128GB': { docomo: 143550, au: 141000, softbank: 144000 },
+  'iPad Air 11-inch (M2)|256GB': { docomo: 162030, au: 159000, softbank: 162720 },
+  'iPad Air 11-inch (M2)|512GB': { docomo: 203280, au: 199800, softbank: 203760 },
+  'iPad Air 11-inch (M2)|1TB': { docomo: 244860, au: 240600, softbank: 245520 },
+  'iPad Air 11インチ (M2)|128GB': { docomo: 143550, au: 141000, softbank: 144000 },
+  'iPad Air 11インチ (M2)|256GB': { docomo: 162030, au: 159000, softbank: 162720 },
+  'iPad Air 11インチ (M2)|512GB': { docomo: 203280, au: 199800, softbank: 203760 },
+  'iPad Air 11インチ (M2)|1TB': { docomo: 244860, au: 240600, softbank: 245520 },
+  'iPad Air 13-inch (M2)|128GB': { docomo: 178200, au: 175200, softbank: 178560 },
+  'iPad Air 13-inch (M2)|256GB': { docomo: 196680, au: 193200, softbank: 197280 },
+  'iPad Air 13-inch (M2)|512GB': { docomo: 237930, au: 234000, softbank: 238320 },
+  'iPad Air 13-inch (M2)|1TB': { docomo: 279180, au: 274800, softbank: 279360 },
+  'iPad Air 11-inch (M3)|128GB': { docomo: 179190, au: 176400, softbank: 179280 },
+  'iPad Air 11-inch (M3)|256GB': { docomo: 198660, au: 195600, softbank: 199440 },
+  'iPad Air 11-inch (M3)|512GB': { docomo: 238920, au: 235200, softbank: 239760 },
+  'iPad Air 11-inch (M3)|1TB': { docomo: 279180, au: 274800, softbank: 279360 },
+  'iPad Air 13-inch (M3)|128GB': { docomo: 225390, au: 221400, softbank: 226080 },
+  'iPad Air 13-inch (M3)|256GB': { docomo: 244860, au: 240600, softbank: 245520 },
+  'iPad Air 13-inch (M3)|512GB': { docomo: 285120, au: 280200, softbank: 285840 },
+  'iPad Air 13-inch (M3)|1TB': { docomo: 325380, au: 319800, softbank: 326160 },
+  'iPad Pro 11-inch (M4)|256GB': { docomo: 235620, au: 231600, softbank: 236160 },
+  'iPad Pro 11-inch (M4)|512GB': { docomo: 276870, au: 272400, softbank: 277920 },
+  'iPad Pro 11-inch (M4)|1TB': { docomo: 355080, au: 349200, softbank: 355680 },
+  'iPad Pro 11-inch (M4)|2TB': { docomo: 433290, au: 426000, softbank: 434160 },
+  'iPad Pro 13-inch (M4)|256GB': { docomo: 293040, au: 288000, softbank: 293760 },
+  'iPad Pro 13-inch (M4)|512GB': { docomo: 334620, au: 328800, softbank: 335520 },
+  'iPad Pro 13-inch (M4)|1TB': { docomo: 412830, au: 405600, softbank: 413280 },
+  'iPad Pro 13-inch (M4)|2TB': { docomo: 491040, au: 482400, softbank: 491760 },
+  'iPad Pro 11-inch (M5)|256GB': { docomo: 282810, au: 277800, softbank: 283680 },
+  'iPad Pro 11-inch (M5)|512GB': { docomo: 323070, au: 317400, softbank: 324000 },
+  'iPad Pro 11-inch (M5)|1TB': { docomo: 403590, au: 396600, softbank: 404640 },
+  'iPad Pro 11-inch (M5)|2TB': { docomo: 484110, au: 475800, softbank: 485280 },
+  'iPad Pro 13-inch (M5)|256GB': { docomo: 351780, au: 345600, softbank: 352800 },
+  'iPad Pro 13-inch (M5)|512GB': { docomo: 392040, au: 385200, softbank: 393120 },
+  'iPad Pro 13-inch (M5)|1TB': { docomo: 472560, au: 464400, softbank: 473760 },
+  'iPad Pro 13-inch (M5)|2TB': { docomo: 553080, au: 543600, softbank: 554400 },
+  'Apple Watch SE (2nd generation)|40mm': { docomo: 49390, au: 48400, softbank: 48960, rakuten: 44800 },
+  'Apple Watch SE (2nd generation)|44mm': { docomo: 54890, au: 53900, softbank: 54720, rakuten: 49800 },
+  'Apple Watch Series 10|42mm': { docomo: 87890, au: 86800, softbank: 87120, rakuten: 80800 },
+  'Apple Watch Series 10|46mm': { docomo: 93500, au: 92400, softbank: 92880, rakuten: 85800 },
+  'Apple Watch Series 11|42mm': { docomo: 103290, au: 101400, softbank: 102960, rakuten: 94800 },
+  'Apple Watch Series 11|46mm': { docomo: 109010, au: 107000, softbank: 108720, rakuten: 99800 },
+  'Apple Watch Series 12|42mm': { docomo: 103290, au: 101400, softbank: 102960, rakuten: 94800 },
+  'Apple Watch Series 12|46mm': { docomo: 109010, au: 107000, softbank: 108720, rakuten: 99800 },
+  'Apple Watch Ultra 2|49mm': { docomo: 152130, au: 148800, softbank: 150480, rakuten: 136800 },
+  'Apple Watch Ultra 3|49mm': { docomo: 164230, au: 161400, softbank: 164160, rakuten: 150800 },
+  'Apple Watch Ultra 4|49mm': { docomo: 164230, au: 161400, softbank: 164160, rakuten: 150800 },
+  'Apple Watch SE 3|40mm': { docomo: 58630, au: 57400, softbank: 58320, rakuten: 53800 },
+  'Apple Watch SE 3|44mm': { docomo: 64350, au: 63000, softbank: 64080, rakuten: 58800 },
+  'AirPods Pro (2nd generation)|標準': { docomo: 39800, au: 39800, softbank: 39800, rakuten: 39800 },
+  'AirPods Pro 3|標準': { docomo: 42800, au: 42800, softbank: 42800, rakuten: 42800 },
+  'AirPods 4|標準': { docomo: 23800, au: 23800, softbank: 23800, rakuten: 23800 },
+  'AirPods 4 with Active Noise Cancellation|標準': { docomo: 32800, au: 32800, softbank: 32800, rakuten: 32800 },
+  'AirPods Max|標準': { docomo: 84800, au: 84800, softbank: 84800, rakuten: 84800 },
+  'AirPods Max with USB-C|標準': { docomo: 84800, au: 84800, softbank: 84800, rakuten: 84800 },
+  'AirPods Max 2|標準': { docomo: 89800, au: 89800, softbank: 89800, rakuten: 89800 },
+  'AirPods 5|標準': { docomo: 23800, au: 23800, softbank: 23800, rakuten: 23800 },
+  'AirPods 5 with Wireless Charging Case|標準': { docomo: 27800, au: 27800, softbank: 27800, rakuten: 27800 },
 };
 
 const CARRIER_PROFILE_BUILD = {
@@ -610,38 +666,43 @@ const CARRIER_PROFILE_BUILD = {
     rakuten: { mult: 1.02, mnp: 20000, residual: 0.5, program: '楽天モバイル買い替え超トクプログラム', months: 24 },
   },
   iPad: {
-    docomo: { mult: 1.12, mnp: 11000, residual: 0.42, program: 'いつでもカエドキプログラム', months: 23 },
-    au: { mult: 1.1, mnp: 11000, residual: 0.5, program: 'スマホトクするプログラム', months: 24 },
-    softbank: { mult: 1.1, mnp: 11000, residual: 0.5, program: '新トクするサポート', months: 24 },
-    rakuten: { mult: 1.0, mnp: 10000, residual: 0.5, program: '買い替え超トクプログラム', months: 24 },
+    docomo: { mult: 1.15, mnp: null, residual: 0.505, program: 'いつでもカエドキプログラム', months: 23 },
+    au: { mult: 1.13, mnp: null, residual: 0.5, program: 'スマホトクするプログラム', months: 24 },
+    softbank: { mult: 1.155, mnp: null, residual: 0.5, program: '新トクするサポート', months: 24 },
   },
   'Apple Watch': {
-    docomo: { mult: 1.1, mnp: 5500, residual: 0, program: '', months: 0 },
-    au: { mult: 1.08, mnp: 5500, residual: 0, program: '', months: 0 },
-    softbank: { mult: 1.08, mnp: 5500, residual: 0, program: '', months: 0 },
-    rakuten: { mult: 1.0, mnp: 5000, residual: 0, program: '', months: 0 },
+    docomo: { mult: 1.15, mnp: null, residual: 0.5, program: 'いつでもカエドキプログラム', months: 23 },
+    au: { mult: 1.13, mnp: null, residual: 0.5, program: 'スマホトクするプログラム', months: 24 },
+    softbank: { mult: 1.145, mnp: null, residual: 0.5, program: '新トクするサポート', months: 24 },
+    rakuten: { mult: 1.055, mnp: null, residual: 0.5, program: '楽天モバイル買い替え超トクプログラム', months: 24 },
+  },
+  AirPods: {
+    docomo: { mult: 1.0, mnp: null, residual: 0, program: '', months: 0 },
+    au: { mult: 1.0, mnp: null, residual: 0, program: '', months: 0 },
+    softbank: { mult: 1.0, mnp: null, residual: 0, program: '', months: 0 },
+    rakuten: { mult: 1.0, mnp: null, residual: 0, program: '', months: 0 },
   },
 };
 
 function getEligibleCarriersForProduct(p, s) {
   const rel = p.releaseDate || '';
   if (p.category === 'iPhone') {
-    if (p.name === 'iPhone') return []; // 初代iPhone(2007)は日本未発売
-    if (/^iPhone (3G|3GS|4)$/.test(p.name)) return ['softbank']; // SoftBank 独占期
-    if (/^iPhone (4S|5)$/.test(p.name)) return ['au', 'softbank']; // au 参入期
-    if (rel < '2020-04-01') return ['docomo', 'au', 'softbank']; // 3キャリア期
-    return ['docomo', 'au', 'softbank', 'rakuten']; // 4キャリア期
+    if (p.name === 'iPhone') return [];
+    if (/^iPhone (3G|3GS|4)$/.test(p.name)) return ['softbank'];
+    if (/^iPhone (4S|5)$/.test(p.name)) return ['au', 'softbank'];
+    if (rel < '2020-04-01') return ['docomo', 'au', 'softbank'];
+    return ['docomo', 'au', 'softbank', 'rakuten'];
   }
   if (p.category === 'iPad') {
     if (!/Cellular/i.test(s.connectivity || '')) return [];
-    if (rel < '2012-10-01') return ['softbank'];
-    if (rel < '2013-10-01') return ['au', 'softbank'];
     return ['docomo', 'au', 'softbank'];
   }
   if (p.category === 'Apple Watch') {
     if (!/Cellular/i.test(s.connectivity || '')) return [];
     if (rel < '2017-09-01') return [];
-    if (rel < '2020-09-01') return ['docomo', 'au', 'softbank'];
+    return ['docomo', 'au', 'softbank', 'rakuten'];
+  }
+  if (p.category === 'AirPods') {
     return ['docomo', 'au', 'softbank', 'rakuten'];
   }
   return [];
@@ -663,6 +724,14 @@ function synthesizeCarriersForSku(p, s) {
   }
 
   const eligible = getEligibleCarriersForProduct(p, s);
+  const eligibleSet = new Set(eligible);
+
+  for (const cid of ['docomo', 'au', 'softbank', 'rakuten']) {
+    if (!eligibleSet.has(cid)) {
+      delete out[cid];
+    }
+  }
+
   if (!eligible.length || !launchApple) return out;
 
   const profs = CARRIER_PROFILE_BUILD[p.category];
@@ -677,26 +746,96 @@ function synthesizeCarriersForSku(p, s) {
   const isLegacyDirectPrice =
     /^iPhone (3G|3GS|4|4S|5)$/.test(p.name) ||
     (p.category === 'iPad' && p.releaseDate < '2013-10-01');
+  const allowReturnProgram =
+    p.category === 'Apple Watch' ||
+    (p.category === 'iPad' && p.releaseDate >= '2019-01-01') ||
+    (p.category === 'iPhone' && p.releaseDate >= '2019-10-01');
+
+  const skuCp = s.carrierPricing && typeof s.carrierPricing === 'object' ? s.carrierPricing : null;
 
   for (const cid of eligible) {
-    if (out[cid]) continue;
     const prof = profs[cid];
     if (!prof) continue;
+    const fromJson = skuCp?.[cid] ?? null;
+
+    if (out[cid]) {
+      const existing = out[cid];
+      if (p.category === 'AirPods') {
+        out[cid] = {
+          ...existing,
+          mnpPrice: null,
+          programEffective2Yr: null,
+          returnProgram: null,
+        };
+      } else if (allowReturnProgram && prof.residual > 0 && !existing.returnProgram) {
+        const cur = existing.currentPrice ?? currentApple;
+        const jsonRp = fromJson?.returnProgram ?? null;
+        const eff = jsonRp?.effectiveCost ?? fromJson?.programEffective2Yr ?? r10(cur * (1 - prof.residual));
+        out[cid] = {
+          ...existing,
+          programEffective2Yr: eff,
+          returnProgram: {
+            name: jsonRp?.name || prof.program,
+            months: jsonRp?.months || prof.months,
+            effectiveCost: eff,
+            residualValue: Math.max(cur - eff, 0),
+          },
+        };
+      } else if (existing.returnProgram && existing.programEffective2Yr === undefined) {
+        out[cid] = {
+          ...existing,
+          programEffective2Yr: existing.returnProgram.effectiveCost,
+        };
+      }
+      continue;
+    }
+
+    if (fromJson) {
+      const cur = fromJson.currentPrice ?? currentApple;
+      const launch = fromJson.launchPrice ?? launchApple;
+      const mnp = p.category === 'AirPods' ? null : (fromJson.mnpPrice ?? null);
+      const rp = p.category === 'AirPods' || !allowReturnProgram
+        ? null
+        : (fromJson.returnProgram ??
+          (fromJson.programEffective2Yr != null && prof.residual > 0
+            ? {
+                name: prof.program,
+                months: prof.months,
+                effectiveCost: fromJson.programEffective2Yr,
+                residualValue: Math.max(cur - fromJson.programEffective2Yr, 0),
+              }
+            : null));
+      out[cid] = {
+        launchPrice: launch,
+        currentPrice: cur,
+        mnpPrice: mnp,
+        programEffective2Yr: rp ? rp.effectiveCost : null,
+        returnProgram: rp,
+        note: '各社オンラインショップ価格表・マスターデータに基づく価格',
+      };
+      continue;
+    }
+
     const researchedPrice = researched?.[cid] ?? null;
     const launchPrice = researchedPrice ?? (isLegacyDirectPrice ? launchApple : r10(launchApple * prof.mult));
     const currentPrice = researchedPrice ?? (isLegacyDirectPrice ? currentApple : r10(currentApple * prof.mult));
-    const mnpPrice = p.releaseDate >= '2019-10-01' ? Math.max(0, currentPrice - prof.mnp) : null;
-    const hasReturn = prof.residual > 0 && p.releaseDate >= '2019-10-01';
+    const mnpPrice =
+      p.category !== 'AirPods' && prof.mnp != null && p.releaseDate >= '2019-10-01'
+        ? Math.max(0, currentPrice - prof.mnp)
+        : null;
+    const hasReturn = p.category !== 'AirPods' && prof.residual > 0 && allowReturnProgram;
+    const effCost = hasReturn ? r10(currentPrice * (1 - prof.residual)) : null;
     out[cid] = {
       launchPrice,
       currentPrice,
       mnpPrice,
+      programEffective2Yr: effCost,
       returnProgram: hasReturn
         ? {
             name: prof.program,
             months: prof.months,
-            effectiveCost: r10(currentPrice * (1 - prof.residual)),
-            residualValue: r10(currentPrice * prof.residual),
+            effectiveCost: effCost,
+            residualValue: Math.max(currentPrice - effCost, 0),
           }
         : null,
       note: researchedPrice
@@ -753,26 +892,22 @@ function inferSkuDiscontinuedStatus(p, s) {
     return { isDiscontinued: true, discontinuedDate: specDisc ?? lastPt?.date ?? undefined };
   }
 
-  // Appleのラインナップ法則に基づく自動判定 (2026年時点の基準)
   const rel = String(p.releaseDate ?? '');
   const relYear = parseInt(rel.slice(0, 4), 10) || 2020;
   const name = String(p.name ?? '');
 
-  // 1) Pro / Pro Max シリーズ (iPhone): 次世代モデル発売時点(発売から約1年後)でApple Store直販は販売終了
   if (p.category === 'iPhone' && (/\bPro(\s+Max)?\b/i.test(name) || /^iPhone\s+(X|XS|XS Max)$/i.test(name))) {
     if (rel < '2026-01-01') {
       return { isDiscontinued: true, discontinuedDate: `${relYear + 1}-09-10` };
     }
   }
 
-  // 2) 無印 / Plus / mini / SE / e (iPhone): iPhone 15以前、mini / SE / 16 Plus / 16e 等は終売
   if (p.category === 'iPhone') {
     if (rel < '2024-09-01' || /\b(mini|SE)\b/i.test(name) || /^iPhone 16 (Plus|Pro|Pro Max)$/i.test(name) || /^iPhone 16e$/i.test(name)) {
       return { isDiscontinued: true, discontinuedDate: `${Math.min(2026, relYear + 2)}-09-10` };
     }
   }
 
-  // 3) iPad / Mac / Apple Watch / AirPods: 後継世代が出た旧世代 (M1/M2/M3世代や2024年以前のモデル) は終売
   if (p.category !== 'iPhone' && rel < '2025-01-01') {
     return { isDiscontinued: true, discontinuedDate: `${Math.min(2026, relYear + 2)}-09-01` };
   }
@@ -794,13 +929,11 @@ products.forEach((p) => {
   const fallbackBaseJpy = refLaunchPt?.appleStorePrice ?? null;
 
   p.skus.forEach((s) => {
-    // 各価格履歴 (priceHistory) に marketUsdJpy / impliedAppleRate / rateDiff / currentFairJpy を付与
     if (Array.isArray(s.priceHistory) && s.priceHistory.length > 0) {
       let inferredSkuUsd = null;
       s.priceHistory = s.priceHistory.map((pt) => {
         let usdPrice = pt.usdPrice;
         if (usdPrice === 0) {
-          // 米国2年契約$0表記の廉価8GBモデルはアンロック実勢価格($375〜$450)で補完
           usdPrice = p.name === 'iPhone 4S' ? 450 : 375;
         } else if ((usdPrice == null || usdPrice <= 0) && inferredSkuUsd != null) {
           usdPrice = inferredSkuUsd;
@@ -821,7 +954,6 @@ products.forEach((p) => {
     const launchPrice = s.priceHistory?.[0]?.appleStorePrice ?? s.carriers?.apple?.launchPrice ?? null;
     const cachedSku = findCachedSku(cachedProd, s);
 
-    // 1) キャリア最新価格を最優先でマージし、未設定キャリアはリサーチ値・モデル値で補完
     if (cachedSku?.carriers && typeof cachedSku.carriers === 'object') {
       const mergedCarriers = { ...(s.carriers ?? {}) };
       for (const [cid, cVal] of Object.entries(cachedSku.carriers)) {
@@ -840,8 +972,8 @@ products.forEach((p) => {
       s.carriers = mergedCarriers;
     }
     s.carriers = synthesizeCarriersForSku(p, s);
+    delete s.carrierPricing;
 
-    // 1-b) SKUおよび各キャリアの販売終了ステータス (isDiscontinued / discontinuedDate) を付与
     const discStatus = inferSkuDiscontinuedStatus(p, s);
     s.isDiscontinued = discStatus.isDiscontinued;
     if (discStatus.discontinuedDate) {
@@ -856,7 +988,6 @@ products.forEach((p) => {
       }
     }
 
-    // 2) 中古最安値 (usedPricing) を最優先でマージ（キャッシュにないSKUまたは実API未取得時は推定フォールバック・店舗名なし）
     if (cachedSku?.usedPricing && cachedSku.usedPricing.lowestPrice > 0) {
       const cu = structuredClone(cachedSku.usedPricing);
       const rIsApi = cu.rakuten?.source === 'api' || cu.rakuten?.source === 'live';
@@ -916,7 +1047,6 @@ products.forEach((p) => {
     }
   });
 
-  // 製品全体の販売終了判定 (全SKUが販売終了なら製品自体も isDiscontinued = true)
   const priced = p.skus.filter((s) => s.priceHistory?.length > 0);
   const targetSkus = priced.length > 0 ? priced : p.skus;
   const allSkusDiscontinued = targetSkus.length > 0 && targetSkus.every((s) => s.isDiscontinued);
@@ -985,16 +1115,16 @@ function deviceSubfamilyRank(p) {
       if (/\bPro\s+Max\b/i.test(n)) return 8;
       if (/\bPro\b/i.test(n)) return 7;
       if (/\b(Ultra|Duo)\b/i.test(n)) return 9;
-      return 4; // 標準 (無印)
+      return 4;
     case 'iPad':
       if (/\bmini\b/i.test(n)) return 2;
       if (/\bAir\b/i.test(n)) return 3;
       if (/\bPro\b/i.test(n)) return 4;
-      return 1; // iPad (無印)
+      return 1;
     case 'Apple Watch':
       if (/\bSE\b/i.test(n)) return 1;
       if (/\bUltra\b/i.test(n)) return 3;
-      return 2; // Series
+      return 2;
     case 'Mac':
       if (/^MacBook\s*(Neo|\(|$)/i.test(n)) return 1;
       if (/^MacBook\s*Air/i.test(n)) return 2;
@@ -1051,7 +1181,6 @@ function compareProducts(a, b) {
 
 products.forEach((p) => {
   p.skus.sort(compareSkus);
-  // 発売時価格 (最小構成 SKU) に対しても marketUsdJpy / impliedAppleRate / rateDiff / currentFairJpy を付与
   const pricedSku = p.skus.find((s) => s.priceHistory?.length > 0) ?? p.skus[0];
   const launchPt = pricedSku?.priceHistory?.[0];
   const currentPt = pricedSku?.priceHistory?.at(-1);
@@ -1073,7 +1202,7 @@ const out = {
     generatedAt: new Date().toISOString(),
     latestUsdJpy,
     latestFxDate: fxCache.latestDate ?? TODAY,
-    source: 'AppleDB (api.appledb.dev) + data/prices (価格リサーチ) + Frankfurter API (data/prices/fx-cache.json) + presets + data/detail',
+    source: 'AppleDB (api.appledb.dev) + data/catalog (価格リサーチ・詳細仕様) + Frankfurter API (data/cache/fx-cache.json) + data/presets.mjs',
     disclaimer: '価格履歴は報道・公式情報を元に収集(confidence が high 以外は概算)。為替レートは Frankfurter API 実勢レート、Appleレートは当時の消費税率(5%/8%/10%)を除いた税抜円価格÷USD価格で算出。',
   },
   products,
@@ -1090,3 +1219,4 @@ for (const c of cats) {
   const ps = products.filter((p) => p.category === c);
   console.log(`${c.padEnd(12)} ${String(ps.length).padStart(3)}機種 | ` + fields.map((f) => `${f}:${ps.filter((p) => p.specs[f]).length}`).join(' ') + ` | JPY価格:${ps.filter((p) => p.skus.some((s) => s.priceHistory.length)).length} 改定履歴:${ps.filter((p) => p.skus.some((s) => s.priceHistory.length > 1)).length}`);
 }
+

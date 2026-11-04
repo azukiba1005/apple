@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import { searchRakutenUsedPrice } from './data/fetch-used-prices.mjs';
+import { searchRakutenUsedPrice } from './scripts/fetch-live-prices.mjs';
 
 function usedPriceProxy(envConfig: {
   appId: string;

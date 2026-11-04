@@ -7,9 +7,9 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "fetch:used": "node data/fetch-used-prices.mjs",
-    "fetch:prices": "node data/fetch-live-prices.mjs",
-    "update:all": "npm run fetch:prices && node data/build-products.mjs"
+    "build:data": "node scripts/build-products.mjs",
+    "fetch:prices": "node scripts/fetch-live-prices.mjs",
+    "update:all": "npm run fetch:prices && npm run build:data"
   },
   "dependencies": {
     "html-to-image": "^1.11.13",

@@ -163,24 +163,23 @@ const hist = (rows: H[]): PricePoint[] =>
 
 type CarrierKey = Exclude<CarrierId, 'apple'>;
 interface Profile { mult: number; mnp: number; residual: number; program: string; months: number }
-const PROFILES: Record<'phone' | 'tablet' | 'watch', Record<CarrierKey, Profile>> = {
+const PROFILES: Record<'phone' | 'tablet' | 'watch', Partial<Record<CarrierKey, Profile>>> = {
   phone: {
     docomo: { mult: 1.19, mnp: 22000, residual: 0.42, program: 'いつでもカエドキプログラム', months: 23 },
     au: { mult: 1.17, mnp: 22000, residual: 0.5, program: 'スマホトクするプログラム', months: 24 },
     softbank: { mult: 1.18, mnp: 21600, residual: 0.5, program: '新トクするサポート', months: 24 },
-    rakuten: { mult: 1.02, mnp: 20000, residual: 0.5, program: 'iPhoneアップグレードプログラム', months: 24 },
+    rakuten: { mult: 1.02, mnp: 20000, residual: 0.5, program: '楽天モバイル買い替え超トクプログラム', months: 24 },
   },
   tablet: {
-    docomo: { mult: 1.12, mnp: 11000, residual: 0.42, program: 'いつでもカエドキプログラム', months: 23 },
-    au: { mult: 1.1, mnp: 11000, residual: 0.5, program: 'スマホトクするプログラム', months: 24 },
-    softbank: { mult: 1.1, mnp: 11000, residual: 0.5, program: '新トクするサポート', months: 24 },
-    rakuten: { mult: 1.0, mnp: 10000, residual: 0.5, program: 'アップグレードプログラム', months: 24 },
+    docomo: { mult: 1.15, mnp: 0, residual: 0.5, program: 'いつでもカエドキプログラム', months: 23 },
+    au: { mult: 1.14, mnp: 0, residual: 0.52, program: 'スマホトクするプログラム', months: 24 },
+    softbank: { mult: 1.15, mnp: 0, residual: 0.51, program: '新トクするサポート', months: 24 },
   },
   watch: {
-    docomo: { mult: 1.1, mnp: 5500, residual: 0, program: '', months: 0 },
-    au: { mult: 1.08, mnp: 5500, residual: 0, program: '', months: 0 },
-    softbank: { mult: 1.08, mnp: 5500, residual: 0, program: '', months: 0 },
-    rakuten: { mult: 1.0, mnp: 5000, residual: 0, program: '', months: 0 },
+    docomo: { mult: 1.13, mnp: 0, residual: 0.49, program: 'いつでもカエドキプログラム', months: 23 },
+    au: { mult: 1.11, mnp: 0, residual: 0.5, program: 'スマホトクするプログラム', months: 24 },
+    softbank: { mult: 1.12, mnp: 0, residual: 0.5, program: '新トクするサポート', months: 24 },
+    rakuten: { mult: 1.03, mnp: 0, residual: 0.5, program: '楽天モバイル買い替え超トクプログラム', months: 24 },
   },
 };
 const r5 = (n: number) => Math.round(n / 5) * 5;
@@ -190,11 +189,12 @@ function mkCarriers(h: PricePoint[], kind: 'phone' | 'tablet' | 'watch'): Sku['c
   const out: Sku['carriers'] = {};
   (Object.keys(PROFILES[kind]) as CarrierKey[]).forEach((c) => {
     const p = PROFILES[kind][c];
+    if (!p) return;
     const current = r5(last * p.mult);
     out[c] = {
       launchPrice: r5(first * p.mult),
       currentPrice: current,
-      mnpPrice: Math.max(current - p.mnp, 0),
+      mnpPrice: p.mnp > 0 ? Math.max(current - p.mnp, 0) : null,
       returnProgram: p.residual > 0
         ? { name: p.program, months: p.months, effectiveCost: r5(current * (1 - p.residual)), residualValue: r5(current * p.residual) }
         : null,
@@ -793,7 +793,40 @@ function normalizeDataset(raw: unknown): { products: Product[]; errors: string[]
         isDiscontinued: s.isDiscontinued,
         discontinuedDate: s.discontinuedDate,
       });
-      const carriers: Sku['carriers'] = { ...(s.carriers ?? {}) };
+      const rawCarriers = { ...((s as any).carrierPricing ?? {}), ...(s.carriers ?? {}) } as Record<string, any>;
+      const carriers: Sku['carriers'] = {};
+      (['docomo', 'au', 'softbank', 'rakuten', 'apple'] as CarrierId[]).forEach((cid) => {
+        const rawCp = rawCarriers[cid];
+        if (!rawCp || typeof rawCp !== 'object') return;
+        if (p.category === 'iPad' && cid === 'rakuten') return;
+        const currentPrice = rawCp.currentPrice ?? rawCp.launchPrice;
+        if (typeof currentPrice !== 'number') return;
+        const launchPrice = typeof rawCp.launchPrice === 'number' ? rawCp.launchPrice : currentPrice;
+        let returnProgram = rawCp.returnProgram ?? null;
+        if (!returnProgram && typeof rawCp.programEffective2Yr === 'number') {
+          const progNames: Record<string, { name: string; months: number }> = {
+            docomo: { name: 'いつでもカエドキプログラム', months: 23 },
+            au: { name: 'スマホトクするプログラム', months: 24 },
+            softbank: { name: '新トクするサポート', months: 24 },
+            rakuten: { name: '楽天モバイル買い替え超トクプログラム', months: 24 },
+          };
+          const meta = progNames[cid] ?? { name: '2年返却プログラム', months: 24 };
+          returnProgram = {
+            name: meta.name,
+            months: meta.months,
+            effectiveCost: rawCp.programEffective2Yr,
+            residualValue: Math.max(currentPrice - rawCp.programEffective2Yr, 0),
+          };
+        }
+        carriers[cid] = {
+          launchPrice,
+          currentPrice,
+          mnpPrice: typeof rawCp.mnpPrice === 'number' ? rawCp.mnpPrice : null,
+          returnProgram,
+          ...(rawCp.isDiscontinued != null ? { isDiscontinued: rawCp.isDiscontinued } : {}),
+          ...(rawCp.discontinuedDate ? { discontinuedDate: rawCp.discontinuedDate } : {}),
+        };
+      });
       if (priceHistory.length) {
         carriers.apple = {
           launchPrice: priceHistory[0].appleStorePrice,
@@ -892,6 +925,127 @@ function carrierValue(cp: CarrierPrice | undefined, mode: Mode, mnp: boolean): n
   const disc = mnp && cp.mnpPrice != null ? cp.currentPrice - cp.mnpPrice : 0;
   if (mode === 'bulk') return Math.max(cp.currentPrice - disc, 0);
   return cp.returnProgram ? Math.max(cp.returnProgram.effectiveCost - disc, 0) : null;
+}
+
+/**
+ * iPad (Wi-Fi / Wi-Fi + Cellular) や Apple Watch (GPS / GPS + Cellular) で
+ * 1クリックで通信方式を切り替えられる候補リストを返す
+ */
+function getProductConnectivityOptions(p: Product): ConnectivityType[] {
+  if (p.category === 'iPad') {
+    const hasWifi = p.skus.some((s) => s.connectivity === 'Wi-Fi');
+    const hasCell = p.skus.some((s) => s.connectivity === 'Wi-Fi + Cellular');
+    return hasWifi && hasCell ? ['Wi-Fi', 'Wi-Fi + Cellular'] : [];
+  }
+  if (p.category === 'Apple Watch') {
+    const hasGps = p.skus.some((s) => s.connectivity === 'GPS');
+    const hasCell = p.skus.some((s) => s.connectivity === 'GPS + Cellular');
+    return hasGps && hasCell ? ['GPS', 'GPS + Cellular'] : [];
+  }
+  return [];
+}
+
+/**
+ * 同じ容量/ケースサイズで指定した通信方式のペアSKUを検索する
+ */
+function findSiblingSkuByConnectivity(p: Product, currentSku: Sku, targetConn: ConnectivityType): Sku | undefined {
+  if (currentSku.connectivity === targetConn) return currentSku;
+  return (
+    p.skus.find((s) => s.connectivity === targetConn && s.storage === currentSku.storage) ??
+    p.skus.find((s) => s.connectivity === targetConn)
+  );
+}
+
+/**
+ * Wi-Fi / GPS 単体モデルが選択されている場合、同じ容量/ケースサイズの Cellular 版SKUを返す
+ */
+function findSiblingCellularSku(p: Product, currentSku: Sku): Sku | undefined {
+  if (p.category === 'iPad' && currentSku.connectivity === 'Wi-Fi') {
+    return findSiblingSkuByConnectivity(p, currentSku, 'Wi-Fi + Cellular');
+  }
+  if (p.category === 'Apple Watch' && currentSku.connectivity === 'GPS') {
+    return findSiblingSkuByConnectivity(p, currentSku, 'GPS + Cellular');
+  }
+  return undefined;
+}
+
+export interface CarrierUnavailableInfo {
+  badge: string;
+  refPrice?: number;
+  refLabel?: string;
+  cellularSku?: Sku;
+}
+
+/**
+ * キャリア価格が null（未設定・対象外）のセルに対して、
+ * カテゴリ別の販売ルールに応じたスマートな理由バッジと参考価格情報を返す
+ */
+function getCarrierUnavailableInfo(
+  p: Product,
+  sku: Sku,
+  carrierId: CarrierId,
+  mode: Mode,
+  mnp: boolean,
+): CarrierUnavailableInfo {
+  const cp = sku.carriers[carrierId];
+
+  // 1. Apple Store 直販
+  if (carrierId === 'apple') {
+    if (cp && mode === 'return') {
+      return { badge: `対象外（一括購入のみ：${yen(cp.currentPrice)}）` };
+    }
+    return {
+      badge: p.specs.launchPriceUsd
+        ? `日本未発売 (米国 ${String(p.specs.launchPriceUsd)})`
+        : '価格データなし',
+    };
+  }
+
+  // 2. iPad × 楽天モバイル（端末取扱なし・SIMのみ対応）
+  if (p.category === 'iPad' && carrierId === 'rakuten') {
+    return { badge: '取扱なし（SIMのみ対応）' };
+  }
+
+  // 3. AirPods × 2年返却モード（MNP割引・返却プログラム対象外、一括購入のみ）
+  if (p.category === 'AirPods' && mode === 'return' && cp) {
+    return { badge: `対象外（一括購入のみ：${yen(cp.currentPrice)}）` };
+  }
+
+  // 4. キャリア販売はあるが2年返却プログラム非対応（旧世代iPad・旧世代iPhoneなど）
+  if (cp && mode === 'return' && !cp.returnProgram) {
+    return { badge: `一括販売のみ（${yen(cp.currentPrice)}）` };
+  }
+
+  // 5. iPad (Wi-Fiモデル) / Apple Watch (GPSモデル) が選ばれている場合 → Cellular版のみ取扱 ＋ Cellular版参考価格
+  if ((p.category === 'iPad' || p.category === 'Apple Watch') && !/Cellular/i.test(sku.connectivity)) {
+    const cellSku = findSiblingCellularSku(p, sku);
+    const cellCp = cellSku?.carriers[carrierId];
+    if (cellCp) {
+      const cellVal = carrierValue(cellCp, mode, mnp);
+      if (cellVal != null) {
+        return {
+          badge: 'ー（Cellularモデルのみ取扱）',
+          refPrice: cellVal,
+          refLabel: mode === 'return' ? '※Cellular版の2年返却実質' : '※Cellular版の価格',
+          cellularSku: cellSku,
+        };
+      }
+      return {
+        badge: 'ー（Cellularモデルのみ取扱）',
+        refPrice: cellCp.currentPrice,
+        refLabel: '※Cellular版（一括のみ）',
+        cellularSku: cellSku,
+      };
+    }
+    return { badge: 'ー（Cellularモデルのみ取扱）', cellularSku: cellSku };
+  }
+
+  // 6. Mac シリーズ
+  if (p.category === 'Mac') {
+    return { badge: '取扱なし（直販・量販店のみ）' };
+  }
+
+  return { badge: '取扱なし' };
 }
 
 interface Sel { pid: string; sid: string }
@@ -1174,7 +1328,17 @@ function buildCompareTable(
   })]);
   SPEC_ROWS.forEach((r) => rows.push([r.label, ...cols.map((c) => specText(c.p.specs[r.key]))]));
   const modeLabel = mode === 'bulk' ? `一括${mnp ? '(MNP/新規割引後)' : ''}` : `2年返却 実質${mnp ? '(MNP/新規割引後)' : ''}`;
-  CARRIER_ORDER.forEach((id) => rows.push([`${CARRIER_META[id].label} ${modeLabel}`, ...cols.map((c) => { const v = carrierValue(c.sku.carriers[id], mode, mnp); return v == null ? '—' : yen(v); })]));
+  CARRIER_ORDER.forEach((id) =>
+    rows.push([
+      `${CARRIER_META[id].label} ${modeLabel}`,
+      ...cols.map((c) => {
+        const v = carrierValue(c.sku.carriers[id], mode, mnp);
+        if (v != null) return yen(v);
+        const unavail = getCarrierUnavailableInfo(c.p, c.sku, id, mode, mnp);
+        return unavail.refPrice != null ? `${unavail.badge} (${unavail.refLabel}: ${yen(unavail.refPrice)})` : unavail.badge;
+      }),
+    ]),
+  );
   rows.push(['最安キャリア', ...cols.map((c) => {
     const vals = CARRIER_ORDER.map((id) => ({ id, v: carrierValue(c.sku.carriers[id], mode, mnp) })).filter((x): x is { id: CarrierId; v: number } => x.v != null);
     if (!vals.length) return '—';
@@ -1537,7 +1701,10 @@ function buildCompareExcelSheets(products: Product[], sel: Sel[], mode: Mode, mn
       ...cols.map((c): XlsCell => {
         const cp = c.sku.carriers[id];
         const v = carrierValue(cp, mode, mnp);
-        if (v == null) return cp && mode === 'return' ? '返却プログラム対象外' : '—';
+        if (v == null) {
+          const unavail = getCarrierUnavailableInfo(c.p, c.sku, id, mode, mnp);
+          return unavail.refPrice != null ? `${unavail.badge} (${unavail.refLabel}: ${yen(unavail.refPrice)})` : unavail.badge;
+        }
         const ch = cheapestFor(c.sku);
         return { v, k: ch.ids.includes(id) ? 'yenBest' : 'yen' };
       }),
@@ -4738,6 +4905,49 @@ function CompareView({
                         )}
                       </div>
 
+                      {/* iPad / Apple Watch 用: 通信方式（Wi-Fi / Cellular または GPS / Cellular）1クリック切替トグル */}
+                      {!isExporting && (() => {
+                        const connOpts = getProductConnectivityOptions(c.p);
+                        if (connOpts.length < 2) return null;
+                        return (
+                          <div
+                            data-export-ignore="true"
+                            role="group"
+                            aria-label={`${c.p.name} の通信方式切り替え`}
+                            className="mt-2 flex items-center justify-between gap-1.5 rounded-lg bg-zinc-100/90 p-0.5 text-[11px] dark:bg-zinc-800/80"
+                          >
+                            <span className="pl-2 text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+                              通信方式
+                            </span>
+                            <div className="flex items-center gap-0.5">
+                              {connOpts.map((conn) => {
+                                const active = c.sku.connectivity === conn;
+                                const targetSku = findSiblingSkuByConnectivity(c.p, c.sku, conn);
+                                return (
+                                  <button
+                                    key={conn}
+                                    type="button"
+                                    disabled={!targetSku}
+                                    onClick={() => {
+                                      if (targetSku) {
+                                        setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: targetSku.id } : s)));
+                                      }
+                                    }}
+                                    className={`rounded-md px-2 py-0.5 text-[11px] font-semibold transition ${
+                                      active
+                                        ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-900 dark:text-zinc-100'
+                                        : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
+                                    }`}
+                                  >
+                                    {conn}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })()}
+
                       {/* 販売終了モデルの主役価格切替はショップ詳細表示ON時のみ補助表示 */}
                       {isDisc && isShopsOpen && (
                         <div
@@ -4799,7 +5009,63 @@ function CompareView({
                           </div>
                         </div>
                       ) : ch.min == null ? (
-                        <div className="mt-2.5 text-xs sm:text-sm text-zinc-500">このモードで購入可能な窓口がありません</div>
+                        (() => {
+                          const cellSku = findSiblingCellularSku(c.p, c.sku);
+                          if (cellSku) {
+                            const cellVals = CARRIER_ORDER.map((id) => ({
+                              id,
+                              v: carrierValue(cellSku.carriers[id], mode, mnp),
+                            })).filter((x): x is { id: CarrierId; v: number } => x.v != null);
+                            const cellMin = cellVals.length ? Math.min(...cellVals.map((x) => x.v)) : null;
+                            const cellBestIds = cellMin != null ? cellVals.filter((x) => x.v === cellMin).map((x) => x.id) : [];
+                            return (
+                              <div className="mt-2.5 space-y-1.5">
+                                <div className="flex flex-wrap items-center justify-between gap-1.5">
+                                  <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                                    ー（Cellularモデルのみ取扱）
+                                  </span>
+                                  {!isExporting && (
+                                    <button
+                                      type="button"
+                                      data-export-ignore="true"
+                                      onClick={() =>
+                                        setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: cellSku.id } : s)))
+                                      }
+                                      className="rounded-md border border-sky-200 bg-sky-50 px-2 py-0.5 text-[11px] font-semibold text-sky-700 transition hover:bg-sky-100 dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-300"
+                                    >
+                                      {cellSku.connectivity} に切替
+                                    </button>
+                                  )}
+                                </div>
+                                {cellMin != null && (
+                                  <div className="flex flex-wrap items-center justify-between gap-1.5 rounded-lg bg-zinc-50 px-2.5 py-1.5 text-xs dark:bg-zinc-800/50">
+                                    <span className="text-zinc-500 dark:text-zinc-400">
+                                      ※Cellular版の2年返却最安:{' '}
+                                      <strong className="font-extrabold tabular-nums text-zinc-800 dark:text-zinc-100">
+                                        {yen(cellMin)}
+                                      </strong>
+                                    </span>
+                                    <div className="flex flex-wrap items-center gap-1">
+                                      {cellBestIds.map((id) => (
+                                        <CarrierBadge key={id} id={id} small />
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                          const bulkPrice = c.sku.carriers.apple?.currentPrice;
+                          return (
+                            <div className="mt-2.5">
+                              <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-1 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                                {bulkPrice != null
+                                  ? `対象外（一括購入のみ：${yen(bulkPrice)}）`
+                                  : 'このモードで購入可能な窓口がありません'}
+                              </span>
+                            </div>
+                          );
+                        })()
                       ) : isDisc ? (
                         <div className="mt-2.5 flex flex-wrap items-baseline justify-between gap-2">
                           <div>
@@ -5115,7 +5381,40 @@ function CompareView({
                                 {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
                               </span>
                               {v == null ? (
-                                <span className="text-zinc-400">{cp ? (mode === 'return' ? '返却対象外' : '—') : id === 'apple' ? '価格なし' : '取扱なし'}</span>
+                                (() => {
+                                  const unavail = getCarrierUnavailableInfo(c.p, c.sku, id, mode, mnp);
+                                  return (
+                                    <div className="flex flex-col items-end gap-0.5 text-right">
+                                      <span className="inline-flex items-center rounded-md bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                                        {unavail.badge}
+                                      </span>
+                                      {unavail.refPrice != null && (
+                                        <div className="flex flex-wrap items-center justify-end gap-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+                                          <span className="rounded bg-zinc-200/70 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600 dark:bg-zinc-700/80 dark:text-zinc-300">
+                                            {unavail.refLabel}:{' '}
+                                            <strong className="font-bold tabular-nums">{yen(unavail.refPrice)}</strong>
+                                          </span>
+                                          {!isExporting && unavail.cellularSku && (
+                                            <button
+                                              type="button"
+                                              data-export-ignore="true"
+                                              onClick={() =>
+                                                setSels(
+                                                  sels.map((s) =>
+                                                    s.pid === c.sel.pid ? { ...s, sid: unavail.cellularSku!.id } : s,
+                                                  ),
+                                                )
+                                              }
+                                              className="text-[10px] font-semibold text-sky-600 underline hover:text-sky-500 dark:text-sky-400"
+                                            >
+                                              Cellular版へ切替
+                                            </button>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })()
                               ) : (
                                 <span className="inline-flex flex-wrap items-center justify-end gap-1.5">
                                   {isDisc ? (
@@ -5498,14 +5797,61 @@ function CompareView({
                             容量・仕様: {c.sku.label}
                           </div>
                         ) : (
-                          <select
-                            data-export-ignore="true"
-                            className={`${selectCls} w-full`}
-                            value={c.sku.id}
-                            onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}
-                          >
-                            {c.p.skus.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
-                          </select>
+                          <>
+                            <select
+                              data-export-ignore="true"
+                              className={`${selectCls} w-full`}
+                              value={c.sku.id}
+                              onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}
+                            >
+                              {c.p.skus.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
+                            </select>
+                            {(() => {
+                              const connOpts = getProductConnectivityOptions(c.p);
+                              if (connOpts.length < 2) return null;
+                              return (
+                                <div
+                                  data-export-ignore="true"
+                                  role="group"
+                                  aria-label={`${c.p.name} の通信方式切り替え`}
+                                  className="mt-1.5 flex items-center justify-between gap-1 rounded-lg bg-zinc-100 p-0.5 text-[11px] font-normal dark:bg-zinc-800"
+                                >
+                                  <span className="pl-1.5 text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+                                    通信
+                                  </span>
+                                  <div className="flex items-center gap-0.5">
+                                    {connOpts.map((conn) => {
+                                      const active = c.sku.connectivity === conn;
+                                      const targetSku = findSiblingSkuByConnectivity(c.p, c.sku, conn);
+                                      return (
+                                        <button
+                                          key={conn}
+                                          type="button"
+                                          disabled={!targetSku}
+                                          onClick={() => {
+                                            if (targetSku) {
+                                              setSels(
+                                                sels.map((s) =>
+                                                  s.pid === c.sel.pid ? { ...s, sid: targetSku.id } : s,
+                                                ),
+                                              );
+                                            }
+                                          }}
+                                          className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold transition ${
+                                            active
+                                              ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-900 dark:text-zinc-100'
+                                              : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
+                                          }`}
+                                        >
+                                          {conn}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </>
                         )}
                       </th>
                     );
@@ -5618,17 +5964,42 @@ function CompareView({
                           }`}
                         >
                           {v == null ? (
-                            <div className="text-xs text-zinc-400 dark:text-zinc-500">
-                              {cp
-                                ? mode === 'return'
-                                  ? '返却プログラム対象外'
-                                  : '—'
-                                : id === 'apple'
-                                  ? c.p.specs.launchPriceUsd
-                                    ? `日本未発売 (米国 ${String(c.p.specs.launchPriceUsd)})`
-                                    : '価格データなし'
-                                  : '取扱なし'}
-                            </div>
+                            (() => {
+                              const unavail = getCarrierUnavailableInfo(c.p, c.sku, id, mode, mnp);
+                              return (
+                                <div className="space-y-1">
+                                  <span className="inline-flex items-center rounded-md bg-zinc-100/90 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800/80 dark:text-zinc-400">
+                                    {unavail.badge}
+                                  </span>
+                                  {unavail.refPrice != null && (
+                                    <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
+                                      <span className="inline-flex items-center gap-1 rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                                        <span>{unavail.refLabel}:</span>
+                                        <strong className="font-bold tabular-nums text-zinc-700 dark:text-zinc-200">
+                                          {yen(unavail.refPrice)}
+                                        </strong>
+                                      </span>
+                                      {!isExporting && unavail.cellularSku && (
+                                        <button
+                                          type="button"
+                                          data-export-ignore="true"
+                                          onClick={() =>
+                                            setSels(
+                                              sels.map((s) =>
+                                                s.pid === c.sel.pid ? { ...s, sid: unavail.cellularSku!.id } : s,
+                                              ),
+                                            )
+                                          }
+                                          className="text-[10px] font-semibold text-sky-600 underline hover:text-sky-500 dark:text-sky-400"
+                                        >
+                                          Cellular版へ切替
+                                        </button>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })()
                           ) : (
                             <div className="space-y-0.5">
                               {/* 1行目: メイン価格 ＋ 月々目安(返却モード時) ＋ 最安ピル or 最安との差額 */}
@@ -8234,7 +8605,7 @@ function BudgetView({
  * 8. App
  * ===================================================================================== */
 
-const LS_DATA = 'apple-price-atlas:data:v2';
+const LS_DATA = 'apple-price-atlas:data:v3';
 const LS_THEME = 'apple-price-atlas:theme';
 const LS_EXT = 'apple-price-atlas:ext-version';
 const LS_AUTODB = 'apple-price-atlas:appledb-auto';

@@ -9,9 +9,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'data/fetch-live-prices.mjs'
-      - 'data/fetch-used-prices.mjs'
-      - 'data/build-products.mjs'
+      - 'scripts/fetch-live-prices.mjs'
+      - 'scripts/build-products.mjs'
+      - 'data/catalog/**'
       - '.github/workflows/update-prices.yml'
 
 permissions:
@@ -51,7 +51,8 @@ jobs:
 
       - name: Download AppleDB device data
         run: |
-          curl -sSL --retry 3 --fail -o data/appledb-main.json https://api.appledb.dev/device/main.json || echo "AppleDB の事前取得に失敗（build-products.mjs 側で再試行します）"
+          mkdir -p data/cache
+          curl -sSL --retry 3 --fail -o data/cache/appledb-main.json https://api.appledb.dev/device/main.json || echo "AppleDB の事前取得に失敗（build-products.mjs 側で再試行します）"
 
       - name: Fetch live prices & rebuild products.json
         env:
@@ -68,7 +69,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/prices/live-prices-cache.json public/products.json
+          git add data/cache/live-prices-cache.json data/cache/fx-cache.json public/products.json
           if git diff --cached --quiet; then
             echo "価格データに変更はありませんでした。"
             exit 0

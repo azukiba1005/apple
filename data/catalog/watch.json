@@ -1,0 +1,3673 @@
+{
+  "meta": {
+    "title": "Apple Watch 全世代 日本 Apple Store 価格履歴 & キャリア価格マスター (2015〜2026)",
+    "currency": "JPY",
+    "taxIncluded": true,
+    "updatedAt": "2026-11-04",
+    "familyCount": 20,
+    "notes": "watch-airpods.json: 日本 Apple Store 税込価格。Apple Watch はアルミニウムケース (初代は Sport) の最廉価構成を基準。2021-03 以前の税別表示価格は税込換算 (1円未満切り捨て) し note に税別価格を記載。出典は検索結果のリダイレクト URL しか得られなかったものはドメイン名と記事概要で記載。"
+  },
+  "families": {
+    "Apple Watch Series 12": {
+      "releaseDate": "2026-09-18",
+      "skus": [
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2026-09-18",
+              "event": "発売時",
+              "jpy": 71800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "mobareco.jp / iphone-mania.jp / yamada-denkiweb.com (2026-09 Apple Watch Series 12 / Ultra 4 発表)",
+              "note": "「71,800円から」(最廉価構成)と複数報道。USD は esrtech.com"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "46mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2026-09-18",
+              "event": "発売時",
+              "jpy": 76800,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "iphone-mania.jp (アルミ 46mm 80,800円〜 との記載。Cellular 42mm との記載もあり矛盾)",
+              "note": "要確認: 80,800円は 42mm GPS + Cellular の価格の可能性あり",
+              "usd": 429
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2026-09-18",
+              "event": "発売時",
+              "jpy": 89800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "mobareco.jp / iphone-mania.jp / apple.com/jp (2026-09 Apple Watch Series 12 GPS + Cellular 42mm)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 103300,
+              "currentPrice": 103290,
+              "mnpPrice": null,
+              "programEffective2Yr": 51810,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 51810,
+                "residualValue": 51480
+              }
+            },
+            "au": {
+              "launchPrice": 101400,
+              "currentPrice": 101400,
+              "mnpPrice": null,
+              "programEffective2Yr": 50700,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 50700,
+                "residualValue": 50700
+              }
+            },
+            "softbank": {
+              "launchPrice": 103000,
+              "currentPrice": 102960,
+              "mnpPrice": null,
+              "programEffective2Yr": 51480,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 51480,
+                "residualValue": 51480
+              }
+            },
+            "rakuten": {
+              "launchPrice": 94800,
+              "currentPrice": 94800,
+              "mnpPrice": null,
+              "programEffective2Yr": 47400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 47400,
+                "residualValue": 47400
+              }
+            }
+          }
+        },
+        {
+          "size": "46mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2026-09-18",
+              "event": "発売時",
+              "jpy": 94800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "mobareco.jp / iphone-mania.jp / apple.com/jp (2026-09 Apple Watch Series 12 GPS + Cellular 46mm)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 109000,
+              "currentPrice": 109010,
+              "mnpPrice": null,
+              "programEffective2Yr": 54670,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 54670,
+                "residualValue": 54340
+              }
+            },
+            "au": {
+              "launchPrice": 107000,
+              "currentPrice": 107000,
+              "mnpPrice": null,
+              "programEffective2Yr": 53500,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 53500,
+                "residualValue": 53500
+              }
+            },
+            "softbank": {
+              "launchPrice": 108700,
+              "currentPrice": 108720,
+              "mnpPrice": null,
+              "programEffective2Yr": 54360,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 54360,
+                "residualValue": 54360
+              }
+            },
+            "rakuten": {
+              "launchPrice": 99800,
+              "currentPrice": 99800,
+              "mnpPrice": null,
+              "programEffective2Yr": 49900,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 49900,
+                "residualValue": 49900
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Ultra 4": {
+      "releaseDate": "2026-09-18",
+      "skus": [
+        {
+          "size": "49mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2026-09-18",
+              "event": "発売時",
+              "jpy": 142800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "mobareco.jp / iphone-mania.jp / yamada-denkiweb.com (2026-09 Apple Watch Series 12 / Ultra 4 発表) / esrtech.com (USD)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 164200,
+              "currentPrice": 164230,
+              "mnpPrice": null,
+              "programEffective2Yr": 82170,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 82170,
+                "residualValue": 82060
+              }
+            },
+            "au": {
+              "launchPrice": 161400,
+              "currentPrice": 161400,
+              "mnpPrice": null,
+              "programEffective2Yr": 80700,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 80700,
+                "residualValue": 80700
+              }
+            },
+            "softbank": {
+              "launchPrice": 164200,
+              "currentPrice": 164160,
+              "mnpPrice": null,
+              "programEffective2Yr": 82080,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 82080,
+                "residualValue": 82080
+              }
+            },
+            "rakuten": {
+              "launchPrice": 150800,
+              "currentPrice": 150800,
+              "mnpPrice": null,
+              "programEffective2Yr": 75400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 75400,
+                "residualValue": 75400
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch SE 3": {
+      "releaseDate": "2025-09-19",
+      "skus": [
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 37800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 41800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp / applelinkage.com / note.com (2026-07-18 Apple Watch / AirPods / iPhone 値上げ) / pricey.jp",
+              "note": "米国価格は据え置き"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 42800,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 46800,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp / applelinkage.com / note.com (2026-07-18 Apple Watch / AirPods / iPhone 値上げ) / pricey.jp",
+              "note": "米国価格は据え置き"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 45800,
+              "usd": 299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 50800,
+              "usd": 299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp / applelinkage.com / note.com (2026-07-18 Apple Watch / AirPods / iPhone 値上げ) / pricey.jp",
+              "note": "米国価格は据え置き"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 52900,
+              "currentPrice": 58630,
+              "mnpPrice": null,
+              "programEffective2Yr": 29590,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 29590,
+                "residualValue": 29040
+              }
+            },
+            "au": {
+              "launchPrice": 51800,
+              "currentPrice": 57400,
+              "mnpPrice": null,
+              "programEffective2Yr": 28700,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 28700,
+                "residualValue": 28700
+              }
+            },
+            "softbank": {
+              "launchPrice": 52600,
+              "currentPrice": 58320,
+              "mnpPrice": null,
+              "programEffective2Yr": 29160,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 29160,
+                "residualValue": 29160
+              }
+            },
+            "rakuten": {
+              "launchPrice": 48500,
+              "currentPrice": 53800,
+              "mnpPrice": null,
+              "programEffective2Yr": 26900,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 26900,
+                "residualValue": 26900
+              }
+            }
+          }
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 50800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 55800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "impress.co.jp / applelinkage.com / note.com (2026-07-18 Apple Watch / AirPods / iPhone 値上げ) / pricey.jp",
+              "note": "米国価格は据え置き"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 58600,
+              "currentPrice": 64350,
+              "mnpPrice": null,
+              "programEffective2Yr": 32450,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 32450,
+                "residualValue": 31900
+              }
+            },
+            "au": {
+              "launchPrice": 57400,
+              "currentPrice": 63000,
+              "mnpPrice": null,
+              "programEffective2Yr": 31500,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 31500,
+                "residualValue": 31500
+              }
+            },
+            "softbank": {
+              "launchPrice": 58300,
+              "currentPrice": 64080,
+              "mnpPrice": null,
+              "programEffective2Yr": 32040,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 32040,
+                "residualValue": 32040
+              }
+            },
+            "rakuten": {
+              "launchPrice": 53500,
+              "currentPrice": 58800,
+              "mnpPrice": null,
+              "programEffective2Yr": 29400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 29400,
+                "residualValue": 29400
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 11": {
+      "releaseDate": "2025-09-19",
+      "skus": [
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 64800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 71800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "jpn.org / applelinkage.com / impress.co.jp (2026-07-18 値上げ後 Series 11 価格)"
+            },
+            {
+              "date": "2026-09-10",
+              "event": "販売終了",
+              "jpy": 71800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (Series 12 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "46mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 69800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)",
+              "note": "46mm 発売時価格は直接確認できず (Series 10 と同じ 42mm+5,000円と推定)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 76800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "jpn.org / applelinkage.com / impress.co.jp (2026-07-18 値上げ後 Series 11 価格)"
+            },
+            {
+              "date": "2026-09-10",
+              "event": "販売終了",
+              "jpy": 76800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (Series 12 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 80800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 89800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "jpn.org / applelinkage.com / impress.co.jp (2026-07-18 値上げ後 Series 11 価格)"
+            },
+            {
+              "date": "2026-09-10",
+              "event": "販売終了",
+              "jpy": 89800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (Series 12 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 92900,
+              "currentPrice": 103290,
+              "mnpPrice": null,
+              "programEffective2Yr": 51810,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 51810,
+                "residualValue": 51480
+              }
+            },
+            "au": {
+              "launchPrice": 91200,
+              "currentPrice": 101400,
+              "mnpPrice": null,
+              "programEffective2Yr": 50700,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 50700,
+                "residualValue": 50700
+              }
+            },
+            "softbank": {
+              "launchPrice": 92600,
+              "currentPrice": 102960,
+              "mnpPrice": null,
+              "programEffective2Yr": 51480,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 51480,
+                "residualValue": 51480
+              }
+            },
+            "rakuten": {
+              "launchPrice": 85300,
+              "currentPrice": 94800,
+              "mnpPrice": null,
+              "programEffective2Yr": 47400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 47400,
+                "residualValue": 47400
+              }
+            }
+          }
+        },
+        {
+          "size": "46mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 85800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)",
+              "note": "発売時価格は直接確認できず (42mm+5,000円と推定)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 94800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "jpn.org / applelinkage.com / impress.co.jp (2026-07-18 値上げ後 Series 11 価格)"
+            },
+            {
+              "date": "2026-09-10",
+              "event": "販売終了",
+              "jpy": 94800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (Series 12 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 98700,
+              "currentPrice": 109010,
+              "mnpPrice": null,
+              "programEffective2Yr": 54670,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 54670,
+                "residualValue": 54340
+              }
+            },
+            "au": {
+              "launchPrice": 96800,
+              "currentPrice": 107000,
+              "mnpPrice": null,
+              "programEffective2Yr": 53500,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 53500,
+                "residualValue": 53500
+              }
+            },
+            "softbank": {
+              "launchPrice": 98400,
+              "currentPrice": 108720,
+              "mnpPrice": null,
+              "programEffective2Yr": 54360,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 54360,
+                "residualValue": 54360
+              }
+            },
+            "rakuten": {
+              "launchPrice": 90300,
+              "currentPrice": 99800,
+              "mnpPrice": null,
+              "programEffective2Yr": 49900,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 49900,
+                "residualValue": 49900
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Ultra 3": {
+      "releaseDate": "2025-09-19",
+      "skus": [
+        {
+          "size": "49mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 129800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "ascii.jp / impress.co.jp / kakaku.com (2025-09 Apple Watch Series 11 / SE 3 / Ultra 3 発表)",
+              "note": "チタニウムケース"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 142800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / applelinkage.com / note.com (2026-07-18 Apple Watch / AirPods / iPhone 値上げ)"
+            },
+            {
+              "date": "2026-09-10",
+              "event": "販売終了",
+              "jpy": 142800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (Ultra 4 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 149300,
+              "currentPrice": 164230,
+              "mnpPrice": null,
+              "programEffective2Yr": 82170,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 82170,
+                "residualValue": 82060
+              }
+            },
+            "au": {
+              "launchPrice": 146700,
+              "currentPrice": 161400,
+              "mnpPrice": null,
+              "programEffective2Yr": 80700,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 80700,
+                "residualValue": 80700
+              }
+            },
+            "softbank": {
+              "launchPrice": 149200,
+              "currentPrice": 164160,
+              "mnpPrice": null,
+              "programEffective2Yr": 82080,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 82080,
+                "residualValue": 82080
+              }
+            },
+            "rakuten": {
+              "launchPrice": 137100,
+              "currentPrice": 150800,
+              "mnpPrice": null,
+              "programEffective2Yr": 75400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 75400,
+                "residualValue": 75400
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 10": {
+      "releaseDate": "2024-09-20",
+      "detail": {
+        "id": "watch-s10",
+        "category": "Apple Watch",
+        "name": "Apple Watch Series 10",
+        "generation": "Series 10 (2024)",
+        "releaseDate": "2024-09-20",
+        "specs": {
+          "soc": "S10 SiP (64bit デュアルコア)",
+          "ram": "非公開",
+          "display": "42mm: 374×446 / 46mm: 416×496 常時表示広視野角 LTPO3 OLED",
+          "battery": "通常使用 最大18時間 (急速充電 30分で約80%)",
+          "weight": "30g (42mm アルミ GPS)",
+          "connectivity": [
+            "GPS (L1 + L5)",
+            "4G LTE (Cellularモデル)",
+            "Wi-Fi 4",
+            "Bluetooth 5.3",
+            "UWB",
+            "eSIM"
+          ],
+          "bands": "LTE: B1/B3/B5/B8/B18/B19/B26/B28 ほか",
+          "camera": "—",
+          "ports": "磁気急速充電",
+          "os": "watchOS 11 〜",
+          "identifier": "Watch7,8"
+        },
+        "skus": [
+          {
+            "id": "42-gps",
+            "label": "42mm GPS",
+            "storage": "64GB",
+            "connectivity": "GPS",
+            "priceHistory": [
+              {
+                "date": "2024-09-20",
+                "event": "発売時",
+                "appleStorePrice": 59800,
+                "usdPrice": 399,
+                "exchangeRate": 143
+              }
+            ],
+            "carriers": {}
+          },
+          {
+            "id": "42-cell",
+            "label": "42mm GPS + Cellular",
+            "storage": "64GB",
+            "connectivity": "GPS + Cellular",
+            "priceHistory": [
+              {
+                "date": "2024-09-20",
+                "event": "発売時",
+                "appleStorePrice": 74800,
+                "usdPrice": 499,
+                "exchangeRate": 143
+              }
+            ],
+            "carriers": {
+              "docomo": {
+                "launchPrice": 87890,
+                "currentPrice": 87890,
+                "mnpPrice": null,
+                "returnProgram": {
+                  "name": "いつでもカエドキプログラム",
+                  "months": 23,
+                  "effectiveCost": 44330,
+                  "residualValue": 43560
+                }
+              },
+              "au": {
+                "launchPrice": 86800,
+                "currentPrice": 86800,
+                "mnpPrice": null,
+                "returnProgram": {
+                  "name": "スマホトクするプログラム",
+                  "months": 24,
+                  "effectiveCost": 43400,
+                  "residualValue": 43400
+                }
+              },
+              "softbank": {
+                "launchPrice": 87120,
+                "currentPrice": 87120,
+                "mnpPrice": null,
+                "returnProgram": {
+                  "name": "新トクするサポート",
+                  "months": 24,
+                  "effectiveCost": 43560,
+                  "residualValue": 43560
+                }
+              },
+              "rakuten": {
+                "launchPrice": 80800,
+                "currentPrice": 80800,
+                "mnpPrice": null,
+                "returnProgram": {
+                  "name": "楽天モバイル買い替え超トクプログラム",
+                  "months": 24,
+                  "effectiveCost": 40400,
+                  "residualValue": 40400
+                }
+              }
+            }
+          }
+        ]
+      },
+      "skus": [
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "jpy": 59800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp / kakakumag.com (2024-09 Apple Watch Series 10 発表)"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 59800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 11 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "46mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "jpy": 64800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp / kakakumag.com (2024-09 Apple Watch Series 10 発表)"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 64800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 11 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "jpy": 75800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "nojima.co.jp / kakakumag.com (2024-09 Apple Watch Series 10 発表)"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 75800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 11 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 87900,
+              "currentPrice": 87890,
+              "mnpPrice": null,
+              "programEffective2Yr": 44330,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 44330,
+                "residualValue": 43560
+              }
+            },
+            "au": {
+              "launchPrice": 86800,
+              "currentPrice": 86800,
+              "mnpPrice": null,
+              "programEffective2Yr": 43400,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 43400,
+                "residualValue": 43400
+              }
+            },
+            "softbank": {
+              "launchPrice": 87100,
+              "currentPrice": 87120,
+              "mnpPrice": null,
+              "programEffective2Yr": 43560,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 43560,
+                "residualValue": 43560
+              }
+            },
+            "rakuten": {
+              "launchPrice": 80800,
+              "currentPrice": 80800,
+              "mnpPrice": null,
+              "programEffective2Yr": 40400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 40400,
+                "residualValue": 40400
+              }
+            }
+          }
+        },
+        {
+          "size": "46mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "jpy": 80800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "nojima.co.jp / kakakumag.com (2024-09 Apple Watch Series 10 発表)"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 80800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 11 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 93500,
+              "currentPrice": 93500,
+              "mnpPrice": null,
+              "programEffective2Yr": 47190,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 47190,
+                "residualValue": 46310
+              }
+            },
+            "au": {
+              "launchPrice": 92400,
+              "currentPrice": 92400,
+              "mnpPrice": null,
+              "programEffective2Yr": 46200,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 46200,
+                "residualValue": 46200
+              }
+            },
+            "softbank": {
+              "launchPrice": 92900,
+              "currentPrice": 92880,
+              "mnpPrice": null,
+              "programEffective2Yr": 46440,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 46440,
+                "residualValue": 46440
+              }
+            },
+            "rakuten": {
+              "launchPrice": 85800,
+              "currentPrice": 85800,
+              "mnpPrice": null,
+              "programEffective2Yr": 42900,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 42900,
+                "residualValue": 42900
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 9": {
+      "releaseDate": "2023-09-22",
+      "skus": [
+        {
+          "size": "41mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2023-09-22",
+              "event": "発売時",
+              "jpy": 59800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 59800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 10 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "45mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2023-09-22",
+              "event": "発売時",
+              "jpy": 64800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 64800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 10 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "41mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2023-09-22",
+              "event": "発売時",
+              "jpy": 75800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 75800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 10 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 87200,
+              "currentPrice": 87200,
+              "mnpPrice": null,
+              "programEffective2Yr": 43600,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 43600,
+                "residualValue": 43600
+              }
+            },
+            "au": {
+              "launchPrice": 85700,
+              "currentPrice": 85700,
+              "mnpPrice": null,
+              "programEffective2Yr": 42900,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 42900,
+                "residualValue": 42800
+              }
+            },
+            "softbank": {
+              "launchPrice": 86800,
+              "currentPrice": 86800,
+              "mnpPrice": null,
+              "programEffective2Yr": 43400,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 43400,
+                "residualValue": 43400
+              }
+            },
+            "rakuten": {
+              "launchPrice": 80000,
+              "currentPrice": 80000,
+              "mnpPrice": null,
+              "programEffective2Yr": 40000,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 40000,
+                "residualValue": 40000
+              }
+            }
+          }
+        },
+        {
+          "size": "45mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2023-09-22",
+              "event": "発売時",
+              "jpy": 80800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 80800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 10 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 92900,
+              "currentPrice": 92900,
+              "mnpPrice": null,
+              "programEffective2Yr": 46500,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 46500,
+                "residualValue": 46400
+              }
+            },
+            "au": {
+              "launchPrice": 91300,
+              "currentPrice": 91300,
+              "mnpPrice": null,
+              "programEffective2Yr": 45700,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 45700,
+                "residualValue": 45600
+              }
+            },
+            "softbank": {
+              "launchPrice": 92500,
+              "currentPrice": 92500,
+              "mnpPrice": null,
+              "programEffective2Yr": 46300,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 46300,
+                "residualValue": 46200
+              }
+            },
+            "rakuten": {
+              "launchPrice": 85200,
+              "currentPrice": 85200,
+              "mnpPrice": null,
+              "programEffective2Yr": 42600,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 42600,
+                "residualValue": 42600
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Ultra 2": {
+      "releaseDate": "2023-09-22",
+      "skus": [
+        {
+          "size": "49mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2023-09-22",
+              "event": "発売時",
+              "jpy": 128800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)",
+              "note": "チタニウムケース"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 128800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / nojima.co.jp (2024-09 ブラックチタニウム追加後も 128,800円で継続) / apple.com (Ultra 3 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 152100,
+              "currentPrice": 152130,
+              "mnpPrice": null,
+              "programEffective2Yr": 76230,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 76230,
+                "residualValue": 75900
+              }
+            },
+            "au": {
+              "launchPrice": 148800,
+              "currentPrice": 148800,
+              "mnpPrice": null,
+              "programEffective2Yr": 74400,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 74400,
+                "residualValue": 74400
+              }
+            },
+            "softbank": {
+              "launchPrice": 150500,
+              "currentPrice": 150480,
+              "mnpPrice": null,
+              "programEffective2Yr": 75240,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 75240,
+                "residualValue": 75240
+              }
+            },
+            "rakuten": {
+              "launchPrice": 136800,
+              "currentPrice": 136800,
+              "mnpPrice": null,
+              "programEffective2Yr": 68400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 68400,
+                "residualValue": 68400
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Ultra": {
+      "releaseDate": "2022-09-23",
+      "skus": [
+        {
+          "size": "49mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2022-09-23",
+              "event": "発売時",
+              "jpy": 124800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)",
+              "note": "チタニウムケース (Ultra は単一素材)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 124800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Ultra 2 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 143500,
+              "currentPrice": 143500,
+              "mnpPrice": null,
+              "programEffective2Yr": 71800,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 71800,
+                "residualValue": 71700
+              }
+            },
+            "au": {
+              "launchPrice": 141000,
+              "currentPrice": 141000,
+              "mnpPrice": null,
+              "programEffective2Yr": 70500,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 70500,
+                "residualValue": 70500
+              }
+            },
+            "softbank": {
+              "launchPrice": 142900,
+              "currentPrice": 142900,
+              "mnpPrice": null,
+              "programEffective2Yr": 71500,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 71500,
+                "residualValue": 71400
+              }
+            },
+            "rakuten": {
+              "launchPrice": 131700,
+              "currentPrice": 131700,
+              "mnpPrice": null,
+              "programEffective2Yr": 65900,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 65900,
+                "residualValue": 65800
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch SE (2nd generation)": {
+      "releaseDate": "2022-09-16",
+      "skus": [
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "jpy": 37800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "Apple Watch Series 9発表に伴う価格改定（値下げ）",
+              "jpy": 34800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)",
+              "note": "米国価格は据え置き"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 34800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (SE 3 発表で販売終了。2024-09 以降も同価格で継続販売)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "jpy": 42800,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "Apple Watch Series 9発表に伴う価格改定（値下げ）",
+              "jpy": 39800,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)",
+              "note": "米国価格は据え置き"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 39800,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (SE 3 発表で販売終了。2024-09 以降も同価格で継続販売)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "jpy": 45800,
+              "usd": 299,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "Apple Watch Series 9発表に伴う価格改定（値下げ）",
+              "jpy": 42800,
+              "usd": 299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)",
+              "note": "米国価格は据え置き"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 42800,
+              "usd": 299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (SE 3 発表で販売終了。2024-09 以降も同価格で継続販売)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 52900,
+              "currentPrice": 49390,
+              "mnpPrice": null,
+              "programEffective2Yr": 25190,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 25190,
+                "residualValue": 24200
+              }
+            },
+            "au": {
+              "launchPrice": 51800,
+              "currentPrice": 48400,
+              "mnpPrice": null,
+              "programEffective2Yr": 24200,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 24200,
+                "residualValue": 24200
+              }
+            },
+            "softbank": {
+              "launchPrice": 52400,
+              "currentPrice": 48960,
+              "mnpPrice": null,
+              "programEffective2Yr": 24480,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 24480,
+                "residualValue": 24480
+              }
+            },
+            "rakuten": {
+              "launchPrice": 47900,
+              "currentPrice": 44800,
+              "mnpPrice": null,
+              "programEffective2Yr": 22400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 22400,
+                "residualValue": 22400
+              }
+            }
+          }
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "jpy": 50800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "Apple Watch Series 9発表に伴う価格改定（値下げ）",
+              "jpy": 47800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / ascii.jp / usedoor.jp (2023-09 Series 9 / Ultra 2 発表, SE 値下げ)",
+              "note": "米国価格は据え置き"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 47800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (SE 3 発表で販売終了。2024-09 以降も同価格で継続販売)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 58300,
+              "currentPrice": 54890,
+              "mnpPrice": null,
+              "programEffective2Yr": 27830,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 27830,
+                "residualValue": 27060
+              }
+            },
+            "au": {
+              "launchPrice": 57300,
+              "currentPrice": 53900,
+              "mnpPrice": null,
+              "programEffective2Yr": 26950,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 26950,
+                "residualValue": 26950
+              }
+            },
+            "softbank": {
+              "launchPrice": 58200,
+              "currentPrice": 54720,
+              "mnpPrice": null,
+              "programEffective2Yr": 27360,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 27360,
+                "residualValue": 27360
+              }
+            },
+            "rakuten": {
+              "launchPrice": 52900,
+              "currentPrice": 49800,
+              "mnpPrice": null,
+              "programEffective2Yr": 24900,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 24900,
+                "residualValue": 24900
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 8": {
+      "releaseDate": "2022-09-16",
+      "skus": [
+        {
+          "size": "41mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "jpy": 59800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 59800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 9 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "45mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "jpy": 64800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 64800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 9 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "41mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "jpy": 74800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 74800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 9 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 86000,
+              "currentPrice": 86000,
+              "mnpPrice": null,
+              "programEffective2Yr": 43000,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 43000,
+                "residualValue": 43000
+              }
+            },
+            "au": {
+              "launchPrice": 84500,
+              "currentPrice": 84500,
+              "mnpPrice": null,
+              "programEffective2Yr": 42300,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 42300,
+                "residualValue": 42200
+              }
+            },
+            "softbank": {
+              "launchPrice": 85600,
+              "currentPrice": 85600,
+              "mnpPrice": null,
+              "programEffective2Yr": 42800,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 42800,
+                "residualValue": 42800
+              }
+            },
+            "rakuten": {
+              "launchPrice": 78900,
+              "currentPrice": 78900,
+              "mnpPrice": null,
+              "programEffective2Yr": 39500,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 39500,
+                "residualValue": 39400
+              }
+            }
+          }
+        },
+        {
+          "size": "45mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2022-09-16",
+              "event": "発売時",
+              "jpy": 79800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / itmedia.co.jp (2022-09 Apple Watch Series 8 / SE 第2世代 / Ultra 発表)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "販売終了",
+              "jpy": 79800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 9 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 91800,
+              "currentPrice": 91800,
+              "mnpPrice": null,
+              "programEffective2Yr": 45900,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 45900,
+                "residualValue": 45900
+              }
+            },
+            "au": {
+              "launchPrice": 90200,
+              "currentPrice": 90200,
+              "mnpPrice": null,
+              "programEffective2Yr": 45100,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 45100,
+                "residualValue": 45100
+              }
+            },
+            "softbank": {
+              "launchPrice": 91400,
+              "currentPrice": 91400,
+              "mnpPrice": null,
+              "programEffective2Yr": 45700,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 45700,
+                "residualValue": 45700
+              }
+            },
+            "rakuten": {
+              "launchPrice": 84200,
+              "currentPrice": 84200,
+              "mnpPrice": null,
+              "programEffective2Yr": 42100,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 42100,
+                "residualValue": 42100
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 7": {
+      "releaseDate": "2021-10-15",
+      "skus": [
+        {
+          "size": "41mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2021-10-15",
+              "event": "発売時",
+              "jpy": 48800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / itmedia.co.jp (Apple Watch Series 7 発表時価格 2021-09)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 58800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "techno-edge.net / tokeitan.net / mobile-hoken.com (2022-07-01 Series 7 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 58800,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 8 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "45mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2021-10-15",
+              "event": "発売時",
+              "jpy": 52800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / itmedia.co.jp (Apple Watch Series 7 発表時価格 2021-09)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 62800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "techno-edge.net / tokeitan.net / mobile-hoken.com (2022-07-01 Series 7 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 62800,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 8 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "41mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2021-10-15",
+              "event": "発売時",
+              "jpy": 60800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / itmedia.co.jp (Apple Watch Series 7 発表時価格 2021-09)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 73800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "techno-edge.net / tokeitan.net / mobile-hoken.com (2022-07-01 Series 7 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 73800,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 8 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 69900,
+              "currentPrice": 84900,
+              "mnpPrice": null,
+              "programEffective2Yr": 42500,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 42500,
+                "residualValue": 42400
+              }
+            },
+            "au": {
+              "launchPrice": 68700,
+              "currentPrice": 83400,
+              "mnpPrice": null,
+              "programEffective2Yr": 41700,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 41700,
+                "residualValue": 41700
+              }
+            },
+            "softbank": {
+              "launchPrice": 69600,
+              "currentPrice": 84500,
+              "mnpPrice": null,
+              "programEffective2Yr": 42300,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 42300,
+                "residualValue": 42200
+              }
+            },
+            "rakuten": {
+              "launchPrice": 64100,
+              "currentPrice": 77900,
+              "mnpPrice": null,
+              "programEffective2Yr": 39000,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 39000,
+                "residualValue": 38900
+              }
+            }
+          }
+        },
+        {
+          "size": "45mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2021-10-15",
+              "event": "発売時",
+              "jpy": 64800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / itmedia.co.jp (Apple Watch Series 7 発表時価格 2021-09)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 77800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "techno-edge.net / tokeitan.net / mobile-hoken.com (2022-07-01 Series 7 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 77800,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 8 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 74500,
+              "currentPrice": 89500,
+              "mnpPrice": null,
+              "programEffective2Yr": 44800,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 44800,
+                "residualValue": 44700
+              }
+            },
+            "au": {
+              "launchPrice": 73200,
+              "currentPrice": 87900,
+              "mnpPrice": null,
+              "programEffective2Yr": 44000,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 44000,
+                "residualValue": 43900
+              }
+            },
+            "softbank": {
+              "launchPrice": 74200,
+              "currentPrice": 89100,
+              "mnpPrice": null,
+              "programEffective2Yr": 44600,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 44600,
+                "residualValue": 44500
+              }
+            },
+            "rakuten": {
+              "launchPrice": 68400,
+              "currentPrice": 82100,
+              "mnpPrice": null,
+              "programEffective2Yr": 41100,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 41100,
+                "residualValue": 41000
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch SE (1st generation)": {
+      "releaseDate": "2020-09-18",
+      "skus": [
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 32780,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp (Apple Watch SE 発表 2020-09)",
+              "note": "税別29,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "Apple Watch Series 7発表に伴う価格改定（税込表示の端数調整）",
+              "jpy": 32800,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp / impress.co.jp (2021-09 Series 7 発表時 SE 32,800円〜 税込) / iphone-mania.jp",
+              "note": "日付は Series 7 発表日 (正確な改定日は要確認)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 40800,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "applewatchjournal.net / iphone-mania.jp (2022-07-01 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 40800,
+              "usd": 279,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (SE 第2世代発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 36080,
+              "usd": 309,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp (Apple Watch SE 発表 2020-09)",
+              "note": "税別32,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "Apple Watch Series 7発表に伴う価格改定（税込表示の端数調整）",
+              "jpy": 36800,
+              "usd": 309,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "apple.com/jp / impress.co.jp (2021-09 Series 7 発表時 SE 32,800円〜 税込) / iphone-mania.jp",
+              "note": "日付は Series 7 発表日 (正確な改定日は要確認)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 44800,
+              "usd": 309,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "applewatchjournal.net / iphone-mania.jp (2022-07-01 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 44800,
+              "usd": 309,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (SE 第2世代発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 38280,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp (Apple Watch SE 発表 2020-09)",
+              "note": "税別34,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "Apple Watch Series 7発表に伴う価格改定（税込表示の端数調整）",
+              "jpy": 38800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "apple.com/jp / impress.co.jp (2021-09 Series 7 発表時 SE 32,800円〜 税込) / iphone-mania.jp",
+              "note": "日付は Series 7 発表日 (正確な改定日は要確認)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 47800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "applewatchjournal.net / iphone-mania.jp (2022-07-01 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 47800,
+              "usd": 329,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (SE 第2世代発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 44000,
+              "currentPrice": 55000,
+              "mnpPrice": null,
+              "programEffective2Yr": 27500,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 27500,
+                "residualValue": 27500
+              }
+            },
+            "au": {
+              "launchPrice": 43300,
+              "currentPrice": 54000,
+              "mnpPrice": null,
+              "programEffective2Yr": 27000,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 27000,
+                "residualValue": 27000
+              }
+            },
+            "softbank": {
+              "launchPrice": 43800,
+              "currentPrice": 54700,
+              "mnpPrice": null,
+              "programEffective2Yr": 27400,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 27400,
+                "residualValue": 27300
+              }
+            },
+            "rakuten": {
+              "launchPrice": 40400,
+              "currentPrice": 50400,
+              "mnpPrice": null,
+              "programEffective2Yr": 25200,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 25200,
+                "residualValue": 25200
+              }
+            }
+          }
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 41580,
+              "usd": 359,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "asobiing.com / itmedia.co.jp (Apple Watch SE 発表 2020-09)",
+              "note": "税別37,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "Apple Watch Series 7発表に伴う価格改定（税込表示の端数調整）",
+              "jpy": 42800,
+              "usd": 359,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "apple.com/jp / impress.co.jp (2021-09 Series 7 発表時 SE 32,800円〜 税込) / iphone-mania.jp",
+              "note": "日付は Series 7 発表日 (正確な改定日は要確認)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 51800,
+              "usd": 359,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "applewatchjournal.net / iphone-mania.jp (2022-07-01 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 51800,
+              "usd": 359,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (SE 第2世代発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 47800,
+              "currentPrice": 59600,
+              "mnpPrice": null,
+              "programEffective2Yr": 29800,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 29800,
+                "residualValue": 29800
+              }
+            },
+            "au": {
+              "launchPrice": 47000,
+              "currentPrice": 58500,
+              "mnpPrice": null,
+              "programEffective2Yr": 29300,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 29300,
+                "residualValue": 29200
+              }
+            },
+            "softbank": {
+              "launchPrice": 47600,
+              "currentPrice": 59300,
+              "mnpPrice": null,
+              "programEffective2Yr": 29700,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 29700,
+                "residualValue": 29600
+              }
+            },
+            "rakuten": {
+              "launchPrice": 43900,
+              "currentPrice": 54600,
+              "mnpPrice": null,
+              "programEffective2Yr": 27300,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 27300,
+                "residualValue": 27300
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 6": {
+      "releaseDate": "2020-09-18",
+      "skus": [
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 47080,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp / kakakumag.com (Apple Watch Series 6 発表 2020-09)",
+              "note": "税別42,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 47080,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 7 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 50380,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / kakakumag.com (Apple Watch Series 6 発表 2020-09)",
+              "note": "税別45,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 50380,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 7 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 59180,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "itmedia.co.jp / kakakumag.com (Apple Watch Series 6 発表 2020-09)",
+              "note": "税別53,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 59180,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 7 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 68100,
+              "currentPrice": 68100,
+              "mnpPrice": null,
+              "programEffective2Yr": 34100,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 34100,
+                "residualValue": 34000
+              }
+            },
+            "au": {
+              "launchPrice": 66900,
+              "currentPrice": 66900,
+              "mnpPrice": null,
+              "programEffective2Yr": 33500,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 33500,
+                "residualValue": 33400
+              }
+            },
+            "softbank": {
+              "launchPrice": 67800,
+              "currentPrice": 67800,
+              "mnpPrice": null,
+              "programEffective2Yr": 33900,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 33900,
+                "residualValue": 33900
+              }
+            },
+            "rakuten": {
+              "launchPrice": 62400,
+              "currentPrice": 62400,
+              "mnpPrice": null,
+              "programEffective2Yr": 31200,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 31200,
+                "residualValue": 31200
+              }
+            }
+          }
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2020-09-18",
+              "event": "発売時",
+              "jpy": 62480,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / kakakumag.com (Apple Watch Series 6 発表 2020-09)",
+              "note": "税別56,800円"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "販売終了",
+              "jpy": 62480,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 7 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 71900,
+              "currentPrice": 71900,
+              "mnpPrice": null,
+              "programEffective2Yr": 36000,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 36000,
+                "residualValue": 35900
+              }
+            },
+            "au": {
+              "launchPrice": 70600,
+              "currentPrice": 70600,
+              "mnpPrice": null,
+              "programEffective2Yr": 35300,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 35300,
+                "residualValue": 35300
+              }
+            },
+            "softbank": {
+              "launchPrice": 71500,
+              "currentPrice": 71500,
+              "mnpPrice": null,
+              "programEffective2Yr": 35800,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 35800,
+                "residualValue": 35700
+              }
+            },
+            "rakuten": {
+              "launchPrice": 65900,
+              "currentPrice": 65900,
+              "mnpPrice": null,
+              "programEffective2Yr": 33000,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 33000,
+                "residualValue": 32900
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 5": {
+      "releaseDate": "2019-09-20",
+      "skus": [
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 46224,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09: GPS 42,800円〜 / Cellular 53,800円〜 税別)",
+              "note": "税別42,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 47080,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09: GPS 42,800円〜 / Cellular 53,800円〜 税別)"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 47080,
+              "usd": 399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 6 / SE 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 49464,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09: GPS 42,800円〜 / Cellular 53,800円〜 税別)",
+              "note": "税別45,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 50380,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09: GPS 42,800円〜 / Cellular 53,800円〜 税別)"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 50380,
+              "usd": 429,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 6 / SE 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 58104,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09: GPS 42,800円〜 / Cellular 53,800円〜 税別)",
+              "note": "税別53,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 59180,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09: GPS 42,800円〜 / Cellular 53,800円〜 税別)"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 59180,
+              "usd": 499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 6 / SE 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 66800,
+              "currentPrice": 68100,
+              "mnpPrice": null,
+              "programEffective2Yr": 34100,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 34100,
+                "residualValue": 34000
+              }
+            },
+            "au": {
+              "launchPrice": 65700,
+              "currentPrice": 66900,
+              "mnpPrice": null,
+              "programEffective2Yr": 33500,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 33500,
+                "residualValue": 33400
+              }
+            },
+            "softbank": {
+              "launchPrice": 66500,
+              "currentPrice": 67800,
+              "mnpPrice": null,
+              "programEffective2Yr": 33900,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 33900,
+                "residualValue": 33900
+              }
+            },
+            "rakuten": {
+              "launchPrice": 61300,
+              "currentPrice": 62400,
+              "mnpPrice": null,
+              "programEffective2Yr": 31200,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 31200,
+                "residualValue": 31200
+              }
+            }
+          }
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2019-09-20",
+              "event": "発売時",
+              "jpy": 61344,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09: GPS 42,800円〜 / Cellular 53,800円〜 税別)",
+              "note": "税別56,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 62480,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09: GPS 42,800円〜 / Cellular 53,800円〜 税別)"
+            },
+            {
+              "date": "2020-09-16",
+              "event": "販売終了",
+              "jpy": 62480,
+              "usd": 529,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 6 / SE 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 70500,
+              "currentPrice": 71900,
+              "mnpPrice": null,
+              "programEffective2Yr": 36000,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 36000,
+                "residualValue": 35900
+              }
+            },
+            "au": {
+              "launchPrice": 69300,
+              "currentPrice": 70600,
+              "mnpPrice": null,
+              "programEffective2Yr": 35300,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 35300,
+                "residualValue": 35300
+              }
+            },
+            "softbank": {
+              "launchPrice": 70200,
+              "currentPrice": 71500,
+              "mnpPrice": null,
+              "programEffective2Yr": 35800,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 35800,
+                "residualValue": 35700
+              }
+            },
+            "rakuten": {
+              "launchPrice": 64700,
+              "currentPrice": 65900,
+              "mnpPrice": null,
+              "programEffective2Yr": 33000,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 33000,
+                "residualValue": 32900
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 4": {
+      "releaseDate": "2018-09-21",
+      "skus": [
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 49464,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gizmodo.jp / apple.com/jp (Apple Watch Series 4 発表 2018-09)",
+              "note": "税別45,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 49464,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 5 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 52704,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gizmodo.jp / apple.com/jp (Apple Watch Series 4 発表 2018-09)",
+              "note": "税別48,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 52704,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 5 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "40mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 61344,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gizmodo.jp / apple.com/jp (Apple Watch Series 4 発表 2018-09)",
+              "note": "税別56,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 61344,
+              "usd": 499,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 5 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 70500,
+              "currentPrice": 70500,
+              "mnpPrice": null,
+              "programEffective2Yr": 35300,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 35300,
+                "residualValue": 35200
+              }
+            },
+            "au": {
+              "launchPrice": 69300,
+              "currentPrice": 69300,
+              "mnpPrice": null,
+              "programEffective2Yr": 34700,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 34700,
+                "residualValue": 34600
+              }
+            },
+            "softbank": {
+              "launchPrice": 70200,
+              "currentPrice": 70200,
+              "mnpPrice": null,
+              "programEffective2Yr": 35100,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 35100,
+                "residualValue": 35100
+              }
+            },
+            "rakuten": {
+              "launchPrice": 64700,
+              "currentPrice": 64700,
+              "mnpPrice": null,
+              "programEffective2Yr": 32400,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 32400,
+                "residualValue": 32300
+              }
+            }
+          }
+        },
+        {
+          "size": "44mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2018-09-21",
+              "event": "発売時",
+              "jpy": 64584,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "gizmodo.jp / apple.com/jp (Apple Watch Series 4 発表 2018-09)",
+              "note": "税別59,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "販売終了",
+              "jpy": 64584,
+              "usd": 529,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (Series 5 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 74300,
+              "currentPrice": 74300,
+              "mnpPrice": null,
+              "programEffective2Yr": 37200,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 37200,
+                "residualValue": 37100
+              }
+            },
+            "au": {
+              "launchPrice": 73000,
+              "currentPrice": 73000,
+              "mnpPrice": null,
+              "programEffective2Yr": 36500,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 36500,
+                "residualValue": 36500
+              }
+            },
+            "softbank": {
+              "launchPrice": 73900,
+              "currentPrice": 73900,
+              "mnpPrice": null,
+              "programEffective2Yr": 37000,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 37000,
+                "residualValue": 36900
+              }
+            },
+            "rakuten": {
+              "launchPrice": 68100,
+              "currentPrice": 68100,
+              "mnpPrice": null,
+              "programEffective2Yr": 34100,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 34100,
+                "residualValue": 34000
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 3": {
+      "releaseDate": "2017-09-22",
+      "skus": [
+        {
+          "size": "38mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2017-09-22",
+              "event": "発売時",
+              "jpy": 39744,
+              "usd": 329,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp (Apple Watch Series 3 発表時価格 2017-09)",
+              "note": "税別36,800円"
+            },
+            {
+              "date": "2018-09-13",
+              "event": "Apple Watch Series 4発表に伴う価格改定（値下げ）",
+              "jpy": 34344,
+              "usd": 279,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / businessinsider.jp (Series 4 発表に伴う Series 3 値下げ 2018-09)",
+              "note": "税別31,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "Apple Watch Series 5発表に伴う価格改定（値下げ）",
+              "jpy": 21384,
+              "usd": 199,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09, Series 3 は GPS 19,800円〜 / Cellular 30,800円〜 税別)",
+              "note": "税別19,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 21780,
+              "usd": 199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09, Series 3 は GPS 19,800円〜 / Cellular 30,800円〜 税別)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "Apple Watch Series 7発表に伴う価格改定（税込表示の端数調整）",
+              "jpy": 22800,
+              "usd": 199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "kakaku.com / gadgetouch.com (2021年 Series 3 税込 22,800円〜)",
+              "note": "税込21,780円→22,800円。日付は Series 7 発表日 (正確な改定日は要確認)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 28800,
+              "usd": 199,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / greens-one.com / gadgetouch.com (2022-07-01 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 28800,
+              "usd": 199,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / wikipedia (2022-09-08 Series 8 等発表時に販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2017-09-22",
+              "event": "発売時",
+              "jpy": 42984,
+              "usd": 359,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp (Apple Watch Series 3 発表時価格 2017-09)",
+              "note": "税別39,800円"
+            },
+            {
+              "date": "2018-09-13",
+              "event": "Apple Watch Series 4発表に伴う価格改定（値下げ）",
+              "jpy": 37584,
+              "usd": 309,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "itmedia.co.jp / businessinsider.jp (Series 4 発表に伴う Series 3 値下げ 2018-09)",
+              "note": "税別34,800円 (38mm +3,000円から推定・複数情報で整合)"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "Apple Watch Series 5発表に伴う価格改定（値下げ）",
+              "jpy": 24624,
+              "usd": 229,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09, Series 3 は GPS 19,800円〜 / Cellular 30,800円〜 税別)",
+              "note": "税別22,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 25080,
+              "usd": 229,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09, Series 3 は GPS 19,800円〜 / Cellular 30,800円〜 税別)"
+            },
+            {
+              "date": "2021-09-15",
+              "event": "Apple Watch Series 7発表に伴う価格改定（税込表示の端数調整）",
+              "jpy": 25800,
+              "usd": 229,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "kakaku.com / gadgetouch.com (2021年 Series 3 税込 22,800円〜)",
+              "note": "税込25,080円→25,800円 (38mm と同様の端数調整と推定)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 32800,
+              "usd": 229,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "iphone-mania.jp / greens-one.com / gadgetouch.com (2022-07-01 値上げ)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 32800,
+              "usd": 229,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / wikipedia (2022-09-08 Series 8 等発表時に販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "38mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2017-09-22",
+              "event": "発売時",
+              "jpy": 49464,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp (Apple Watch Series 3 発表時価格 2017-09)",
+              "note": "税別45,800円"
+            },
+            {
+              "date": "2018-09-13",
+              "event": "Apple Watch Series 4発表に伴う価格改定（値下げ）",
+              "jpy": 46224,
+              "usd": 379,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "itmedia.co.jp / businessinsider.jp (Series 4 発表に伴う Series 3 値下げ 2018-09)",
+              "note": "税別42,800円との情報 (単一ソース)"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "Apple Watch Series 5発表に伴う価格改定（値下げ）",
+              "jpy": 33264,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09, Series 3 は GPS 19,800円〜 / Cellular 30,800円〜 税別)",
+              "note": "税別30,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 33880,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "apple.com/jp/newsroom (Apple Watch Series 5 発表 2019-09, Series 3 は GPS 19,800円〜 / Cellular 30,800円〜 税別)"
+            }
+          ],
+          "note": "Cellular 版の販売終了日は未確認 (遅くとも 2022-09-08)",
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 56900,
+              "currentPrice": 39000,
+              "mnpPrice": null,
+              "programEffective2Yr": 19500,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 19500,
+                "residualValue": 19500
+              }
+            },
+            "au": {
+              "launchPrice": 55900,
+              "currentPrice": 38300,
+              "mnpPrice": null,
+              "programEffective2Yr": 19200,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 19200,
+                "residualValue": 19100
+              }
+            },
+            "softbank": {
+              "launchPrice": 56600,
+              "currentPrice": 38800,
+              "mnpPrice": null,
+              "programEffective2Yr": 19400,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 19400,
+                "residualValue": 19400
+              }
+            },
+            "rakuten": {
+              "launchPrice": 52200,
+              "currentPrice": 35700,
+              "mnpPrice": null,
+              "programEffective2Yr": 17900,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 17900,
+                "residualValue": 17800
+              }
+            }
+          }
+        },
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS + Cellular",
+          "history": [
+            {
+              "date": "2017-09-22",
+              "event": "発売時",
+              "jpy": 52704,
+              "usd": 429,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp (Apple Watch Series 3 発表時価格 2017-09)",
+              "note": "税別48,800円"
+            },
+            {
+              "date": "2019-09-11",
+              "event": "Apple Watch Series 5発表に伴う価格改定（値下げ）",
+              "jpy": 36504,
+              "taxRate": 0.08,
+              "confidence": "low",
+              "source": "impress.co.jp / socius101.com (Series 3 Cellular 42mm 33,800円〜 税別)",
+              "note": "税別33,800円"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 37180,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "impress.co.jp / socius101.com"
+            }
+          ],
+          "note": "2018-09 改定後価格は未確認。Cellular 版の販売終了日は未確認 (遅くとも 2022-09-08)",
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 60600,
+              "currentPrice": 42800,
+              "mnpPrice": null,
+              "programEffective2Yr": 21400,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 21400,
+                "residualValue": 21400
+              }
+            },
+            "au": {
+              "launchPrice": 59600,
+              "currentPrice": 42000,
+              "mnpPrice": null,
+              "programEffective2Yr": 21000,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 21000,
+                "residualValue": 21000
+              }
+            },
+            "softbank": {
+              "launchPrice": 60300,
+              "currentPrice": 42600,
+              "mnpPrice": null,
+              "programEffective2Yr": 21300,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 21300,
+                "residualValue": 21300
+              }
+            },
+            "rakuten": {
+              "launchPrice": 55600,
+              "currentPrice": 39200,
+              "mnpPrice": null,
+              "programEffective2Yr": 19600,
+              "returnProgram": {
+                "name": "楽天モバイル買い替え超トクプログラム",
+                "months": 24,
+                "effectiveCost": 19600,
+                "residualValue": 19600
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Apple Watch Series 1": {
+      "releaseDate": "2016-09-16",
+      "skus": [
+        {
+          "size": "38mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2016-09-16",
+              "event": "発売時",
+              "jpy": 30024,
+              "usd": 269,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (Apple Watch Series 2 / Series 1 発表 2016-09)",
+              "note": "税別27,800円"
+            },
+            {
+              "date": "2018-09-13",
+              "event": "販売終了",
+              "jpy": 30024,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "appbank.net / iphone-mania.jp (2017-09 Series 3 発表時も税別価格据え置きで継続販売) / AppleDB",
+              "note": "2017-09 に米国価格は $269→$249 等に改定されたが、日本は税別価格据え置きで継続販売 (impress.co.jp / appbank.net)。2018-09 終了時までの改定は確認されず"
+            }
+          ],
+          "note": "Series 1 は GPS 非搭載だが Cellular 無しモデルのため connectivity は 'GPS' とした",
+          "carrierPricing": null
+        },
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2016-09-16",
+              "event": "発売時",
+              "jpy": 33264,
+              "usd": 299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (Apple Watch Series 2 / Series 1 発表 2016-09)",
+              "note": "税別30,800円"
+            },
+            {
+              "date": "2018-09-13",
+              "event": "販売終了",
+              "jpy": 33264,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "appbank.net / iphone-mania.jp (2017-09 Series 3 発表時も税別価格据え置きで継続販売) / AppleDB",
+              "note": "2017-09 に米国価格は $269→$249 等に改定されたが、日本は税別価格据え置きで継続販売 (impress.co.jp / appbank.net)。2018-09 終了時までの改定は確認されず"
+            }
+          ],
+          "note": "Series 1 は GPS 非搭載だが Cellular 無しモデルのため connectivity は 'GPS' とした",
+          "carrierPricing": null
+        }
+      ]
+    },
+    "Apple Watch Series 2": {
+      "releaseDate": "2016-09-16",
+      "skus": [
+        {
+          "size": "38mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2016-09-16",
+              "event": "発売時",
+              "jpy": 40824,
+              "usd": 369,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (Apple Watch Series 2 / Series 1 発表 2016-09)",
+              "note": "税別37,800円 (アルミニウム)"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "販売終了",
+              "jpy": 40824,
+              "usd": 369,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "appbank.net / gigazine.net (Series 3 発表で Series 2 販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "GPS",
+          "history": [
+            {
+              "date": "2016-09-16",
+              "event": "発売時",
+              "jpy": 44064,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "impress.co.jp (Apple Watch Series 2 / Series 1 発表 2016-09)",
+              "note": "税別40,800円 (アルミニウム)"
+            },
+            {
+              "date": "2017-09-13",
+              "event": "販売終了",
+              "jpy": 44064,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "appbank.net / gigazine.net (Series 3 発表で Series 2 販売終了)"
+            }
+          ],
+          "carrierPricing": null
+        }
+      ]
+    },
+    "Apple Watch (1st generation)": {
+      "releaseDate": "2015-04-24",
+      "skus": [
+        {
+          "size": "38mm",
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-04-24",
+              "event": "発売時",
+              "jpy": 46224,
+              "usd": 349,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com / impress.co.jp (Apple Watch 2015年発売時価格)",
+              "note": "Apple Watch Sport (アルミ) 税別42,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "価格改定（値下げ）",
+              "jpy": 39744,
+              "usd": 299,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "taisy0.com / itmedia.co.jp (2016-03-22 Apple Watch Sport 値下げ)",
+              "note": "税別42,800円→36,800円 (3月イベントに合わせ値下げ)"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 39744,
+              "usd": 299,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (Series 1/2 発表で Sport 販売終了)"
+            }
+          ],
+          "note": "GPS/Cellular の区別なし (connectivity '-')",
+          "carrierPricing": null
+        },
+        {
+          "size": "42mm",
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2015-04-24",
+              "event": "発売時",
+              "jpy": 52704,
+              "usd": 399,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "kakaku.com / impress.co.jp (Apple Watch 2015年発売時価格)",
+              "note": "Apple Watch Sport (アルミ) 税別48,800円"
+            },
+            {
+              "date": "2016-03-22",
+              "event": "価格改定（値下げ）",
+              "jpy": 46224,
+              "usd": 349,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "taisy0.com / itmedia.co.jp (2016-03-22 Apple Watch Sport 値下げ)",
+              "note": "税別48,800円→42,800円 (3月イベントに合わせ値下げ)"
+            },
+            {
+              "date": "2016-09-08",
+              "event": "販売終了",
+              "jpy": 46224,
+              "usd": 349,
+              "taxRate": 0.08,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (Series 1/2 発表で Sport 販売終了)"
+            }
+          ],
+          "note": "GPS/Cellular の区別なし (connectivity '-')",
+          "carrierPricing": null
+        }
+      ]
+    }
+  }
+}

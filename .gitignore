@@ -1,7 +1,7 @@
 node_modules
 dist
 .DS_Store
-data/appledb-main.json
+data/cache/appledb-main.json
 .env
 .env.*
 !.env.example

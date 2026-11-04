@@ -1,0 +1,869 @@
+{
+  "meta": {
+    "title": "AirPods 全世代 日本 Apple Store 価格履歴 & キャリア価格マスター (2016〜2026)",
+    "currency": "JPY",
+    "taxIncluded": true,
+    "updatedAt": "2026-11-04",
+    "familyCount": 13,
+    "notes": "watch-airpods.json: 日本 Apple Store 税込価格。Apple Watch はアルミニウムケース (初代は Sport) の最廉価構成を基準。2021-03 以前の税別表示価格は税込換算 (1円未満切り捨て) し note に税別価格を記載。出典は検索結果のリダイレクト URL しか得られなかったものはドメイン名と記事概要で記載。"
+  },
+  "families": {
+    "AirPods 5": {
+      "releaseDate": "2026-09-18",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-09-18",
+              "event": "発売時",
+              "jpy": 23800,
+              "usd": 129,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "devicecamp.com / gamewith.jp / apple-hacks.com (AirPods 5 23,800円 / ワイヤレス充電ケース付き 27,800円)",
+              "note": "USD は youtube 等の二次情報 (low)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 23800,
+              "currentPrice": 23800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 23800,
+              "currentPrice": 23800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 23800,
+              "currentPrice": 23800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 23800,
+              "currentPrice": 23800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods 5 with Wireless Charging Case": {
+      "releaseDate": "2026-09-18",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-09-18",
+              "event": "発売時",
+              "jpy": 27800,
+              "usd": 149,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "devicecamp.com / gamewith.jp / apple-hacks.com (AirPods 5 23,800円 / ワイヤレス充電ケース付き 27,800円)",
+              "note": "米国価格は未確認 ($149 前後との二次情報のみ)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 27800,
+              "currentPrice": 27800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 27800,
+              "currentPrice": 27800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 27800,
+              "currentPrice": 27800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 27800,
+              "currentPrice": 27800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods Max 2": {
+      "releaseDate": "2026-04-01",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-04-01",
+              "event": "発売時",
+              "jpy": 89800,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "apple.com/jp / kakaku.com / ascii.jp (AirPods Max 2 89,800円, 2026年4月上旬発売) / lifehacker.com (USD)",
+              "note": "2026-07-18 の値上げでは据え置き"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 89800,
+              "currentPrice": 89800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 89800,
+              "currentPrice": 89800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 89800,
+              "currentPrice": 89800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 89800,
+              "currentPrice": 89800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods Pro 3": {
+      "releaseDate": "2025-09-19",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2025-09-19",
+              "event": "発売時",
+              "jpy": 39800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "gamewith.jp / apple-gadget.jp (AirPods Pro 3 39,800円・据え置き)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 42800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "applelinkage.com / smapple-okayama.com / note.com (2026-07-18 値上げ: AirPods 4 21,800→23,800 / ANC 29,800→32,800 / Pro 3 39,800→42,800 / Max 2 据え置き)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 39800,
+              "currentPrice": 42800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 39800,
+              "currentPrice": 42800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 39800,
+              "currentPrice": 42800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 39800,
+              "currentPrice": 42800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods 4": {
+      "releaseDate": "2024-09-20",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "jpy": 21800,
+              "usd": 129,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp / kakaku.com (AirPods 4 21,800円 / ANC 29,800円)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 23800,
+              "usd": 129,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "applelinkage.com / smapple-okayama.com / note.com (2026-07-18 値上げ: AirPods 4 21,800→23,800 / ANC 29,800→32,800 / Pro 3 39,800→42,800 / Max 2 据え置き)"
+            },
+            {
+              "date": "2026-09-10",
+              "event": "販売終了",
+              "jpy": 23800,
+              "usd": 129,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (AirPods 5 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 21800,
+              "currentPrice": 23800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 21800,
+              "currentPrice": 23800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 21800,
+              "currentPrice": 23800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 21800,
+              "currentPrice": 23800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods 4 with Active Noise Cancellation": {
+      "releaseDate": "2024-09-20",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "jpy": 29800,
+              "usd": 179,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "nojima.co.jp / kakaku.com (AirPods 4 21,800円 / ANC 29,800円)"
+            },
+            {
+              "date": "2026-07-18",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 32800,
+              "usd": 179,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "applelinkage.com / smapple-okayama.com / note.com (2026-07-18 値上げ: AirPods 4 21,800→23,800 / ANC 29,800→32,800 / Pro 3 39,800→42,800 / Max 2 据え置き)"
+            },
+            {
+              "date": "2026-09-10",
+              "event": "販売終了",
+              "jpy": 32800,
+              "usd": 179,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (AirPods 5 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 29800,
+              "currentPrice": 32800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 29800,
+              "currentPrice": 32800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 29800,
+              "currentPrice": 32800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 29800,
+              "currentPrice": 32800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods Max with USB-C": {
+      "releaseDate": "2024-09-20",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2024-09-20",
+              "event": "発売時",
+              "jpy": 84800,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "impress.co.jp / phileweb.com (AirPods Max USB-C 84,800円)"
+            },
+            {
+              "date": "2026-03-17",
+              "event": "販売終了",
+              "jpy": 84800,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB (AirPods Max 2 発表で販売終了)",
+              "note": "2026-07-18 の値上げ前に販売終了"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 84800,
+              "currentPrice": 84800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 84800,
+              "currentPrice": 84800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 84800,
+              "currentPrice": 84800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 84800,
+              "currentPrice": 84800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods Pro (2nd generation)": {
+      "releaseDate": "2022-09-23",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2022-09-23",
+              "event": "発売時",
+              "jpy": 39800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp / usedoor.jp (AirPods Pro 第2世代 39,800円)"
+            },
+            {
+              "date": "2023-09-13",
+              "event": "容量ラインナップ変更",
+              "jpy": 39800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "kakaku.com / yodobashi.com (USB-C 充電ケース版に切替・価格据え置き)",
+              "note": "MagSafe 充電ケース (USB-C) 版に切替"
+            },
+            {
+              "date": "2025-09-10",
+              "event": "販売終了",
+              "jpy": 39800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com / gizmodo.jp (AirPods Pro 3 発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 39800,
+              "currentPrice": 39800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 39800,
+              "currentPrice": 39800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 39800,
+              "currentPrice": 39800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 39800,
+              "currentPrice": 39800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods (3rd generation)": {
+      "releaseDate": "2021-10-26",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2021-10-26",
+              "event": "発売時",
+              "jpy": 23800,
+              "usd": 179,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / apple.com/jp (AirPods 第3世代 23,800円, MagSafe 充電ケース付)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 27800,
+              "usd": 179,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / techno-edge.net / itmedia.co.jp (2022-07-01 AirPods 値上げ: 第2世代 16,800→19,800 / 第3世代 23,800→27,800 / Pro 30,580→38,800 / Max 67,980→84,800)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "容量ラインナップ変更",
+              "jpy": 27800,
+              "usd": 169,
+              "taxRate": 0.1,
+              "confidence": "low",
+              "source": "iphone-mania.jp / yodobashi.com (Lightning 充電ケース版 27,800円 / MagSafe 充電ケース版 30,800円)",
+              "note": "Lightning 充電ケース版が追加され最廉価構成に (27,800円, $169)。MagSafe 版は 30,800円との情報あり ($179)。追加日は 2022-09〜10 頃で正確な日付は要確認"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 27800,
+              "usd": 169,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (AirPods 4 発表で販売終了)",
+              "note": "AppleDB の販売終了日は 2024-09-11"
+            }
+          ],
+          "note": "最廉価構成を基準 (2022-09 以降は Lightning 充電ケース版)",
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 23800,
+              "currentPrice": 27800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 23800,
+              "currentPrice": 27800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 23800,
+              "currentPrice": 27800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 23800,
+              "currentPrice": 27800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods Max": {
+      "releaseDate": "2020-12-15",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2020-12-15",
+              "event": "発売時",
+              "jpy": 67980,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (AirPods Max 61,800円 税別)",
+              "note": "税別61,800円"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 84800,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / techno-edge.net / itmedia.co.jp (2022-07-01 AirPods 値上げ: 第2世代 16,800→19,800 / 第3世代 23,800→27,800 / Pro 30,580→38,800 / Max 67,980→84,800)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 84800,
+              "usd": 549,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / impress.co.jp (USB-C 版に置き換え)"
+            }
+          ],
+          "note": "Lightning 版",
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 67980,
+              "currentPrice": 84800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 67980,
+              "currentPrice": 84800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 67980,
+              "currentPrice": 84800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 67980,
+              "currentPrice": 84800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods Pro (1st generation)": {
+      "releaseDate": "2019-10-30",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-10-30",
+              "event": "発売時",
+              "jpy": 30580,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp/newsroom (AirPods Pro 発表 2019-10, 27,800円 税別)",
+              "note": "税別27,800円"
+            },
+            {
+              "date": "2021-10-19",
+              "event": "容量ラインナップ変更",
+              "jpy": 30580,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "apple.com/jp (MagSafe 充電ケース付属に変更、価格据え置き)",
+              "note": "MagSafe 充電ケース版に切替 (価格変更なし)"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 38800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / techno-edge.net / itmedia.co.jp (2022-07-01 AirPods 値上げ: 第2世代 16,800→19,800 / 第3世代 23,800→27,800 / Pro 30,580→38,800 / Max 67,980→84,800)"
+            },
+            {
+              "date": "2022-09-08",
+              "event": "販売終了",
+              "jpy": 38800,
+              "usd": 249,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (AirPods Pro 第2世代発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 30580,
+              "currentPrice": 38800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 30580,
+              "currentPrice": 38800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 30580,
+              "currentPrice": 38800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 30580,
+              "currentPrice": 38800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods (2nd generation)": {
+      "releaseDate": "2019-03-20",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2019-03-21",
+              "event": "発売時",
+              "jpy": 19224,
+              "usd": 159,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "harulog.jp / apple.com/jp (AirPods 第2世代: 充電ケース 17,800円 / ワイヤレス充電ケース 22,800円 税別)",
+              "note": "充電ケース版 税別17,800円。ワイヤレス充電ケース版は税別22,800円 (税込24,624円, $199) で 2021-10 頃まで併売"
+            },
+            {
+              "date": "2019-10-01",
+              "event": "消費税率変更(8%→10%)",
+              "jpy": 19580,
+              "usd": 159,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com/jp",
+              "note": "ワイヤレス充電ケース版は 25,080円"
+            },
+            {
+              "date": "2021-10-19",
+              "event": "AirPods (第3世代)発表に伴う価格改定（値下げ）",
+              "jpy": 16800,
+              "usd": 129,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / bcnretail.com (AirPods 第2世代 19,580→16,800円)",
+              "note": "ワイヤレス充電ケース版はこの時点でラインナップから外れた"
+            },
+            {
+              "date": "2022-07-01",
+              "event": "円安に伴う価格改定（値上げ）",
+              "jpy": 19800,
+              "usd": 129,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "iphone-mania.jp / techno-edge.net / itmedia.co.jp (2022-07-01 AirPods 値上げ: 第2世代 16,800→19,800 / 第3世代 23,800→27,800 / Pro 30,580→38,800 / Max 67,980→84,800)"
+            },
+            {
+              "date": "2024-09-10",
+              "event": "販売終了",
+              "jpy": 19800,
+              "usd": 129,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "AppleDB / apple.com (AirPods 4 発表で販売終了)",
+              "note": "AppleDB の販売終了日は 2024-09-11"
+            }
+          ],
+          "note": "充電ケース (Lightning) 版を基準",
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 19224,
+              "currentPrice": 19800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 19224,
+              "currentPrice": 19800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 19224,
+              "currentPrice": 19800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 19224,
+              "currentPrice": 19800,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    },
+    "AirPods (1st generation)": {
+      "releaseDate": "2016-12-19",
+      "skus": [
+        {
+          "storage": "-",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2016-12-14",
+              "event": "発売時",
+              "jpy": 18144,
+              "usd": 159,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "iphone-mania.jp / kakaku.com (初代 AirPods 16,800円 税別)",
+              "note": "税別16,800円。日本のオンライン販売開始は 2016-12-13〜14 頃 (AppleDB の発売日は 2016-12-19)"
+            },
+            {
+              "date": "2019-03-21",
+              "event": "販売終了",
+              "jpy": 18144,
+              "usd": 159,
+              "taxRate": 0.08,
+              "confidence": "high",
+              "source": "AppleDB / apple.com (AirPods 第2世代発表で販売終了)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 18144,
+              "currentPrice": 18144,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "au": {
+              "launchPrice": 18144,
+              "currentPrice": 18144,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "softbank": {
+              "launchPrice": 18144,
+              "currentPrice": 18144,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            },
+            "rakuten": {
+              "launchPrice": 18144,
+              "currentPrice": 18144,
+              "mnpPrice": null,
+              "programEffective2Yr": null,
+              "returnProgram": null
+            }
+          }
+        }
+      ]
+    }
+  }
+}

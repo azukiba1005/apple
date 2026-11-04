@@ -1,7 +1,7 @@
 // Cloudflare Pages Function: /api/used-price
 // 環境変数 RAKUTEN_APP_ID / YAHOO_APP_ID が設定されている場合は
 // 楽天市場APIおよびYahoo!ショッピングAPI (v3) を呼び出し、横断比較データを返します。
-import { searchRakutenUsedPrice } from '../../data/fetch-used-prices.mjs';
+import { searchRakutenUsedPrice } from '../../scripts/fetch-live-prices.mjs';
 
 export async function onRequestGet(context) {
   const url = new URL(context.request.url);
