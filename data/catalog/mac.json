@@ -3,11 +3,177 @@
     "title": "Mac 全世代 日本 Apple Store 価格履歴マスター (1998〜2026: PowerPC / Intel / Apple Silicon)",
     "currency": "JPY",
     "taxIncluded": true,
-    "updatedAt": "2026-11-04",
-    "familyCount": 242,
+    "updatedAt": "2026-11-06",
+    "familyCount": 248,
     "notes": "mac-ppc-1998-2005.json: PowerPC搭載コンシューマMac（iMac G3 / iMac G4 Flat Panel / iMac G5 / Mac mini G4、1998〜2005年）の日本Apple Store・Apple Japan標準価格（5%税込換算）および米国発表時MSRP履歴。1998年〜2004年3月までは税別発表のため5%消費税を加算した税込価格をjpyに記録し、税別価格をnoteに併記。2004年4月の総額表示義務化以降はApple Store税込表示価格を記録。販売終了日は後継モデルの発表・発売日を基準に記載。 / mac-intel-2006-2008.json: Intel移行初期（2006〜2008年）のMac 37モデルの日本Apple Store税込価格（消費税率5%総額表示）および米国Apple Store税抜MSRP履歴。当時のPC Watch / ITmedia / ASCII.jp報道およびApple公式プレスリリースに基づく。2008年7月の初代MacBook Air SSDモデルの大幅値下げ（388,400円→325,400円）や2008年10月のMacBook White（MB402J/B）の値下げ（129,800円→114,800円）、MacBook Pro 17インチの仕様強化・価格改定（329,800円→318,800円）も反映。 / mac-intel-2009-2011.json: Intel搭載Mac (2009年〜2011年発売) 46モデルの日本Apple Store税込価格履歴（当時消費税5%総額表示）。PC Watch / ASCII.jp / ITmedia / Apple Japan公式ニュースリリースに基づく。2009年10月21日のMacBook Air値下げ、2010年10月21日のMacBook値下げ、2010年11月3日のiMac・Mac mini円高還元値下げを反映。 / mac-intel-2012-2015.json: Intel搭載Mac (2012〜2015年発売、計43モデル) の日本Apple Store税込価格履歴および米国発売時MSRP(税抜USD)。2014-03-31以前は消費税5%税込表示(taxRate: 0.05)、2014-04-01以降は消費税8%税別表示への移行に伴い税込価格(exTax * 1.08)を算出しnoteに税別価格を併記(Mac Pro Late 2013のみ2019-10-01の消費税10%改定も反映)。2013-02-14、2013-06-11、2014-04-01、2014-06-18、2014-10-17、2015-03-10、2015-05-20、2016-10-28等の主要な価格改定を収録。 / mac-intel-2016-2020.json: 2016〜2020年発売のIntel搭載Mac全34モデルの日本Apple Store税込価格履歴および米国MSRP(税抜USD)。2019-09-30以前は消費税8%(taxRate: 0.08)、2019-10-01以降は消費税10%(taxRate: 0.1)を適用。2019-10-01を跨いで継続販売されたモデルには消費税率変更イベントを記録。また2020-03-18のMac mini標準SSD倍増・値下げ、2020-08-04の21.5インチiMac標準SSD化、2022-06-07(WWDC22)の円安改定も反映。 / mac-apple-silicon.json: Apple Silicon搭載Macの日本Apple Store税込価格履歴。SKUは標準構成(RAM/SSD)単位、多い場合は最廉価＋代表上位構成のみ。チップのコア数違いはnoteに記載。2022年の円安改定はMacについては2022-06-07(WWDC22)に実施。発表日と発売日が異なる場合、発売時のdateは発売日、販売終了は後継発表日(日本時間)。usdは米国Apple Store税抜価格(標準的な既知値)。"
   },
   "families": {
+    "iMac (24-inch, M6, 2026)": {
+      "releaseDate": "2026-11-06",
+      "skus": [
+        {
+          "storage": "16GB/256GB (2ポート)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 249800,
+              "usd": 1499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; iphone-mania.jp (2026年10月 M6 iMac 価格)",
+              "note": "10コアCPU/10コアGPU・Thunderbolt 4 ×2"
+            }
+          ],
+          "note": "10コアCPU/10コアGPU (2ポート)"
+        },
+        {
+          "storage": "16GB/256GB (4ポート)",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 289800,
+              "usd": 1699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; biccamera.com (2026年10月 M6 iMac 4ポートモデル 価格)",
+              "note": "12コアCPU/12コアGPU・Thunderbolt 4 ×4・2.5Gb Ethernet"
+            }
+          ],
+          "note": "12コアCPU/12コアGPU (4ポート)"
+        }
+      ]
+    },
+    "MacBook Pro 14-inch (M6)": {
+      "releaseDate": "2026-11-06",
+      "skus": [
+        {
+          "storage": "16GB/1TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 339800,
+              "usd": 1999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; iphone-mania.jp (2026年10月 14インチMacBook Pro M6 価格)",
+              "note": "12コアCPU/12コアGPU・Liquid Retina XDRディスプレイ"
+            }
+          ],
+          "note": "12コアCPU/12コアGPU"
+        }
+      ]
+    },
+    "MacBook Pro (14-inch PROLED XDR, M5 Pro)": {
+      "releaseDate": "2026-11-06",
+      "skus": [
+        {
+          "storage": "24GB/1TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 499800,
+              "usd": 2899,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; itmedia.co.jp (2026年10月 MacBook Pro PROLED XDR M5 Pro 価格)",
+              "note": "15コアCPU/16コアGPU・タンデムOLED PROLED XDRディスプレイ（タッチ対応・Dynamic Island）"
+            }
+          ],
+          "note": "15コアCPU/16コアGPU・PROLED XDR"
+        }
+      ]
+    },
+    "MacBook Pro (14-inch PROLED XDR, M5 Max)": {
+      "releaseDate": "2026-11-06",
+      "skus": [
+        {
+          "storage": "36GB/2TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 769800,
+              "usd": 4499,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; kakaku.com (2026年10月 14インチMacBook Pro PROLED XDR M5 Max 価格)",
+              "note": "18コアCPU/32コアGPU・タンデムOLED PROLED XDRディスプレイ（タッチ対応・Dynamic Island）"
+            }
+          ],
+          "note": "18コアCPU/32コアGPU・PROLED XDR"
+        }
+      ]
+    },
+    "MacBook Pro (16-inch PROLED XDR, M5 Pro)": {
+      "releaseDate": "2026-11-06",
+      "skus": [
+        {
+          "storage": "24GB/1TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 599800,
+              "usd": 3399,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; itmedia.co.jp (2026年10月 16インチMacBook Pro PROLED XDR M5 Pro 価格)",
+              "note": "18コアCPU/20コアGPU・タンデムOLED PROLED XDRディスプレイ（タッチ対応・Dynamic Island）"
+            }
+          ],
+          "note": "18コアCPU/20コアGPU・PROLED XDR"
+        }
+      ]
+    },
+    "MacBook Pro (16-inch PROLED XDR, M5 Max)": {
+      "releaseDate": "2026-11-06",
+      "skus": [
+        {
+          "storage": "36GB/2TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 829800,
+              "usd": 4799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; kakaku.com (2026年10月 16インチMacBook Pro PROLED XDR M5 Max 価格)",
+              "note": "18コアCPU/32コアGPU・タンデムOLED PROLED XDRディスプレイ（タッチ対応・Dynamic Island）"
+            }
+          ],
+          "note": "18コアCPU/32コアGPU・PROLED XDR"
+        },
+        {
+          "storage": "48GB/2TB",
+          "connectivity": "-",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 929800,
+              "usd": 5299,
+              "taxRate": 0.1,
+              "confidence": "medium",
+              "source": "apple.com; kakaku.com (2026年10月 16インチMacBook Pro PROLED XDR M5 Max 上位構成価格)",
+              "note": "20コアCPU/40コアGPU・タンデムOLED PROLED XDRディスプレイ（タッチ対応・Dynamic Island）"
+            }
+          ],
+          "note": "20コアCPU/40コアGPU・PROLED XDR"
+        }
+      ]
+    },
     "Mac mini (M5 Pro)": {
       "releaseDate": "2026-09-22",
       "skus": [

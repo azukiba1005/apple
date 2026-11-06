@@ -3,11 +3,229 @@
     "title": "iPad 全世代 日本 Apple Store 価格履歴 & キャリア価格マスター (2010〜2026)",
     "currency": "JPY",
     "taxIncluded": true,
-    "updatedAt": "2026-11-04",
-    "familyCount": 45,
+    "updatedAt": "2026-11-06",
+    "familyCount": 46,
     "notes": "ipad-legacy.json: jpy は日本 Apple Store 税込価格。2014-04 以降の税別表示期間は税別価格×(1+税率)で換算し、税別価格を note に記載。 2014-03 以前は税込表示 (5%)。 Wi-Fi + Cellular (初代/iPad 2 は Wi-Fi + 3G、第3世代は Wi-Fi + 4G) は 2014-07-01 に Apple Store で SIM フリー版販売が始まるまでキャリア販売のみのため jpy:null (Apple 発表の参考価格は note に記載)。 2014-04-01 消費税8%移行時、Apple は旧税込額と同じ数字を税別価格として表示したとする情報が複数あり、それに基づき換算 (一部 low)。 2015 年の円安改定は iPad では確認できず (iPhone/Mac/App Store のみ報道)。2016-09-08 に iPad Pro の円高値下げ、2017-09-13 に iPad Pro 256GB/512GB の値上げあり。 source は search_web のリダイレクト URL しか得られなかったため出典ドメイン名と記事内容で記載。 usd は米国 Apple Store 税抜価格 (既知の公式価格)。 販売終了日は原則 AppleDB の日付 (日本時間の後継機発表日) を使用。 / ipad-modern.json: 日本 Apple Store 直販の税込価格。2021-03 以前の税別表示期は税別価格×(1+税率) を切り捨てで換算し note に税別価格を記載。 2021-04-01 の総額表示義務化は価格改定ではないため履歴に含めない。 主なイベント: 2019-10-01 消費税10%、2022-07-01 円安一斉値上げ、2022-10-19 iPad Air(第5世代)/mini(第6世代) 再値上げ (iPad 第9世代は据え置き)、2024-05-08 iPad 第10世代値下げ、2026-06-25 部品(メモリ/ストレージ)コスト高騰による一斉値上げ。2023年・2025年は iPad 本体価格の改定なし (後継機は据え置き価格)。 2026-06-25 改定は円安ではなく部品コスト高騰が主因のため event を「部品コスト高騰に伴う価格改定（値上げ）」とした。容量別・Cellular 価格はブログ等の検索要約ベースで confidence を medium/low としている。 USD は米国 Apple Store 税抜の発表価格 (一般に知られる公式価格)。2026-06 改定後の USD は未調査のため省略。 source は検索結果がリダイレクト URL のみだったためドメイン名 + 記事内容で記載。 iPad Pro M4/M5 は標準ガラス構成のみ (Nano-texture は +16,000円)。"
   },
   "families": {
+    "iPad mini (A20 Pro)": {
+      "releaseDate": "2026-11-06",
+      "skus": [
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 119800,
+              "usd": 699,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; iphone-mania.jp (iPad mini A20 Pro 価格)",
+              "note": "8.5インチOLEDディスプレイ搭載・A20 Pro (5コアCPU/7コアGPU)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 136800,
+              "usd": 799,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; note.com (iPad mini A20 Pro 価格)",
+              "note": "標準ガラス構成 (Nano-textureガラスオプションあり)"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 171800,
+              "usd": 999,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; note.com (iPad mini A20 Pro 価格)",
+              "note": "フルスペックA20 Pro (6コアCPU/7コアGPU/Dual Neural Engine)・標準ガラス構成"
+            }
+          ],
+          "carrierPricing": null
+        },
+        {
+          "storage": "128GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 144800,
+              "usd": 849,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; selectra.jp (iPad mini A20 Pro 価格)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 173140,
+              "currentPrice": 173140,
+              "mnpPrice": null,
+              "programEffective2Yr": 92620,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 92620,
+                "residualValue": 80520
+              }
+            },
+            "au": {
+              "launchPrice": 168800,
+              "currentPrice": 168800,
+              "mnpPrice": null,
+              "programEffective2Yr": 87800,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 87800,
+                "residualValue": 81000
+              }
+            },
+            "softbank": {
+              "launchPrice": 180720,
+              "currentPrice": 180720,
+              "mnpPrice": null,
+              "programEffective2Yr": 83760,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 83760,
+                "residualValue": 96960
+              }
+            },
+            "rakuten": null
+          }
+        },
+        {
+          "storage": "256GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 161800,
+              "usd": 949,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; selectra.jp (iPad mini A20 Pro 価格)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 193380,
+              "currentPrice": 193380,
+              "mnpPrice": null,
+              "programEffective2Yr": 103620,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 103620,
+                "residualValue": 89760
+              }
+            },
+            "au": {
+              "launchPrice": 189800,
+              "currentPrice": 189800,
+              "mnpPrice": null,
+              "programEffective2Yr": 98800,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 98800,
+                "residualValue": 91000
+              }
+            },
+            "softbank": {
+              "launchPrice": 202320,
+              "currentPrice": 202320,
+              "mnpPrice": null,
+              "programEffective2Yr": 93360,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 93360,
+                "residualValue": 108960
+              }
+            },
+            "rakuten": null
+          }
+        },
+        {
+          "storage": "512GB",
+          "connectivity": "Wi-Fi + Cellular",
+          "history": [
+            {
+              "date": "2026-11-06",
+              "event": "発売時",
+              "jpy": 196800,
+              "usd": 1149,
+              "taxRate": 0.1,
+              "confidence": "high",
+              "source": "apple.com; impress.co.jp; mobilelaby.com (iPad mini A20 Pro 価格)"
+            }
+          ],
+          "carrierPricing": {
+            "docomo": {
+              "launchPrice": 234960,
+              "currentPrice": 234960,
+              "mnpPrice": null,
+              "programEffective2Yr": 125400,
+              "returnProgram": {
+                "name": "いつでもカエドキプログラム",
+                "months": 23,
+                "effectiveCost": 125400,
+                "residualValue": 109560
+              }
+            },
+            "au": {
+              "launchPrice": 228800,
+              "currentPrice": 228800,
+              "mnpPrice": null,
+              "programEffective2Yr": 118800,
+              "returnProgram": {
+                "name": "スマホトクするプログラム",
+                "months": 24,
+                "effectiveCost": 118800,
+                "residualValue": 110000
+              }
+            },
+            "softbank": {
+              "launchPrice": 246240,
+              "currentPrice": 246240,
+              "mnpPrice": null,
+              "programEffective2Yr": 113760,
+              "returnProgram": {
+                "name": "新トクするサポート",
+                "months": 24,
+                "effectiveCost": 113760,
+                "residualValue": 132480
+              }
+            },
+            "rakuten": null
+          }
+        }
+      ]
+    },
     "iPad Air 11-inch (M4)": {
       "releaseDate": "2026-03-11",
       "skus": [

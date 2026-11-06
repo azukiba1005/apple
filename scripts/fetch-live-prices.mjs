@@ -1271,6 +1271,9 @@ const RESEARCHED_CARRIER_PRICES = {
   'iPad mini (A17 Pro)|128GB': { docomo: 144870, au: 142200, softbank: 145440 },
   'iPad mini (A17 Pro)|256GB': { docomo: 164340, au: 161400, softbank: 164880 },
   'iPad mini (A17 Pro)|512GB': { docomo: 204600, au: 201000, softbank: 205200 },
+  'iPad mini (A20 Pro)|128GB': { docomo: 173140, au: 168800, softbank: 180720 },
+  'iPad mini (A20 Pro)|256GB': { docomo: 193380, au: 189800, softbank: 202320 },
+  'iPad mini (A20 Pro)|512GB': { docomo: 234960, au: 228800, softbank: 246240 },
   'iPad Air 11-inch (M2)|128GB': { docomo: 143550, au: 141000, softbank: 144000 },
   'iPad Air 11-inch (M2)|256GB': { docomo: 162030, au: 159000, softbank: 162720 },
   'iPad Air 11-inch (M2)|512GB': { docomo: 203280, au: 199800, softbank: 203760 },
@@ -1371,6 +1374,7 @@ export function selectTargetProducts(masterProducts) {
     'ipad-pro-13-inch-m5',
     'ipad-mini-6th-generation',
     'ipad-mini-a17-pro',
+    'ipad-mini-a20-pro',
     'watch-s10',
     'apple-watch-series-8',
     'apple-watch-series-9',
@@ -1402,6 +1406,12 @@ export function selectTargetProducts(masterProducts) {
     'macbook-air-13-inch-m5-2026',
     'macbook-air-15-inch-m5-2026',
     'macbook-neo',
+    'imac-24-inch-m6-2026',
+    'macbook-pro-14-inch-m6',
+    'macbook-pro-14-inch-proled-xdr-m5-pro',
+    'macbook-pro-14-inch-proled-xdr-m5-max',
+    'macbook-pro-16-inch-proled-xdr-m5-pro',
+    'macbook-pro-16-inch-proled-xdr-m5-max',
   ]);
 
   const targets = [];
