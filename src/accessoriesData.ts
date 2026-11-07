@@ -1,4 +1,4 @@
-import { enrichPricePointFx, type PricePoint } from './App';
+import type { PricePoint } from './App';
 
 /* =====================================================================================
  * Apple 純正・準純正アクセサリー カタログデータ (src/accessoriesData.ts)
@@ -162,18 +162,32 @@ export const DEVICE_COMPAT_GROUPS: DeviceCompatGroupMeta[] = [
 
 type HRow = [date: string, event: string, jpy: number, usd: number, fx: number, note?: string];
 
+const ACC_LATEST_USD_JPY = 152.8;
+const accRound1 = (n: number) => Math.round(n * 10) / 10;
+const accTaxRateAt = (date: string): number =>
+  date >= '2019-10-01' ? 0.1 : date >= '2014-04-01' ? 0.08 : date >= '1997-04-01' ? 0.05 : 0.03;
+
 function mkAccHistory(rows: HRow[]): PricePoint[] {
-  return rows.map(([date, event, appleStorePrice, usdPrice, exchangeRate, note]) =>
-    enrichPricePointFx({
+  return rows.map(([date, event, appleStorePrice, usdPrice, exchangeRate, note]) => {
+    const taxRate = accTaxRateAt(date);
+    const marketUsdJpy = accRound1(exchangeRate);
+    const impliedAppleRate = usdPrice > 0 ? accRound1(appleStorePrice / (1 + taxRate) / usdPrice) : undefined;
+    const rateDiff = impliedAppleRate != null ? accRound1(impliedAppleRate - marketUsdJpy) : undefined;
+    const currentFairJpy = usdPrice > 0 ? Math.round(usdPrice * ACC_LATEST_USD_JPY * 1.1) : undefined;
+    return {
       date,
       event,
       appleStorePrice,
       usdPrice,
-      exchangeRate,
-      marketUsdJpy: exchangeRate,
+      exchangeRate: marketUsdJpy,
+      taxRate,
+      marketUsdJpy,
+      ...(impliedAppleRate != null ? { impliedAppleRate } : {}),
+      ...(rateDiff != null ? { rateDiff } : {}),
+      ...(currentFairJpy != null ? { currentFairJpy } : {}),
       ...(note ? { note } : {}),
-    }),
-  );
+    };
+  });
 }
 
 export const ACCESSORIES_CATALOG: AccessoryItem[] = [
