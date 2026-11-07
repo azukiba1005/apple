@@ -17,6 +17,7 @@ import {
   type UsedPricing,
   type UsedShopOffer,
 } from './usedPrice';
+import { AccessoriesView } from './AccessoriesView';
 
 /* =====================================================================================
  * 1. データスキーマ (TypeScript インターフェース)
@@ -2066,7 +2067,7 @@ const EmptyNote = ({ text }: { text: string }) => <div className={`${card} p-10 
 const useChartColors = () => { const d = useDark(); return { axis: d ? '#a1a1aa' : '#52525b', grid: d ? '#3f3f46' : '#e4e4e7', tipBg: d ? '#18181b' : '#ffffff', tipBorder: d ? '#3f3f46' : '#e4e4e7', text: d ? '#f4f4f5' : '#18181b' }; };
 
 /* ---------- URLクエリパラメータの双方向同期ユーティリティ ---------- */
-type Tab = 'compare' | 'budget' | 'timeline' | 'fx';
+export type Tab = 'compare' | 'budget' | 'timeline' | 'fx' | 'accessories';
 
 const DEFAULT_COMPARE_IDS = ['iphone-14', 'iphone-15', 'iphone-16'] as const;
 
@@ -2487,7 +2488,9 @@ function parseUrlSearchParams(search: string) {
         ? 'timeline'
         : tabRaw === 'fx'
           ? 'fx'
-          : 'compare';
+          : tabRaw === 'accessories' || tabRaw === 'accessory'
+            ? 'accessories'
+            : 'compare';
   const maxPriceNum = parseInt(params.get('maxPrice') ?? '', 10);
   const maxPrice =
     Number.isFinite(maxPriceNum) && maxPriceNum >= 10000 && maxPriceNum <= 300000
@@ -8843,6 +8846,7 @@ export default function App() {
     { id: 'budget', label: '💰 予算から探す', shortLabel: '💰 予算で探す', icon: <Sparkles className="h-4 w-4 shrink-0" /> },
     { id: 'timeline', label: '価格改定タイムライン', shortLabel: '価格改定履歴', icon: <LineIcon className="h-4 w-4 shrink-0" /> },
     { id: 'fx', label: '発売時価格 × 為替', shortLabel: '発売価格×為替', icon: <Coins className="h-4 w-4 shrink-0" /> },
+    { id: 'accessories', label: 'アクセサリー', shortLabel: 'アクセサリー', icon: <ShoppingBag className="h-4 w-4 shrink-0" /> },
   ];
 
   return (
@@ -8863,7 +8867,7 @@ export default function App() {
               <span className="hidden sm:inline">{dark ? 'ライト' : 'ダーク'}</span>
             </button>
           </div>
-          <nav className="mx-auto grid max-w-7xl grid-cols-4 sm:flex sm:gap-1 px-2 sm:px-4">
+          <nav className="mx-auto grid max-w-7xl grid-cols-5 sm:flex sm:gap-1 px-2 sm:px-4">
             {tabs.map((t) => (
               <button key={t.id} onClick={() => setTab(t.id)}
                 className={`inline-flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap border-b-2 px-1 sm:px-3.5 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold transition ${tab === t.id ? 'border-sky-500 text-sky-600 dark:text-sky-400' : 'border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'}`}>
@@ -8918,6 +8922,7 @@ export default function App() {
           )}
           {tab === 'timeline' && <TimelineView products={products} toast={toast} />}
           {tab === 'fx' && <FxView products={products} toast={toast} />}
+          {tab === 'accessories' && <AccessoriesView toast={toast} />}
         </main>
 
         <footer className="mx-auto w-full max-w-7xl px-3 pb-10 pt-4 text-[11px] sm:text-xs text-zinc-500 sm:px-4">
