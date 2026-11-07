@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-11-06T05:34:04.901Z",
-  "latestDate": "2026-11-06",
-  "latest": 158.5,
+  "updatedAt": "2026-11-07T09:53:09.650Z",
+  "latestDate": "2026-11-07",
+  "latest": 158.3,
   "source": "https://api.frankfurter.dev/v1/{YYYY-MM-DD}?base=USD&symbols=JPY",
   "rates": {
     "1998-08-15": 145.2,
