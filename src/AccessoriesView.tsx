@@ -9,20 +9,20 @@ import {
   FileSpreadsheet,
   Headphones,
   Info,
-  Laptop,
   Scale,
   Search,
   ShoppingBag,
   Smartphone,
   Sparkles,
-  Tablet,
   Trophy,
-  Watch,
   X,
 } from 'lucide-react';
 import {
+  btnCls,
   buildXlsx,
+  card as cardCls,
   DEFAULT_LATEST_USD_JPY,
+  selectCls,
   taxRateAt,
   type PricePoint,
 } from './App';
@@ -44,13 +44,6 @@ const signedYen = (n: number) =>
   `${n > 0 ? '+' : n < 0 ? '−' : '±'}¥${Math.abs(Math.round(n)).toLocaleString('ja-JP')}`;
 const signedPct = (n: number) =>
   `${n > 0 ? '+' : n < 0 ? '−' : '±'}${Math.abs(n).toFixed(1)}%`;
-
-const cardCls =
-  'rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800/80 dark:bg-zinc-900/50';
-const selectCls =
-  'rounded-lg border border-zinc-300 bg-white px-2.5 py-1.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100';
-const btnCls =
-  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-1.5 text-xs sm:text-sm font-medium text-zinc-700 transition hover:bg-zinc-200 active:scale-[0.99] dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700';
 
 type TierFilter = 'all' | AccessoryTier | 'beats-collab';
 type SortKey = 'recommended' | 'price-asc' | 'price-desc' | 'hike-desc' | 'release-desc';
@@ -134,31 +127,31 @@ function downloadAccessoriesExcel(items: AccessoryItem[]) {
 function TierBadge({ item }: { item: AccessoryItem }) {
   if (item.tier === 'genuine') {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-zinc-900 px-2.5 py-0.5 text-[11px] font-semibold text-white dark:bg-zinc-100 dark:text-zinc-900">
-        <Apple className="h-3 w-3" />
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900 px-3 py-1 text-xs font-semibold text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900">
+        <Apple className="h-3.5 w-3.5" />
         {item.subTypeLabel}
       </span>
     );
   }
   if (item.subType === 'apple-owned-beats') {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-rose-300 bg-rose-50 px-2.5 py-0.5 text-[11px] font-semibold text-rose-800 dark:border-rose-800/80 dark:bg-rose-950/50 dark:text-rose-200">
-        <Headphones className="h-3 w-3" />
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+        <Headphones className="h-3.5 w-3.5" />
         {item.subTypeLabel}
       </span>
     );
   }
   if (item.subType === 'apple-store-partner') {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-sky-300 bg-sky-50 px-2.5 py-0.5 text-[11px] font-semibold text-sky-800 dark:border-sky-800/80 dark:bg-sky-950/50 dark:text-sky-200">
-        <Sparkles className="h-3 w-3" />
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+        <Sparkles className="h-3.5 w-3.5" />
         {item.subTypeLabel}
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 dark:border-emerald-800/80 dark:bg-emerald-950/50 dark:text-emerald-200">
-      <Check className="h-3 w-3" />
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+      <Check className="h-3.5 w-3.5" />
       {item.subTypeLabel}
     </span>
   );
@@ -298,31 +291,31 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {/* 1. ヒーロー＆統計サマリー */}
-      <section className={`${cardCls} p-4 sm:p-6`}>
+      <section className={`${cardCls} p-5 sm:p-6`}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-600 dark:bg-sky-400/10 dark:text-sky-300">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-3.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
               <ShoppingBag className="h-3.5 w-3.5" />
               Apple 純正 ＆ 準純正（Apple Store公式取扱・MFi / Qi2 / Beats）完全網羅カタログ
             </div>
-            <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
               Apple 純正・準純正アクセサリー図鑑 ＆ 互換性・価格比較
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               Apple純正品（{summaryStats.genuineCount}シリーズ）と、Beats・Logicool・Belkin・Anker・Hermès等の準純正品（
               {summaryStats.semiCount}シリーズ / 全{summaryStats.totalSkuCount} SKU）の発売時価格・円安改定履歴・米国ドル換算・対応機種を一覧比較できます。
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
             <button
               type="button"
               onClick={() => setGuideOpen((v) => !v)}
               className={btnCls}
             >
-              <Info className="h-4 w-4 text-sky-500" />
+              <Info className="h-4 w-4 text-zinc-500" />
               <span>純正と準純正の違いとは？</span>
               {guideOpen ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
             </button>
@@ -334,7 +327,7 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
               }}
               className={btnCls}
             >
-              <FileSpreadsheet className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <FileSpreadsheet className="h-4 w-4 text-[#487558] dark:text-[#88b396]" />
               <span>Excel (.xlsx) 出力</span>
             </button>
           </div>
@@ -342,36 +335,36 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
 
         {/* 純正 vs 準純正の定義ガイド（折りたたみ） */}
         {guideOpen && (
-          <div className="mt-4 grid gap-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-3.5 sm:grid-cols-4 dark:border-zinc-800 dark:bg-zinc-950/60">
-            <div className="rounded-lg bg-white p-3 border border-zinc-200/70 dark:bg-zinc-900 dark:border-zinc-800">
-              <div className="text-xs font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
-                <Apple className="h-3.5 w-3.5" /> ① Apple 純正
+          <div className="mt-4 grid gap-3 rounded-2xl bg-[#f5f5f7] p-4 sm:grid-cols-4 dark:bg-[#23252b]">
+            <div className="rounded-xl bg-white p-3.5 dark:bg-[#1c1d22]">
+              <div className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <Apple className="h-4 w-4" /> ① Apple 純正
               </div>
-              <p className="mt-1 text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="mt-1.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                 Apple自身が設計・販売。H2/U1チップやSmart Connector、Touch ID、25W MagSafeなどOSレベルの独自連携が最大の強み。
               </p>
             </div>
-            <div className="rounded-lg bg-white p-3 border border-zinc-200/70 dark:bg-zinc-900 dark:border-zinc-800">
-              <div className="text-xs font-bold text-rose-700 dark:text-rose-300 flex items-center gap-1.5">
-                <Headphones className="h-3.5 w-3.5" /> ② Beats / 公式コラボ
+            <div className="rounded-xl bg-white p-3.5 dark:bg-[#1c1d22]">
+              <div className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <Headphones className="h-4 w-4" /> ② Beats / 公式コラボ
               </div>
-              <p className="mt-1 text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="mt-1.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                 Apple完全子会社の『Beats by Dre』や『Apple × Hermès / Nike』。H1チップや「探す」、サファイアクリスタル製カメラコントロールなどを共有。
               </p>
             </div>
-            <div className="rounded-lg bg-white p-3 border border-zinc-200/70 dark:bg-zinc-900 dark:border-zinc-800">
-              <div className="text-xs font-bold text-sky-700 dark:text-sky-300 flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5" /> ③ Apple Store 公式パートナー
+            <div className="rounded-xl bg-white p-3.5 dark:bg-[#1c1d22]">
+              <div className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <Sparkles className="h-4 w-4" /> ③ Apple Store 公式パートナー
               </div>
-              <p className="mt-1 text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="mt-1.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                 Logicool（Combo Touch / Crayon）やBelkin（UltraGlass 2 / BoostCharge Pro）など、Appleと共同開発され直営店で販売される準純正品。
               </p>
             </div>
-            <div className="rounded-lg bg-white p-3 border border-zinc-200/70 dark:bg-zinc-900 dark:border-zinc-800">
-              <div className="text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-1.5">
-                <Check className="h-3.5 w-3.5" /> ④ MFi / Qi2 / Find My 認証
+            <div className="rounded-xl bg-white p-3.5 dark:bg-[#1c1d22]">
+              <div className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <Check className="h-4 w-4" /> ④ MFi / Qi2 / Find My 認証
               </div>
-              <p className="mt-1 text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="mt-1.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                 Anker等の『Qi2 15W』『Made for Apple Watch』『Works with Apple Find My』公式認証モジュール搭載品。純正同等の安全性で高コスパ。
               </p>
             </div>
@@ -380,10 +373,10 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
       </section>
 
       {/* 2. フィルタバー（純正/準純正 × 所有デバイス逆引き × カテゴリ × 検索） */}
-      <section className={`${cardCls} p-4 sm:p-5 space-y-4`}>
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <section className={`${cardCls} p-5 sm:p-6 space-y-4`}>
+        <div className="flex flex-col gap-3.5 lg:flex-row lg:items-center lg:justify-between">
           {/* 区分セグメント */}
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
             {(
               [
                 { id: 'all', label: `すべて (${ACCESSORIES_CATALOG.length})` },
@@ -398,10 +391,10 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                   key={t.id}
                   type="button"
                   onClick={() => setTierFilter(t.id)}
-                  className={`rounded-xl px-3 py-1.5 text-xs sm:text-sm font-semibold transition ${
+                  className={`rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold transition ${
                     active
-                      ? 'bg-zinc-900 text-white shadow-sm dark:bg-zinc-100 dark:text-zinc-900'
-                      : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
+                      ? 'bg-zinc-900 text-zinc-100 shadow-2xs dark:bg-zinc-200 dark:text-zinc-900'
+                      : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
                   }`}
                 >
                   {t.label}
@@ -411,23 +404,23 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
           </div>
 
           {/* 検索 ＆ 並び替え */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2.5">
             <div className="relative flex-1 sm:w-64">
-              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="製品名・型番・ブランド・機能で検索..."
-                className="w-full rounded-lg border border-zinc-300 bg-white pl-8 pr-7 py-1.5 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                className="w-full rounded-xl bg-[#f5f5f7] pl-9 pr-8 py-2 text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-400/50 dark:bg-[#23252b] dark:text-zinc-100"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="h-4 w-4" />
                 </button>
               )}
             </div>
@@ -446,16 +439,16 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
         </div>
 
         {/* 所有デバイスからの逆引き互換性フィルタ */}
-        <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-3 dark:border-zinc-800 dark:bg-zinc-950/50">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <label className="flex items-center gap-1.5 text-xs font-bold text-zinc-700 dark:text-zinc-300">
-              <Smartphone className="h-3.5 w-3.5 text-sky-500" />
+        <div className="rounded-2xl bg-[#f5f5f7] p-4 dark:bg-[#23252b]">
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+            <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+              <Smartphone className="h-4 w-4 text-zinc-500" />
               <span>お使いのApple機種から対応アクセサリーを逆引き（非対応ミス防止）:</span>
             </label>
             <select
               value={compatFilter}
               onChange={(e) => setCompatFilter(e.target.value as DeviceCompatGroupId | 'all')}
-              className={`${selectCls} sm:min-w-[360px] font-medium`}
+              className={`${selectCls} !bg-white dark:!bg-[#1c1d22] sm:min-w-[360px] font-medium`}
             >
               {DEVICE_COMPAT_GROUPS.map((g) => (
                 <option key={g.id} value={g.id}>
@@ -465,15 +458,15 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
             </select>
           </div>
           {activeCompatMeta.warningTip && (
-            <div className="mt-2 flex items-start gap-2 rounded-lg border border-amber-300/80 bg-amber-50/90 px-3 py-2 text-xs text-amber-900 dark:border-amber-800/70 dark:bg-amber-950/40 dark:text-amber-200">
-              <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <div className="mt-3 flex items-start gap-2 rounded-xl bg-white px-3.5 py-2.5 text-xs sm:text-sm text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-300">
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-zinc-500" />
               <span>{activeCompatMeta.warningTip}</span>
             </div>
           )}
         </div>
 
         {/* カテゴリピル */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           {ACCESSORY_CATEGORIES.map((cat) => {
             const active = categoryFilter === cat.id;
             const count =
@@ -485,10 +478,10 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                 key={cat.id}
                 type="button"
                 onClick={() => setCategoryFilter(cat.id)}
-                className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                   active
-                    ? 'border-sky-500 bg-sky-500/15 text-sky-700 dark:border-sky-400 dark:bg-sky-400/20 dark:text-sky-200'
-                    : 'border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800'
+                    ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
+                    : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-400 dark:hover:bg-[#2c2f36]'
                 }`}
               >
                 {cat.shortLabel} ({count})
@@ -499,14 +492,14 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
       </section>
 
       {/* 3. 「純正 vs 準純正」定番比較プリセット ＆ 横並び比較テーブル */}
-      <section className={`${cardCls} p-4 sm:p-6 space-y-4`}>
+      <section className={`${cardCls} p-5 sm:p-6 space-y-4`}>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
-              <Scale className="h-5 w-5 text-sky-500" />
+            <h2 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+              <Scale className="h-5 w-5 text-zinc-500" />
               <span>純正 vs 準純正 徹底比較テーブル（ワンクリック対決プリセット）</span>
             </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="mt-0.5 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
               「純正を買うべきか、準純正で十分か？」迷いやすい定番ジャンルをワンクリックで横並び比較できます（各カードの「比較に追加」で自由に入れ替え可）。
             </p>
           </div>
@@ -525,7 +518,7 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
         </div>
 
         {/* プリセット選択ボタン */}
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {ACCESSORY_COMPARISON_PRESETS.map((preset) => {
             const active = activePresetId === preset.id;
             return (
@@ -533,16 +526,16 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                 key={preset.id}
                 type="button"
                 onClick={() => applyPreset(preset.id)}
-                className={`text-left rounded-xl border p-3 transition ${
+                className={`text-left rounded-2xl p-4 transition ${
                   active
-                    ? 'border-sky-500 bg-sky-50/70 ring-1 ring-sky-500/40 dark:border-sky-400 dark:bg-sky-950/30'
-                    : 'border-zinc-200/80 bg-zinc-50/60 hover:bg-zinc-100/80 dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:bg-zinc-800/80'
+                    ? 'bg-zinc-900 text-zinc-100 shadow-2xs dark:bg-zinc-200 dark:text-zinc-900'
+                    : 'bg-[#f5f5f7] text-zinc-800 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-200 dark:hover:bg-[#2c2f36]'
                 }`}
               >
-                <div className="text-xs font-bold text-zinc-900 dark:text-zinc-100 line-clamp-1">
+                <div className="text-xs sm:text-sm font-bold line-clamp-1">
                   {preset.title}
                 </div>
-                <div className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400 line-clamp-1">
+                <div className={`mt-1 text-xs line-clamp-1 ${active ? 'text-zinc-300 dark:text-zinc-600' : 'text-zinc-500 dark:text-zinc-400'}`}>
                   {preset.subtitle}
                 </div>
               </button>
@@ -552,9 +545,9 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
 
         {/* 結論アドバイス */}
         {activePreset && (
-          <div className="rounded-xl border border-emerald-300/80 bg-emerald-50/70 p-3.5 text-xs sm:text-sm text-emerald-950 dark:border-emerald-800/70 dark:bg-emerald-950/30 dark:text-emerald-100">
-            <div className="font-bold flex items-center gap-1.5 mb-1">
-              <Trophy className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="rounded-2xl bg-[#eaf2ed]/75 p-4 text-xs sm:text-sm text-[#3d6b4e] dark:bg-[#1e2b24]/75 dark:text-[#88b396]">
+            <div className="font-bold flex items-center gap-2 mb-1">
+              <Trophy className="h-4 w-4 shrink-0" />
               <span>選び方の結論：{activePreset.title}</span>
             </div>
             <p className="leading-relaxed text-xs sm:text-sm">{activePreset.verdict}</p>
@@ -563,30 +556,30 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
 
         {/* 横並び比較テーブル */}
         {compareItems.length > 0 ? (
-          <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+          <div className="overflow-x-auto rounded-2xl bg-[#f5f5f7]/60 dark:bg-[#23252b]/60">
             <table className="w-full min-w-[640px] border-collapse text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                  <th className="w-36 p-3 font-semibold text-zinc-600 dark:text-zinc-400">比較項目</th>
+                <tr className="bg-zinc-200/50 dark:bg-[#282a32]">
+                  <th className="w-40 px-4 py-3.5 font-semibold text-zinc-600 dark:text-zinc-400">比較項目</th>
                   {compareItems.map((item) => {
                     const sku = getActiveSku(item);
                     return (
-                      <th key={item.id} className="p-3 align-top min-w-[200px]">
+                      <th key={item.id} className="px-4 py-3.5 align-top min-w-[210px]">
                         <div className="flex items-start justify-between gap-2">
                           <TierBadge item={item} />
                           <button
                             type="button"
                             onClick={() => toggleCompare(item.id)}
-                            className="rounded p-0.5 text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 dark:hover:bg-zinc-800"
+                            className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 dark:hover:bg-zinc-700"
                             title="比較から外す"
                           >
-                            <X className="h-3.5 w-3.5" />
+                            <X className="h-4 w-4" />
                           </button>
                         </div>
-                        <div className="mt-1.5 font-bold text-zinc-900 dark:text-zinc-100">
+                        <div className="mt-2 font-bold text-zinc-900 dark:text-zinc-100">
                           {item.name}
                         </div>
-                        <div className="mt-0.5 text-[11px] font-normal text-zinc-500 dark:text-zinc-400">
+                        <div className="mt-0.5 text-xs font-normal text-zinc-500 dark:text-zinc-400">
                           {sku.label}
                         </div>
                       </th>
@@ -594,9 +587,9 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                   })}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              <tbody className="divide-y divide-zinc-200/40 dark:divide-white/[0.04]">
                 <tr>
-                  <td className="p-3 font-semibold text-zinc-600 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/40">
+                  <td className="px-4 py-3.5 font-semibold text-zinc-600 dark:text-zinc-400">
                     現在価格 (税込)
                   </td>
                   {compareItems.map((item) => {
@@ -604,23 +597,24 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                     const minPrice = Math.min(...compareItems.map((x) => getActiveSku(x).currentPrice));
                     const isCheapest = sku.currentPrice === minPrice && compareItems.length > 1;
                     return (
-                      <td key={item.id} className="p-3 tabular-nums">
+                      <td key={item.id} className="px-4 py-3.5 tabular-nums">
                         <span
-                          className={`text-base font-extrabold ${
+                          className={`text-base font-bold ${
                             isCheapest
-                              ? 'text-emerald-600 dark:text-emerald-400'
+                              ? 'text-[#3d6b4e] dark:text-[#88b396]'
                               : 'text-zinc-900 dark:text-zinc-100'
                           }`}
                         >
                           {yen(sku.currentPrice)}
                         </span>
                         {isCheapest && (
-                          <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                          <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-[#eaf2ed] px-2.5 py-0.5 text-xs font-semibold text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
                             最安
                           </span>
                         )}
                         {sku.marketEstimatePrice && (
-                          <div className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
+                          <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                             EC実勢目安: 約{yen(sku.marketEstimatePrice)}
                           </div>
                         )}
@@ -629,17 +623,17 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                   })}
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-zinc-600 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/40">
+                  <td className="px-4 py-3.5 font-semibold text-zinc-600 dark:text-zinc-400">
                     発売時価格・改定差額
                   </td>
                   {compareItems.map((item) => {
                     const sku = getActiveSku(item);
                     const diff = sku.currentPrice - sku.launchPrice;
                     return (
-                      <td key={item.id} className="p-3 tabular-nums text-xs">
+                      <td key={item.id} className="px-4 py-3.5 tabular-nums text-xs sm:text-sm">
                         <div>発売時: {yen(sku.launchPrice)}</div>
                         {diff !== 0 ? (
-                          <span className="text-rose-600 dark:text-rose-400 font-semibold">
+                          <span className="text-zinc-600 dark:text-zinc-400 font-medium">
                             {signedYen(diff)} ({signedPct((diff / sku.launchPrice) * 100)})
                           </span>
                         ) : (
@@ -650,14 +644,14 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                   })}
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-zinc-600 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/40">
+                  <td className="px-4 py-3.5 font-semibold text-zinc-600 dark:text-zinc-400">
                     米国価格・適用為替
                   </td>
                   {compareItems.map((item) => {
                     const sku = getActiveSku(item);
                     const fx = evalAccessoryFx(sku);
                     return (
-                      <td key={item.id} className="p-3 tabular-nums text-xs">
+                      <td key={item.id} className="px-4 py-3.5 tabular-nums text-xs sm:text-sm">
                         {fx ? (
                           <>
                             <div>US ${fx.usd} (税抜)</div>
@@ -673,41 +667,41 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                   })}
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-zinc-600 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/40">
+                  <td className="px-4 py-3.5 font-semibold text-zinc-600 dark:text-zinc-400">
                     接続・給電方式
                   </td>
                   {compareItems.map((item) => (
-                    <td key={item.id} className="p-3 text-xs leading-relaxed">
+                    <td key={item.id} className="px-4 py-3.5 text-xs sm:text-sm leading-relaxed">
                       {item.connection}
                     </td>
                   ))}
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-zinc-600 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/40">
+                  <td className="px-4 py-3.5 font-semibold text-zinc-600 dark:text-zinc-400">
                     主な特徴・強み
                   </td>
                   {compareItems.map((item) => (
-                    <td key={item.id} className="p-3 text-xs leading-relaxed">
+                    <td key={item.id} className="px-4 py-3.5 text-xs sm:text-sm leading-relaxed">
                       {item.specs.specialFeatures ?? item.highlights[0]}
                     </td>
                   ))}
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-zinc-600 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/40">
+                  <td className="px-4 py-3.5 font-semibold text-zinc-600 dark:text-zinc-400">
                     サイズ・重量・仕様
                   </td>
                   {compareItems.map((item) => (
-                    <td key={item.id} className="p-3 text-xs leading-relaxed">
+                    <td key={item.id} className="px-4 py-3.5 text-xs sm:text-sm leading-relaxed">
                       {item.specs.dimensionsOrWeight ?? '—'}
                     </td>
                   ))}
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-zinc-600 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/40">
+                  <td className="px-4 py-3.5 font-semibold text-zinc-600 dark:text-zinc-400">
                     認証・メーカー保証
                   </td>
                   {compareItems.map((item) => (
-                    <td key={item.id} className="p-3 text-xs leading-relaxed">
+                    <td key={item.id} className="px-4 py-3.5 text-xs sm:text-sm leading-relaxed">
                       <div className="font-medium text-zinc-800 dark:text-zinc-200">
                         {item.certification ?? '—'}
                       </div>
@@ -721,14 +715,14 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
             </table>
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-zinc-300 p-6 text-center text-xs sm:text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+          <div className="rounded-2xl bg-[#f5f5f7] p-8 text-center text-xs sm:text-sm text-zinc-500 dark:bg-[#23252b] dark:text-zinc-400">
             上のプリセットを選ぶか、各アクセサリーカードの「比較に追加」ボタンを押すと最大4製品まで横並び比較できます。
           </div>
         )}
       </section>
 
       {/* 4. アクセサリーカード一覧 */}
-      <section className="space-y-3">
+      <section className="space-y-4">
         <div className="flex items-center justify-between px-1">
           <div className="text-xs sm:text-sm font-semibold text-zinc-600 dark:text-zinc-400">
             該当アクセサリー: <strong className="text-zinc-900 dark:text-zinc-100">{filteredItems.length}</strong> シリーズ
@@ -756,15 +750,15 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                 <article
                   key={item.id}
                   id={`acc-card-${item.id}`}
-                  className={`${cardCls} flex flex-col justify-between p-4 sm:p-5 transition hover:border-zinc-300 dark:hover:border-zinc-700`}
+                  className={`${cardCls} flex flex-col justify-between p-5 sm:p-6 transition`}
                 >
-                  <div className="space-y-3">
+                  <div className="space-y-3.5">
                     {/* ヘッダーバッジ列 */}
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex flex-wrap items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-2">
                         <TierBadge item={item} />
                         {catMeta && (
-                          <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-[11px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
                             {catMeta.shortLabel}
                           </span>
                         )}
@@ -772,10 +766,10 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                       <button
                         type="button"
                         onClick={() => toggleCompare(item.id)}
-                        className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-semibold transition ${
+                        className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
                           inCompare
-                            ? 'border-sky-500 bg-sky-500 text-white'
-                            : 'border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200'
+                            ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
+                            : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70'
                         }`}
                       >
                         {inCompare ? <Check className="h-3.5 w-3.5" /> : <Scale className="h-3.5 w-3.5" />}
@@ -789,14 +783,14 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                         {item.brand} ・ 発売日 {item.releaseDate}
                         {activeSku.modelNumber ? ` ・ 型番 ${activeSku.modelNumber}` : ''}
                       </div>
-                      <h3 className="mt-0.5 text-base sm:text-lg font-bold leading-snug text-zinc-900 dark:text-zinc-50">
+                      <h3 className="mt-1 text-base sm:text-lg font-bold leading-snug text-zinc-900 dark:text-zinc-100">
                         {item.name}
                       </h3>
                     </div>
 
                     {/* SKU切替ピル (複数SKUある場合) */}
                     {item.skus.length > 1 && (
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-2">
                         {item.skus.map((s) => {
                           const isSel = s.id === activeSku.id;
                           return (
@@ -806,10 +800,10 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                               onClick={() =>
                                 setSelectedSkuMap((prev) => ({ ...prev, [item.id]: s.id }))
                               }
-                              className={`rounded-lg border px-2.5 py-1 text-xs font-semibold transition ${
+                              className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
                                 isSel
-                                  ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
-                                  : 'border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/70 dark:text-zinc-300'
+                                  ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
+                                  : 'bg-[#f5f5f7] text-zinc-700 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
                               }`}
                             >
                               {s.label} ({yen(s.currentPrice)})
@@ -820,18 +814,18 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                     )}
 
                     {/* 価格ボックス */}
-                    <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-3 dark:border-zinc-800 dark:bg-zinc-950/50">
-                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <div className="rounded-2xl bg-[#f5f5f7] p-4 dark:bg-[#23252b]">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2.5">
                         <div>
                           <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                             {item.tier === 'genuine' ? 'Apple Store 直販価格 (税込)' : '公式ストア価格 (税込)'}
                           </span>
-                          <div className="flex items-baseline gap-2 mt-0.5">
-                            <span className="text-xl sm:text-2xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-50">
+                          <div className="flex flex-wrap items-baseline gap-2.5 mt-1">
+                            <span className="text-xl sm:text-2xl font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
                               {yen(activeSku.currentPrice)}
                             </span>
                             {priceDiff !== 0 && (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-rose-600 dark:text-rose-400">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-zinc-200/70 px-2.5 py-0.5 text-xs font-medium tabular-nums text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-300">
                                 発売時 {yen(activeSku.launchPrice)} から {signedYen(priceDiff)}
                               </span>
                             )}
@@ -840,10 +834,10 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
 
                         {activeSku.marketEstimatePrice && (
                           <div className="text-right">
-                            <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                            <span className="text-xs text-zinc-500 dark:text-zinc-400">
                               EC・量販店 実勢目安
                             </span>
-                            <div className="text-sm font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
+                            <div className="text-sm sm:text-base font-bold tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
                               約{yen(activeSku.marketEstimatePrice)}
                             </div>
                           </div>
@@ -851,10 +845,10 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                       </div>
 
                       {/* 為替＆改定履歴トグル */}
-                      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-200/70 pt-2 text-xs text-zinc-500 dark:border-zinc-800/80 dark:text-zinc-400">
+                      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-zinc-500 dark:text-zinc-400">
                         {fx ? (
                           <span className="inline-flex items-center gap-1.5 tabular-nums">
-                            <Coins className="h-3.5 w-3.5 text-amber-500" />
+                            <Coins className="h-3.5 w-3.5 text-zinc-400" />
                             <span>
                               米国 ${fx.usd} ・ 実質Appleレート{' '}
                               <strong className="text-zinc-700 dark:text-zinc-200">
@@ -874,7 +868,7 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                                 [item.id]: !prev[item.id],
                               }))
                             }
-                            className="inline-flex items-center gap-1 font-semibold text-sky-600 hover:underline dark:text-sky-400"
+                            className="inline-flex items-center gap-1 font-semibold text-zinc-700 underline hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-100"
                           >
                             <span>価格改定履歴 ({activeSku.priceHistory.length}回)</span>
                             {histExpanded ? (
@@ -887,7 +881,7 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                       </div>
 
                       {histExpanded && (
-                        <div className="mt-2 space-y-1 border-t border-zinc-200/70 pt-2 text-xs dark:border-zinc-800">
+                        <div className="mt-2.5 space-y-1.5 rounded-xl bg-white p-3 text-xs dark:bg-[#1c1d22]">
                           {activeSku.priceHistory.map((pt, idx) => (
                             <div
                               key={`${pt.date}-${idx}`}
@@ -906,25 +900,25 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                     </div>
 
                     {/* 対応機種 ＆ 非対応注意アラート */}
-                    <div className="space-y-1.5 text-xs">
+                    <div className="space-y-2 text-xs sm:text-sm">
                       <div>
-                        <span className="font-bold text-zinc-700 dark:text-zinc-300">主な対応機種: </span>
+                        <span className="font-semibold text-zinc-700 dark:text-zinc-300">主な対応機種: </span>
                         <span className="text-zinc-600 dark:text-zinc-400">
                           {item.compatDevices.join(' / ')}
                         </span>
                       </div>
                       {item.incompatibleNotice && (
-                        <div className="rounded-lg border border-rose-300/80 bg-rose-50/80 px-2.5 py-1.5 text-[11px] font-medium text-rose-800 dark:border-rose-900/70 dark:bg-rose-950/40 dark:text-rose-200">
+                        <div className="rounded-xl bg-[#f5f5f7] px-3 py-2 text-xs font-medium text-zinc-700 dark:bg-[#23252b] dark:text-zinc-300">
                           ⚠️ {item.incompatibleNotice}
                         </div>
                       )}
                     </div>
 
                     {/* ハイライト箇条書き */}
-                    <ul className="space-y-1 text-xs text-zinc-700 dark:text-zinc-300">
+                    <ul className="space-y-1.5 text-xs sm:text-sm text-zinc-700 dark:text-zinc-300">
                       {item.highlights.map((h, i) => (
-                        <li key={i} className="flex items-start gap-1.5 leading-relaxed">
-                          <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500" />
+                        <li key={i} className="flex items-start gap-2 leading-relaxed">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-400 dark:bg-zinc-500" />
                           <span>{h}</span>
                         </li>
                       ))}
@@ -932,21 +926,21 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
 
                     {/* ライバル比較メモ */}
                     {(item.comparisonNote || altItem) && (
-                      <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-2.5 text-xs dark:border-zinc-800 dark:bg-zinc-900/60">
+                      <div className="rounded-2xl bg-[#f5f5f7] p-3.5 text-xs sm:text-sm dark:bg-[#23252b]">
                         {item.comparisonNote && (
                           <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                             💡 {item.comparisonNote}
                           </p>
                         )}
                         {altItem && (
-                          <div className="mt-1.5 flex items-center justify-between gap-2">
-                            <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
+                          <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                            <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
                               比較ライバル ({altItem.tier === 'genuine' ? 'Apple純正' : '準純正'}):
                             </span>
                             <button
                               type="button"
                               onClick={() => jumpToAlternative(altItem.id)}
-                              className="text-xs font-bold text-sky-600 hover:underline dark:text-sky-400"
+                              className="text-xs font-bold text-zinc-800 underline hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-zinc-100"
                             >
                               → {altItem.name} ({yen(altItem.skus[0].currentPrice)}) を見る
                             </button>
@@ -957,16 +951,16 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                   </div>
 
                   {/* フッター：ショップ検索リンク */}
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-200/80 pt-3 dark:border-zinc-800">
-                    <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-2 pt-3">
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500">
                       {item.certification}
                     </span>
-                    <div className="flex flex-wrap items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-2">
                       <a
                         href={`https://www.apple.com/jp/shop/accessories/all-accessories?fh=${encodeURIComponent(item.name)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
                       >
                         <span>Apple Store</span>
                         <ExternalLink className="h-3 w-3" />
@@ -977,8 +971,9 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                         )}/`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-rose-300"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
                       >
+                        <span className="h-2 w-2 rounded-full bg-[#a66c75]" />
                         <span>楽天市場</span>
                         <ExternalLink className="h-3 w-3" />
                       </a>
@@ -988,8 +983,9 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-amber-700 hover:bg-amber-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-amber-300"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
                       >
+                        <span className="h-2 w-2 rounded-full bg-[#ad8755]" />
                         <span>Yahoo!</span>
                         <ExternalLink className="h-3 w-3" />
                       </a>

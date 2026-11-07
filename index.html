@@ -3,21 +3,129 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Apple Price Atlas – スペック・キャリア価格・価格改定比較</title>
+    <title>Apple Price Atlas | 歴代Apple製品のスペック・キャリア価格・中古相場・整備済品の完全比較データベース</title>
+    <meta
+      name="description"
+      content="Apple Price Atlas | 歴代Apple製品のスペック・キャリア価格・中古相場・整備済品の完全比較データベース。iPhone・iPad・Mac・Apple Watch・AirPodsの新品定価・4大キャリア実質負担額・楽天/Yahoo!中古最安値・Apple認定整備済品在庫・発売時価格×為替レート推移を網羅的に横断比較できます。"
+    />
+    <meta
+      property="og:title"
+      content="Apple Price Atlas | 歴代Apple製品のスペック・キャリア価格・中古相場・整備済品の完全比較データベース"
+    />
+    <meta
+      property="og:description"
+      content="iPhone・iPad・Mac・Apple Watch・AirPodsのスペック・Apple直販＆4大キャリア価格・中古ショップ最安値・Apple認定整備済品在庫・価格改定タイムライン・為替レート推移を一括比較できる完全データベース。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Apple Price Atlas" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Apple Price Atlas | 歴代Apple製品のスペック・キャリア価格・中古相場・整備済品の完全比較データベース"
+    />
+    <meta
+      name="twitter:description"
+      content="歴代Apple製品のスペック・キャリア価格・中古相場・Apple認定整備済品・価格改定履歴・為替推移を完全比較できるデータベース。"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class' };</script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              zinc: {
+                50: '#f5f5f7',
+                100: '#ececef',
+                200: '#e2e3e8',
+                300: '#cfd1d8',
+                400: '#9ca0ab',
+                500: '#727682',
+                600: '#555863',
+                700: '#34363e',
+                800: '#24262c',
+                900: '#1c1d22',
+                950: '#141518',
+              },
+              emerald: {
+                50: '#eef4f0',
+                100: '#dce9e0',
+                200: '#bfd6c7',
+                300: '#9abca6',
+                400: '#7ea88c',
+                500: '#649274',
+                600: '#4e785d',
+                700: '#3f614b',
+                800: '#2b4234',
+                900: '#213328',
+                950: '#18241d',
+              },
+              rose: {
+                50: '#f6eff0',
+                100: '#eadcdf',
+                200: '#d7bec3',
+                300: '#be9ba2',
+                400: '#ab7f88',
+                500: '#966871',
+                600: '#7d535c',
+                700: '#644249',
+                800: '#473035',
+                900: '#362529',
+                950: '#24191c',
+              },
+              amber: {
+                50: '#f6f2eb',
+                100: '#ebe3d5',
+                200: '#d8c9b0',
+                300: '#bfa987',
+                400: '#ae946d',
+                500: '#997e57',
+                600: '#7f6745',
+                700: '#665237',
+                800: '#473927',
+                900: '#362c1e',
+                950: '#241d14',
+              },
+              sky: {
+                50: '#eff3f6',
+                100: '#dfe7ed',
+                200: '#c3d2dd',
+                300: '#9eb6c7',
+                400: '#829fb4',
+                500: '#69879d',
+                600: '#546e82',
+                700: '#435868',
+                800: '#303f4a',
+                900: '#253038',
+                950: '#192026',
+              },
+            },
+          },
+        },
+      };
+    </script>
     <style>
       html {
         -webkit-text-size-adjust: 100%;
         -webkit-tap-highlight-color: transparent;
         scrollbar-gutter: stable;
+        font-feature-settings: "palt" 1;
       }
-      html, body { overflow-x: hidden; }
+      html, body {
+        overflow-x: hidden;
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+      }
+      html.dark, html.dark body {
+        background-color: #141518;
+        color: #ececef;
+      }
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
   </head>
-  <body class="bg-zinc-50 text-zinc-900 antialiased selection:bg-sky-500 selection:text-white dark:bg-zinc-950 dark:text-zinc-100">
+  <body class="bg-[#f5f5f7] text-[#1d1d1f] antialiased leading-relaxed selection:bg-zinc-700 selection:text-zinc-100 dark:bg-[#141518] dark:text-[#ececef]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

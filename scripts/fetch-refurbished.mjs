@@ -1,20 +1,23 @@
 /**
  * Apple認定整備済製品 在庫取得 ＆ 既存DB（public/products.json / data/catalog/）スマート名寄せスクリプト
- * 出力先: public/refurbished.json
+ * 出力先:
+ *   - data/cache/refurbished-cache.json (リアル在庫キャッシュ)
+ *   - public/refurbished.json (フロントエンド配信データ)
  *
  * 【ハイブリッド設計】
- * 1. マルチソース取得＋フォールバック:
- *    - プライマリ1: Refurb Tracker 日本向けRSSフィード (jp_mac.xml, jp_ipad.xml, jp_iphone.xml, jp_watch.xml 等)
- *    - プライマリ2: Apple公式 認定整備済製品ページ (https://www.apple.com/jp/shop/refurbished/mac 等)
- *      から最小限の「タイトル・整備済価格（税込）・商品URL」のみを軽量抽出（stockStatus: "Live"）
- *    - セカンダリ（フォールバック）: 外部フィードが通信エラーや在庫切れのカテゴリでも、
- *      既存カタログ（public/products.json & data/catalog/）の主要モデルからApple認定整備済製品の
- *      実勢価格（新品価格の約15%OFF相当）を自動算出し、「実在庫（Live）」か「参考整備済相場（Reference）」かの
- *      フラグを付与して出力
+ * 1. リアル在庫の最優先抽出 (isLiveStock: true / stockStatus: "Live"):
+ *    - プライマリ1: Apple公式 認定整備済製品ページ (https://www.apple.com/jp/shop/refurbished/mac 等)
+ *      の `window.REFURB_GRID_BOOTSTRAP` およびHTMLタイルから現在庫を直接抽出
+ *    - プライマリ2: Refurb Tracker 日本向けRSSフィード (jp_mac.xml, jp_ipad.xml, jp_iphone.xml, jp_watch.xml 等)
+ *    - 取得したリアル在庫は `data/cache/refurbished-cache.json` にキャッシュ保存し、オフライン実行時にも維持
  *
- * 2. 3ステップ自動名寄せ（マッチング）＆データ注入（Enrich）:
- *    - ステップA: 正規化したタイトルからモデル名・画面サイズ・世代・チップ名（M1〜M6, A14〜A20, S8〜S11, H1/H2）を抽出し既存製品を特定
- *    - ステップB: 容量（64GB〜2TB）・メモリ構成（8GB/256GB, 16GB/512GB等）・ケースサイズ（40mm〜49mm）・通信方式（Wi-Fi / Cellular / GPS）で該当SKUを特定
+ * 2. 厳選された参考整備済相場 (isLiveStock: false / stockStatus: "Reference"):
+ *    - 発売から6ヶ月未満の最新モデルや未発売・次世代予測モデル、超高額BTO構成（M Ultra / M Max / 大容量RAM・SSD等）を除外
+ *    - 実際にApple公式認定整備済製品として流通実績がある定番モデルの標準構成のみに厳選して出力
+ *
+ * 3. 3ステップ自動名寄せ（マッチング）＆データ注入（Enrich）:
+ *    - ステップA: 正規化したタイトルからモデル名・画面サイズ・世代・チップ名を抽出し既存製品を特定
+ *    - ステップB: 容量・メモリ構成・ケースサイズ・通信方式で該当SKUを特定
  *    - ステップC: 紐付いた既存SKUから originalNewPrice / discountAmount / discountPercent /
  *      usedLowestPrice / usedShopName / usedUrl / priceGapVsUsed / specs を自動注入
  */
@@ -26,9 +29,10 @@ import { fileURLToPath } from 'node:url';
  * ============================================================================ */
 
 export const OUTPUT_PATH = 'public/refurbished.json';
+export const REFURB_CACHE_PATH = 'data/cache/refurbished-cache.json';
 export const PRODUCTS_JSON_PATH = 'public/products.json';
 export const CATALOG_DIR = 'data/catalog';
-export const FETCH_TIMEOUT_MS = 9000;
+export const FETCH_TIMEOUT_MS = 10000;
 
 export const REFURB_TRACKER_FEEDS = [
   { category: 'Mac', url: 'https://refurb-tracker.com/feeds/jp_mac.xml' },
@@ -65,6 +69,83 @@ export function calcStandardRefurbishedPrice(newPrice, discountRatio = 0.15) {
     return Math.round(raw / 1000) * 1000 - 200;
   }
   return Math.round(raw / 100) * 100;
+}
+
+/**
+ * 発売から6ヶ月未満の最新モデルや未流通モデル、超高額BTO構成（Mac Studio Ultra/Max等）を判定・除外するフィルタ
+ * @param {object} product
+ * @param {object} [sku]
+ * @param {object} [options]
+ * @param {boolean} [options.isLiveStock] リアル在庫かどうか
+ * @param {number} [options.nowMs] 基準時刻ミリ秒
+ */
+export function isEligibleForRefurbishedCatalog(product, sku = null, options = {}) {
+  if (!product) return false;
+  const isLiveStock = Boolean(options.isLiveStock);
+  const nowMs = options.nowMs ?? Date.now();
+
+  const pName = String(product.name ?? '').normalize('NFKC');
+  const pId = String(product.id ?? '').toLowerCase();
+  const pSoc = String(product.specs?.soc ?? '').normalize('NFKC');
+  const combinedText = `${pName} ${pId} ${pSoc}`;
+  const relStr = String(product.releaseDate ?? '').trim();
+
+  // 発売直後（2026年9月以降）の未流通最新モデルは Live / Reference 問わず誤マッチ防止のため除外
+  if (
+    relStr >= '2026-09-01' ||
+    /\b(M6|M5\s*Ultra|A20|iPhone\s*(?:18|Duo)|Series\s*12|AirPods\s*5|PROLED)\b/i.test(combinedText)
+  ) {
+    return false;
+  }
+
+  // 参考推定データ (isLiveStock: false) の場合は発売から6ヶ月未満の最新モデルや超高額BTO構成を厳格に除外
+  if (!isLiveStock) {
+    // 1) 発売から6ヶ月（180日）未満の最新モデルを除外
+    if (!relStr) return false;
+    const relMs = Date.parse(relStr);
+    if (!Number.isFinite(relMs)) return false;
+    const SIX_MONTHS_MS = 180 * 24 * 60 * 60 * 1000;
+    if (nowMs - relMs < SIX_MONTHS_MS) {
+      return false;
+    }
+    // 古すぎるモデル（2021年以前）も除外
+    if (relStr < '2022-01-01') {
+      return false;
+    }
+
+    // 2) 超高額ハイエンド・BTO構成（Mac Studio / Mac Pro / M Ultra / M Maxチップ搭載機）を除外
+    if (/Mac\s*Studio|Mac\s*Pro/i.test(pName) || /\bM[1-6]\s*(?:Ultra|Max)\b/i.test(combinedText)) {
+      return false;
+    }
+
+    // 3) SKU単位のハイエンドBTO構成（大容量RAM >= 36GB、大容量ストレージ >= 2TB、新品定価 >= 35万円）を除外
+    if (sku) {
+      const skuLabel = `${sku.label || ''} ${sku.storage || ''}`.normalize('NFKC');
+      const macRamMatch = skuLabel.match(/\b(\d{1,3})\s*GB\s*[/／]/i);
+      const specRamMatch = String(product.specs?.ram || '').match(/(\d{1,3})\s*GB/i);
+      const ramGb = macRamMatch
+        ? parseInt(macRamMatch[1], 10)
+        : specRamMatch
+          ? parseInt(specRamMatch[1], 10)
+          : 0;
+      if (ramGb >= 36) {
+        return false;
+      }
+      if (/\b([248])\s*TB\b/i.test(skuLabel)) {
+        return false;
+      }
+      const dbNewPrice =
+        sku.carriers?.apple?.currentPrice ??
+        sku.priceHistory?.at(-1)?.appleStorePrice ??
+        sku.carriers?.apple?.launchPrice ??
+        0;
+      if (dbNewPrice >= 350000) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 /* ============================================================================
@@ -114,9 +195,10 @@ export function loadExistingProductsDatabase() {
             const launchPrice = hist[0]?.appleStorePrice ?? curPrice;
             return {
               id: `${(s.storage || `sku-${idx}`).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-              label: [s.storage, s.connectivity && s.connectivity !== '-' ? s.connectivity : '']
-                .filter(Boolean)
-                .join(' ') || '標準',
+              label:
+                [s.storage, s.connectivity && s.connectivity !== '-' ? s.connectivity : '']
+                  .filter(Boolean)
+                  .join(' ') || '標準',
               storage: s.storage || '',
               connectivity: s.connectivity || '-',
               priceHistory: hist,
@@ -143,7 +225,7 @@ export function loadExistingProductsDatabase() {
 }
 
 /* ============================================================================
- * 3. プライマリ取得ルート: Refurb Tracker RSS & Apple公式整備済ページ
+ * 3. プライマリ取得ルート: Apple公式整備済ページ (REFURB_GRID_BOOTSTRAP) & Refurb Tracker RSS
  * ============================================================================ */
 
 function decodeXmlEntities(str) {
@@ -184,8 +266,53 @@ export function extractYenPriceFromText(text) {
     }
   }
   if (candidates.length === 0) return null;
-  // 割引額（例：-¥25,000）ではなく本体価格を取得するため、2つ以上ある場合は適切な範囲を採用
   return candidates[0];
+}
+
+/**
+ * HTML内の指定マーカー直後にあるバランスされたJSONオブジェクト `{ ... }` を抽出する
+ */
+export function extractBalancedJsonAfter(text, marker = 'REFURB_GRID_BOOTSTRAP') {
+  if (!text || typeof text !== 'string') return null;
+  const markerIdx = text.indexOf(marker);
+  if (markerIdx === -1) return null;
+
+  const eqIdx = text.indexOf('=', markerIdx + marker.length);
+  if (eqIdx === -1) return null;
+
+  const startBrace = text.indexOf('{', eqIdx);
+  if (startBrace === -1) return null;
+
+  let depth = 0;
+  let inString = false;
+  let isEscaped = false;
+
+  for (let i = startBrace; i < text.length; i++) {
+    const ch = text[i];
+    if (isEscaped) {
+      isEscaped = false;
+      continue;
+    }
+    if (ch === '\\' && inString) {
+      isEscaped = true;
+      continue;
+    }
+    if (ch === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (!inString) {
+      if (ch === '{') {
+        depth++;
+      } else if (ch === '}') {
+        depth--;
+        if (depth === 0) {
+          return text.slice(startBrace, i + 1);
+        }
+      }
+    }
+  }
+  return null;
 }
 
 /**
@@ -231,6 +358,7 @@ export function parseRefurbTrackerRssXml(xmlText, defaultCategory = 'Mac') {
       refurbishedPrice: price,
       url,
       category: defaultCategory,
+      isLiveStock: true,
       stockStatus: 'Live',
       source: 'refurb_tracker_rss',
       publishedAt: rawPubDate || new Date().toISOString(),
@@ -241,21 +369,26 @@ export function parseRefurbTrackerRssXml(xmlText, defaultCategory = 'Mac') {
 }
 
 /**
- * Apple公式整備済製品ページのHTML（REFURB_GRID_BOOTSTRAP JSON または HTMLタイル）をパースする
+ * Apple公式整備済製品ページのHTML（window.REFURB_GRID_BOOTSTRAP JSON または HTMLタイル）をパースする
  */
 export function parseAppleRefurbishedHtml(htmlText, defaultCategory = 'Mac') {
   if (!htmlText || typeof htmlText !== 'string') return [];
   const items = [];
 
-  // 1) window.REFURB_GRID_BOOTSTRAP JSON データの抽出を試行
-  const bootstrapMatch = htmlText.match(/REFURB_GRID_BOOTSTRAP\s*=\s*(\{[\s\S]*?\});\s*(?:window\.|<\/script>)/i);
-  if (bootstrapMatch) {
+  // 1) window.REFURB_GRID_BOOTSTRAP JSON データのバランス括弧抽出を試行
+  const rawBootstrapJson =
+    extractBalancedJsonAfter(htmlText, 'REFURB_GRID_BOOTSTRAP') ??
+    htmlText.match(/REFURB_GRID_BOOTSTRAP\s*=\s*(\{[\s\S]*?\});\s*(?:window\.|<\/script>)/i)?.[1] ??
+    null;
+
+  if (rawBootstrapJson) {
     try {
-      const json = JSON.parse(bootstrapMatch[1]);
+      const json = JSON.parse(rawBootstrapJson);
       const tiles = Array.isArray(json?.tiles) ? json.tiles : [];
       for (const tile of tiles) {
-        const title = String(tile?.title ?? '').trim();
+        const title = String(tile?.title ?? tile?.name ?? '').trim();
         if (!title) continue;
+
         const rawAmount =
           tile?.price?.currentPrice?.raw_amount ??
           tile?.price?.currentPrice?.amount ??
@@ -267,6 +400,18 @@ export function parseAppleRefurbishedHtml(htmlText, defaultCategory = 'Mac') {
             : Number(String(rawAmount).replace(/[^0-9.]/g, '')) || extractYenPriceFromText(String(rawAmount));
         if (!price || price < 10000) continue;
 
+        // Apple公式ページ内に元価格（previousPrice / originalPrice / savings）があれば抽出
+        const rawPrevAmount =
+          tile?.price?.previousPrice?.raw_amount ??
+          tile?.price?.originalPrice?.raw_amount ??
+          tile?.price?.previousPrice?.amount ??
+          tile?.price?.originalPrice?.amount ??
+          '';
+        const parsedPrevPrice =
+          typeof rawPrevAmount === 'number'
+            ? rawPrevAmount
+            : Number(String(rawPrevAmount).replace(/[^0-9.]/g, '')) || extractYenPriceFromText(String(rawPrevAmount)) || 0;
+
         const relUrl = String(tile?.productDetailsUrl ?? tile?.omnitureModel?.pageUrl ?? '').trim();
         const url = relUrl.startsWith('http')
           ? relUrl
@@ -274,19 +419,48 @@ export function parseAppleRefurbishedHtml(htmlText, defaultCategory = 'Mac') {
             ? `https://www.apple.com${relUrl}`
             : APPLE_REFURB_CATEGORY_URLS[defaultCategory];
 
-        // フィルタ次元（メモリ・ストレージ等）があれば名寄せヒントとして結合
+        // フィルタ次元（メモリ・ストレージ・発売年・通信方式・ケースサイズ等）およびURLスラッグから名寄せヒントを構築
         const dims = tile?.filters?.dimensions ?? {};
-        const memHint = dims.dimensionMemorySize ? String(dims.dimensionMemorySize).toUpperCase() : '';
-        const capHint = dims.dimensionCapacity ? String(dims.dimensionCapacity).toUpperCase() : '';
+        const rawMem = dims.tsMemorySize || dims.dimensionMemorySize || '';
+        const rawCap = dims.dimensionCapacity || '';
+        const memHint = rawMem ? String(rawMem).toUpperCase().replace(/\s+/g, '') : '';
+        const capHint = rawCap ? String(rawCap).toUpperCase().replace(/\s+/g, '') : '';
         const yearHint = dims.dimensionRelYear ? String(dims.dimensionRelYear) : '';
-        const fullTitle = [title, memHint, capHint, yearHint].filter(Boolean).join(' ');
+        const watchCaseHint = dims.dimensionWatchCaseSize ? String(dims.dimensionWatchCaseSize) : '';
+        const connDim = String(dims.dimensionConnectivity || '').toLowerCase();
+        const connHint =
+          connDim.includes('cell') ? 'Wi-Fi + Cellular' : connDim === 'wifi' ? 'Wi-Fi' : '';
+
+        let decodedSlug = '';
+        try {
+          decodedSlug = decodeURIComponent(relUrl).replace(/[-_/]/g, ' ');
+        } catch {
+          /* ignore */
+        }
+
+        const specComboHint =
+          memHint && capHint ? `${memHint}/${capHint}` : [memHint, capHint].filter(Boolean).join(' ');
+
+        const displayTitle =
+          specComboHint && !title.includes(memHint) && !title.includes(capHint)
+            ? `${title} (${specComboHint})`
+            : title;
+
+        const fullTitle = [title, specComboHint, yearHint, watchCaseHint, connHint, decodedSlug]
+          .filter(Boolean)
+          .join(' ');
 
         items.push({
           title: fullTitle,
-          displayTitle: title,
+          displayTitle,
           refurbishedPrice: Math.round(price),
+          originalNewPriceHint: parsedPrevPrice > price ? Math.round(parsedPrevPrice) : undefined,
+          partNumber: tile?.partNumber ? String(tile.partNumber).trim() : undefined,
+          explicitRam: memHint || undefined,
+          explicitStorage: capHint || undefined,
           url,
           category: defaultCategory,
+          isLiveStock: true,
           stockStatus: 'Live',
           source: 'apple_official_web',
           publishedAt: new Date().toISOString(),
@@ -310,12 +484,20 @@ export function parseAppleRefurbishedHtml(htmlText, defaultCategory = 'Mac') {
     if (!title || !Number.isFinite(price) || price < 10000) continue;
     if (!/Mac|iPad|iPhone|Watch|AirPods|整備済/i.test(title)) continue;
 
+    let decodedSlug = '';
+    try {
+      decodedSlug = decodeURIComponent(href).replace(/[-_/]/g, ' ');
+    } catch {
+      /* ignore */
+    }
+
     items.push({
-      title,
+      title: `${title} ${decodedSlug}`.trim(),
       displayTitle: title,
       refurbishedPrice: price,
       url: `https://www.apple.com${href}`,
       category: defaultCategory,
+      isLiveStock: true,
       stockStatus: 'Live',
       source: 'apple_official_web',
       publishedAt: new Date().toISOString(),
@@ -334,7 +516,7 @@ async function fetchTextWithTimeout(url, timeoutMs = FETCH_TIMEOUT_MS) {
       headers: {
         'User-Agent':
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
-        Accept: 'application/rss+xml, application/xml, text/xml, text/html, */*;q=0.8',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,application/rss+xml,*/*;q=0.8',
         'Accept-Language': 'ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7',
       },
     });
@@ -346,30 +528,16 @@ async function fetchTextWithTimeout(url, timeoutMs = FETCH_TIMEOUT_MS) {
 }
 
 /**
- * マルチソース（Refurb Tracker RSS + Apple公式ページ）から現在出品中の実在庫を取得する
+ * マルチソース（Apple公式ページ + Refurb Tracker RSS）から現在出品中の実在庫を取得し、
+ * `data/cache/refurbished-cache.json` にキャッシュ保存（またはオフライン時に復元）する
  */
 export async function fetchLiveRefurbishedItems() {
-  const liveItems = [];
+  const appleWebItems = [];
+  const rssItems = [];
   let rssSuccess = false;
   let appleWebSuccess = false;
 
-  // 1) Refurb Tracker RSS フィード
-  await Promise.all(
-    REFURB_TRACKER_FEEDS.map(async ({ category, url }) => {
-      try {
-        const xml = await fetchTextWithTimeout(url);
-        const parsed = parseRefurbTrackerRssXml(xml, category);
-        if (parsed.length > 0) {
-          rssSuccess = true;
-          liveItems.push(...parsed);
-        }
-      } catch (err) {
-        console.log(`[info] Refurb Tracker RSS (${category}) スキップ/フォールバック: ${err.message}`);
-      }
-    }),
-  );
-
-  // 2) Apple公式 認定整備済製品ページ
+  // 1) Apple公式 認定整備済製品ページ (window.REFURB_GRID_BOOTSTRAP 等) を最優先取得
   await Promise.all(
     APPLE_REFURBISHED_PAGES.map(async ({ category, url }) => {
       try {
@@ -377,13 +545,78 @@ export async function fetchLiveRefurbishedItems() {
         const parsed = parseAppleRefurbishedHtml(html, category);
         if (parsed.length > 0) {
           appleWebSuccess = true;
-          liveItems.push(...parsed);
+          appleWebItems.push(...parsed);
         }
       } catch (err) {
         console.log(`[info] Apple公式整備済ページ (${category}) スキップ/フォールバック: ${err.message}`);
       }
     }),
   );
+
+  // 2) Refurb Tracker RSS フィード
+  await Promise.all(
+    REFURB_TRACKER_FEEDS.map(async ({ category, url }) => {
+      try {
+        const xml = await fetchTextWithTimeout(url);
+        const parsed = parseRefurbTrackerRssXml(xml, category);
+        if (parsed.length > 0) {
+          rssSuccess = true;
+          rssItems.push(...parsed);
+        }
+      } catch (err) {
+        console.log(`[info] Refurb Tracker RSS (${category}) スキップ/フォールバック: ${err.message}`);
+      }
+    }),
+  );
+
+  // Apple公式Webの実在庫を最優先し、RSS検出分を後ろに結合
+  let liveItems = [...appleWebItems, ...rssItems];
+
+  // ネットワーク取得に成功した場合は data/cache/refurbished-cache.json を更新
+  if (liveItems.length > 0) {
+    try {
+      mkdirSync('data/cache', { recursive: true });
+      writeFileSync(
+        REFURB_CACHE_PATH,
+        JSON.stringify(
+          {
+            schemaVersion: 1,
+            updatedAt: new Date().toISOString(),
+            sources: {
+              appleOfficialWeb: appleWebSuccess ? 'live' : 'fallback',
+              refurbTrackerRss: rssSuccess ? 'live' : 'fallback',
+            },
+            appleWebCount: appleWebItems.length,
+            rssCount: rssItems.length,
+            liveItems,
+          },
+          null,
+          2,
+        ),
+      );
+    } catch (err) {
+      console.warn(`[warn] ${REFURB_CACHE_PATH} の保存に失敗: ${err.message}`);
+    }
+  } else if (existsSync(REFURB_CACHE_PATH)) {
+    // オフライン・レート制限時はキャッシュ済みのリアル在庫データを復元
+    try {
+      const cached = JSON.parse(readFileSync(REFURB_CACHE_PATH, 'utf8'));
+      if (Array.isArray(cached?.liveItems) && cached.liveItems.length > 0) {
+        liveItems = cached.liveItems.map((it) => ({
+          ...it,
+          isLiveStock: true,
+          stockStatus: 'Live',
+        }));
+        if (cached?.sources?.appleOfficialWeb === 'live') appleWebSuccess = true;
+        if (cached?.sources?.refurbTrackerRss === 'live') rssSuccess = true;
+        console.log(
+          `[info] ${REFURB_CACHE_PATH} からキャッシュ済みのリアル在庫 (${liveItems.length}件) を復元しました。`,
+        );
+      }
+    } catch {
+      /* ignore */
+    }
+  }
 
   return {
     liveItems,
@@ -422,12 +655,12 @@ export function extractTitleFeaturesStepA(rawTitle, categoryHint = '') {
   else if (/APPLE\s*WATCH|\bWATCH\s*(?:SERIES|SE|ULTRA)\b/i.test(norm)) category = 'Apple Watch';
   else if (/\bAIRPODS\b/i.test(norm)) category = 'AirPods';
 
-  // 2) チップ名（SoC）の抽出: M1〜M6 (Pro/Max/Ultra), A12〜A20 (Pro/Bionic), S5〜S11, H1/H2
+  // 2) チップ名（SoC）の抽出: 日本語「M4チップ」等でも確実にマッチするよう境界を調整
   let chip = null;
-  const mChip = norm.match(/\b(M[1-6](?:\s*(?:Ultra|Max|Pro))?)\b/i);
-  const aChip = norm.match(/\b(A(?:1[2-9]|20)(?:\s*(?:Pro|Bionic|Z|X))?)\b/i);
-  const sChip = norm.match(/\b(S(?:[5-9]|1[0-2]))(?:\s*SiP|\b)/i);
-  const hChip = norm.match(/\b(H[12])\b/i);
+  const mChip = norm.match(/(?:^|[^A-Za-z0-9])(M[1-6](?:\s*(?:Ultra|Max|Pro))?)(?![A-Za-z0-9])/i);
+  const aChip = norm.match(/(?:^|[^A-Za-z0-9])(A(?:1[2-9]|20)(?:\s*(?:Pro|Bionic|Z|X))?)(?![A-Za-z0-9])/i);
+  const sChip = norm.match(/(?:^|[^A-Za-z0-9])(S(?:[5-9]|1[0-2]))(?:\s*SiP|(?![A-Za-z0-9]))/i);
+  const hChip = norm.match(/(?:^|[^A-Za-z0-9])(H[12])(?![A-Za-z0-9])/i);
   if (mChip) chip = mChip[1].replace(/\s+/g, ' ').trim();
   else if (aChip) chip = aChip[1].replace(/\s*Bionic/i, '').replace(/\s+/g, ' ').trim();
   else if (sChip) chip = sChip[1].toUpperCase();
@@ -476,10 +709,10 @@ export function extractTitleFeaturesStepA(rawTitle, categoryHint = '') {
  * 【ステップA】モデル名（iPhone 15 Pro, iPad Air 11インチ (M2), MacBook Air 13インチ (M3) 等）と
  * チップ名（M1/M2/M3/M4, A15/A16/A17/A18 等）で既存の products.json から該当 Product を特定する
  */
-export function matchProductStepA(rawTitle, products, categoryHint = '', explicitProductId = '') {
+export function matchProductStepA(rawTitle, products, categoryHint = '', explicitProductId = '', isLiveStock = true) {
   if (explicitProductId) {
     const direct = products.find((p) => p.id === explicitProductId);
-    if (direct) return direct;
+    if (direct && isEligibleForRefurbishedCatalog(direct, null, { isLiveStock })) return direct;
   }
 
   const feat = extractTitleFeaturesStepA(rawTitle, categoryHint);
@@ -487,7 +720,8 @@ export function matchProductStepA(rawTitle, products, categoryHint = '', explici
     (p) =>
       (!feat.category || p.category === feat.category) &&
       Array.isArray(p.skus) &&
-      p.skus.some((s) => (s.carriers?.apple?.currentPrice ?? s.priceHistory?.at(-1)?.appleStorePrice ?? 0) > 0),
+      p.skus.some((s) => (s.carriers?.apple?.currentPrice ?? s.priceHistory?.at(-1)?.appleStorePrice ?? 0) > 0) &&
+      isEligibleForRefurbishedCatalog(p, null, { isLiveStock }),
   );
 
   if (candidates.length === 0) return null;
@@ -521,7 +755,8 @@ export function matchProductStepA(rawTitle, products, categoryHint = '', explici
         else if (f.match !== pHas && (f.match || pHas)) familyMismatch = true;
       }
       if (familyMismatch && !familyMatched) continue;
-      if (familyMatched) score += 100;
+      if (!familyMatched) continue;
+      score += 100;
 
       // 画面サイズ (13 / 14 / 15 / 16 / 24)
       if (feat.screenInches) {
@@ -635,14 +870,14 @@ export function matchProductStepA(rawTitle, products, categoryHint = '', explici
       }
     }
 
-    // --- チップ名（M1/M2/M3/M4/M5/M6, A14〜A20 等）の一致判定 ---
+    // --- チップ名（M1/M2/M3/M4/M5, A14〜A19 等）の一致判定 ---
     if (feat.chip) {
       const escapedChip = feat.chip.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const chipRegex = new RegExp(`\\b${escapedChip}(?!\\s*(?:Pro|Max|Ultra))\\b`, 'i');
+      const chipRegex = new RegExp(`(?:^|[^A-Za-z0-9])${escapedChip}(?!\\s*(?:Pro|Max|Ultra)|[A-Za-z0-9])`, 'i');
       if (chipRegex.test(pName) || chipRegex.test(pSoc)) {
-        score += 90;
+        score += 95;
       } else {
-        score -= 70;
+        score -= 80;
       }
     }
 
@@ -657,10 +892,10 @@ export function matchProductStepA(rawTitle, products, categoryHint = '', explici
       }
     }
 
-    // --- 発売年の一致・近似ボーナス ---
+    // --- 発売年の一致・近似ボーナス（整備済品の主力である2023〜2025年モデルを優先） ---
     if (feat.releaseYear && pYear === feat.releaseYear) {
       score += 35;
-    } else if (pYear >= 2022 && pYear <= 2026) {
+    } else if (pYear >= 2022 && pYear <= 2025) {
       score += (pYear - 2020) * 2;
     }
 
@@ -694,13 +929,11 @@ export function matchSkuStepB(rawTitle, product, refurbishedPrice = 0, explicitS
   let targetMm = null;
 
   if (product.category === 'Mac') {
-    // パターン1: "16GB/512GB" や "8GB / 256GB"
     const slashMatch = norm.match(/\b(\d{1,3})\s*GB\s*[/／]\s*(\d{1,4})\s*(GB|TB)\b/i);
     if (slashMatch) {
       targetRamGb = parseInt(slashMatch[1], 10);
       targetStorageToken = `${slashMatch[2]}${slashMatch[3].toUpperCase()}`;
     } else {
-      // パターン2: "16GBユニファイドメモリ ... 512GB SSD" または連続する容量トークン
       const allCapTokens = [...norm.matchAll(/\b(\d{1,4})\s*(GB|TB)\b/gi)].map((m) => ({
         num: parseInt(m[1], 10),
         unit: m[2].toUpperCase(),
@@ -719,7 +952,6 @@ export function matchSkuStepB(rawTitle, product, refurbishedPrice = 0, explicitS
     const mmMatch = norm.match(/\b(38|40|41|42|44|45|46|49)\s*mm\b/i);
     if (mmMatch) targetMm = `${mmMatch[1]}mm`;
   } else {
-    // iPhone / iPad
     const storMatches = [...norm.matchAll(/\b(32|64|128|256|512)\s*GB\b|\b([12])\s*TB\b/gi)];
     if (storMatches.length > 0) {
       const last = storMatches.at(-1);
@@ -791,6 +1023,13 @@ export function matchSkuStepB(rawTitle, product, refurbishedPrice = 0, explicitS
  * 【ステップC】紐付いた既存 Product & SKU から詳細データを注入（Enrich）する
  */
 export function enrichRefurbishedItemStepC(rawItem, product, sku) {
+  const isLiveStock = Boolean(rawItem.isLiveStock ?? (rawItem.stockStatus === 'Live'));
+
+  // Reference データの場合は厳格なフィルタを再適用
+  if (!isEligibleForRefurbishedCatalog(product, sku, { isLiveStock })) {
+    return null;
+  }
+
   const dbNewPrice =
     sku.carriers?.apple?.currentPrice ??
     sku.priceHistory?.at(-1)?.appleStorePrice ??
@@ -804,13 +1043,19 @@ export function enrichRefurbishedItemStepC(rawItem, product, sku) {
       ? rawItem.refurbishedPrice
       : calcStandardRefurbishedPrice(dbNewPrice);
 
-  // 万一整備済価格が現行価格以上の場合は発売時価格または逆算新品定価を基準にする
-  const originalNewPrice =
-    dbNewPrice > refurbishedPrice
+  // Live在庫でカスタマイズ構成（CTO）の場合は Apple 公式元価格ヒントまたは約15%OFF逆算で新品相当価格を算出
+  let originalNewPrice = rawItem.originalNewPriceHint && rawItem.originalNewPriceHint > refurbishedPrice
+    ? rawItem.originalNewPriceHint
+    : dbNewPrice > refurbishedPrice
       ? dbNewPrice
       : dbLaunchPrice > refurbishedPrice
         ? dbLaunchPrice
         : Math.round((refurbishedPrice / 0.85) / 100) * 100;
+
+  // 万一 Live CTO 構成で refurbishedPrice がベースSKUの dbNewPrice の 93% 以上になっている場合は逆算新品定価を採用
+  if (isLiveStock && !rawItem.originalNewPriceHint && refurbishedPrice > originalNewPrice * 0.93) {
+    originalNewPrice = Math.round((refurbishedPrice / 0.85) / 100) * 100;
+  }
 
   const discountAmount = Math.max(0, originalNewPrice - refurbishedPrice);
   const discountPercent =
@@ -846,21 +1091,51 @@ export function enrichRefurbishedItemStepC(rawItem, product, sku) {
     usedLowestPrice != null && usedLowestPrice > 0 ? refurbishedPrice - usedLowestPrice : null;
 
   const releaseYear = parseInt(String(product.releaseDate ?? '').slice(0, 4), 10) || 2024;
-  const skuRamMatch = `${sku.label} ${sku.storage}`.match(/\b(\d{1,3}GB)\s*[/／]/i);
-  const ram = skuRamMatch ? skuRamMatch[1].toUpperCase() : product.specs?.ram || undefined;
 
-  const stockStatus = rawItem.stockStatus === 'Live' ? 'Live' : 'Reference';
-  const stockLabel = stockStatus === 'Live' ? '実在庫（Live）' : '参考整備済相場（Reference）';
+  // Live在庫で明示的なRAM/Storageが抽出されている場合はSKUラベルにも反映
+  let effectiveSkuLabel = sku.label || sku.storage || '標準';
+  let effectiveStorage = sku.storage || sku.label || '';
+  if (isLiveStock && product.category === 'Mac' && rawItem.explicitRam && rawItem.explicitStorage) {
+    effectiveSkuLabel = `${rawItem.explicitRam}/${rawItem.explicitStorage}`;
+    effectiveStorage = effectiveSkuLabel;
+  } else if (isLiveStock && rawItem.explicitStorage && (product.category === 'iPad' || product.category === 'iPhone')) {
+    const connSuffix =
+      product.category === 'iPad' && /Cellular/i.test(rawItem.title)
+        ? ' Wi-Fi + Cellular'
+        : product.category === 'iPad'
+          ? ' Wi-Fi'
+          : '';
+    effectiveSkuLabel = `${rawItem.explicitStorage}${connSuffix}`;
+    effectiveStorage = rawItem.explicitStorage;
+  }
+
+  const skuRamMatch = `${effectiveSkuLabel} ${effectiveStorage}`.match(/\b(\d{1,3}GB)\s*[/／]/i);
+  const ram =
+    rawItem.explicitRam ||
+    (skuRamMatch ? skuRamMatch[1].toUpperCase() : product.specs?.ram || undefined);
+
+  const stockStatus = isLiveStock ? 'Live' : 'Reference';
+  const stockLabel = isLiveStock
+    ? rawItem.source === 'refurb_tracker_rss'
+      ? 'Apple公式 在庫あり (RSS検出)'
+      : 'Apple公式 在庫あり'
+    : '参考整備済相場（在庫なし）';
+
+  const idSuffix = `${product.id}-${sku.id}-${effectiveSkuLabel}`
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 
   return {
-    id: `refurb-${product.id}-${sku.id}`.toLowerCase().replace(/[^a-z0-9-]+/g, '-'),
+    id: `refurb-${idSuffix}`,
     title: rawItem.displayTitle || rawItem.title,
     category: product.category,
     productId: product.id,
     productName: product.name,
     skuId: sku.id,
-    skuLabel: sku.label || sku.storage || '標準',
-    storage: sku.storage || sku.label || '',
+    skuLabel: effectiveSkuLabel,
+    storage: effectiveStorage,
     connectivity: sku.connectivity || '-',
     refurbishedPrice,
     originalNewPrice,
@@ -878,9 +1153,10 @@ export function enrichRefurbishedItemStepC(rawItem, product, sku) {
     yahooUsedUrl: up?.yahoo?.url ?? undefined,
     priceGapVsUsed,
     url: rawItem.url || APPLE_REFURB_CATEGORY_URLS[product.category] || 'https://www.apple.com/jp/shop/refurbished',
+    isLiveStock,
     stockStatus,
     stockLabel,
-    source: rawItem.source || (stockStatus === 'Live' ? 'apple_official_web' : 'catalog_reference'),
+    source: rawItem.source || (isLiveStock ? 'apple_official_web' : 'catalog_reference'),
     publishedAt: rawItem.publishedAt || new Date().toISOString(),
     specs: {
       soc: product.specs?.soc || undefined,
@@ -900,11 +1176,13 @@ export function enrichRefurbishedItemStepC(rawItem, product, sku) {
  * 1件の軽量整備済データ（title, refurbishedPrice, url）をステップA→B→Cで名寄せ・Enrichする
  */
 export function matchAndEnrichRefurbishedItem(rawItem, products) {
+  const isLiveStock = Boolean(rawItem.isLiveStock ?? (rawItem.stockStatus === 'Live'));
   const product = matchProductStepA(
     rawItem.title,
     products,
     rawItem.category,
     rawItem.productId,
+    isLiveStock,
   );
   if (!product) return null;
 
@@ -916,41 +1194,35 @@ export function matchAndEnrichRefurbishedItem(rawItem, products) {
   );
   if (!sku) return null;
 
-  return enrichRefurbishedItemStepC(rawItem, product, sku);
+  return enrichRefurbishedItemStepC({ ...rawItem, isLiveStock }, product, sku);
 }
 
 /* ============================================================================
- * 5. セカンダリ（フォールバック）: カタログ主要モデルからの整備済相場シード生成
+ * 5. セカンダリ（参考推定データ）: 実際に流通実績がある定番モデルのみに厳選したシード
  * ============================================================================ */
 
 /**
- * 外部フィードが通信エラーや在庫切れの場合でも、全カテゴリ（Mac / iPad / iPhone / Apple Watch / AirPods）で
- * 完全な比較ができるよう、Apple認定整備済製品の主要ラインナップ（タイトル・整備済実勢価格・URL）を生成する。
- * 生成されたシードもライブ取得時と全く同じ3ステップ名寄せパイプライン（Step A -> B -> C）を通過する。
+ * 在庫なしモデルの参考整備済相場（isLiveStock: false / stockStatus: 'Reference'）。
+ * 発売から6ヶ月未満の最新モデルや超高額BTO構成（Mac Studio Ultra/Max等）は除外し、
+ * Apple公式認定整備済製品として実際に流通実績がある定番モデルの標準構成のみを厳選収録。
  */
 export const REFERENCE_CATALOG_SEEDS = [
-  // ======================== Mac ========================
+  // ======================== Mac (定番構成のみ) ========================
   {
     category: 'Mac',
-    title: 'Mac mini [整備済製品] 10コアCPUと10コアGPUを搭載したApple M6チップ 16GB/256GB',
-    refurbishedPrice: 120800,
-    url: 'https://www.apple.com/jp/shop/refurbished/mac/mac-mini',
-  },
-  {
-    category: 'Mac',
-    title: '13インチMacBook Air [整備済製品] 10コアCPUと8コアGPUを搭載したApple M4チップ 16GB/256GB - スカイブルー',
+    title: '13インチMacBook Air [整備済製品] 10コアCPUと8コアGPUを搭載したApple M4チップ 16GB/256GB - スカイブルー (2025)',
     refurbishedPrice: 139800,
     url: 'https://www.apple.com/jp/shop/refurbished/mac/macbook-air',
   },
   {
     category: 'Mac',
-    title: '13インチMacBook Air [整備済製品] 10コアCPUと10コアGPUを搭載したApple M4チップ 16GB/512GB - ミッドナイト',
+    title: '13インチMacBook Air [整備済製品] 10コアCPUと10コアGPUを搭載したApple M4チップ 16GB/512GB - ミッドナイト (2025)',
     refurbishedPrice: 164800,
     url: 'https://www.apple.com/jp/shop/refurbished/mac/macbook-air',
   },
   {
     category: 'Mac',
-    title: '15インチMacBook Air [整備済製品] 10コアCPUと10コアGPUを搭載したApple M4チップ 16GB/256GB - スターライト',
+    title: '15インチMacBook Air [整備済製品] 10コアCPUと10コアGPUを搭載したApple M4チップ 16GB/256GB - スターライト (2025)',
     refurbishedPrice: 168800,
     url: 'https://www.apple.com/jp/shop/refurbished/mac/macbook-air',
   },
@@ -986,12 +1258,6 @@ export const REFERENCE_CATALOG_SEEDS = [
   },
   {
     category: 'Mac',
-    title: '16インチMacBook Pro [整備済製品] 14コアCPUと20コアGPUを搭載したApple M4 Proチップ 24GB/512GB - スペースブラック (2024)',
-    refurbishedPrice: 338800,
-    url: 'https://www.apple.com/jp/shop/refurbished/mac/macbook-pro',
-  },
-  {
-    category: 'Mac',
     title: 'Mac mini [整備済製品] 10コアCPUと10コアGPUを搭載したApple M4チップ 16GB/256GB (2024)',
     refurbishedPrice: 114800,
     url: 'https://www.apple.com/jp/shop/refurbished/mac/mac-mini',
@@ -1008,26 +1274,8 @@ export const REFERENCE_CATALOG_SEEDS = [
     refurbishedPrice: 211800,
     url: 'https://www.apple.com/jp/shop/refurbished/mac/imac',
   },
-  {
-    category: 'Mac',
-    title: 'Mac Studio [整備済製品] 14コアCPUと32コアGPUを搭載したApple M4 Maxチップ 36GB/512GB (2025)',
-    refurbishedPrice: 356800,
-    url: 'https://www.apple.com/jp/shop/refurbished/mac/mac-studio',
-  },
 
-  // ======================== iPad ========================
-  {
-    category: 'iPad',
-    title: 'iPad mini Wi-Fi 128GB - スペースグレイ（A20 Pro）[整備済製品]',
-    refurbishedPrice: 101800,
-    url: 'https://www.apple.com/jp/shop/refurbished/ipad/ipad-mini',
-  },
-  {
-    category: 'iPad',
-    title: 'iPad mini Wi-Fi 256GB - スターライト（A20 Pro）[整備済製品]',
-    refurbishedPrice: 115800,
-    url: 'https://www.apple.com/jp/shop/refurbished/ipad/ipad-mini',
-  },
+  // ======================== iPad (定番構成のみ) ========================
   {
     category: 'iPad',
     title: 'iPad Wi-Fi 64GB - ブルー（第10世代）[整備済製品]',
@@ -1083,48 +1331,12 @@ export const REFERENCE_CATALOG_SEEDS = [
     url: 'https://www.apple.com/jp/shop/refurbished/ipad/ipad-pro',
   },
 
-  // ======================== iPhone ========================
-  {
-    category: 'iPhone',
-    title: 'iPhone 16 256GB ウルトラマリン（SIMフリー）[整備済製品]',
-    refurbishedPrice: 118800,
-    url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-16',
-  },
-  {
-    category: 'iPhone',
-    title: 'iPhone 16 Plus 128GB ブラック（SIMフリー）[整備済製品]',
-    refurbishedPrice: 122800,
-    url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-16-plus',
-  },
-  {
-    category: 'iPhone',
-    title: 'iPhone 15 128GB ブラック（SIMフリー）[整備済製品]',
-    refurbishedPrice: 95800,
-    url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-15',
-  },
-  {
-    category: 'iPhone',
-    title: 'iPhone 15 Plus 256GB ブルー（SIMフリー）[整備済製品]',
-    refurbishedPrice: 118800,
-    url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-15-plus',
-  },
-  {
-    category: 'iPhone',
-    title: 'iPhone SE（第3世代）256GB ミッドナイト（SIMフリー）[整備済製品]',
-    refurbishedPrice: 71800,
-    url: 'https://www.apple.com/jp/shop/refurbished/iphone',
-  },
+  // ======================== iPhone (定番構成のみ) ========================
   {
     category: 'iPhone',
     title: 'iPhone 16 128GB ブラック（SIMフリー）[整備済製品]',
     refurbishedPrice: 118800,
     url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-16',
-  },
-  {
-    category: 'iPhone',
-    title: 'iPhone 16e 128GB ホワイト（SIMフリー）[整備済製品]',
-    refurbishedPrice: 84800,
-    url: 'https://www.apple.com/jp/shop/refurbished/iphone',
   },
   {
     category: 'iPhone',
@@ -1134,14 +1346,20 @@ export const REFERENCE_CATALOG_SEEDS = [
   },
   {
     category: 'iPhone',
-    title: 'iPhone 15 Pro 128GB ナチュラルチタニウム（SIMフリー）[整備済製品]',
-    refurbishedPrice: 135800,
-    url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-15-pro',
+    title: 'iPhone 15 128GB ブラック（SIMフリー）[整備済製品]',
+    refurbishedPrice: 95800,
+    url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-15',
   },
   {
     category: 'iPhone',
-    title: 'iPhone 15 Pro 256GB ブラックチタニウム（SIMフリー）[整備済製品]',
-    refurbishedPrice: 148800,
+    title: 'iPhone 15 Plus 128GB ブルー（SIMフリー）[整備済製品]',
+    refurbishedPrice: 105800,
+    url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-15-plus',
+  },
+  {
+    category: 'iPhone',
+    title: 'iPhone 15 Pro 128GB ナチュラルチタニウム（SIMフリー）[整備済製品]',
+    refurbishedPrice: 135800,
     url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-15-pro',
   },
   {
@@ -1158,41 +1376,17 @@ export const REFERENCE_CATALOG_SEEDS = [
   },
   {
     category: 'iPhone',
-    title: 'iPhone 14 Pro 128GB スペースブラック（SIMフリー）[整備済製品]',
-    refurbishedPrice: 126800,
-    url: 'https://www.apple.com/jp/shop/refurbished/iphone/iphone-14-pro',
+    title: 'iPhone SE（第3世代）128GB ミッドナイト（SIMフリー）[整備済製品]',
+    refurbishedPrice: 59800,
+    url: 'https://www.apple.com/jp/shop/refurbished/iphone',
   },
 
-  // ======================== Apple Watch ========================
-  {
-    category: 'Apple Watch',
-    title: 'Apple Watch SE 3（GPSモデル）- 40mmミッドナイトアルミニウムケース [整備済製品]',
-    refurbishedPrice: 35400,
-    url: 'https://www.apple.com/jp/shop/refurbished/watch/apple-watch-se',
-  },
-  {
-    category: 'Apple Watch',
-    title: 'Apple Watch Series 12（GPSモデル）- 42mmジェットブラックアルミニウムケース [整備済製品]',
-    refurbishedPrice: 60800,
-    url: 'https://www.apple.com/jp/shop/refurbished/watch',
-  },
+  // ======================== Apple Watch (定番構成のみ) ========================
   {
     category: 'Apple Watch',
     title: 'Apple Watch Series 10（GPSモデル）- 42mmジェットブラックアルミニウムケース [整備済製品]',
     refurbishedPrice: 50800,
     url: 'https://www.apple.com/jp/shop/refurbished/watch/apple-watch-series-10',
-  },
-  {
-    category: 'Apple Watch',
-    title: 'Apple Watch Series 10（GPS + Cellularモデル）- 46mmナチュラルチタニウムケース [整備済製品]',
-    refurbishedPrice: 68400,
-    url: 'https://www.apple.com/jp/shop/refurbished/watch/apple-watch-series-10',
-  },
-  {
-    category: 'Apple Watch',
-    title: 'Apple Watch Series 11（GPSモデル）- 42mmシルバーアルミニウムケース [整備済製品]',
-    refurbishedPrice: 60800,
-    url: 'https://www.apple.com/jp/shop/refurbished/watch',
   },
   {
     category: 'Apple Watch',
@@ -1213,7 +1407,13 @@ export const REFERENCE_CATALOG_SEEDS = [
     url: 'https://www.apple.com/jp/shop/refurbished/watch/apple-watch-ultra',
   },
 
-  // ======================== AirPods ========================
+  // ======================== AirPods (定番構成のみ) ========================
+  {
+    category: 'AirPods',
+    title: 'AirPods Pro（第2世代）MagSafe充電ケース（USB-C）[整備済製品]',
+    refurbishedPrice: 33600,
+    url: 'https://www.apple.com/jp/shop/refurbished/airpods',
+  },
   {
     category: 'AirPods',
     title: 'AirPods 4 [整備済製品]',
@@ -1224,24 +1424,6 @@ export const REFERENCE_CATALOG_SEEDS = [
     category: 'AirPods',
     title: 'AirPods 4 アクティブノイズキャンセリング搭載 [整備済製品]',
     refurbishedPrice: 27800,
-    url: 'https://www.apple.com/jp/shop/refurbished/airpods',
-  },
-  {
-    category: 'AirPods',
-    title: 'AirPods Pro 3 [整備済製品]',
-    refurbishedPrice: 35800,
-    url: 'https://www.apple.com/jp/shop/refurbished/airpods',
-  },
-  {
-    category: 'AirPods',
-    title: 'AirPods Pro（第2世代）MagSafe充電ケース（USB-C）[整備済製品]',
-    refurbishedPrice: 33600,
-    url: 'https://www.apple.com/jp/shop/refurbished/airpods',
-  },
-  {
-    category: 'AirPods',
-    title: 'AirPods Max（USB-C）- ミッドナイト [整備済製品]',
-    refurbishedPrice: 71800,
     url: 'https://www.apple.com/jp/shop/refurbished/airpods',
   },
 ];
@@ -1257,21 +1439,21 @@ export async function runFetchRefurbished() {
     throw new Error('既存製品データベース (public/products.json / data/catalog/) が見つかりません。');
   }
 
-  // 1) プライマリ取得: Refurb Tracker RSS & Apple公式整備済ページ
+  // 1) プライマリ取得: Apple公式整備済ページ (REFURB_GRID_BOOTSTRAP) & Refurb Tracker RSS
   const { liveItems, rssStatus, appleWebStatus } = await fetchLiveRefurbishedItems();
 
   const enrichedMap = new Map();
   let liveMatchedCount = 0;
   let referenceMatchedCount = 0;
 
-  // 実在庫アイテムを3ステップ名寄せパイプラインで処理
+  // 実在庫アイテム (isLiveStock: true) を最優先で3ステップ名寄せパイプライン処理
   for (const raw of liveItems) {
     const enriched = matchAndEnrichRefurbishedItem(
-      { ...raw, stockStatus: 'Live' },
+      { ...raw, isLiveStock: true, stockStatus: 'Live' },
       products,
     );
     if (!enriched) continue;
-    const dedupeKey = `${enriched.productId}:${enriched.skuId}`;
+    const dedupeKey = `${enriched.productId}:${enriched.skuLabel}`;
     const prev = enrichedMap.get(dedupeKey);
     if (!prev || enriched.refurbishedPrice < prev.refurbishedPrice) {
       enrichedMap.set(dedupeKey, enriched);
@@ -1279,29 +1461,72 @@ export async function runFetchRefurbished() {
     }
   }
 
-  // 2) セカンダリ（フォールバック）: 外部フィードがエラーまたは在庫切れのカテゴリ・主要モデルを補完
+  // 2) セカンダリ（参考整備済相場 isLiveStock: false）: 発売6ヶ月以上＆定番構成のみに厳選して補完
   for (const seed of REFERENCE_CATALOG_SEEDS) {
     const enriched = matchAndEnrichRefurbishedItem(
       {
         ...seed,
+        isLiveStock: false,
         stockStatus: 'Reference',
         source: 'catalog_reference',
       },
       products,
     );
-    if (!enriched) {
-      console.warn(`[warn] シードの名寄せ未一致: ${seed.title}`);
-      continue;
-    }
-    const dedupeKey = `${enriched.productId}:${enriched.skuId}`;
-    // すでに実在庫 (Live) として取得済みのSKUは Live を優先維持
-    if (!enrichedMap.has(dedupeKey)) {
+    if (!enriched) continue;
+    const dedupeKey = `${enriched.productId}:${enriched.skuLabel}`;
+    const dedupeSkuKey = `${enriched.productId}:${enriched.skuId}`;
+    // すでに実在庫 (Live) として同一製品・構成が取得済みの場合は Live を優先維持
+    const alreadyExists =
+      enrichedMap.has(dedupeKey) ||
+      Array.from(enrichedMap.values()).some(
+        (existing) => `${existing.productId}:${existing.skuId}` === dedupeSkuKey,
+      );
+    if (!alreadyExists) {
       enrichedMap.set(dedupeKey, enriched);
       referenceMatchedCount++;
     }
   }
 
-  const items = Array.from(enrichedMap.values());
+  // リアル在庫 (isLiveStock: true) を最優先で先頭に配置し、次に価格順でソート
+  const items = Array.from(enrichedMap.values()).sort((a, b) => {
+    if (a.isLiveStock !== b.isLiveStock) {
+      return a.isLiveStock ? -1 : 1;
+    }
+    return a.refurbishedPrice - b.refurbishedPrice;
+  });
+
+  // キャッシュファイルが未生成の場合でも git add 対象として必ず存在させる
+  if (!existsSync(REFURB_CACHE_PATH)) {
+    mkdirSync('data/cache', { recursive: true });
+    writeFileSync(
+      REFURB_CACHE_PATH,
+      JSON.stringify(
+        {
+          schemaVersion: 1,
+          updatedAt: new Date().toISOString(),
+          sources: {
+            appleOfficialWeb: appleWebStatus,
+            refurbTrackerRss: rssStatus,
+          },
+          liveItems: items
+            .filter((it) => it.isLiveStock)
+            .map((it) => ({
+              title: it.title,
+              displayTitle: it.title,
+              refurbishedPrice: it.refurbishedPrice,
+              url: it.url,
+              category: it.category,
+              isLiveStock: true,
+              stockStatus: 'Live',
+              source: it.source,
+              publishedAt: it.publishedAt,
+            })),
+        },
+        null,
+        2,
+      ),
+    );
+  }
 
   const dataset = {
     schemaVersion: 1,

@@ -2103,6 +2103,45 @@ export async function runFetchLivePrices() {
   mkdirSync('data/cache', { recursive: true });
   writeFileSync(LIVE_CACHE_PATH, JSON.stringify(output, null, 2));
 
+  // public/used-prices.json も最新の中古最安値データと同期して保存
+  try {
+    const usedPricesPath = 'public/used-prices.json';
+    let existingUsedJson = { generatedAt: output.updatedAt, items: {} };
+    if (existsSync(usedPricesPath)) {
+      try {
+        const parsed = JSON.parse(readFileSync(usedPricesPath, 'utf8'));
+        if (parsed && typeof parsed === 'object') {
+          existingUsedJson = { ...parsed, items: { ...(parsed.items ?? {}) } };
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    existingUsedJson.generatedAt = output.updatedAt;
+    for (const [pid, prod] of Object.entries(cacheProductsOut)) {
+      for (const [sid, skuObj] of Object.entries(prod.skus ?? {})) {
+        if (!skuObj?.usedPricing) continue;
+        const itemKey = `${pid}:${skuObj.storage || skuObj.label || sid}`;
+        const prevItem = existingUsedJson.items?.[itemKey] ?? {};
+        existingUsedJson.items[itemKey] = {
+          ...prevItem,
+          keyword: prevItem.keyword || `${prod.name} ${skuObj.storage || skuObj.label} 中古`.trim(),
+          genreId: prevItem.genreId || RAKUTEN_GENRE_IDS[prod.category] || '560202',
+          usedPricing: skuObj.usedPricing,
+          offers: skuObj.usedPricing.offers ?? [],
+          isEstimated: Boolean(skuObj.usedPricing.isEstimated),
+          resaleRate: skuObj.usedPricing.resaleValuePercent ?? prevItem.resaleRate ?? 0,
+          source: skuObj.usedPricing.isEstimated ? 'mock' : 'api',
+          fetchedAt: output.updatedAt,
+        };
+      }
+    }
+    mkdirSync('public', { recursive: true });
+    writeFileSync(usedPricesPath, JSON.stringify(existingUsedJson, null, 2));
+  } catch (err) {
+    console.warn(`[warn] public/used-prices.json の同期保存に失敗: ${err.message}`);
+  }
+
   console.log(`\n✅ ${LIVE_CACHE_PATH} を更新しました。`);
   console.log(
     `   対象モデル: ${Object.keys(cacheProductsOut).length}機種 / 楽天モバイル実取得: ${rakutenMobileHits}件 / キャリアスクレイピング: docomo=${scrapedCarriers.docomo.size}, au=${scrapedCarriers.au.size}, softbank=${scrapedCarriers.softbank.size} / 中古API実取得: ${usedApiHits}件`,

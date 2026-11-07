@@ -55,7 +55,7 @@ jobs:
           mkdir -p data/cache
           curl -sSL --retry 3 --fail -o data/cache/appledb-main.json https://api.appledb.dev/device/main.json || echo "AppleDB の事前取得に失敗（build-products.mjs 側で再試行します）"
 
-      - name: Fetch live prices & rebuild products.json
+      - name: Fetch live prices, rebuild products.json & fetch refurbished data
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
           RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
@@ -64,13 +64,16 @@ jobs:
           YAHOO_VC_SID: ${{ secrets.YAHOO_VC_SID }}
           YAHOO_VC_PID: ${{ secrets.YAHOO_VC_PID }}
           YAHOO_MOSHIMO_AID: ${{ secrets.YAHOO_MOSHIMO_AID }}
-        run: npm run update:all
+        run: |
+          node scripts/fetch-live-prices.mjs
+          node scripts/build-products.mjs
+          node scripts/fetch-refurbished.mjs
 
       - name: Commit and push updated price data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/cache/live-prices-cache.json data/cache/fx-cache.json public/products.json public/refurbished.json
+          git add data/cache/live-prices-cache.json data/cache/fx-cache.json data/cache/refurbished-cache.json public/products.json public/used-prices.json public/refurbished.json
           if git diff --cached --quiet; then
             echo "価格データに変更はありませんでした。"
             exit 0
