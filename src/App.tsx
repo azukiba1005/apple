@@ -2067,7 +2067,7 @@ const EmptyNote = ({ text }: { text: string }) => <div className={`${card} p-10 
 const useChartColors = () => { const d = useDark(); return { axis: d ? '#a1a1aa' : '#52525b', grid: d ? '#3f3f46' : '#e4e4e7', tipBg: d ? '#18181b' : '#ffffff', tipBorder: d ? '#3f3f46' : '#e4e4e7', text: d ? '#f4f4f5' : '#18181b' }; };
 
 /* ---------- URLクエリパラメータの双方向同期ユーティリティ ---------- */
-export type Tab = 'compare' | 'budget' | 'timeline' | 'fx' | 'accessories';
+export type Tab = 'compare' | 'budget' | 'refurbished' | 'timeline' | 'fx' | 'accessories';
 
 const DEFAULT_COMPARE_IDS = ['iphone-14', 'iphone-15', 'iphone-16'] as const;
 
@@ -2484,13 +2484,15 @@ function parseUrlSearchParams(search: string) {
   const tab: Tab =
     tabRaw === 'budget'
       ? 'budget'
-      : tabRaw === 'timeline'
-        ? 'timeline'
-        : tabRaw === 'fx'
-          ? 'fx'
-          : tabRaw === 'accessories' || tabRaw === 'accessory'
-            ? 'accessories'
-            : 'compare';
+      : tabRaw === 'refurbished' || tabRaw === 'refurb'
+        ? 'refurbished'
+        : tabRaw === 'timeline'
+          ? 'timeline'
+          : tabRaw === 'fx'
+            ? 'fx'
+            : tabRaw === 'accessories' || tabRaw === 'accessory'
+              ? 'accessories'
+              : 'compare';
   const maxPriceNum = parseInt(params.get('maxPrice') ?? '', 10);
   const maxPrice =
     Number.isFinite(maxPriceNum) && maxPriceNum >= 10000 && maxPriceNum <= 300000
@@ -8605,6 +8607,778 @@ function BudgetView({
 }
 
 /* =====================================================================================
+ * 7.5 Apple認定整備済品 (RefurbishedView)
+ *     Refurb Tracker RSS / Apple公式整備済ページ + 既存DB (products.json) スマート名寄せ比較
+ * ===================================================================================== */
+
+export type RefurbStockStatus = 'Live' | 'Reference';
+export type RefurbCategoryFilter = 'all' | 'Mac' | 'iPad' | 'iPhone' | 'Apple Watch' | 'AirPods';
+export type RefurbSortKey = 'price-asc' | 'discount-desc' | 'used-gap-asc';
+
+export interface RefurbishedSpecs {
+  soc?: string;
+  ram?: string;
+  weight?: string;
+  releaseYear?: number;
+  releaseDate?: string;
+  display?: string;
+  battery?: string;
+  ports?: string;
+  os?: string;
+}
+
+export interface RefurbishedItem {
+  id: string;
+  title: string;
+  category: Category;
+  productId: string;
+  productName: string;
+  skuId: string;
+  skuLabel: string;
+  storage: string;
+  connectivity: ConnectivityType;
+  refurbishedPrice: number;
+  originalNewPrice: number;
+  isOriginalDiscontinued?: boolean;
+  discountAmount: number;
+  discountPercent: number;
+  usedLowestPrice: number | null;
+  usedShopName: string;
+  usedUrl: string;
+  usedPlatform?: 'rakuten' | 'yahoo';
+  usedIsEstimated?: boolean;
+  rakutenUsedPrice?: number | null;
+  rakutenUsedUrl?: string;
+  yahooUsedPrice?: number | null;
+  yahooUsedUrl?: string;
+  priceGapVsUsed: number | null;
+  url: string;
+  stockStatus: RefurbStockStatus;
+  stockLabel: string;
+  source?: string;
+  publishedAt?: string;
+  specs: RefurbishedSpecs;
+}
+
+export interface RefurbishedDataset {
+  schemaVersion: 1;
+  updatedAt: string;
+  sources?: {
+    refurbTrackerRss?: 'live' | 'fallback';
+    appleOfficialWeb?: 'live' | 'fallback';
+    liveCount?: number;
+    referenceCount?: number;
+    totalCount?: number;
+  };
+  items: RefurbishedItem[];
+}
+
+const APPLE_REFURB_CATEGORY_URLS: Record<string, string> = {
+  Mac: 'https://www.apple.com/jp/shop/refurbished/mac',
+  iPad: 'https://www.apple.com/jp/shop/refurbished/ipad',
+  iPhone: 'https://www.apple.com/jp/shop/refurbished/iphone',
+  'Apple Watch': 'https://www.apple.com/jp/shop/refurbished/watch',
+  AirPods: 'https://www.apple.com/jp/shop/refurbished/airpods',
+};
+
+function calcClientRefurbPrice(newPrice: number): number {
+  if (!Number.isFinite(newPrice) || newPrice <= 0) return 0;
+  const raw = newPrice * 0.85;
+  if (newPrice >= 100000) {
+    return Math.round(raw / 1000) * 1000 - 200;
+  }
+  return Math.round(raw / 100) * 100;
+}
+
+/**
+ * `./refurbished.json` ロード前やオフライン時でも即座に表示できるよう、
+ * 現在の `products` カタログの主要モデルから名寄せ済みの整備済相場リストを自動構築する
+ */
+function buildClientFallbackRefurbishedItems(products: Product[]): RefurbishedItem[] {
+  const targetProducts = products.filter(
+    (p) =>
+      hasPrice(p) &&
+      ['Mac', 'iPad', 'iPhone', 'Apple Watch', 'AirPods'].includes(p.category) &&
+      String(p.releaseDate ?? '') >= '2022-01-01',
+  );
+
+  const items: RefurbishedItem[] = [];
+  for (const p of targetProducts) {
+    const skus = pricedSkus(p).slice(0, 2);
+    for (const sku of skus) {
+      const dbNewPrice =
+        sku.carriers.apple?.currentPrice ??
+        (sku.priceHistory.length ? lastOf(sku.priceHistory).appleStorePrice : 0);
+      if (!dbNewPrice || dbNewPrice <= 0) continue;
+
+      const refurbishedPrice = calcClientRefurbPrice(dbNewPrice);
+      const discountAmount = Math.max(0, dbNewPrice - refurbishedPrice);
+      const discountPercent = round1((discountAmount / dbNewPrice) * 100);
+
+      const usedInfo = estimateUsedMarketData(p, sku);
+      const up = usedInfo.usedPricing;
+      const usedLowestPrice = up.lowestPrice > 0 ? up.lowestPrice : null;
+      const isYahoo = up.lowestPlatform === 'yahoo';
+      const bestOffer = isYahoo ? (up.yahoo ?? up.rakuten) : (up.rakuten ?? up.yahoo);
+      const usedIsEstimated = Boolean(usedInfo.isEstimated || up.isEstimated || !bestOffer?.shopName);
+      const usedShopName =
+        bestOffer?.shopName && bestOffer.shopName.trim()
+          ? bestOffer.shopName.trim()
+          : isYahoo
+            ? 'Yahoo!ショッピング（じゃんぱら・イオシス・ソフマップ等）最安相場'
+            : '楽天市場（イオシス・じゃんぱら・ゲオ等）最安相場';
+      const usedUrl =
+        bestOffer?.url ||
+        (isYahoo ? usedInfo.yahooSearchUrl : usedInfo.rakutenSearchUrl);
+      const priceGapVsUsed =
+        usedLowestPrice != null ? refurbishedPrice - usedLowestPrice : null;
+      const releaseYear = parseInt(String(p.releaseDate ?? '').slice(0, 4), 10) || 2024;
+
+      items.push({
+        id: `refurb-${p.id}-${sku.id}`,
+        title: `${p.name} ${sku.label} [整備済製品]`,
+        category: p.category,
+        productId: p.id,
+        productName: p.name,
+        skuId: sku.id,
+        skuLabel: sku.label,
+        storage: sku.storage || sku.label,
+        connectivity: sku.connectivity,
+        refurbishedPrice,
+        originalNewPrice: dbNewPrice,
+        isOriginalDiscontinued: isProductDiscontinued(p, sku),
+        discountAmount,
+        discountPercent,
+        usedLowestPrice,
+        usedShopName,
+        usedUrl,
+        usedPlatform: isYahoo ? 'yahoo' : 'rakuten',
+        usedIsEstimated,
+        rakutenUsedPrice: up.rakuten?.price ?? null,
+        rakutenUsedUrl: up.rakuten?.url ?? usedInfo.rakutenSearchUrl,
+        yahooUsedPrice: up.yahoo?.price ?? null,
+        yahooUsedUrl: up.yahoo?.url ?? usedInfo.yahooSearchUrl,
+        priceGapVsUsed,
+        url: APPLE_REFURB_CATEGORY_URLS[p.category] ?? 'https://www.apple.com/jp/shop/refurbished',
+        stockStatus: 'Reference',
+        stockLabel: '参考整備済相場（Reference）',
+        source: 'catalog_reference',
+        specs: {
+          soc: p.specs.soc,
+          ram: p.specs.ram,
+          weight: p.specs.weight,
+          releaseYear,
+          releaseDate: p.releaseDate,
+          display: p.specs.display,
+          battery: p.specs.battery,
+          ports: p.specs.ports,
+          os: p.specs.os,
+        },
+      });
+    }
+  }
+  return items;
+}
+
+function RefurbishedView({
+  products,
+  refurbDataset,
+  sels,
+  setSels,
+  setTab,
+  toast,
+}: {
+  products: Product[];
+  refurbDataset: RefurbishedDataset | null;
+  sels: Sel[];
+  setSels: (s: Sel[]) => void;
+  setTab: (t: Tab) => void;
+  toast: (m: string) => void;
+}) {
+  const [catFilter, setCatFilter] = useState<RefurbCategoryFilter>('all');
+  const [sortKey, setSortKey] = useState<RefurbSortKey>('used-gap-asc');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [onlyBargainVsUsed, setOnlyBargainVsUsed] = useState(false);
+
+  // refurbished.json のデータがあればそれを使用し、最新の products 情報と同期補完する
+  const allItems = useMemo<RefurbishedItem[]>(() => {
+    const baseItems =
+      refurbDataset?.items && refurbDataset.items.length > 0
+        ? refurbDataset.items
+        : buildClientFallbackRefurbishedItems(products);
+
+    return baseItems.map((it) => {
+      const matchedProd = products.find((p) => p.id === it.productId);
+      const matchedSku = matchedProd?.skus.find((s) => s.id === it.skuId) ?? matchedProd?.skus[0];
+      if (!matchedProd || !matchedSku) return it;
+
+      const usedInfo = estimateUsedMarketData(matchedProd, matchedSku);
+      const up = usedInfo.usedPricing;
+      const usedLowestPrice =
+        it.usedLowestPrice != null && it.usedLowestPrice > 0
+          ? it.usedLowestPrice
+          : up.lowestPrice > 0
+            ? up.lowestPrice
+            : null;
+      const priceGapVsUsed =
+        usedLowestPrice != null ? it.refurbishedPrice - usedLowestPrice : it.priceGapVsUsed;
+
+      return {
+        ...it,
+        isOriginalDiscontinued:
+          it.isOriginalDiscontinued ?? isProductDiscontinued(matchedProd, matchedSku),
+        usedLowestPrice,
+        priceGapVsUsed,
+        specs: {
+          soc: it.specs?.soc ?? matchedProd.specs.soc,
+          ram: it.specs?.ram ?? matchedProd.specs.ram,
+          weight: it.specs?.weight ?? matchedProd.specs.weight,
+          releaseYear:
+            it.specs?.releaseYear ??
+            (parseInt(String(matchedProd.releaseDate ?? '').slice(0, 4), 10) || undefined),
+          releaseDate: it.specs?.releaseDate ?? matchedProd.releaseDate,
+          display: it.specs?.display ?? matchedProd.specs.display,
+          battery: it.specs?.battery ?? matchedProd.specs.battery,
+          ports: it.specs?.ports ?? matchedProd.specs.ports,
+          os: it.specs?.os ?? matchedProd.specs.os,
+        },
+      };
+    });
+  }, [refurbDataset, products]);
+
+  // カテゴリ別件数
+  const categoryCounts = useMemo(() => {
+    const counts: Record<RefurbCategoryFilter, number> = {
+      all: allItems.length,
+      Mac: 0,
+      iPad: 0,
+      iPhone: 0,
+      'Apple Watch': 0,
+      AirPods: 0,
+    };
+    for (const it of allItems) {
+      if (it.category in counts) {
+        counts[it.category as RefurbCategoryFilter]++;
+      }
+    }
+    return counts;
+  }, [allItems]);
+
+  // 絞り込み＆ソート後のリスト
+  const filteredAndSorted = useMemo(() => {
+    const q = searchQuery.trim().normalize('NFKC').toLowerCase();
+    const filtered = allItems.filter((it) => {
+      if (catFilter !== 'all' && it.category !== catFilter) return false;
+      if (onlyBargainVsUsed && (it.priceGapVsUsed == null || it.priceGapVsUsed > 15000)) {
+        return false;
+      }
+      if (q) {
+        const hay = `${it.title} ${it.productName} ${it.skuLabel} ${it.specs.soc ?? ''} ${it.specs.ram ?? ''}`
+          .normalize('NFKC')
+          .toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    return [...filtered].sort((a, b) => {
+      if (sortKey === 'price-asc') {
+        return a.refurbishedPrice - b.refurbishedPrice || b.discountAmount - a.discountAmount;
+      }
+      if (sortKey === 'discount-desc') {
+        return b.discountAmount - a.discountAmount || b.discountPercent - a.discountPercent;
+      }
+      // 'used-gap-asc': 中古相場との差額が小さい順
+      const gapA = a.priceGapVsUsed ?? Number.POSITIVE_INFINITY;
+      const gapB = b.priceGapVsUsed ?? Number.POSITIVE_INFINITY;
+      return gapA - gapB || a.refurbishedPrice - b.refurbishedPrice;
+    });
+  }, [allItems, catFilter, onlyBargainVsUsed, searchQuery, sortKey]);
+
+  const stats = useMemo(() => {
+    const liveCount = allItems.filter((i) => i.stockStatus === 'Live').length;
+    const refCount = allItems.length - liveCount;
+    const under15kCount = allItems.filter(
+      (i) => i.priceGapVsUsed != null && i.priceGapVsUsed <= 15000,
+    ).length;
+    const maxDiscount = allItems.reduce((m, i) => Math.max(m, i.discountAmount), 0);
+    return { liveCount, refCount, under15kCount, maxDiscount };
+  }, [allItems]);
+
+  const handleAddToCompare = (item: RefurbishedItem) => {
+    const existsProd = products.find((p) => p.id === item.productId);
+    if (!existsProd) {
+      toast(`${item.productName} のマスターデータが見つかりません`);
+      return;
+    }
+    const targetSid =
+      existsProd.skus.find((s) => s.id === item.skuId)?.id ?? existsProd.skus[0]?.id ?? item.skuId;
+    const alreadyInSels = sels.some((s) => s.pid === existsProd.id);
+    if (alreadyInSels) {
+      setSels(sels.map((s) => (s.pid === existsProd.id ? { pid: existsProd.id, sid: targetSid } : s)));
+      toast(`${existsProd.name} (${item.skuLabel}) の比較SKUを更新しました`);
+    } else {
+      setSels([...sels, { pid: existsProd.id, sid: targetSid }]);
+      toast(`${existsProd.name} (${item.skuLabel}) をメイン比較表に追加しました`);
+    }
+  };
+
+  const categoryTabs: { id: RefurbCategoryFilter; label: string }[] = [
+    { id: 'all', label: 'すべて' },
+    { id: 'Mac', label: 'Mac' },
+    { id: 'iPad', label: 'iPad' },
+    { id: 'iPhone', label: 'iPhone' },
+    { id: 'Apple Watch', label: 'Apple Watch' },
+    { id: 'AirPods', label: 'AirPods' },
+  ];
+
+  const sortOptions: { id: RefurbSortKey; label: string }[] = [
+    { id: 'price-asc', label: '価格が安い順' },
+    { id: 'discount-desc', label: '新品からの割引額が大きい順' },
+    { id: 'used-gap-asc', label: '中古相場との差額が小さい順' },
+  ];
+
+  return (
+    <div className="space-y-4 sm:space-y-5">
+      {/* ヘッダー＆コントロールカード */}
+      <div className={`${card} p-3.5 sm:p-5`}>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <SectionTitle
+            icon={<Apple className="h-5 w-5" />}
+            title="Apple認定整備済品 × 新品定価 × 中古最安値 完全比較"
+            desc="Refurb TrackerのRSSフィード・Apple公式整備済ページの在庫情報と、当サイトDB（新品定価・詳細スペック・楽天/Yahoo!中古最安値）を自動名寄せ（マッチング）して横断比較します。"
+          />
+          <div className="flex flex-wrap items-center gap-2 ml-auto">
+            <a
+              href={
+                catFilter !== 'all'
+                  ? (APPLE_REFURB_CATEGORY_URLS[catFilter] ?? 'https://www.apple.com/jp/shop/refurbished')
+                  : 'https://www.apple.com/jp/shop/refurbished'
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className={secondaryActionBtnCls}
+            >
+              <Apple className="h-3.5 w-3.5 shrink-0" />
+              <span>Apple公式 認定整備済製品ストア</span>
+              <ExternalLink className="h-3 w-3 shrink-0" />
+            </a>
+          </div>
+        </div>
+
+        {/* サマリー統計バー */}
+        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/50">
+            <div className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">収録・名寄せモデル数</div>
+            <div className="mt-0.5 text-sm sm:text-base font-extrabold tabular-nums text-zinc-900 dark:text-zinc-100">
+              {allItems.length} <span className="text-xs font-semibold text-zinc-500">構成</span>
+            </div>
+            <div className="text-[10px] text-zinc-500 dark:text-zinc-400">
+              実在庫(Live): {stats.liveCount}件 / 相場(Reference): {stats.refCount}件
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/50">
+            <div className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">新品定価からの最大割引額</div>
+            <div className="mt-0.5 text-sm sm:text-base font-extrabold tabular-nums text-zinc-900 dark:text-zinc-100">
+              −{yen(stats.maxDiscount)} <span className="text-xs font-semibold text-zinc-500">(約15% OFF)</span>
+            </div>
+            <div className="text-[10px] text-zinc-500 dark:text-zinc-400">
+              Apple純正パーツ交換・徹底クリーニング済
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/50">
+            <div className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">整備済品が圧倒的にお得な機種</div>
+            <div className="mt-0.5 text-sm sm:text-base font-extrabold tabular-nums text-emerald-600 dark:text-emerald-400">
+              {stats.under15kCount} <span className="text-xs font-semibold">モデル</span>
+            </div>
+            <div className="text-[10px] text-zinc-500 dark:text-zinc-400">
+              中古最安との差額 ＋¥15,000 以内
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/50">
+            <div className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">Apple認定整備済品の特典</div>
+            <div className="mt-0.5 text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">
+              新品バッテリー・外装 ＆ 1年保証
+            </div>
+            <div className="text-[10px] text-zinc-500 dark:text-zinc-400">
+              AppleCare+ 加入可・全付属品同梱
+            </div>
+          </div>
+        </div>
+
+        {/* 上部フィルタ：カテゴリ絞り込み（すべて / Mac / iPad / iPhone / Apple Watch / AirPods） */}
+        <div className="mt-4 space-y-3 border-t border-zinc-200/80 pt-3.5 dark:border-zinc-800/80">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+              {categoryTabs.map((c) => {
+                const active = catFilter === c.id;
+                const count = categoryCounts[c.id] ?? 0;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setCatFilter(c.id)}
+                    className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl border px-3 py-1.5 text-xs sm:text-sm font-semibold transition ${
+                      active
+                        ? 'border-zinc-900 bg-zinc-900 text-white shadow-sm dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
+                        : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-300 dark:hover:bg-zinc-800'
+                    }`}
+                  >
+                    {c.id !== 'all' && <CatIcon cat={c.id} className="h-3.5 w-3.5 shrink-0" />}
+                    <span>{c.label}</span>
+                    <span
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold tabular-nums ${
+                        active
+                          ? 'bg-white/20 text-white dark:bg-zinc-900/20 dark:text-zinc-900'
+                          : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* キーワード検索 ＆ 1.5万円以内フィルタ */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative flex-1 sm:w-56 sm:flex-initial">
+                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="モデル名・チップ(M3/M4/A18)で検索..."
+                  className="w-full rounded-lg border border-zinc-300 bg-white py-1.5 pl-8 pr-7 text-xs sm:text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    aria-label="検索クリア"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setOnlyBargainVsUsed((v) => !v)}
+                className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition ${
+                  onlyBargainVsUsed
+                    ? 'border-emerald-600 bg-emerald-600 text-white dark:border-emerald-500 dark:bg-emerald-500 dark:text-zinc-950'
+                    : 'border-zinc-200 bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
+                }`}
+              >
+                <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                <span>中古差額1.5万円以内のみ</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 並び替え（価格が安い順 / 新品からの割引額が大きい順 / 中古相場との差額が小さい順） */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1">並び替え:</span>
+              {sortOptions.map((opt) => {
+                const active = sortKey === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setSortKey(opt.id)}
+                    className={`inline-flex items-center gap-1 whitespace-nowrap rounded-lg border px-2.5 py-1 text-xs font-semibold transition ${
+                      active
+                        ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
+                        : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-700/80 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:bg-zinc-800'
+                    }`}
+                  >
+                    <span>{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="text-xs text-zinc-500 dark:text-zinc-400 tabular-nums">
+              表示中: <strong className="font-bold text-zinc-900 dark:text-zinc-100">{filteredAndSorted.length}</strong> 件
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* アイテムカード一覧 */}
+      {filteredAndSorted.length === 0 ? (
+        <EmptyNote text="条件に一致するApple認定整備済製品が見つかりませんでした。カテゴリや検索キーワードを変更してお試しください。" />
+      ) : (
+        <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-2">
+          {filteredAndSorted.map((item) => {
+            const inCompare = sels.some((s) => s.pid === item.productId && s.sid === item.skuId);
+            const inCompareProduct = sels.some((s) => s.pid === item.productId);
+            const gap = item.priceGapVsUsed;
+            const isRefurbBargainVsUsed = gap != null && gap <= 15000;
+            const isUsedMuchCheaper = gap != null && gap >= 30000;
+            const isLive = item.stockStatus === 'Live';
+
+            return (
+              <div
+                key={item.id}
+                className={`${card} flex flex-col justify-between p-4 sm:p-5 transition hover:border-zinc-300 dark:hover:border-zinc-700`}
+              >
+                <div>
+                  {/* 上部ステータス＆カテゴリ＆スペックバッジ */}
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1 rounded-md bg-zinc-900 px-2 py-0.5 text-[11px] font-bold text-white dark:bg-zinc-100 dark:text-zinc-900">
+                        <CatIcon cat={item.category} className="h-3 w-3 shrink-0" />
+                        <span>{item.category}</span>
+                      </span>
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold ${
+                          isLive
+                            ? 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300'
+                            : 'border-zinc-200 bg-zinc-100 text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'
+                        }`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            isLive ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-400'
+                          }`}
+                        />
+                        <span>{item.stockLabel}</span>
+                      </span>
+                      {item.specs.releaseYear && (
+                        <span className="rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[11px] font-medium text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800/70 dark:text-zinc-300">
+                          {item.specs.releaseYear}年発売
+                        </span>
+                      )}
+                    </div>
+
+                    {/* 割引率ピルバッジ */}
+                    <span className="inline-flex items-center gap-1 rounded-full bg-zinc-900 px-2.5 py-0.5 text-xs font-extrabold tabular-nums text-white dark:bg-white dark:text-zinc-900">
+                      新品比 −{yen(item.discountAmount)} ({item.discountPercent.toFixed(1)}% OFF)
+                    </span>
+                  </div>
+
+                  {/* 製品名・SKU・正規化タイトル */}
+                  <div className="mt-2.5">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                      <h3 className="text-base sm:text-lg font-extrabold leading-snug text-zinc-900 dark:text-zinc-50">
+                        {item.productName}
+                      </h3>
+                      <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-bold text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+                        {item.skuLabel}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1">
+                      {item.title}
+                    </p>
+                  </div>
+
+                  {/* 既存DB (products.json) から注入された詳細スペック */}
+                  <div className="mt-2.5 flex flex-wrap gap-1.5 text-[11px] text-zinc-600 dark:text-zinc-300">
+                    {item.specs.soc && (
+                      <span className="inline-flex items-center gap-1 rounded-md border border-zinc-200/80 bg-zinc-50 px-2 py-0.5 dark:border-zinc-800 dark:bg-zinc-800/60">
+                        <span className="text-zinc-400">SoC:</span>
+                        <strong className="font-semibold">{item.specs.soc.split(' (')[0]}</strong>
+                      </span>
+                    )}
+                    {item.specs.ram && (
+                      <span className="inline-flex items-center gap-1 rounded-md border border-zinc-200/80 bg-zinc-50 px-2 py-0.5 dark:border-zinc-800 dark:bg-zinc-800/60">
+                        <span className="text-zinc-400">RAM:</span>
+                        <strong className="font-semibold">{item.specs.ram}</strong>
+                      </span>
+                    )}
+                    {item.storage && (
+                      <span className="inline-flex items-center gap-1 rounded-md border border-zinc-200/80 bg-zinc-50 px-2 py-0.5 dark:border-zinc-800 dark:bg-zinc-800/60">
+                        <span className="text-zinc-400">構成:</span>
+                        <strong className="font-semibold">{item.storage}</strong>
+                      </span>
+                    )}
+                    {item.connectivity && item.connectivity !== '-' && (
+                      <span className="inline-flex items-center gap-1 rounded-md border border-zinc-200/80 bg-zinc-50 px-2 py-0.5 dark:border-zinc-800 dark:bg-zinc-800/60">
+                        <span className="text-zinc-400">通信:</span>
+                        <strong className="font-semibold">{item.connectivity}</strong>
+                      </span>
+                    )}
+                    {item.specs.weight && (
+                      <span className="inline-flex items-center gap-1 rounded-md border border-zinc-200/80 bg-zinc-50 px-2 py-0.5 dark:border-zinc-800 dark:bg-zinc-800/60">
+                        <span className="text-zinc-400">重量:</span>
+                        <strong className="font-semibold">{item.specs.weight.split(' / ')[0]}</strong>
+                      </span>
+                    )}
+                  </div>
+
+                  {/* ① Apple認定整備済品価格 / ② 参考：Apple新品定価 / ③ 当サイトの中古最安値 の3価格横並び表示 */}
+                  <div className="mt-3.5 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                    {/* ① Apple認定整備済品価格（メイン表示） */}
+                    <div className="rounded-xl border-2 border-zinc-900 bg-zinc-900/5 p-2.5 dark:border-zinc-100 dark:bg-zinc-100/5">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">
+                          ① Apple認定整備済品
+                        </span>
+                        <span className="rounded bg-zinc-900 px-1.5 py-0.2 text-[10px] font-bold text-white dark:bg-zinc-100 dark:text-zinc-900">
+                          {item.discountPercent.toFixed(0)}% OFF
+                        </span>
+                      </div>
+                      <div className="mt-1 text-xl font-extrabold tabular-nums tracking-tight text-zinc-900 dark:text-white">
+                        {yen(item.refurbishedPrice)}
+                      </div>
+                      <div className="mt-0.5 text-[11px] font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">
+                        新品比 −{yen(item.discountAmount)} ({item.discountPercent.toFixed(1)}% OFF)
+                      </div>
+                    </div>
+
+                    {/* ② 参考：Apple新品定価（または終売時最終価格） */}
+                    <div className="rounded-xl border border-zinc-200 bg-zinc-50/70 p-2.5 dark:border-zinc-800 dark:bg-zinc-900/50">
+                      <div className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
+                        ② 参考：{item.isOriginalDiscontinued ? '終売時最終価格' : 'Apple新品定価'}
+                      </div>
+                      <div className="mt-1 text-base sm:text-lg font-bold tabular-nums text-zinc-600 line-through decoration-zinc-400 dark:text-zinc-300">
+                        {yen(item.originalNewPrice)}
+                      </div>
+                      <div className="mt-0.5 text-[10px] text-zinc-500 dark:text-zinc-400">
+                        {item.isOriginalDiscontinued
+                          ? 'Apple Store新品は販売終了'
+                          : 'Apple Store現行新品価格'}
+                      </div>
+                    </div>
+
+                    {/* ③ 当サイトの中古最安値（イオシス・じゃんぱら等の楽天/Yahoo!最安） */}
+                    <div className="rounded-xl border border-zinc-200 bg-zinc-50/70 p-2.5 dark:border-zinc-800 dark:bg-zinc-900/50">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
+                          ③ 当サイト中古最安値
+                        </span>
+                        {item.usedUrl && (
+                          <a
+                            href={item.usedUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                          >
+                            <span>詳細</span>
+                            <ExternalLink className="h-2.5 w-2.5" />
+                          </a>
+                        )}
+                      </div>
+                      <div className="mt-1 text-base sm:text-lg font-bold tabular-nums text-zinc-800 dark:text-zinc-100">
+                        {item.usedLowestPrice != null ? yen(item.usedLowestPrice) : '—'}
+                      </div>
+                      <div className="mt-0.5 truncate text-[10px] text-zinc-500 dark:text-zinc-400" title={item.usedShopName}>
+                        {gap != null
+                          ? `整備済との差額: ${gap >= 0 ? `+${yen(gap)}` : signedYen(gap)}`
+                          : item.usedShopName}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 差額に応じたおすすめ判定バッジ */}
+                  {item.usedLowestPrice != null && gap != null && (
+                    <div className="mt-3">
+                      {isRefurbBargainVsUsed ? (
+                        <div className="rounded-xl border border-emerald-300 bg-emerald-50/90 px-3 py-2 text-xs font-bold leading-relaxed text-emerald-900 dark:border-emerald-800/80 dark:bg-emerald-950/50 dark:text-emerald-200">
+                          <span className="mr-1 inline-block rounded bg-emerald-600 px-1.5 py-0.5 text-[10px] font-extrabold text-white dark:bg-emerald-400 dark:text-zinc-950">
+                            おすすめ
+                          </span>
+                          {gap > 0
+                            ? `中古最安に＋${yen(gap)}足すだけでApple公式の新品バッテリー・外装・1年保証が付くため整備済品が圧倒的にお得！`
+                            : `中古最安（${yen(item.usedLowestPrice)}）と同等以下の価格で、Apple公式の新品バッテリー・外装・1年保証が付くため整備済品が圧倒的にお得！`}
+                        </div>
+                      ) : isUsedMuchCheaper ? (
+                        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zinc-200 bg-zinc-100/80 px-3 py-2 text-xs font-semibold leading-relaxed text-zinc-700 dark:border-zinc-700/80 dark:bg-zinc-800/70 dark:text-zinc-300">
+                          <div>
+                            <span className="mr-1.5 inline-block rounded bg-zinc-700 px-1.5 py-0.5 text-[10px] font-bold text-white dark:bg-zinc-300 dark:text-zinc-900">
+                              コスパ比較
+                            </span>
+                            コスパ重視なら中古ショップ（{yen(item.usedLowestPrice)}）の方が大幅に安上がり
+                            <span className="ml-1 text-[11px] font-normal text-zinc-500 dark:text-zinc-400">
+                              （差額 −{yen(gap)} / {item.usedShopName}）
+                            </span>
+                          </div>
+                          {item.usedUrl && (
+                            <a
+                              href={item.usedUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-bold text-zinc-900 underline hover:opacity-80 dark:text-zinc-100"
+                            >
+                              <span>中古最安を見る</span>
+                              <ExternalLink className="h-3 w-3 shrink-0" />
+                            </a>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="rounded-xl border border-zinc-200/80 bg-zinc-50 px-3 py-2 text-xs leading-relaxed text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-400">
+                          中古最安（{yen(item.usedLowestPrice)}）との差額は{' '}
+                          <strong className="font-bold text-zinc-800 dark:text-zinc-200">
+                            ＋{yen(gap)}
+                          </strong>
+                          。初期費用を抑えるなら中古、新品バッテリー・外装＆Apple公式1年保証を重視するなら認定整備済品がおすすめです。
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* 下部アクションボタン: 「Apple公式整備済ページへ」 ＆ 「この機種をメイン比較表に追加」 */}
+                <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-zinc-200/70 pt-3 dark:border-zinc-800/70">
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-zinc-900 px-3 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-zinc-800 active:scale-[0.99] dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                  >
+                    <Apple className="h-3.5 w-3.5 shrink-0" />
+                    <span>Apple公式整備済ページへ</span>
+                    <ExternalLink className="h-3 w-3 shrink-0" />
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={() => handleAddToCompare(item)}
+                    className={`${secondaryActionBtnCls} flex-1 !py-2 ${
+                      inCompare
+                        ? '!border-zinc-400 !bg-zinc-200/80 dark:!border-zinc-600 dark:!bg-zinc-700'
+                        : ''
+                    }`}
+                  >
+                    <span>
+                      {inCompare
+                        ? '✓ メイン比較表に追加済'
+                        : inCompareProduct
+                          ? '↻ この容量で比較表を更新'
+                          : '＋ この機種をメイン比較表に追加'}
+                    </span>
+                  </button>
+
+                  {inCompareProduct && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTab('compare');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className={`${secondaryActionBtnCls} !py-2`}
+                      title="メイン比較表タブを開く"
+                    >
+                      <Scale className="h-3.5 w-3.5 shrink-0" />
+                      <span>比較表へ</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* =====================================================================================
  * 8. App
  * ===================================================================================== */
 
@@ -8690,6 +9464,7 @@ export default function App() {
     return buildDefaultSels(products);
   });
   const [toastMsg, setToastMsg] = useState('');
+  const [refurbDataset, setRefurbDataset] = useState<RefurbishedDataset | null>(null);
   const toastTimer = useRef<number>();
 
   const toast = (m: string) => { setToastMsg(m); window.clearTimeout(toastTimer.current); toastTimer.current = window.setTimeout(() => setToastMsg(''), 2200); };
@@ -8713,7 +9488,8 @@ export default function App() {
 
   // 起動時の自動読み込み:
   //  1) ./products.json (同梱の実データ) を generatedAt が変わったとき、または未ロード時にマージ
-  //  2) AppleDB が有効なら api.appledb.dev から取得してスペック/販売終了日を補強
+  //  2) ./refurbished.json (Apple認定整備済品データ) を読み込み
+  //  3) AppleDB が有効なら api.appledb.dev から取得してスペック/販売終了日を補強
   //  いずれも失敗時は静かに無視 (オフライン・未配置でも動作)
   useEffect(() => {
     const autoDb = (() => { try { return localStorage.getItem(LS_AUTODB) !== 'off'; } catch { return true; } })();
@@ -8726,6 +9502,15 @@ export default function App() {
           if (ver && (localStorage.getItem(LS_EXT) !== ver || cur.length <= SAMPLE_PRODUCTS.length)) {
             const { products: ps } = normalizeDataset(j);
             if (ps.length) { cur = mergeProducts(cur, ps); dirty = true; localStorage.setItem(LS_EXT, ver); notes.push(`products.json ${ps.length}製品`); }
+          }
+        }
+      } catch { /* noop */ }
+      try {
+        const rr = await fetch('./refurbished.json');
+        if (rr.ok) {
+          const rj = await rr.json();
+          if (rj && Array.isArray(rj.items)) {
+            setRefurbDataset(rj as RefurbishedDataset);
           }
         }
       } catch { /* noop */ }
@@ -8844,6 +9629,7 @@ export default function App() {
   const tabs: { id: Tab; label: string; shortLabel: string; icon: React.ReactNode }[] = [
     { id: 'compare', label: 'スペック＆キャリア比較', shortLabel: '価格・スペック比較', icon: <Scale className="h-4 w-4 shrink-0" /> },
     { id: 'budget', label: '💰 予算から探す', shortLabel: '💰 予算で探す', icon: <Sparkles className="h-4 w-4 shrink-0" /> },
+    { id: 'refurbished', label: 'Apple認定整備済品', shortLabel: '整備済品', icon: <Apple className="h-4 w-4 shrink-0" /> },
     { id: 'timeline', label: '価格改定タイムライン', shortLabel: '価格改定履歴', icon: <LineIcon className="h-4 w-4 shrink-0" /> },
     { id: 'fx', label: '発売時価格 × 為替', shortLabel: '発売価格×為替', icon: <Coins className="h-4 w-4 shrink-0" /> },
     { id: 'accessories', label: 'アクセサリー', shortLabel: 'アクセサリー', icon: <ShoppingBag className="h-4 w-4 shrink-0" /> },
@@ -8867,7 +9653,7 @@ export default function App() {
               <span className="hidden sm:inline">{dark ? 'ライト' : 'ダーク'}</span>
             </button>
           </div>
-          <nav className="mx-auto grid max-w-7xl grid-cols-5 sm:flex sm:gap-1 px-2 sm:px-4">
+          <nav className="mx-auto grid max-w-7xl grid-cols-6 sm:flex sm:gap-1 px-2 sm:px-4">
             {tabs.map((t) => (
               <button key={t.id} onClick={() => setTab(t.id)}
                 className={`inline-flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap border-b-2 px-1 sm:px-3.5 py-2 sm:py-2.5 text-[11px] sm:text-sm font-semibold transition ${tab === t.id ? 'border-sky-500 text-sky-600 dark:text-sky-400' : 'border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'}`}>
@@ -8917,6 +9703,16 @@ export default function App() {
               catFilter={budgetCat}
               setCatFilter={setBudgetCat}
               mnp={mnp}
+              toast={toast}
+            />
+          )}
+          {tab === 'refurbished' && (
+            <RefurbishedView
+              products={products}
+              refurbDataset={refurbDataset}
+              sels={sels}
+              setSels={setSels}
+              setTab={setTab}
               toast={toast}
             />
           )}

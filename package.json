@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "build:data": "node scripts/build-products.mjs",
     "fetch:prices": "node scripts/fetch-live-prices.mjs",
-    "update:all": "npm run fetch:prices && npm run build:data"
+    "fetch:refurbished": "node scripts/fetch-refurbished.mjs",
+    "update:all": "npm run fetch:prices && npm run build:data && npm run fetch:refurbished"
   },
   "dependencies": {
     "html-to-image": "^1.11.13",

@@ -11,6 +11,7 @@ on:
     paths:
       - 'scripts/fetch-live-prices.mjs'
       - 'scripts/build-products.mjs'
+      - 'scripts/fetch-refurbished.mjs'
       - 'data/catalog/**'
       - '.github/workflows/update-prices.yml'
 
@@ -69,12 +70,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/cache/live-prices-cache.json data/cache/fx-cache.json public/products.json
+          git add data/cache/live-prices-cache.json data/cache/fx-cache.json public/products.json public/refurbished.json
           if git diff --cached --quiet; then
             echo "価格データに変更はありませんでした。"
             exit 0
           fi
-          git commit -m "chore(data): 最新のキャリア価格・中古最安値を自動更新"
+          git commit -m "chore(data): 最新のキャリア価格・中古最安値・整備済品在庫を自動更新"
           for i in 1 2 3; do
             git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0
             echo "push に失敗しました。リトライします ($i/3)"
