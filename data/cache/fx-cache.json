@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-07T09:53:09.650Z",
-  "latestDate": "2026-11-07",
+  "updatedAt": "2026-11-08T22:48:14.116Z",
+  "latestDate": "2026-11-08",
   "latest": 158.3,
   "source": "https://api.frankfurter.dev/v1/{YYYY-MM-DD}?base=USD&symbols=JPY",
   "rates": {
