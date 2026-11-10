@@ -112,17 +112,17 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
     { value: 'all', label: 'すべて', count: allOffers.length },
     {
       value: 'unused',
-      label: '✨ 未使用品のみ',
+      label: '未使用品のみ',
       count: allOffers.filter((o) => o.conditionRank === 'unused').length,
     },
     {
       value: 'rankA_plus',
-      label: '🅰️ 美品(Aランク)以上',
+      label: 'Aランク以上',
       count: allOffers.filter((o) => o.conditionRank === 'unused' || o.conditionRank === 'rankA').length,
     },
     {
       value: 'trusted',
-      label: '✅ 大手ショップのみ',
+      label: '大手ショップのみ',
       count: allOffers.filter((o) => o.isTrusted).length,
     },
   ];

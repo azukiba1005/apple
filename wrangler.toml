@@ -1,0 +1,6 @@
+name = "apple-price-atlas"
+compatibility_date = "2024-11-01"
+# functions/api/* が scripts/*.mjs（node:fs / process.env を参照）を import するため
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+

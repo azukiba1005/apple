@@ -30,6 +30,7 @@ import {
   selectCls,
   sortCategories,
   SPEC_ROWS,
+  resolveSpecRaw,
   specText,
   toCSV,
   useChartColors,
@@ -115,7 +116,7 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
       ['世代', p.generation || '—'],
       ['発売日', p.releaseDate || '—'],
       ['通信方式', sku.connectivity === '-' ? '共通 (本体仕様参照)' : sku.connectivity],
-      ...SPEC_ROWS.map((r): XlsCell[] => [r.label, specText(p.specs[r.key])]),
+      ...SPEC_ROWS.map((r): XlsCell[] => [r.label, specText(resolveSpecRaw(p, r))]),
     ];
     downloadXlsx(`apple-timeline-${p.id}-${sku.id}.xlsx`, [
       { name: '価格改定タイムライン', rows, freezeRows: 1 },

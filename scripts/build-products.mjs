@@ -8,6 +8,7 @@
 //       ⑤ data/cache/live-prices-cache.json および data/cache/fx-cache.json を統合して public/products.json を出力
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { IPHONE, IPAD, WATCH, AIRPODS, MAC } from '../data/presets.mjs';
+import { enrichAllProducts } from './spec-enrichment.mjs';
 import {
   estimatePlatformOffers,
   buildUsedPricingObject,
@@ -1181,6 +1182,10 @@ function compareProducts(a, b) {
     String(a.name ?? '').localeCompare(String(b.name ?? ''), 'ja', { numeric: true })
   );
 }
+
+/* ---------- ⑥ スペック拡充 (scripts/spec-enrichment.mjs + data/specs/*.mjs + AppleDB 自動マッピング) ---------- */
+const specEnrichStats = enrichAllProducts(products, db);
+console.log(`スペック拡充: マスター辞書適用 ${specEnrichStats.withMaster} / ${specEnrichStats.total} 製品 (残りは AppleDB・チップ辞書の自動マッピング)`);
 
 products.forEach((p) => {
   p.skus.sort(compareSkus);

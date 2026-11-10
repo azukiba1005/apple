@@ -1069,37 +1069,130 @@ export interface SpecRowDef {
   key: string;
   label: string;
   primary?: boolean;
+  /** specs[key] が空のときに順に参照する旧キー（レガシー機種向けの後方互換） */
+  fallback?: string[];
 }
 
-/** 初期表示（主要項目のみ）の対象となる主要6スペック */
-const PRIMARY_SPEC_ROWS: SpecRowDef[] = [
-  { key: 'soc', label: 'SoC（チップ）', primary: true },
-  { key: 'ram', label: 'メモリ（RAM）', primary: true },
-  { key: 'display', label: 'ディスプレイ（サイズ・Hz）', primary: true },
-  { key: 'battery', label: 'バッテリー', primary: true },
-  { key: 'weight', label: '重量', primary: true },
-  { key: 'ports', label: 'ポート / 端子', primary: true },
+export interface SpecGroupDef {
+  id: string;
+  title: string;
+  rows: SpecRowDef[];
+}
+
+/**
+ * Apple公式風 全6カテゴリのスペック構成（scripts/spec-enrichment.mjs が products.json に出力するキーと対応）。
+ * 比較中の全機種で値が無い行は表示時に自動非表示になる。
+ */
+const SPEC_GROUPS: SpecGroupDef[] = [
+  {
+    id: 'chip',
+    title: 'チップ・AI・OS',
+    rows: [
+      { key: 'soc', label: 'SoC（チップ名・構成）' },
+      { key: 'process', label: '製造プロセス' },
+      { key: 'cpuCores', label: 'CPUコア数' },
+      { key: 'gpuCores', label: 'GPUコア数' },
+      { key: 'neuralEngine', label: 'Neural Engine' },
+      { key: 'ram', label: 'メモリ（RAM）' },
+      { key: 'ramBandwidth', label: 'メモリ帯域幅' },
+      { key: 'appleIntelligence', label: 'Apple Intelligence' },
+      { key: 'osInitial', label: '初期搭載OS' },
+      { key: 'osLatest', label: '最新対応OS', fallback: ['os'] },
+    ],
+  },
+  {
+    id: 'display',
+    title: 'ディスプレイ・筐体デザイン',
+    rows: [
+      { key: 'displaySize', label: '画面サイズ・パネル', fallback: ['display'] },
+      { key: 'resolution', label: '解像度・画素密度' },
+      { key: 'refreshRate', label: 'リフレッシュレート' },
+      { key: 'brightness', label: '最大輝度' },
+      { key: 'alwaysOn', label: '常時表示ディスプレイ' },
+      { key: 'frontBio', label: 'フロント仕様・生体認証' },
+      { key: 'material', label: '筐体素材' },
+      { key: 'pencil', label: 'Apple Pencil 対応' },
+    ],
+  },
+  {
+    id: 'camera',
+    title: 'カメラ・映像・オーディオ・操作系',
+    rows: [
+      { key: 'rearCamera', label: 'リアカメラ構成', fallback: ['camera'] },
+      { key: 'zoom', label: '光学ズームレンジ' },
+      { key: 'video', label: '動画撮影' },
+      { key: 'frontCamera', label: 'フロントカメラ' },
+      { key: 'controls', label: '物理ボタン・操作系' },
+      { key: 'audio', label: 'オーディオ・マイク' },
+    ],
+  },
+  {
+    id: 'connect',
+    title: '端子・充電・通信・SIM',
+    rows: [
+      { key: 'portSpeed', label: 'コネクタ端子・転送速度', fallback: ['ports'] },
+      { key: 'externalDisplay', label: '外部ディスプレイ出力' },
+      { key: 'charging', label: '充電仕様' },
+      { key: '__conn', label: '通信方式（選択中モデル）' },
+      { key: 'simSpec', label: 'SIM仕様（日本国内版）' },
+      { key: 'wireless', label: 'Wi-Fi / Bluetooth', fallback: ['connectivity'] },
+      { key: 'extras', label: '無線チップ・付加機能' },
+      { key: 'bands', label: '対応バンド' },
+    ],
+  },
+  {
+    id: 'size',
+    title: 'サイズ・重量・バッテリー',
+    rows: [
+      { key: 'dimensions', label: '本体サイズ（高さ × 幅 × 厚さ）' },
+      { key: 'weight', label: '重量' },
+      { key: 'battery', label: 'バッテリー容量' },
+      { key: 'batteryLife', label: 'バッテリー駆動時間' },
+    ],
+  },
+  {
+    id: 'tech',
+    title: '技術仕様・発売情報',
+    rows: [
+      { key: 'identifier', label: '内部識別子（Identifier）' },
+      { key: 'modelNumbers', label: 'モデル番号（A番号）' },
+      { key: 'board', label: 'ボードID（Boardconfig）' },
+      { key: 'arch', label: 'アーキテクチャ' },
+      { key: '__release', label: '発売日（経過期間）' },
+      { key: 'colors', label: 'カラー' },
+      { key: 'launchPriceJpy', label: '発売時価格 (日本)' },
+      { key: 'launchPriceUsd', label: '発売時価格 (米国)' },
+      { key: 'discontinued', label: '販売終了日 (日本時間)' },
+    ],
+  },
 ];
 
-/** 折りたたみ時に隠れる詳細スペック項目 */
-const DETAIL_SPEC_ROWS: SpecRowDef[] = [
-  { key: 'camera', label: 'カメラ' },
-  { key: '__conn', label: '通信方式（SKU）' },
-  { key: 'connectivity', label: '通信規格' },
-  { key: 'bands', label: '対応バンド' },
-  { key: 'os', label: '対応OS' },
-  { key: 'colors', label: 'カラー' },
-  { key: 'launchPriceJpy', label: '発売時価格 (日本)' },
-  { key: 'launchPriceUsd', label: '発売時価格 (米国)' },
-  { key: 'identifier', label: '機種識別子 (Identifier)' },
-  { key: 'modelNumbers', label: 'モデル番号 (型番)' },
-  { key: 'discontinued', label: '販売終了日 (日本時間)' },
-];
+/** エクスポート（CSV / Markdown / Excel）用のフラットなスペック行一覧 */
+const SPEC_ROWS: SpecRowDef[] = SPEC_GROUPS.flatMap((g) => g.rows).filter((r) => r.key !== '__conn');
 
-const SPEC_ROWS: SpecRowDef[] = [
-  ...PRIMARY_SPEC_ROWS,
-  ...DETAIL_SPEC_ROWS.filter((r) => r.key !== '__conn'),
-];
+/** 発売日 + 経過年数・月数（例: 2024-09-20（発売から2年1ヶ月）） */
+function releaseElapsedText(releaseDate: string | undefined, now: Date = new Date()): string | undefined {
+  if (!releaseDate) return undefined;
+  const d = new Date(`${releaseDate}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return releaseDate;
+  let months = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+  if (now.getDate() < d.getDate()) months -= 1;
+  if (months < 0) return `${releaseDate}（発売予定）`;
+  const y = Math.floor(months / 12);
+  const m = months % 12;
+  const span = y > 0 ? `${y}年${m > 0 ? `${m}ヶ月` : ''}` : `${m}ヶ月`;
+  return `${releaseDate}（発売から${m === 0 && y === 0 ? '1ヶ月未満' : span}）`;
+}
+
+/** 行定義に従って製品の生スペック値を解決（fallback キー・計算行に対応） */
+function resolveSpecRaw(p: { specs: Specs; releaseDate?: string }, row: SpecRowDef): string | string[] | undefined {
+  if (row.key === '__release') return releaseElapsedText(p.releaseDate);
+  for (const k of [row.key, ...(row.fallback ?? [])]) {
+    const v = p.specs[k];
+    if (v != null && (Array.isArray(v) ? v.length > 0 : String(v).trim() !== '' && String(v).trim() !== '—')) return v;
+  }
+  return undefined;
+}
 
 /* ---------- AppleDB (https://api.appledb.dev/device/main.json) 連携 ---------- */
 const APPLEDB_URL = 'https://api.appledb.dev/device/main.json';
@@ -1202,12 +1295,12 @@ export function normalizeSpecForCompare(raw: unknown): string {
 
 function getColSpecDisplayValue(
   c: { p: Product; sku: Sku },
-  key: string,
+  row: SpecRowDef,
 ): string {
-  if (key === '__conn') {
+  if (row.key === '__conn') {
     return c.sku.connectivity === '-' ? '共通 (本体仕様参照)' : c.sku.connectivity;
   }
-  return specText(c.p.specs[key]);
+  return specText(resolveSpecRaw(c.p, row));
 }
 
 export interface EvaluatedSpecRow {
@@ -1223,12 +1316,12 @@ function evaluateSpecRows(
   rows: SpecRowDef[],
 ): EvaluatedSpecRow[] {
   return rows.map((row) => {
-    const values = cols.map((c) => getColSpecDisplayValue(c, row.key));
+    const values = cols.map((c) => getColSpecDisplayValue(c, row));
     const normValues = cols.map((c) => {
       if (row.key === '__conn') {
         return c.sku.connectivity === '-' ? '' : normalizeSpecForCompare(c.sku.connectivity);
       }
-      return normalizeSpecForCompare(c.p.specs[row.key]);
+      return normalizeSpecForCompare(resolveSpecRaw(c.p, row));
     });
     const allEmpty = normValues.every((v) => v === '');
     const uniqueCount = new Set(normValues).size;
@@ -1341,7 +1434,7 @@ function buildCompareTable(
     const curPt = c.sku.priceHistory.length ? lastOf(c.sku.priceHistory) : undefined;
     return evaluateCurrentFxFairness(curPt).summaryText;
   })]);
-  SPEC_ROWS.forEach((r) => rows.push([r.label, ...cols.map((c) => specText(c.p.specs[r.key]))]));
+  SPEC_ROWS.forEach((r) => rows.push([r.label, ...cols.map((c) => specText(resolveSpecRaw(c.p, r)))]));
   const modeLabel = mode === 'bulk' ? `一括${mnp ? '(MNP/新規割引後)' : ''}` : `2年返却 実質${mnp ? '(MNP/新規割引後)' : ''}`;
   CARRIER_ORDER.forEach((id) =>
     rows.push([
@@ -1761,7 +1854,7 @@ function buildCompareExcelSheets(products: Product[], sel: Sel[], mode: Mode, mn
 
   compareRows.push(secRow('スペック'));
   SPEC_ROWS.forEach((r) => {
-    compareRows.push([r.label, ...cols.map((c) => specText(c.p.specs[r.key]))]);
+    compareRows.push([r.label, ...cols.map((c) => specText(resolveSpecRaw(c.p, r)))]);
   });
 
   const carrierRows: XlsCell[][] = [[
@@ -2386,16 +2479,13 @@ function parseMyDeviceQuery(
   return { sel: { pid: p.id, sid: sku.id }, matched: true };
 }
 
-export type CompareShowKey = 'diag' | 'tradein' | 'fx' | 'shops';
+export type CompareShowKey = 'tradein';
 export type CompareShowFlags = Record<CompareShowKey, boolean>;
 
-const COMPARE_SHOW_KEYS: CompareShowKey[] = ['diag', 'tradein', 'fx', 'shops'];
+const COMPARE_SHOW_KEYS: CompareShowKey[] = ['tradein'];
 
 const DEFAULT_SHOW_FLAGS: CompareShowFlags = {
-  diag: false,
   tradein: false,
-  fx: false,
-  shops: false,
 };
 
 const LS_COMPARE_SHOW = 'apple-price-atlas:compare-show:v1';
@@ -2407,7 +2497,7 @@ function parseShowFlagsParam(raw: string | null): CompareShowFlags | null {
     return { ...DEFAULT_SHOW_FLAGS };
   }
   if (trimmed === 'all' || trimmed === 'full') {
-    return { diag: true, tradein: true, fx: true, shops: true };
+    return { tradein: true };
   }
   const tokens = new Set(
     trimmed
@@ -2416,10 +2506,7 @@ function parseShowFlagsParam(raw: string | null): CompareShowFlags | null {
       .filter(Boolean),
   );
   return {
-    diag: tokens.has('diag'),
     tradein: tokens.has('tradein'),
-    fx: tokens.has('fx'),
-    shops: tokens.has('shops'),
   };
 }
 
@@ -2442,10 +2529,7 @@ function loadInitialShowFlags(
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object') {
         return {
-          diag: Boolean(parsed.diag),
           tradein: Boolean(parsed.tradein) || hasMyParam,
-          fx: Boolean(parsed.fx),
-          shops: Boolean(parsed.shops),
         };
       }
     }
@@ -2675,8 +2759,9 @@ export {
   findSiblingSkuByConnectivity,
   findSiblingCellularSku,
   getCarrierUnavailableInfo,
-  PRIMARY_SPEC_ROWS,
-  DETAIL_SPEC_ROWS,
+  SPEC_GROUPS,
+  resolveSpecRaw,
+  releaseElapsedText,
   SPEC_ROWS,
   APPLEDB_URL,
   addDays,
@@ -2784,8 +2869,8 @@ export default function App() {
   const pendingMyRef = useRef<string | null>(initQuery.myRaw);
 
   const [dark, setDark] = useState<boolean>(() => {
-    try { const t = localStorage.getItem(LS_THEME); if (t) return t === 'dark'; } catch { /* noop */ }
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+    // 初回アクセスは必ずライトモード（ユーザーが明示的に切り替えた場合のみ保存値を採用）
+    try { return localStorage.getItem(LS_THEME) === 'dark'; } catch { return false; }
   });
   const [products, setProducts] = useState<Product[]>(() => {
     try { const raw = localStorage.getItem(LS_DATA); if (raw) { const r = normalizeDataset(JSON.parse(raw)); if (r.products.length) return r.products; } } catch { /* noop */ }
@@ -2843,6 +2928,18 @@ export default function App() {
   const toast = useCallback((m: string) => { setToastMsg(m); window.clearTimeout(toastTimer.current); toastTimer.current = window.setTimeout(() => setToastMsg(''), 2200); }, []);
   const handleOpenBudgetTab = useCallback(() => setTab('budget'), []);
 
+  // 比較テーブルの機種名ヘッダー行を、グローバルヘッダーの直下に固定するため高さを CSS 変数へ反映
+  const appHeaderRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = appHeaderRef.current;
+    if (!el) return;
+    const apply = () => document.documentElement.style.setProperty('--app-header-h', `${Math.round(el.getBoundingClientRect().height)}px`);
+    apply();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(apply) : null;
+    ro?.observe(el);
+    window.addEventListener('resize', apply);
+    return () => { ro?.disconnect(); window.removeEventListener('resize', apply); };
+  }, []);
   useEffect(() => { document.documentElement.classList.toggle('dark', dark); try { localStorage.setItem(LS_THEME, dark ? 'dark' : 'light'); } catch { /* noop */ } }, [dark]);
   useEffect(() => { try { localStorage.setItem(LS_DATA, JSON.stringify({ schemaVersion: 1, products })); } catch { /* noop */ } }, [products]);
   useEffect(() => {
@@ -3011,8 +3108,8 @@ export default function App() {
 
   return (
     <ThemeCtx.Provider value={dark}>
-      <div className="min-h-screen flex flex-col bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#141518] dark:text-zinc-100">
-        <header className="sticky top-0 z-30 border-b border-zinc-200/50 bg-[#f5f5f7]/85 backdrop-blur-md dark:border-white/[0.04] dark:bg-[#141518]/85">
+      <div className="min-h-screen flex flex-col bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#16171a] dark:text-zinc-100">
+        <header ref={appHeaderRef} className="sticky top-0 z-30 border-b border-zinc-200/50 bg-[#f5f5f7]/85 backdrop-blur-md dark:border-white/[0.04] dark:bg-[#16171a]/85">
           <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6 sm:py-3.5">
             <a href="./" className="flex min-w-0 items-center gap-2.5 group">
               <div className="shrink-0 rounded-xl bg-zinc-900 p-2 text-zinc-100 transition group-hover:opacity-85 dark:bg-[#25272e] dark:text-zinc-100"><Apple className="h-5 w-5" /></div>

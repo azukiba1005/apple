@@ -1008,6 +1008,8 @@ export async function searchRakutenUsedPrice({
   affiliateId = process.env.RAKUTEN_AFFILIATE_ID,
   accessKey = process.env.RAKUTEN_ACCESS_KEY,
   yahooAppId = process.env.YAHOO_APP_ID,
+  /** 楽天APIの「1秒1リクエスト」制限対策: 連続する楽天リクエスト間に挿入する待機時間(ms) */
+  rakutenGapMs = 0,
 }) {
   const minPrice = calcMinPrice(launchPrice);
   const genreId = getRakutenGenreId(category);
@@ -1037,6 +1039,7 @@ export async function searchRakutenUsedPrice({
         } catch (err) {
           console.warn(`[warn] Rakuten API (${productName} ${storage}): ${err.message}`);
         }
+        if (rakutenGapMs > 0) await new Promise((r) => setTimeout(r, rakutenGapMs));
         try {
           unusedOffer = await fetchFromRakutenApi({
             productName,

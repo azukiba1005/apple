@@ -1,0 +1,30 @@
+// Apple Watch / AirPods の実用スペック マスター辞書（Apple公式仕様ベース。不確かな項目は省略）
+const W_S4 = { sz: '1.57〜1.78インチ LTPO OLED Retina', res: '40mm: 324×394 / 44mm: 368×448', hz: '60Hz（常時表示非対応）', ex: '耐水50m / ECG（心電図）/ 転倒検出', dim: '40mm: 40 × 34 × 10.7mm / 44mm: 44 × 38 × 10.7mm', bl: '1日（最大18時間）' };
+const W_STD = 'Digital Crown（触覚フィードバック）/ サイドボタン';
+const W_7 = { sz: '1.69〜1.9インチ LTPO OLED（常時表示Retina）', res: '41mm: 352×430 / 45mm: 396×484', hz: '最大60Hz（常時表示）', aod: '対応', dim: '41mm: 41 × 35 × 10.7mm / 45mm: 45 × 38 × 10.7mm', bl: '1日（最大18時間）' };
+
+export const WATCH_SPECS = {
+  'apple-watch-series-4': { ...W_S4, nit: '1000nit', aod: '非対応', mat: 'アルミニウム / ステンレススチール', ctl: W_STD, wl: 'Wi-Fi 4（802.11n 2.4GHz）/ Bluetooth 5.0', os0: 'watchOS 5', os1: 'watchOS 10（サポート終了）' },
+  'apple-watch-series-5': { ...W_S4, hz: '1〜60Hz（常時表示）', aod: '対応', nit: '1000nit', mat: 'アルミニウム / ステンレススチール / チタニウム / セラミック', ctl: W_STD, wl: 'Wi-Fi 4（802.11n 2.4GHz）/ Bluetooth 5.0', ex: '耐水50m / ECG（心電図）/ 転倒検出 / コンパス', os0: 'watchOS 6', os1: 'watchOS 10（サポート終了）' },
+  'apple-watch-series-6': { ...W_S4, hz: '1〜60Hz（常時表示）', aod: '対応', nit: '1000nit（常時表示時 Series 5比2.5倍）', mat: 'アルミニウム / ステンレススチール / チタニウム', ctl: W_STD, wl: 'Wi-Fi 4（802.11n 2.4/5GHz）/ Bluetooth 5.0 / 超広帯域チップ U1', ex: '耐水50m / 血中酸素ウェルネス / ECG / 常時計測高度計 / 転倒検出', os0: 'watchOS 7', os1: 'watchOS 11' },
+  'apple-watch-series-7': { ...W_7, nit: '1000nit', mat: 'アルミニウム / ステンレススチール / チタニウム', ctl: W_STD, wl: 'Wi-Fi 4（802.11n 2.4/5GHz）/ Bluetooth 5.0 / 超広帯域チップ U1', ex: '耐水50m / 防塵 IP6X / 血中酸素ウェルネス / ECG / 高速充電（USB-C）', os0: 'watchOS 8', os1: 'watchOS 11' },
+  'apple-watch-series-8': { ...W_7, nit: '1000nit', mat: 'アルミニウム / ステンレススチール', ctl: W_STD, wl: 'Wi-Fi 4（802.11n 2.4/5GHz）/ Bluetooth 5.3 / 超広帯域チップ U1', ex: '耐水50m / 防塵 IP6X / 皮膚温センサー / 血中酸素ウェルネス / ECG / 衝突事故検出', os0: 'watchOS 9', os1: 'watchOS 26' },
+  'apple-watch-series-9': { ...W_7, hz: '1〜60Hz（常時表示）', nit: '2000nit（ピーク）', mat: 'アルミニウム / ステンレススチール', ctl: `${W_STD} / ダブルタップジェスチャー`, wl: 'Wi-Fi 4（802.11n 2.4/5GHz）/ Bluetooth 5.3 / 第2世代超広帯域チップ U2', ex: '耐水50m / 防塵 IP6X / 皮膚温センサー / 血中酸素ウェルネス / ECG / 衝突事故検出 / オンデバイスSiri', os0: 'watchOS 10', os1: 'watchOS 26' },
+  'watch-s10': { sz: '1.64〜1.96インチ LTPO3 広視野角OLED', res: '42mm: 374×446 / 46mm: 416×496', hz: '1〜60Hz（常時表示）', nit: '2000nit（ピーク）', aod: '対応', mat: 'アルミニウム / チタニウム', ctl: `${W_STD} / ダブルタップジェスチャー`, wl: 'Wi-Fi 4（802.11n 2.4/5GHz）/ Bluetooth 5.3 / 第2世代超広帯域チップ U2', ex: '耐水50m（水深ライブ表示）/ 防塵 IP6X / 睡眠時無呼吸の通知 / 皮膚温センサー / ECG / 衝突事故検出', dim: '42mm: 42 × 36 × 9.7mm / 46mm: 46 × 39 × 9.7mm', bl: '1日（最大18時間）', os0: 'watchOS 11', os1: 'watchOS 26' },
+  'apple-watch-ultra': { sz: '1.92インチ LTPO OLED（常時表示Retina）', res: '410×502', hz: '1〜60Hz（常時表示）', nit: '2000nit（ピーク）', aod: '対応', mat: 'チタニウム + サファイアクリスタル', ctl: 'アクションボタン / サイドボタン / Digital Crown', wl: 'Wi-Fi 4（802.11n 2.4/5GHz）/ Bluetooth 5.3 / 第1世代超広帯域チップ U1 / 2周波GPS（L1+L5）', ex: '耐水100m（EN13319ダイビング対応40m）/ 防塵 IP6X / サイレン（86dB）/ 水深計 / ECG', dim: '49 × 44 × 14.4mm', bl: '最大36時間（低電力モードで最大60時間）', os0: 'watchOS 9', os1: 'watchOS 26' },
+  'apple-watch-ultra-2': { sz: '1.92インチ LTPO OLED（常時表示Retina）', res: '410×502', hz: '1〜60Hz（常時表示）', nit: '3000nit（ピーク）', aod: '対応', mat: 'チタニウム + サファイアクリスタル', ctl: 'アクションボタン / サイドボタン / Digital Crown / ダブルタップジェスチャー', wl: 'Wi-Fi 4（802.11n 2.4/5GHz）/ Bluetooth 5.3 / 第2世代超広帯域チップ U2 / 2周波GPS（L1+L5）', ex: '耐水100m（EN13319ダイビング対応40m）/ 防塵 IP6X / サイレン（86dB）/ 水深計 / ECG', dim: '49 × 44 × 14.4mm', bl: '最大36時間（低電力モードで最大72時間）', os0: 'watchOS 10', os1: 'watchOS 26' },
+  'apple-watch-ultra-3': { sz: '1.92インチ LTPO3 広視野角OLED（常時表示）', hz: '1〜60Hz（常時表示）', nit: '3000nit（ピーク）', aod: '対応', mat: 'チタニウム + サファイアクリスタル', ctl: 'アクションボタン / サイドボタン / Digital Crown / ダブルタップジェスチャー', wl: 'Bluetooth 5.3 / 第2世代超広帯域チップ U2 / 2周波GPS / 5G対応（Cellular）', ex: '耐水100m / 衛星経由の緊急SOS・メッセージ（提供地域のみ）/ 高血圧通知 / 睡眠スコア', dim: '49 × 44 × 12.5mm', bl: '最大42時間（低電力モードで最大72時間）', os0: 'watchOS 26', os1: 'watchOS 26' },
+};
+
+export const AIRPODS_SPECS = {
+  'airpods-1st-generation': { aud: 'ノイズキャンセリング非対応 / ビームフォーミングマイク / デュアル光学センサー', ctl: 'ダブルタップ（Siri等に割り当て）', wl: 'Bluetooth 4.2（Appleワイヤレスチップ W1）', chg: 'Lightning充電ケース', bl: '連続再生 最大5時間 / ケース併用 最大24時間', ex: '自動接続・耳検出' },
+  'airpods-2nd-generation': { aud: 'ノイズキャンセリング非対応 / 「Hey Siri」対応', ctl: 'ダブルタップ（Siri等に割り当て）', wl: 'Bluetooth 5.0', chg: 'Lightning充電ケース（ワイヤレス充電ケースはオプション）', bl: '連続再生 最大5時間 / ケース併用 最大24時間', ex: '自動接続・耳検出' },
+  'airpods-3rd-generation': { aud: 'パーソナライズされた空間オーディオ（ダイナミックヘッドトラッキング）/ アダプティブEQ', ctl: '感圧センサー（スワイプ・押す）', wl: 'Bluetooth 5.0', chg: 'MagSafe充電ケース（Lightning / Qiワイヤレス対応）', bl: '連続再生 最大6時間 / ケース併用 最大30時間', ex: '耐汗耐水 IPX4（イヤホン・ケース）' },
+  'airpods-pro-1st-generation': { aud: 'アクティブノイズキャンセリング / 外部音取り込み / 空間オーディオ', ctl: '感圧センサー（押す）', wl: 'Bluetooth 5.0', chg: 'ワイヤレス充電ケース（Lightning / Qi）', bl: '連続再生 最大4.5時間（ANCオン）/ ケース併用 最大24時間', ex: '耐汗耐水 IPX4' },
+  'airpods-pro-2nd-generation': { aud: 'アクティブノイズキャンセリング（第1世代の最大2倍）/ アダプティブオーディオ / 適応型環境音除去 / 会話感知 / パーソナライズされた空間オーディオ', ctl: 'タッチコントロール（スワイプで音量調整）/ 感圧センサー', wl: 'Bluetooth 5.3', chg: 'MagSafe充電ケース（USB-C / Qi / Apple Watch充電器 / スピーカー・紛失防止ストラップループ内蔵）', bl: '連続再生 最大6時間（ANCオン）/ ケース併用 最大30時間', ex: '耐汗耐水 IP54（イヤホン・ケース）/ 精密探索（U1）/ 聴覚補助機能（ソフトウェア）' },
+  'airpods-4': { aud: 'パーソナライズされた空間オーディオ / 「Hey Siri」・音声コマンド', ctl: '感圧センサー / ヘッドジェスチャー（頷く・首を振る）', wl: 'Bluetooth 5.3', chg: 'USB-C充電ケース', bl: '連続再生 最大5時間 / ケース併用 最大30時間', ex: '耐汗耐水 IP54（イヤホン・ケース）' },
+  'airpods-4-with-active-noise-cancellation': { aud: 'アクティブノイズキャンセリング / 適応型オーディオ / 会話感知 / パーソナライズされた空間オーディオ', ctl: '感圧センサー / ヘッドジェスチャー（頷く・首を振る）', wl: 'Bluetooth 5.3', chg: 'USB-C充電ケース（Qi / Apple Watch充電器 ワイヤレス充電対応）', bl: '連続再生 最大5時間（ANCオン）/ ケース併用 最大30時間', ex: '耐汗耐水 IP54（イヤホン・ケース）/ 探す対応スピーカー内蔵ケース' },
+  'airpods-max': { aud: 'アクティブノイズキャンセリング / 外部音取り込み / 空間オーディオ（ダイナミックヘッドトラッキング）', ctl: 'Digital Crown（音量・再生）/ ノイズコントロールボタン', wl: 'Bluetooth 5.0', chg: 'Lightning充電', bl: '連続再生 最大20時間（ANCオン）', mat: 'アルミニウムイヤーカップ + ステンレススチール製ヘッドバンドフレーム' },
+  'airpods-max-with-usb-c': { aud: 'アクティブノイズキャンセリング / 外部音取り込み / 空間オーディオ / USB-Cロスレスオーディオ（24bit/48kHz）', ctl: 'Digital Crown（音量・再生）/ ノイズコントロールボタン', wl: 'Bluetooth 5.0', chg: 'USB-C充電', bl: '連続再生 最大20時間（ANCオン）', mat: 'アルミニウムイヤーカップ + ステンレススチール製ヘッドバンドフレーム' },
+};
+

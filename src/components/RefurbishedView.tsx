@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Apple,
   ExternalLink,
@@ -191,8 +191,8 @@ export function buildClientFallbackRefurbishedItems(products: Product[]): Refurb
         bestOffer?.shopName && bestOffer.shopName.trim()
           ? bestOffer.shopName.trim()
           : isYahoo
-            ? 'Yahoo!ショッピング（じゃんぱら・イオシス・ソフマップ等）最安相場'
-            : '楽天市場（イオシス・じゃんぱら・ゲオ等）最安相場';
+            ? 'Yahoo!ショッピング 最安相場'
+            : '楽天市場 最安相場';
       const usedUrl =
         bestOffer?.url ||
         (isYahoo ? usedInfo.yahooSearchUrl : usedInfo.rakutenSearchUrl);
@@ -271,12 +271,41 @@ export const RefurbishedView = React.memo(function RefurbishedView({
   // デフォルトは「現在Apple公式に実在庫がある商品（isLiveStock: true）のみ」を表示
   const [showReferenceItems, setShowReferenceItems] = useState(false);
 
-  // refurbished.json のデータがあればそれを使用し、最新の products 情報と同期補完する
+  // タブを開いた時に /api/refurbished（Apple公式 REFURB_GRID_BOOTSTRAP → Refurb Tracker RSS、エッジキャッシュ15分）から
+  // リアルタイムの実在庫を取得。失敗時のみビルド時生成の ./refurbished.json にフォールバックする
+  const [liveDataset, setLiveDataset] = useState<RefurbishedDataset | null>(null);
+  const [liveStatus, setLiveStatus] = useState<'loading' | 'live' | 'fallback'>('loading');
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/refurbished');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = (await res.json()) as RefurbishedDataset;
+        if (!Array.isArray(data?.items) || data.items.length === 0) throw new Error('empty');
+        if (!cancelled) {
+          setLiveDataset(data);
+          setLiveStatus('live');
+        }
+      } catch {
+        if (!cancelled) setLiveStatus('fallback');
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // リアル在庫データを使用し、最新の products 情報（モデル・SKU）と名寄せ・同期補完する。
+  // 推定データ（参考整備済相場）は「参考相場も表示」をONにした時のみ補完する
   const allItems = useMemo<RefurbishedItem[]>(() => {
+    const dataset = liveDataset ?? refurbDataset;
     const baseItems =
-      refurbDataset?.items && refurbDataset.items.length > 0
-        ? refurbDataset.items
-        : buildClientFallbackRefurbishedItems(products);
+      dataset?.items && dataset.items.length > 0
+        ? dataset.items
+        : showReferenceItems
+          ? buildClientFallbackRefurbishedItems(products)
+          : [];
 
     return baseItems.map((it) => {
       const live = isItemLiveStock(it);
@@ -324,7 +353,7 @@ export const RefurbishedView = React.memo(function RefurbishedView({
         },
       };
     });
-  }, [refurbDataset, products]);
+  }, [liveDataset, refurbDataset, products, showReferenceItems]);
 
   // 表示対象プール（デフォルトは isLiveStock === true の実在庫のみ、トグルON時のみ参考相場も合算）
   const activePool = useMemo(() => {
@@ -431,7 +460,7 @@ export const RefurbishedView = React.memo(function RefurbishedView({
           <SectionTitle
             icon={<Apple className="h-5 w-5" />}
             title="Apple認定整備済品 × 新品定価 × 中古最安値 完全比較"
-            desc="Apple公式整備済ページの現在庫（window.REFURB_GRID_BOOTSTRAP）・Refurb TrackerのRSSフィードと、当サイトDB（新品定価・詳細スペック・楽天/Yahoo!中古最安値）を自動名寄せして横断比較します。"
+            desc={`Apple公式整備済ページの現在庫（window.REFURB_GRID_BOOTSTRAP）・Refurb TrackerのRSSフィードと、当サイトDB（新品定価・詳細スペック・楽天/Yahoo!中古最安値）を自動名寄せして横断比較します。${liveStatus === 'loading' ? '（最新在庫を取得中…）' : liveStatus === 'live' ? '（リアルタイム取得）' : '（定期更新データを表示中）'}`}
           />
           <div className="flex flex-wrap items-center gap-2.5 ml-auto">
             <a

@@ -1042,13 +1042,15 @@ export async function fetchUsedMarketPrice(
   if (typeof window !== 'undefined') {
     try {
       const proxyParams = new URLSearchParams({
+        productId: product.id,
+        skuId: sku.id,
         productName: product.name,
         storage: storageTerm,
         category: product.category,
         launchPrice: launchPrice ? String(launchPrice) : '',
         releaseDate: product.releaseDate || '',
       });
-      const res = await fetch(`./api/used-price?${proxyParams.toString()}`);
+      const res = await fetch(`/api/used-price?${proxyParams.toString()}`);
       if (res.ok) {
         const data = await res.json();
         if (data && data.usedPricing && typeof data.usedPricing.lowestPrice === 'number') {

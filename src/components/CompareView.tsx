@@ -29,7 +29,7 @@ import {
   DEFAULT_LATEST_USD_JPY,
   DEFAULT_SHOW_FLAGS,
   DeltaBadge,
-  DETAIL_SPEC_ROWS,
+  SPEC_GROUPS,
   downloadBlob,
   downloadFile,
   downloadXlsx,
@@ -55,7 +55,6 @@ import {
   marketRate,
   normalizeSpecForCompare,
   pricedSkus,
-  PRIMARY_SPEC_ROWS,
   ResaleBadge,
   round1,
   secondaryActionBtnCls,
@@ -815,370 +814,49 @@ function TradeInCardOverlay({
   );
 }
 
-/* ---------- 💡 この比較の結論・おすすめ購入ルート診断パネル（コンパクト4列サマリーバー） ---------- */
-function CompareDiagnosticPanel({
-  cols,
-  mode,
-  mnp,
-  setMode,
-  getUsedData,
-  onOpenBudgetTab,
-}: {
-  cols: { sel: Sel; p: Product; sku: Sku }[];
-  mode: Mode;
-  mnp: boolean;
-  setMode: (m: Mode) => void;
-  getUsedData: (c: { sel: Sel; p: Product; sku: Sku }) => UsedMarketData;
-  onOpenBudgetTab?: () => void;
-}) {
-  const [open, setOpen] = useState(true);
-
-  const enriched = useMemo(() => {
-    return cols.map((c) => {
-      const usedInfo = getUsedData(c);
-      const up = usedInfo.usedPricing;
-      const lowestUsed = up.lowestPrice;
-      const isYahooLowest = up.lowestPlatform === 'yahoo';
-      const bestUsedOffer = isYahooLowest ? up.yahoo ?? up.rakuten : up.rakuten ?? up.yahoo;
-      const unusedOffer = usedInfo.unused;
-      const appleCur =
-        c.sku.carriers.apple?.currentPrice ??
-        (c.sku.priceHistory.length ? lastOf(c.sku.priceHistory).appleStorePrice : null);
-      const appleLaunch =
-        c.sku.carriers.apple?.launchPrice ??
-        (c.sku.priceHistory.length ? c.sku.priceHistory[0].appleStorePrice : null);
-      const score = computePerformanceScore(c.p, c.sku);
-      const annualUsedCost = Math.round(lowestUsed / score.remainingSupportYears);
-      const resalePct =
-        up.resaleValuePercent ??
-        (appleLaunch && appleLaunch > 0
-          ? Math.round((lowestUsed / appleLaunch) * 100)
-          : appleCur && appleCur > 0
-            ? Math.round((lowestUsed / appleCur) * 100)
-            : null);
-
-      const carrierReturns = (['docomo', 'au', 'softbank', 'rakuten'] as CarrierId[])
-        .map((cid) => {
-          const cp = c.sku.carriers[cid];
-          if (!cp?.returnProgram) return null;
-          const eff = carrierValue(cp, 'return', mnp) ?? cp.returnProgram.effectiveCost;
-          return { cid, effectiveCost: eff, programName: cp.returnProgram.name };
-        })
-        .filter((x): x is { cid: CarrierId; effectiveCost: number; programName: string } => x !== null)
-        .sort((a, b) => a.effectiveCost - b.effectiveCost);
-
-      const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
-      const isDisc = discInfo.isDiscontinued;
-
-      return {
-        ...c,
-        isDisc,
-        discDate: discInfo.discontinuedDate,
-        usedInfo,
-        lowestUsed,
-        isYahooLowest,
-        bestUsedOffer,
-        unusedOffer,
-        appleCur,
-        appleLaunch,
-        score,
-        annualUsedCost,
-        resalePct,
-        bestCarrierReturn: carrierReturns[0] ?? null,
-        allCarrierReturns: carrierReturns,
-      };
-    });
-  }, [cols, getUsedData, mnp]);
-
-  if (!enriched.length) return null;
-
-  // 1. 中古コスパ最適（初期費用×残り寿命バランス）
-  const usedCandidates = enriched.filter((x) => x.score.remainingSupportYears >= 2);
-  const bestUsedValue = [...(usedCandidates.length ? usedCandidates : enriched)].sort(
-    (a, b) => a.annualUsedCost - b.annualUsedCost || b.score.total - a.score.total,
-  )[0];
-
-  // 2. キャリア2年返却（実質負担）最安ルート (現在新品販売中のモデルを優先)
-  const returnCandidates = enriched
-    .filter((x) => x.bestCarrierReturn != null)
-    .sort(
-      (a, b) =>
-        Number(a.isDisc) - Number(b.isDisc) ||
-        a.bestCarrierReturn!.effectiveCost - b.bestCarrierReturn!.effectiveCost ||
-        b.score.total - a.score.total,
-    );
-  const bestReturnRoute = returnCandidates[0] ?? null;
-
-  // 3. リセールバリュー（資産価値）No.1
-  const resaleCandidates = enriched
-    .filter((x) => x.resalePct != null)
-    .sort((a, b) => (b.resalePct ?? 0) - (a.resalePct ?? 0) || b.score.total - a.score.total);
-  const bestResaleModel = resaleCandidates[0] ?? enriched[0];
-
-  // 4. 価格逆転・要注意アラート（短文サマリー）
-  const alerts: {
-    label: string;
-    modelText: string;
-    detailText: string;
-    linkUrl?: string;
-    isWarning?: boolean;
-  }[] = [];
-
-  for (let i = 0; i < enriched.length; i++) {
-    for (let j = 0; j < enriched.length; j++) {
-      if (i === j) continue;
-      const older = enriched[i];
-      const newer = enriched[j];
-      const isNewerHigher =
-        newer.score.total > older.score.total &&
-        (newer.p.releaseDate >= older.p.releaseDate || newer.score.socScore > older.score.socScore);
-      if (!isNewerHigher || older.appleCur == null) continue;
-      const olderPriceKind = older.isDisc ? '終売定価' : '新品定価';
-      const newerUnusedPrice = newer.unusedOffer?.price;
-      const newerUsedPrice = newer.lowestUsed;
-      if (newerUnusedPrice != null && newerUnusedPrice < older.appleCur) {
-        alerts.push({
-          label: '価格逆転注目',
-          modelText: `${newer.p.name} (${newer.sku.label})`,
-          detailText: `未使用 ${yen(newerUnusedPrice)}（${older.p.name}${olderPriceKind} ${yen(older.appleCur)}より安）`,
-          linkUrl: newer.unusedOffer?.itemUrl ?? newer.bestUsedOffer?.url,
-          isWarning: true,
-        });
-      } else if (newerUsedPrice < older.appleCur - 10000) {
-        alerts.push({
-          label: '価格逆転注目',
-          modelText: `${newer.p.name} (${newer.sku.label})`,
-          detailText: `中古 ${yen(newerUsedPrice)}（${older.p.name}${olderPriceKind}より${yen(older.appleCur - newerUsedPrice)}安）`,
-          linkUrl: newer.bestUsedOffer?.url,
-          isWarning: true,
-        });
-      }
-    }
+/* ---------- キャリア価格セルの補足行（トグル連動・「2年返却」に表記統一） ---------- */
+function carrierSubParts(cp: CarrierPrice, mode: Mode, mnp: boolean): string[] {
+  const parts: string[] = [];
+  if (mode === 'bulk') {
+    if (!mnp && cp.mnpPrice != null) parts.push(`MNP ${yen(cp.mnpPrice)}`);
+    else if (mnp && cp.mnpPrice != null && cp.currentPrice !== cp.mnpPrice) parts.push(`通常 ${yen(cp.currentPrice)}`);
+    if (cp.returnProgram) parts.push(`2年返却 ${yen(cp.returnProgram.effectiveCost)}`);
+  } else {
+    parts.push(`一括 ${yen(cp.currentPrice)}`);
+    if (cp.mnpPrice != null) parts.push(`MNP ${yen(cp.mnpPrice)}`);
   }
+  return parts;
+}
 
-  for (const item of enriched) {
-    if (item.unusedOffer && item.unusedOffer.price <= item.lowestUsed) {
-      alerts.push({
-        label: '未使用逆転',
-        modelText: `${item.p.name} (${item.sku.label})`,
-        detailText: `未使用 ${yen(item.unusedOffer.price)} ≦ 中古 ${yen(item.lowestUsed)}（未使用品が得）`,
-        linkUrl: item.unusedOffer.itemUrl,
-        isWarning: true,
-      });
-    }
-  }
-
-  for (const item of enriched) {
-    if (item.appleCur != null && !item.isDisc) {
-      const gap = item.appleCur - item.lowestUsed;
-      if (gap >= 0 && gap < 15000) {
-        alerts.push({
-          label: '新品推奨',
-          modelText: `${item.p.name} (${item.sku.label})`,
-          detailText: `新品と中古の差が ${yen(gap)} のためApple直販新品が有利`,
-          linkUrl: appleStoreUrlForCategory(item.p.category),
-          isWarning: false,
-        });
-      }
-    }
-  }
-
-  const primaryAlert = alerts[0] ?? {
-    label: enriched.length === 1 ? '単体購入診断' : '価格バランス',
-    modelText: `${bestUsedValue.p.name} (${bestUsedValue.sku.label})`,
-    detailText:
-      enriched.length === 1
-        ? `中古最安 ${yen(bestUsedValue.lowestUsed)}（年あたり ${yen(bestUsedValue.annualUsedCost)}）が好バランス`
-        : `世代間の不自然な価格逆転なし（長期所有は${bestUsedValue.p.name}中古が最適）`,
-    linkUrl: bestUsedValue.bestUsedOffer?.url,
-    isWarning: false,
-  };
-
-  return (
-    <div className={`${card} px-5 py-3.5 sm:px-6 sm:py-4`}>
-      <div className="flex flex-wrap items-center justify-between gap-2.5">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#f5f5f7] text-xs text-zinc-700 dark:bg-[#23252b] dark:text-zinc-300">
-            💡
-          </span>
-          <h3 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">
-            この比較の結論・おすすめ購入ルート診断
-          </h3>
-          <span className="rounded-lg bg-[#f5f5f7] px-2 py-0.5 text-xs font-medium text-zinc-500 dark:bg-[#23252b] dark:text-zinc-400">
-            {enriched.length}機種分析
-          </span>
-        </div>
-
-        <div data-export-ignore="true" className="flex items-center gap-2 ml-auto">
-          {onOpenBudgetTab && (
-            <button
-              type="button"
-              onClick={onOpenBudgetTab}
-              className={secondaryActionBtnCls}
-            >
-              <span>予算から最高スペックを探す ↗</span>
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={() => setOpen(!open)}
-            className={secondaryActionBtnCls}
-          >
-            <span>{open ? '折りたたむ ▴' : '展開 ▾'}</span>
-          </button>
-        </div>
+/* ---------- 中古最安値の1行表示（ショップ名・バッジ等は出さず、詳細はモーダルへ集約） ---------- */
+function UsedOneLine({ u, loading, onOpen }: { u: UsedMarketData; loading?: boolean; onOpen: () => void }) {
+  const up = u.usedPricing;
+  const isEstimated = Boolean(u.isEstimated || u.source === 'mock' || up.isEstimated);
+  const linkCls = 'inline-flex items-center gap-0.5 text-sm font-medium text-[#0071e3] hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-[#0071e3]';
+  if (isEstimated) {
+    return (
+      <div data-export-ignore="true" className="flex flex-wrap items-center gap-x-3 text-sm text-zinc-500 dark:text-zinc-400">
+        <a href={u.rakutenSearchUrl} target="_blank" rel="noopener noreferrer" className={linkCls}>
+          中古在庫を検索 <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+        <button type="button" onClick={onOpen} className={linkCls}>
+          {loading ? '取得中…' : 'ショップ一覧'} <ExternalLink className="h-3.5 w-3.5" />
+        </button>
       </div>
-
-      {open && (
-        <div className="mt-3.5 grid grid-cols-1 gap-3 text-xs sm:grid-cols-2 lg:grid-cols-4">
-          {/* 1. 中古コスパ最適 */}
-          <div className="rounded-xl bg-[#f5f5f7] p-3.5 dark:bg-[#23252b]">
-            <div className="flex items-center justify-between gap-1.5">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                <span className="h-2 w-2 rounded-full bg-[#649274]" />
-                中古コスパ最適
-              </span>
-              {bestUsedValue.bestUsedOffer && (
-                <a
-                  data-export-ignore="true"
-                  href={bestUsedValue.bestUsedOffer.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-0.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100"
-                >
-                  <span>{bestUsedValue.usedInfo.isEstimated ? '在庫検索' : 'ショップ'}</span>
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              )}
-            </div>
-            <div className="mt-1.5 leading-relaxed text-zinc-700 dark:text-zinc-300">
-              <strong className="font-bold text-zinc-900 dark:text-zinc-100">
-                {bestUsedValue.p.name} ({bestUsedValue.sku.label})
-              </strong>{' '}
-              — {bestUsedValue.usedInfo.isEstimated ? '参考推定 約' : '最安 '}
-              <strong className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
-                {yen(bestUsedValue.lowestUsed)}
-              </strong>{' '}
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                （年あたり {yen(bestUsedValue.annualUsedCost)} / 残{bestUsedValue.score.remainingSupportYears}年）
-              </span>
-            </div>
-          </div>
-
-          {/* 2. 2年返却最安 */}
-          <div className="rounded-xl bg-[#f5f5f7] p-3.5 dark:bg-[#23252b]">
-            <div className="flex items-center justify-between gap-1.5">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                <span className="h-2 w-2 rounded-full bg-zinc-500" />
-                2年返却最安
-              </span>
-              {bestReturnRoute?.bestCarrierReturn && (
-                <div data-export-ignore="true" className="flex items-center gap-2">
-                  {mode !== 'return' && (
-                    <button
-                      type="button"
-                      onClick={() => setMode('return')}
-                      className="text-xs font-medium text-zinc-500 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                    >
-                      返却表示へ
-                    </button>
-                  )}
-                  <a
-                    href={CARRIER_STORE_URLS[bestReturnRoute.bestCarrierReturn.cid]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-0.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100"
-                  >
-                    <span>詳細</span>
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-              )}
-            </div>
-            <div className="mt-1.5 leading-relaxed text-zinc-700 dark:text-zinc-300">
-              {bestReturnRoute?.bestCarrierReturn ? (
-                <>
-                  <strong className="font-bold text-zinc-900 dark:text-zinc-100">
-                    {bestReturnRoute.p.name} ({bestReturnRoute.sku.label})
-                  </strong>{' '}
-                  — {CARRIER_META[bestReturnRoute.bestCarrierReturn.cid].label} 実質{' '}
-                  <strong className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
-                    {yen(bestReturnRoute.bestCarrierReturn.effectiveCost)}
-                  </strong>{' '}
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                    （月約{yen(Math.round(bestReturnRoute.bestCarrierReturn.effectiveCost / 24))}）
-                  </span>
-                </>
-              ) : (
-                <span className="text-zinc-500">対象プログラムなし（直販・中古推奨）</span>
-              )}
-            </div>
-          </div>
-
-          {/* 3. リセールNo.1 */}
-          <div className="rounded-xl bg-[#f5f5f7] p-3.5 dark:bg-[#23252b]">
-            <div className="flex items-center justify-between gap-1.5">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                <span className="h-2 w-2 rounded-full bg-[#649274]" />
-                リセールNo.1
-              </span>
-              <a
-                data-export-ignore="true"
-                href={appleStoreUrlForCategory(bestResaleModel.p.category)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-0.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100"
-              >
-                <span>公式</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            </div>
-            <div className="mt-1.5 leading-relaxed text-zinc-700 dark:text-zinc-300">
-              <strong className="font-bold text-zinc-900 dark:text-zinc-100">
-                {bestResaleModel.p.name} ({bestResaleModel.sku.label})
-              </strong>{' '}
-              — 残価率{' '}
-              <strong className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
-                {bestResaleModel.resalePct ?? '—'}%
-              </strong>{' '}
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                （中古相場 {yen(bestResaleModel.lowestUsed)}）
-              </span>
-            </div>
-          </div>
-
-          {/* 4. 価格逆転注目 / 価格バランス */}
-          <div className="rounded-xl bg-[#f5f5f7] p-3.5 dark:bg-[#23252b]">
-            <div className="flex items-center justify-between gap-1.5">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                <span className="h-2 w-2 rounded-full bg-zinc-400" />
-                {primaryAlert.label}
-              </span>
-              {primaryAlert.linkUrl && (
-                <a
-                  data-export-ignore="true"
-                  href={primaryAlert.linkUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-0.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100"
-                >
-                  <span>詳細</span>
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              )}
-            </div>
-            <div className="mt-1.5 leading-relaxed text-zinc-700 dark:text-zinc-300">
-              <strong className="font-bold text-zinc-900 dark:text-zinc-100">
-                {primaryAlert.modelText}
-              </strong>{' '}
-              — {primaryAlert.detailText}
-            </div>
-          </div>
-        </div>
-      )}
+    );
+  }
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 text-sm text-zinc-600 dark:text-zinc-300">
+      <span className="tabular-nums">
+        中古最安 <strong className="font-semibold text-zinc-900 dark:text-zinc-100">{yen(up.lowestPrice)}</strong>
+      </span>
+      <button type="button" data-export-ignore="true" onClick={onOpen} className={linkCls}>
+        ショップ一覧 <ExternalLink className="h-3.5 w-3.5" />
+      </button>
     </div>
   );
 }
+
 
 /* =====================================================================================
  * 5. タブ1: スペック＆キャリア価格 横並び比較
@@ -1282,8 +960,6 @@ export const CompareView = React.memo(function CompareView({
   const [q, setQ] = useState('');
   const [catF, setCatF] = useState('');
   const [mobileView, setMobileView] = useState<'stack' | 'table'>('stack');
-  const [discontinuedHeroMode, setDiscontinuedHeroMode] = useState<'archive' | 'used'>('archive');
-  const [openShopCards, setOpenShopCards] = useState<Record<string, boolean>>({});
   const [usedMap, setUsedMap] = useState<Record<string, UsedMarketData>>({});
   const [activeShopModal, setActiveShopModal] = useState<{ p: Product; sku: Sku } | null>(null);
   const [loadingModalKey, setLoadingModalKey] = useState<string | null>(null);
@@ -1316,52 +992,47 @@ export const CompareView = React.memo(function CompareView({
 
   const openShopComparisonModal = (p: Product, sku: Sku) => {
     setActiveShopModal({ p, sku });
-    const hasPrepopulatedOffers = Array.isArray(sku.usedPricing?.offers) && sku.usedPricing.offers.length >= 3;
-    if (!hasPrepopulatedOffers) {
-      triggerLiveOffersFetch(p, sku, false);
-    }
+    // モーダルを開くたびに /api/used-price（エッジキャッシュ10分）からリアルタイム出品リストを取得
+    triggerLiveOffersFetch(p, sku, true);
   };
 
-  const primaryEvalRows = useMemo(() => evaluateSpecRows(cols, PRIMARY_SPEC_ROWS), [cols]);
-  const detailEvalRows = useMemo(() => evaluateSpecRows(cols, DETAIL_SPEC_ROWS), [cols]);
-  const visiblePrimaryRows = useMemo(
-    () => (diffOnly ? primaryEvalRows.filter((r) => r.hasDiff) : primaryEvalRows),
-    [primaryEvalRows, diffOnly],
+  // 全カテゴリ・全項目を最初から展開表示。全機種で値が無い行は自動非表示、差分ONの時は差分行のみ残し、空のカテゴリ見出しも非表示
+  const allSpecSections = useMemo(
+    () =>
+      SPEC_GROUPS.map((g) => ({
+        id: g.id,
+        title: g.title,
+        rows: evaluateSpecRows(cols, g.rows).filter((r) => !r.allEmpty),
+      })),
+    [cols],
   );
-  const visibleDetailRows = useMemo(
-    () => (diffOnly ? detailEvalRows.filter((r) => r.hasDiff) : detailEvalRows),
-    [detailEvalRows, diffOnly],
-  );
-  const displayedSpecRows = useMemo(
-    () => (specExpanded ? [...visiblePrimaryRows, ...visibleDetailRows] : visiblePrimaryRows),
-    [specExpanded, visiblePrimaryRows, visibleDetailRows],
+  const specSections = useMemo(
+    () =>
+      allSpecSections
+        .map((sec) => ({ ...sec, rows: diffOnly ? sec.rows.filter((r) => r.hasDiff) : sec.rows }))
+        .filter((sec) => sec.rows.length > 0),
+    [allSpecSections, diffOnly],
   );
   const totalDiffSpecCount = useMemo(
-    () => primaryEvalRows.filter((r) => r.hasDiff).length + detailEvalRows.filter((r) => r.hasDiff).length,
-    [primaryEvalRows, detailEvalRows],
+    () => allSpecSections.reduce((n, sec) => n + sec.rows.filter((r) => r.hasDiff).length, 0),
+    [allSpecSections],
   );
 
   const isSimpleView =
-    !showFlags.diag && !showFlags.tradein && !showFlags.fx && !showFlags.shops && !diffOnly && !specExpanded;
+    !showFlags.tradein && !diffOnly;
   const isFullDetailView =
-    showFlags.diag && showFlags.tradein && showFlags.fx && showFlags.shops && specExpanded;
+    showFlags.tradein;
   const toggleShowFlag = (key: CompareShowKey) => {
-    if (key === 'shops') {
-      setOpenShopCards({});
-    }
     setShowFlags((prev) => ({ ...prev, [key]: !prev[key] }));
   };
   const applySimpleView = () => {
-    setOpenShopCards({});
-    setDiscontinuedHeroMode('archive');
     setDiffOnly(false);
     setSpecExpanded(false);
     setShowFlags({ ...DEFAULT_SHOW_FLAGS });
   };
   const applyFullDetailView = () => {
-    setOpenShopCards({});
     setSpecExpanded(true);
-    setShowFlags({ diag: true, tradein: true, fx: true, shops: true });
+    setShowFlags({ tradein: true });
   };
   const available = useMemo(
     () => products.filter((p) => !sels.some((s) => s.pid === p.id)).sort(compareProducts),
@@ -1482,7 +1153,7 @@ export const CompareView = React.memo(function CompareView({
       setActiveExportScope(null);
       throw new Error('キャプチャ対象要素が見つかりません');
     }
-    const bgColor = dark ? '#141518' : '#f5f5f7';
+    const bgColor = dark ? '#16171a' : '#f5f5f7';
     const prevWidth = rootEl.style.width;
     const prevMaxWidth = rootEl.style.maxWidth;
     const prevOverflow = rootEl.style.overflow;
@@ -1639,10 +1310,7 @@ export const CompareView = React.memo(function CompareView({
   };
 
   const SHOW_SWITCH_ITEMS: { key: CompareShowKey; icon: string; label: string }[] = [
-    { key: 'diag', icon: '💡', label: '自動診断パネル' },
     { key: 'tradein', icon: '🔄', label: '下取り・追い金計算' },
-    { key: 'fx', icon: '💱', label: '為替・Appleレート分析' },
-    { key: 'shops', icon: '🏪', label: '中古ショップ個別リンク' },
   ];
 
   return (
@@ -1844,7 +1512,7 @@ export const CompareView = React.memo(function CompareView({
           ref={captureRootRef}
           className={
             isExporting
-              ? 'space-y-5 rounded-2xl bg-[#f5f5f7] p-6 text-zinc-900 dark:bg-[#141518] dark:text-zinc-100'
+              ? 'space-y-5 rounded-2xl bg-[#f5f5f7] p-6 text-zinc-900 dark:bg-[#16171a] dark:text-zinc-100'
               : 'space-y-5 sm:space-y-6'
           }
         >
@@ -1880,16 +1548,6 @@ export const CompareView = React.memo(function CompareView({
             data-export-ignore={activeExportScope === 'table' ? 'true' : undefined}
             className={activeExportScope === 'table' ? 'hidden' : 'space-y-5'}
           >
-            {showFlags.diag && (
-              <CompareDiagnosticPanel
-                cols={cols}
-                mode={mode}
-                mnp={mnp}
-                setMode={setMode}
-                getUsedData={getUsedData}
-                onOpenBudgetTab={onOpenBudgetTab}
-              />
-            )}
 
             <div
               className={
@@ -1913,43 +1571,31 @@ export const CompareView = React.memo(function CompareView({
                 const { appleNewPrice, bestReturnCost } = getCardTradeInProps(c);
                 const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
                 const isDisc = discInfo.isDiscontinued;
-                const launchApplePrice =
-                  c.sku.carriers.apple?.launchPrice ??
-                  (c.sku.priceHistory.length ? c.sku.priceHistory[0].appleStorePrice : null);
-                const finalApplePrice =
-                  c.sku.carriers.apple?.currentPrice ??
-                  (c.sku.priceHistory.length ? lastOf(c.sku.priceHistory).appleStorePrice : null);
-                const isShopsOpen = openShopCards[c.sel.pid] ?? showFlags.shops;
                 return (
-                  <div
-                    key={c.sel.pid}
-                    className={`${card} flex flex-col justify-between p-5 sm:p-6`}
-                  >
+                  <div key={c.sel.pid} className={`${card} flex flex-col justify-between p-5 sm:p-6`}>
                     <div>
-                      {/* 要素1: 機種名・容量セレクター（販売終了機種は機種名横に小さく控えめな販売終了バッジのみ） */}
+                      {/* 機種名・容量選択（終売機は控えめな「販売終了・最終価格」ラベル） */}
                       <div className="flex items-center justify-between gap-2.5">
-                        <div className="flex min-w-0 items-center gap-2">
-                          <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0 text-zinc-400" />
-                          <span className="truncate text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                            {c.p.name}
-                          </span>
+                        <div className="flex min-w-0 flex-col">
+                          <div className="flex min-w-0 items-center gap-2">
+                            <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0 text-zinc-400" />
+                            <span className="truncate text-base font-semibold text-zinc-900 dark:text-zinc-100 sm:text-lg">{c.p.name}</span>
+                          </div>
                           {isDisc && (
                             <span
-                              className="shrink-0 rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400"
+                              className="mt-0.5 pl-6 text-xs text-zinc-500 dark:text-zinc-400"
                               title={discInfo.discontinuedDate ? `終売: ${discInfo.discontinuedDate}` : 'Apple Store / キャリア販売終了'}
                             >
-                              販売終了
+                              販売終了・最終価格
                             </span>
                           )}
                         </div>
                         {isExporting ? (
-                          <span className="shrink-0 rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-800 dark:bg-[#25272e] dark:text-zinc-100">
-                            {c.sku.label}
-                          </span>
+                          <span className="shrink-0 text-sm font-medium text-zinc-700 dark:text-zinc-200">{c.sku.label}</span>
                         ) : (
                           <select
                             data-export-ignore="true"
-                            className={`${selectCls} shrink-0 !py-1.5 !px-2.5 !text-xs`}
+                            className={`${selectCls} shrink-0 !px-2.5 !py-1.5 !text-xs`}
                             value={c.sku.id}
                             aria-label={`${c.p.name} の容量・通信方式`}
                             onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}
@@ -1959,210 +1605,47 @@ export const CompareView = React.memo(function CompareView({
                         )}
                       </div>
 
-                      {/* iPad / Apple Watch 用: 通信方式（Wi-Fi / Cellular または GPS / Cellular）1クリック切替トグル */}
-                      {!isExporting && (() => {
-                        const connOpts = getProductConnectivityOptions(c.p);
-                        if (connOpts.length < 2) return null;
-                        return (
-                          <div
-                            data-export-ignore="true"
-                            role="group"
-                            aria-label={`${c.p.name} の通信方式切り替え`}
-                            className="mt-2.5 flex items-center justify-between gap-2 rounded-lg bg-[#f5f5f7] p-1 text-xs dark:bg-[#23252b]"
-                          >
-                            <span className="pl-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                              通信方式
-                            </span>
-                            <div className="flex items-center gap-1">
-                              {connOpts.map((conn) => {
-                                const active = c.sku.connectivity === conn;
-                                const targetSku = findSiblingSkuByConnectivity(c.p, c.sku, conn);
-                                return (
-                                  <button
-                                    key={conn}
-                                    type="button"
-                                    disabled={!targetSku}
-                                    onClick={() => {
-                                      if (targetSku) {
-                                        setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: targetSku.id } : s)));
-                                      }
-                                    }}
-                                    className={`rounded-md px-2.5 py-1 text-xs font-semibold transition ${
-                                      active
-                                        ? 'bg-white text-zinc-900 shadow-sm dark:bg-[#1c1d22] dark:text-zinc-100'
-                                        : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
-                                    }`}
-                                  >
-                                    {conn}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })()}
-
-                      {/* 販売終了モデルの主役価格切替はショップ詳細表示ON時のみ補助表示 */}
-                      {isDisc && isShopsOpen && (
-                        <div
-                          data-export-ignore="true"
-                          role="group"
-                          aria-label="販売終了モデルの主役価格切り替え"
-                          className="mt-2.5 grid grid-cols-2 gap-1 rounded-lg bg-[#f5f5f7] p-1 text-xs font-medium dark:bg-[#23252b]"
-                        >
-                          <button
-                            type="button"
-                            onClick={() => setDiscontinuedHeroMode('archive')}
-                            className={`rounded-md px-2.5 py-1 transition ${
-                              discontinuedHeroMode === 'archive'
-                                ? 'bg-white font-semibold text-zinc-900 shadow-sm dark:bg-[#1c1d22] dark:text-zinc-100'
-                                : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
-                            }`}
-                          >
-                            最終定価で比較
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setDiscontinuedHeroMode('used')}
-                            className={`rounded-md px-2.5 py-1 transition ${
-                              discontinuedHeroMode === 'used'
-                                ? 'bg-white font-semibold text-zinc-900 shadow-sm dark:bg-[#1c1d22] dark:text-zinc-100'
-                                : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
-                            }`}
-                          >
-                            現在の中古・未使用で比較
-                          </button>
-                        </div>
-                      )}
-
-                      {/* 要素2: メイン価格 */}
-                      {isDisc && isShopsOpen && discontinuedHeroMode === 'used' ? (
-                        <div className="mt-3">
-                          <div className="flex flex-wrap items-baseline justify-between gap-2">
-                            <div className="flex flex-wrap items-baseline gap-1.5">
-                              <span className="text-xl sm:text-2xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-100">
-                                {yen(usedInfo.usedPricing.lowestPrice)}
-                              </span>
-                              <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                                （現在の中古最安）
-                              </span>
-                            </div>
-                            {usedInfo.unused && (
-                              <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
-                                未使用: {yen(usedInfo.unused.price)}
-                              </span>
-                            )}
-                          </div>
-                          <div className="mt-1 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
-                            発売時 {yen(launchApplePrice ?? ch.min)} → 終売時最終 {yen(finalApplePrice ?? ch.min)}
-                            {finalApplePrice != null && (
-                              <span className="ml-1.5 font-medium text-zinc-600 dark:text-zinc-300">
-                                （最終定価比 {signedYen(usedInfo.usedPricing.lowestPrice - finalApplePrice)}）
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ) : ch.min == null ? (
+                      {/* メイン価格 */}
+                      {ch.min == null ? (
                         (() => {
                           const cellSku = findSiblingCellularSku(c.p, c.sku);
-                          if (cellSku) {
-                            const cellVals = CARRIER_ORDER.map((id) => ({
-                              id,
-                              v: carrierValue(cellSku.carriers[id], mode, mnp),
-                            })).filter((x): x is { id: CarrierId; v: number } => x.v != null);
-                            const cellMin = cellVals.length ? Math.min(...cellVals.map((x) => x.v)) : null;
-                            const cellBestIds = cellMin != null ? cellVals.filter((x) => x.v === cellMin).map((x) => x.id) : [];
-                            return (
-                              <div className="mt-3 space-y-2">
-                                <div className="flex flex-wrap items-center justify-between gap-2">
-                                  <span className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-1 text-xs text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
-                                    ー（Cellularモデルのみ取扱）
-                                  </span>
-                                  {!isExporting && (
-                                    <button
-                                      type="button"
-                                      data-export-ignore="true"
-                                      onClick={() =>
-                                        setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: cellSku.id } : s)))
-                                      }
-                                      className="rounded-md bg-zinc-200/80 px-2.5 py-1 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-300/80 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-[#2d3039]"
-                                    >
-                                      {cellSku.connectivity} に切替
-                                    </button>
-                                  )}
-                                </div>
-                                {cellMin != null && (
-                                  <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-[#f5f5f7] px-3 py-2 text-xs dark:bg-[#23252b]">
-                                    <span className="text-zinc-500 dark:text-zinc-400">
-                                      ※Cellular版の2年返却最安:{' '}
-                                      <strong className="font-extrabold tabular-nums text-zinc-800 dark:text-zinc-100">
-                                        {yen(cellMin)}
-                                      </strong>
-                                    </span>
-                                    <div className="flex flex-wrap items-center gap-1">
-                                      {cellBestIds.map((id) => (
-                                        <CarrierBadge key={id} id={id} small />
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          }
                           const bulkPrice = c.sku.carriers.apple?.currentPrice;
                           return (
-                            <div className="mt-3">
-                              <span className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-1 text-xs text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
-                                {bulkPrice != null
-                                  ? `対象外（一括購入のみ：${yen(bulkPrice)}）`
+                            <div className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+                              {cellSku
+                                ? 'このモードでは対象外（Cellularモデルのみ取扱）'
+                                : bulkPrice != null
+                                  ? `対象外（一括購入のみ ${yen(bulkPrice)}）`
                                   : 'このモードで購入可能な窓口がありません'}
-                              </span>
+                              {!isExporting && cellSku && (
+                                <button
+                                  type="button"
+                                  data-export-ignore="true"
+                                  onClick={() => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: cellSku.id } : s)))}
+                                  className="ml-2 font-medium text-[#0071e3] hover:underline"
+                                >
+                                  {cellSku.connectivity} に切替
+                                </button>
+                              )}
                             </div>
                           );
                         })()
-                      ) : isDisc ? (
-                        <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
-                          <div>
-                            <div className="text-xl sm:text-2xl font-extrabold tabular-nums text-zinc-700 dark:text-zinc-200">
-                              {yen(ch.min)}
-                            </div>
-                            <div className="mt-1 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
-                              発売時 {yen(launchApplePrice ?? ch.min)} → 終売時最終 {yen(finalApplePrice ?? ch.min)}
-                              {apple != null && !ch.ids.includes('apple') && (
-                                <span className="ml-1.5 text-zinc-600 dark:text-zinc-300">
-                                  (Apple終売比 {signedYen(ch.min - apple)})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-1">{ch.ids.map((id) => <CarrierBadge key={id} id={id} small />)}</div>
-                        </div>
                       ) : (
-                        <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
-                          <div>
-                            <div className="text-xl sm:text-2xl font-extrabold tabular-nums text-zinc-900 dark:text-zinc-100">{yen(ch.min)}</div>
-                            {apple != null && !ch.ids.includes('apple') ? (
-                              <div className="mt-1 text-xs font-medium text-[#3d6b4e] dark:text-[#88b396]">Apple Store比 {signedYen(ch.min - apple)}</div>
-                            ) : launchApplePrice != null && finalApplePrice != null ? (
-                              <div className="mt-1 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
-                                発売時 {yen(launchApplePrice)} → 現在 {yen(finalApplePrice)}
-                              </div>
-                            ) : null}
+                        <div className="mt-4">
+                          <div className={`text-2xl font-semibold tabular-nums sm:text-3xl ${isDisc ? 'text-zinc-700 dark:text-zinc-200' : 'text-zinc-900 dark:text-zinc-100'}`}>
+                            {yen(ch.min)}
                           </div>
-                          <div className="flex flex-wrap items-center gap-1">{ch.ids.map((id) => <CarrierBadge key={id} id={id} small />)}</div>
+                          {apple != null && !ch.ids.includes('apple') && (
+                            <div className="mt-1 text-sm tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
+                              Apple Store比 {signedYen(ch.min - apple)}
+                            </div>
+                          )}
                         </div>
                       )}
 
-                      {/* 💱 為替・Appleレート分析（ONの時のみ表示） */}
-                      {showFlags.fx && c.sku.priceHistory.length > 0 && (
-                        <div className="mt-3 border-t border-zinc-200/50 pt-3 dark:border-white/[0.05]">
-                          <CompactCardFxLine pt={lastOf(c.sku.priceHistory)} />
-                        </div>
-                      )}
-
-                      {/* 🔄 下取り・追い金計算（ONの時のみ表示） */}
+                      {/* 下取り選択時のみ実質追い金 */}
                       {showFlags.tradein && tradeInEst && (
-                        <div className="mt-3">
+                        <div className="mt-4">
                           <TradeInCardOverlay
                             tradeInEst={tradeInEst}
                             targetProduct={c.p}
@@ -2175,185 +1658,14 @@ export const CompareView = React.memo(function CompareView({
                       )}
                     </div>
 
-                    {/* 要素3: 中古最安値の1行サマリー（クリックまたは 🏪 中古ショップ個別リンクON で個別ショップ行を展開） */}
-                    {(() => {
-                      const up = usedInfo.usedPricing;
-                      const isEstimated = Boolean(usedInfo.isEstimated || usedInfo.source === 'mock' || up.isEstimated);
-                      const isYahooLowest = up.lowestPlatform === 'yahoo';
-                      const bestOffer = isYahooLowest ? up.yahoo ?? up.rakuten : up.rakuten ?? up.yahoo;
-                      const offerCount = (up.offers ?? usedInfo.offers ?? []).length;
-                      const toggleCardShops = () =>
-                        setOpenShopCards((prev) => ({
-                          ...prev,
-                          [c.sel.pid]: !(prev[c.sel.pid] ?? showFlags.shops),
-                        }));
-                      return (
-                        <div className="mt-3 border-t border-zinc-200/50 pt-3 dark:border-white/[0.05]">
-                          <div className="flex items-center justify-between gap-2">
-                            <button
-                              type="button"
-                              onClick={() => (isEstimated ? toggleCardShops() : openShopComparisonModal(c.p, c.sku))}
-                              className="min-w-0 flex-1 truncate rounded text-left text-xs text-zinc-600 transition hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-100 tabular-nums"
-                              title={
-                                isEstimated
-                                  ? 'クリックして実在庫の検索リンクを表示'
-                                  : 'クリックして中古・未使用品のショップ比較リスト（安い順）を表示'
-                              }
-                            >
-                              {isEstimated ? (
-                                <>
-                                  📊 参考推定相場: <strong className="font-bold text-zinc-900 dark:text-zinc-100">約{yen(up.lowestPrice)}</strong>
-                                  <span className="ml-1 text-xs text-zinc-500 dark:text-zinc-400">
-                                    （実在庫データ未取得）
-                                  </span>
-                                </>
-                              ) : (
-                                <>
-                                  中古最安 <strong className="font-bold text-zinc-900 dark:text-zinc-100">{yen(up.lowestPrice)}</strong>
-                                  {usedInfo.unused && (
-                                    <>
-                                      {' '}/ 未使用 <strong className="font-semibold text-zinc-800 dark:text-zinc-200">{yen(usedInfo.unused.price)}</strong>
-                                    </>
-                                  )}
-                                  {up.resaleValuePercent != null && (
-                                    <span className="ml-1 text-xs text-zinc-500 dark:text-zinc-400">
-                                      （リセール {up.resaleValuePercent}%）
-                                    </span>
-                                  )}
-                                </>
-                              )}
-                            </button>
-                            <button
-                              data-export-ignore="true"
-                              type="button"
-                              onClick={toggleCardShops}
-                              aria-expanded={isShopsOpen}
-                              className="inline-flex shrink-0 items-center gap-0.5 rounded px-1.5 py-0.5 text-xs text-zinc-400 transition hover:text-zinc-700 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
-                            >
-                              <span>{isShopsOpen ? '閉じる' : '内訳'}</span>
-                              {isShopsOpen ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-                            </button>
-                          </div>
-
-                          {!isEstimated && offerCount > 0 && (
-                            <div data-export-ignore="true" className="mt-2.5">
-                              <button
-                                type="button"
-                                onClick={() => openShopComparisonModal(c.p, c.sku)}
-                                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#f5f5f7] px-3 py-2 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-200/70 hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:bg-[#23252b] dark:text-zinc-200 dark:hover:bg-[#2c2f37]"
-                              >
-                                <span aria-hidden="true">🏪</span>
-                                <span>中古ショップを安い順に見る ({offerCount}件)</span>
-                              </button>
-                            </div>
-                          )}
-
-                          {isShopsOpen && (
-                            <div className="mt-2.5 space-y-2 border-t border-zinc-200/50 pt-2.5 text-xs dark:border-white/[0.05]">
-                              {isEstimated ? (
-                                <>
-                                  <div className="flex flex-wrap items-center justify-between gap-1.5">
-                                    <span className="text-xs font-medium text-zinc-600 dark:text-zinc-300 tabular-nums">
-                                      📊 参考推定相場: 約{yen(up.lowestPrice)}（実在庫データ未取得）
-                                    </span>
-                                    <ResaleBadge rate={up.resaleValuePercent} launchPrice={usedInfo.launchPrice} />
-                                  </div>
-                                  <div data-export-ignore="true" className="flex flex-col gap-1.5 pt-0.5">
-                                    <a
-                                      href={usedInfo.rakutenSearchUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="inline-flex items-center justify-between rounded-lg bg-[#f5f5f7] px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-200/70 hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f37] dark:hover:text-zinc-100"
-                                    >
-                                      <span>楽天市場で実際の在庫を検索</span>
-                                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                                    </a>
-                                    <a
-                                      href={usedInfo.yahooSearchUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="inline-flex items-center justify-between rounded-lg bg-[#f5f5f7] px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-200/70 hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f37] dark:hover:text-zinc-100"
-                                    >
-                                      <span>Yahoo!で実際の在庫を検索</span>
-                                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                                    </a>
-                                  </div>
-                                </>
-                              ) : (
-                                <>
-                                  <div className="flex flex-wrap items-center justify-between gap-1.5">
-                                    <span className="inline-flex flex-wrap items-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                                      <span className="inline-flex items-center gap-1.5 rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
-                                        <span
-                                          className={`h-1.5 w-1.5 rounded-full ${
-                                            isYahooLowest ? 'bg-[#ad8755]' : 'bg-[#a66c75]'
-                                          }`}
-                                        />
-                                        {isYahooLowest ? 'Yahoo!最安' : '楽天最安'}
-                                      </span>
-                                      <TrustedShopBadge isTrusted={bestOffer?.isTrustedShop} compact />
-                                    </span>
-                                    <ResaleBadge rate={up.resaleValuePercent} launchPrice={usedInfo.launchPrice} />
-                                  </div>
-                                  <div className="space-y-1.5">
-                                    {up.rakuten && (
-                                      <div className="flex items-center justify-between gap-2">
-                                        <span className="inline-flex min-w-0 items-center gap-1.5 truncate">
-                                          <span className="inline-flex shrink-0 items-center gap-1 rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-[#a66c75]" />
-                                            楽天
-                                          </span>
-                                          <span className={`tabular-nums ${!isYahooLowest ? 'font-bold text-zinc-900 dark:text-zinc-100' : 'font-medium text-zinc-600 dark:text-zinc-400'}`}>
-                                            {yen(up.rakuten.price)}
-                                          </span>
-                                          <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.rakuten.shopName}>
-                                            {up.rakuten.shopName}
-                                          </span>
-                                        </span>
-                                        <a
-                                          data-export-ignore="true"
-                                          href={up.rakuten.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="inline-flex shrink-0 items-center gap-0.5 font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100"
-                                        >
-                                          商品 <ExternalLink className="h-3 w-3" />
-                                        </a>
-                                      </div>
-                                    )}
-                                    {up.yahoo && (
-                                      <div className="flex items-center justify-between gap-2">
-                                        <span className="inline-flex min-w-0 items-center gap-1.5 truncate">
-                                          <span className="inline-flex shrink-0 items-center gap-1 rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-[#ad8755]" />
-                                            Yahoo!
-                                          </span>
-                                          <span className={`tabular-nums ${isYahooLowest ? 'font-bold text-zinc-900 dark:text-zinc-100' : 'font-medium text-zinc-600 dark:text-zinc-400'}`}>
-                                            {yen(up.yahoo.price)}
-                                          </span>
-                                          <span className="truncate text-zinc-500 dark:text-zinc-400" title={up.yahoo.shopName}>
-                                            {up.yahoo.shopName}
-                                          </span>
-                                        </span>
-                                        <a
-                                          data-export-ignore="true"
-                                          href={up.yahoo.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="inline-flex shrink-0 items-center gap-0.5 font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100"
-                                        >
-                                          商品 <ExternalLink className="h-3 w-3" />
-                                        </a>
-                                      </div>
-                                    )}
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
+                    {/* 中古最安値の1行サマリー */}
+                    <div className="mt-5 border-t border-zinc-200/60 pt-3 dark:border-white/[0.06]">
+                      <UsedOneLine
+                        u={usedInfo}
+                        loading={loadingModalKey === `${c.p.id}__${c.sku.id}`}
+                        onOpen={() => openShopComparisonModal(c.p, c.sku)}
+                      />
+                    </div>
                   </div>
                 );
               })}
@@ -2409,7 +1721,7 @@ export const CompareView = React.memo(function CompareView({
                 {CARRIER_ORDER.map((id) => (
                   <div key={id} className="p-4">
                     <div className="mb-3"><CarrierBadge id={id} /></div>
-                    <div className="space-y-2.5">
+                    <div className="divide-y divide-zinc-200/60 dark:divide-white/[0.06]">
                       {cols.map((c) => {
                         const cp = c.sku.carriers[id];
                         const v = carrierValue(cp, mode, mnp);
@@ -2420,15 +1732,7 @@ export const CompareView = React.memo(function CompareView({
                         return (
                           <div
                             key={c.sel.pid}
-                            className={`rounded-xl p-3.5 text-xs ${
-                              v == null
-                                ? 'bg-[#f5f5f7]/70 dark:bg-[#23252b]/60'
-                                : isDisc
-                                  ? 'bg-[#f5f5f7]/90 dark:bg-[#23252b]/80'
-                                  : isMin
-                                    ? 'bg-[#eaf2ed]/60 dark:bg-[#1e2b24]/45'
-                                    : 'bg-[#f5f5f7] dark:bg-[#23252b]'
-                            }`}
+                            className={`py-3 text-sm ${isMin ? 'font-medium' : ''}`}
                           >
                             <div className="flex items-center justify-between gap-2">
                               <span className="font-bold text-zinc-900 dark:text-zinc-100">
@@ -2501,23 +1805,12 @@ export const CompareView = React.memo(function CompareView({
                                 </span>
                               )}
                             </div>
-                            {v != null && cp && (
-                              <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-                                {isDisc ? (
-                                  id === 'apple' ? (
-                                    <span>発売時 {yen(cp.launchPrice)} → 終売時最終 {yen(cp.currentPrice)}</span>
-                                  ) : cp.launchPrice !== cp.currentPrice ? (
-                                    <span>発売時 {yen(cp.launchPrice)} → 終売時最終 {yen(cp.currentPrice)}（販売終了）</span>
-                                  ) : (
-                                    <span>発売時総額 {yen(cp.launchPrice)}（販売終了）</span>
-                                  )
-                                ) : (
-                                  <span>発売時 {yen(cp.launchPrice)} → 現在 {yen(cp.currentPrice)}</span>
-                                )}
-                                {cp.mnpPrice != null && <span>MNP: {yen(cp.mnpPrice)}</span>}
-                                {cp.returnProgram && <span>{cp.returnProgram.name} ({cp.returnProgram.months}ヶ月): {yen(cp.returnProgram.effectiveCost)}</span>}
-                              </div>
-                            )}
+                            {v != null && cp && (() => {
+                              const parts = carrierSubParts(cp, mode, mnp);
+                              return parts.length > 0 ? (
+                                <div className="mt-1 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">{parts.join(' ｜ ')}</div>
+                              ) : null;
+                            })()}
                           </div>
                         );
                       })}
@@ -2526,276 +1819,71 @@ export const CompareView = React.memo(function CompareView({
                 ))}
               </div>
 
-              {/* スマホ縦並び: 中古相場・リセールバリュー (楽天・Yahoo!横断比較) */}
-              <div className={`${card} overflow-hidden`}>
-                <div className="bg-[#f5f5f7] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:bg-[#23252b]">
-                  現在の中古相場（最安値）・リセールバリュー (楽天市場 ＆ Yahoo!ショッピング)
-                </div>
-                <div className="space-y-3 p-4">
-                  {cols.map((c) => {
-                    const u = getUsedData(c);
-                    const up = u.usedPricing;
-                    const isEstimated = Boolean(u.isEstimated || u.source === 'mock' || up.isEstimated);
-                    const isYahooLowest = up.lowestPlatform === 'yahoo';
-                    const isShopsOpen = openShopCards[c.sel.pid] ?? showFlags.shops;
-                    const offerCount = (up.offers ?? u.offers ?? []).length;
-                    return (
-                      <div key={c.sel.pid} className="rounded-xl bg-[#f5f5f7] p-3.5 text-xs dark:bg-[#23252b]">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="font-bold text-zinc-900 dark:text-zinc-100">
-                            {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
-                          </span>
-                          <ResaleBadge rate={up.resaleValuePercent} launchPrice={u.launchPrice} />
-                        </div>
-                        {isEstimated ? (
-                          <div className="mt-2 space-y-2">
-                            <div className="text-xs font-semibold tabular-nums text-zinc-800 dark:text-zinc-200">
-                              📊 参考推定相場: 約{yen(up.lowestPrice)}（実在庫データ未取得）
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                              <a
-                                href={u.rakutenSearchUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-300 dark:hover:bg-[#25272e]"
-                              >
-                                <span>楽天市場で実際の在庫を検索</span>
-                                <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                              </a>
-                              <a
-                                href={u.yahooSearchUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-300 dark:hover:bg-[#25272e]"
-                              >
-                                <span>Yahoo!で実際の在庫を検索</span>
-                                <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                              </a>
-                            </div>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
-                              <div className="flex flex-wrap items-baseline gap-1.5">
-                                <span className="text-xs text-zinc-500">横断最安:</span>
-                                <span className="text-base font-extrabold tabular-nums text-zinc-900 dark:text-zinc-100">{yen(up.lowestPrice)}</span>
-                                <span className="inline-flex items-center gap-1 rounded-md bg-zinc-200/70 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
-                                  <span className={`h-1.5 w-1.5 rounded-full ${isYahooLowest ? 'bg-[#ad8755]' : 'bg-[#a66c75]'}`} />
-                                  {isYahooLowest ? 'Yahoo!最安' : '楽天最安'}
-                                </span>
-                                {u.unused && (
-                                  <span className="text-xs tabular-nums text-zinc-500">
-                                    / 未使用: <strong className="font-bold text-zinc-800 dark:text-zinc-200">{yen(u.unused.price)}</strong>
-                                  </span>
-                                )}
-                              </div>
-                              {u.launchPrice && (
-                                <span className="text-xs tabular-nums text-zinc-400">発売時直販 {yen(u.launchPrice)}</span>
-                              )}
-                            </div>
-                            {offerCount > 0 && (
-                              <div className="mt-2.5">
-                                <button
-                                  type="button"
-                                  onClick={() => openShopComparisonModal(c.p, c.sku)}
-                                  className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:bg-[#1c1d22] dark:text-zinc-200 dark:hover:bg-[#25272e]"
-                                >
-                                  <span aria-hidden="true">🏪</span>
-                                  <span>中古ショップを安い順に見る ({offerCount}件)</span>
-                                </button>
-                              </div>
-                            )}
-                            {isShopsOpen && (
-                              <div className="mt-2.5 space-y-1.5 border-t border-zinc-200/50 pt-2 text-xs dark:border-white/[0.05]">
-                                {up.rakuten && (
-                                  <div className="flex items-center justify-between gap-2">
-                                    <span className="truncate text-zinc-600 dark:text-zinc-300">
-                                      <strong className="text-zinc-800 dark:text-zinc-200">[楽天]</strong> {yen(up.rakuten.price)} — {up.rakuten.shopName}
-                                    </span>
-                                    <a href={up.rakuten.url} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1 font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100">
-                                      リンク <ExternalLink className="h-3 w-3" />
-                                    </a>
-                                  </div>
-                                )}
-                                {up.yahoo && (
-                                  <div className="flex items-center justify-between gap-2">
-                                    <span className="truncate text-zinc-600 dark:text-zinc-300">
-                                      <strong className="text-zinc-800 dark:text-zinc-200">[Yahoo!]</strong> {yen(up.yahoo.price)} — {up.yahoo.shopName}
-                                    </span>
-                                    <a href={up.yahoo.url} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1 font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100">
-                                      リンク <ExternalLink className="h-3 w-3" />
-                                    </a>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+              {/* スマホ縦並び: 中古最安値（1行サマリー） */}
+              <div className={`${card} divide-y divide-zinc-200/60 overflow-hidden dark:divide-white/[0.06]`}>
+                <div className="bg-[#f5f5f7] px-4 py-2.5 text-xs font-semibold text-zinc-500 dark:bg-[#23252b]">中古最安</div>
+                {cols.map((c) => (
+                  <div key={c.sel.pid} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+                    <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                      {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
+                    </span>
+                    <UsedOneLine
+                      u={getUsedData(c)}
+                      loading={loadingModalKey === `${c.p.id}__${c.sku.id}`}
+                      onOpen={() => openShopComparisonModal(c.p, c.sku)}
+                    />
+                  </div>
+                ))}
               </div>
 
-              {showFlags.fx && (
-                <div className={`${card} overflow-hidden`}>
-                  <div className="bg-[#f5f5f7] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:bg-[#23252b]">
-                    為替レート比較（当時の市場レート vs Apple適用レート・割安判定）
+              <div className={`${card} overflow-hidden`}>
+                <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-4">
+                  <div className="flex flex-col">
+                    <span className="text-base font-semibold text-[#1d1d1f] dark:text-zinc-100">スペック比較</span>
+                    <span className="text-sm text-[#6e6e73] dark:text-zinc-400">違いがある項目 {totalDiffSpecCount}件</span>
                   </div>
-                  <div className="space-y-3 p-4">
-                    {cols.map((c) => {
-                      const launchPt = c.sku.priceHistory[0];
-                      const curPt = c.sku.priceHistory.length ? lastOf(c.sku.priceHistory) : undefined;
-                      return (
-                        <div key={c.sel.pid} className="space-y-2 rounded-xl bg-[#f5f5f7] p-3.5 text-xs dark:bg-[#23252b]">
-                          <div className="font-bold text-zinc-900 dark:text-zinc-100">
-                            {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
-                          </div>
-                          {curPt && (
-                            <div>
-                              <CurrentFxFairnessBadge pt={curPt} compact showFairPrice={true} />
-                            </div>
-                          )}
-                          {launchPt && (
-                            <div className="space-y-1 pt-0.5">
-                              <div className="text-xs font-semibold text-zinc-500">発売時 ({launchPt.date}):</div>
-                              <FxRatePairChip pt={launchPt} compact />
-                            </div>
-                          )}
-                          {curPt && curPt !== launchPt && (
-                            <div className="space-y-1 pt-0.5">
-                              <div className="text-xs font-semibold text-zinc-500">最新/終売時 ({curPt.date}):</div>
-                              <FxRatePairChip pt={curPt} compact />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <button
+                    type="button"
+                    aria-pressed={diffOnly}
+                    onClick={() => setDiffOnly((prev) => !prev)}
+                    className={`inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
+                      diffOnly
+                        ? 'bg-[#1d1d1f] text-white dark:bg-zinc-200 dark:text-zinc-900'
+                        : 'bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#25272e] dark:text-zinc-200'
+                    }`}
+                  >
+                    差分のみ表示
+                  </button>
                 </div>
-              )}
-
-              <div className={`${card} divide-y divide-zinc-200/40 overflow-hidden dark:divide-white/[0.04]`}>
-                <div className="flex flex-wrap items-center justify-between gap-2 bg-[#f5f5f7] px-4 py-3 dark:bg-[#23252b]">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-300">
-                      スペック比較
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                      <span className="h-1.5 w-1.5 rounded-full bg-zinc-600 dark:bg-zinc-300" />
-                      違いあり ({totalDiffSpecCount})
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <button
-                      type="button"
-                      aria-pressed={diffOnly}
-                      onClick={() => setDiffOnly((prev) => !prev)}
-                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition ${
-                        diffOnly
-                          ? 'bg-zinc-800 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                          : 'bg-white text-zinc-600 hover:bg-zinc-100 dark:bg-[#1c1d22] dark:text-zinc-300'
-                      }`}
-                    >
-                      <span aria-hidden="true">🔍</span>
-                      <span>差分のみ表示</span>
-                    </button>
-                    <div
-                      role="group"
-                      aria-label="スペック表示範囲"
-                      className="inline-flex rounded-lg bg-zinc-200/70 p-0.5 text-xs font-medium dark:bg-[#1c1d22]"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setSpecExpanded(false)}
-                        className={`rounded-md px-2.5 py-1 transition ${
-                          !specExpanded
-                            ? 'bg-white font-semibold text-zinc-900 shadow-sm dark:bg-[#25272e] dark:text-zinc-100'
-                            : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400'
-                        }`}
-                      >
-                        主要項目のみ
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSpecExpanded(true)}
-                        className={`rounded-md px-2.5 py-1 transition ${
-                          specExpanded
-                            ? 'bg-white font-semibold text-zinc-900 shadow-sm dark:bg-[#25272e] dark:text-zinc-100'
-                            : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400'
-                        }`}
-                      >
-                        すべて展開
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                {displayedSpecRows.length === 0 ? (
-                  <div className="p-5 text-center text-xs text-zinc-500 dark:text-zinc-400">
-                    <span>
-                      {cols.length < 2
-                        ? '1機種のみ選択中のため、選択中のモデル間で異なるスペック項目はありません'
-                        : '選択中のモデル間で異なるスペック項目はありません'}
-                    </span>{' '}
-                    <button
-                      type="button"
-                      onClick={() => setDiffOnly(false)}
-                      className="font-semibold text-zinc-800 underline underline-offset-2 hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-zinc-100"
-                    >
+                {specSections.length === 0 ? (
+                  <div className="p-5 text-center text-sm text-[#6e6e73] dark:text-zinc-400">
+                    <span>{cols.length < 2 ? '1機種のみ選択中のため、違いのあるスペック項目はありません' : '選択中のモデル間で異なるスペック項目はありません'}</span>{' '}
+                    <button type="button" onClick={() => setDiffOnly(false)} className="font-medium text-[#0071e3] hover:underline">
                       （すべて表示に戻す）
                     </button>
                   </div>
                 ) : (
-                  displayedSpecRows.map((er) => (
-                    <div key={er.row.key} className="p-4">
-                      <div className="mb-2 flex items-center gap-1.5 text-xs">
-                        {er.hasDiff ? (
-                          <>
-                            <span
-                              className="h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-700 dark:bg-zinc-300"
-                              title="比較モデル間で違いがある項目"
-                            />
-                            <span className="font-bold text-zinc-800 dark:text-zinc-200">{er.row.label}</span>
-                          </>
-                        ) : (
-                          <span className="font-medium text-zinc-400 dark:text-zinc-500">{er.row.label}</span>
-                        )}
-                      </div>
-                      <div className="space-y-1.5 text-xs">
-                        {cols.map((c, idx) => (
-                          <div
-                            key={c.sel.pid}
-                            className="flex items-baseline justify-between gap-3 rounded-lg bg-[#f5f5f7] px-3 py-2 dark:bg-[#23252b]"
-                          >
-                            <span className="shrink-0 font-semibold text-zinc-600 dark:text-zinc-400">{c.p.name}</span>
-                            <span
-                              className={`text-right ${
-                                er.hasDiff
-                                  ? 'font-medium text-zinc-900 dark:text-zinc-100'
-                                  : 'text-zinc-500 dark:text-zinc-500'
-                              }`}
-                            >
-                              {er.values[idx]}
-                            </span>
+                  specSections.map((sec) => (
+                    <div key={sec.id}>
+                      <div className="bg-[#f5f5f7] px-4 pb-3 pt-6 text-sm font-semibold text-[#1d1d1f] dark:bg-[#23252b] dark:text-zinc-100">{sec.title}</div>
+                      <div className="divide-y divide-[#e5e5ea] dark:divide-white/[0.06]">
+                        {sec.rows.map((er) => (
+                          <div key={er.row.key} className="px-4 py-3.5">
+                            <div className={`mb-1.5 text-sm ${er.hasDiff ? 'font-semibold text-[#1d1d1f] dark:text-zinc-100' : 'text-[#6e6e73] dark:text-zinc-400'}`}>{er.row.label}</div>
+                            <div className="space-y-1.5 text-sm leading-relaxed">
+                              {cols.map((c, idx) => (
+                                <div key={c.sel.pid} className="flex items-baseline justify-between gap-3">
+                                  <span className="shrink-0 text-[#6e6e73] dark:text-zinc-400">{c.p.name}</span>
+                                  <span className={`break-words text-right ${er.hasDiff ? 'font-medium text-[#1d1d1f] dark:text-zinc-100' : 'text-[#6e6e73] dark:text-zinc-400'}`}>{er.values[idx]}</span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         ))}
                       </div>
                     </div>
                   ))
                 )}
-                <button
-                  type="button"
-                  onClick={() => setSpecExpanded((prev) => !prev)}
-                  className="flex w-full items-center justify-center gap-1.5 bg-[#f5f5f7] px-4 py-3 text-xs font-semibold text-zinc-600 transition hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f37] dark:hover:text-zinc-100"
-                >
-                  {specExpanded ? (
-                    <span>▲ 詳細スペックを折りたたむ（主要{PRIMARY_SPEC_ROWS.length}項目のみ表示に戻す）</span>
-                  ) : (
-                    <span>
-                      ▼ 詳細スペック（アーキテクチャ・ボードID・モデル番号・対応バンド等 残り{detailEvalRows.length}項目）をすべて表示
-                    </span>
-                  )}
-                </button>
               </div>
             </div>
           )}
@@ -2808,7 +1896,7 @@ export const CompareView = React.memo(function CompareView({
                 ? 'hidden'
                 : isExporting
                   ? `${card} block overflow-visible`
-                  : `${card} overflow-x-auto ${mobileView === 'stack' ? 'hidden sm:block' : 'block'}`
+                  : `${card} overflow-x-auto lg:overflow-x-clip ${mobileView === 'stack' ? 'hidden sm:block' : 'block'}`
             }
           >
             <table
@@ -2819,15 +1907,15 @@ export const CompareView = React.memo(function CompareView({
                 <tr className="border-b border-zinc-200/50 dark:border-white/[0.05]">
                   <th
                     className={`${
-                      isExporting ? '' : 'sticky left-0 z-10'
-                    } w-28 sm:w-40 bg-white px-4 py-3.5 sm:px-5 sm:py-4 text-left text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22] dark:text-zinc-400`}
+                      isExporting ? '' : 'sticky left-0 top-[var(--app-header-h,0px)] z-30 backdrop-blur-md'
+                    } w-28 sm:w-40 bg-white/90 px-4 py-3.5 sm:px-5 sm:py-4 text-left text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22]/90 dark:text-zinc-400`}
                   >
                     項目
                   </th>
                   {cols.map((c) => {
                     const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
                     return (
-                      <th key={c.sel.pid} className="min-w-[170px] sm:min-w-[230px] px-4 py-3.5 sm:px-5 sm:py-4 text-left align-top">
+                      <th key={c.sel.pid} className={`${isExporting ? '' : 'sticky top-[var(--app-header-h,0px)] z-20 bg-white/90 backdrop-blur-md dark:bg-[#1c1d22]/90'} min-w-[170px] sm:min-w-[230px] px-4 py-3.5 sm:px-5 sm:py-4 text-left align-top`}>
                         <div className="flex flex-wrap items-center gap-1.5 text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100">
                           <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0" />
                           <span>{c.p.name}</span>
@@ -2912,7 +2000,7 @@ export const CompareView = React.memo(function CompareView({
                   })}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200/40 dark:divide-white/[0.04]">
+              <tbody className="divide-y divide-[#e5e5ea] dark:divide-white/[0.06]">
                 {showFlags.tradein && tradeInEst && (
                   <>
                     <tr className="bg-[#f5f5f7]/80 dark:bg-[#23252b]/70">
@@ -2980,35 +2068,8 @@ export const CompareView = React.memo(function CompareView({
                       const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
                       const isDisc = Boolean(cp?.isDiscontinued ?? discInfo.isDiscontinued);
 
-                      const subParts: string[] = [];
-                      if (cp && v != null) {
-                        if (mode === 'bulk') {
-                          if (!mnp && cp.mnpPrice != null) {
-                            subParts.push(`MNP ${yen(cp.mnpPrice)}`);
-                          } else if (mnp && cp.mnpPrice != null && cp.currentPrice !== cp.mnpPrice) {
-                            subParts.push(`通常一括 ${yen(cp.currentPrice)}`);
-                          }
-                          if (cp.returnProgram) {
-                            subParts.push(`2年返却 ${yen(cp.returnProgram.effectiveCost)}`);
-                          }
-                        } else {
-                          subParts.push(`通常一括 ${yen(cp.currentPrice)}`);
-                          if (cp.mnpPrice != null) {
-                            subParts.push(`MNP一括 ${yen(cp.mnpPrice)}`);
-                          }
-                        }
-                      }
-                      const hasLaunchDiff = Boolean(cp && cp.launchPrice !== cp.currentPrice);
-                      if (hasLaunchDiff && cp && subParts.length === 0) {
-                        subParts.push(`発売時 ${yen(cp.launchPrice)}`);
-                      }
+                      const subParts: string[] = cp && v != null ? carrierSubParts(cp, mode, mnp) : [];
 
-                      const latestPt =
-                        id === 'apple' && c.sku.priceHistory.length > 0
-                          ? lastOf(c.sku.priceHistory)
-                          : undefined;
-                      const fxEval =
-                        showFlags.fx && latestPt ? evaluateCurrentFxFairness(latestPt) : null;
 
                       return (
                         <td
@@ -3095,41 +2156,6 @@ export const CompareView = React.memo(function CompareView({
                                 </div>
                               )}
 
-                              {/* 3行目: 発売時と現在価格が異なる場合のみ小さく表示 */}
-                              {hasLaunchDiff && cp && subParts[0] !== `発売時 ${yen(cp.launchPrice)}` && (
-                                <div className="text-xs tabular-nums text-zinc-400 dark:text-zinc-500">
-                                  発売時 {yen(cp.launchPrice)}
-                                </div>
-                              )}
-
-                              {/* Apple Store行の為替1行コンパクト表示（為替トグルON時のみ） */}
-                              {fxEval && fxEval.status !== 'none' && fxEval.pctDiff != null && (
-                                <div className="truncate whitespace-nowrap text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
-                                  為替:{' '}
-                                  <span
-                                    className={
-                                      fxEval.status === 'bargain'
-                                        ? 'font-semibold text-[#3d6b4e] dark:text-[#88b396]'
-                                        : fxEval.status === 'expensive'
-                                          ? 'font-semibold text-zinc-700 dark:text-zinc-300'
-                                          : 'font-medium text-zinc-600 dark:text-zinc-300'
-                                    }
-                                  >
-                                    {fxEval.status === 'bargain'
-                                      ? '割安'
-                                      : fxEval.status === 'expensive'
-                                        ? '割高'
-                                        : '適正'}{' '}
-                                    {signedPct(fxEval.pctDiff)}
-                                  </span>
-                                  {fxEval.appleRate != null && (
-                                    <span className="text-zinc-400 dark:text-zinc-500">
-                                      {' '}
-                                      (Apple ¥{fxEval.appleRate.toFixed(1)}/$)
-                                    </span>
-                                  )}
-                                </div>
-                              )}
                             </div>
                           )}
                         </td>
@@ -3137,417 +2163,94 @@ export const CompareView = React.memo(function CompareView({
                     })}
                   </tr>
                 ))}
-                <tr className="bg-[#f5f5f7]/80 dark:bg-[#23252b]/70">
-                  <td colSpan={cols.length + 1} className="px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-500">
-                    中古相場・資産価値 — 楽天市場 ＆ Yahoo!ショッピング 横断比較
-                  </td>
-                </tr>
                 <tr>
                   <td
                     className={`${
                       isExporting ? '' : 'sticky left-0 z-10'
-                    } bg-white px-4 py-3.5 sm:px-5 sm:py-4 align-top shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22]`}
+                    } bg-white px-4 py-3.5 sm:px-5 sm:py-4 align-middle text-sm font-medium text-zinc-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22] dark:text-zinc-300`}
                   >
-                    <div className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-700 dark:text-zinc-200">
-                      <ShoppingBag className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
-                      現在の中古相場
-                    </div>
-                    <div className="mt-1 text-xs text-zinc-400">楽天・Yahoo!横断比較</div>
+                    中古最安
                   </td>
-                  {cols.map((c) => {
-                    const u = getUsedData(c);
-                    const up = u.usedPricing;
-                    const isEstimated = Boolean(u.isEstimated || u.source === 'mock' || up.isEstimated);
-                    const isYahooLowest = up.lowestPlatform === 'yahoo';
-                    const bestOffer = isYahooLowest ? up.yahoo ?? up.rakuten : up.rakuten ?? up.yahoo;
-                    const isShopsOpen = openShopCards[c.sel.pid] ?? showFlags.shops;
-                    const offerCount = (up.offers ?? u.offers ?? []).length;
-                    const metaLineParts = [
-                      u.unused ? `未使用品目安: ${yen(u.unused.price)}` : null,
-                      u.launchPrice ? `発売時定価: ${yen(u.launchPrice)}` : null,
-                    ].filter(Boolean);
-
-                    return (
-                      <td key={c.sel.pid} className="px-4 py-3.5 sm:px-5 sm:py-4 align-top">
-                        <div className="space-y-1.5">
-                          {/* 1行目: ステータスバッジ + メイン価格 + リセール率バッジを横1行で揃え段落ちを防止 */}
-                          <div className="flex flex-wrap items-baseline gap-2 whitespace-nowrap">
-                            <span className="text-sm sm:text-base font-extrabold tabular-nums text-zinc-900 dark:text-zinc-100">
-                              {isEstimated ? `約${yen(up.lowestPrice)}` : yen(up.lowestPrice)}
-                            </span>
-                            {up.resaleValuePercent != null && (
-                              <span
-                                className="inline-flex items-center gap-1 rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium tabular-nums text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300"
-                                title={
-                                  u.launchPrice
-                                    ? `発売時定価 ${yen(u.launchPrice)} に対する残価率`
-                                    : undefined
-                                }
-                              >
-                                <span
-                                  className={`h-1.5 w-1.5 rounded-full ${
-                                    up.resaleValuePercent >= 70
-                                      ? 'bg-[#649274]'
-                                      : 'bg-zinc-400 dark:bg-zinc-500'
-                                  }`}
-                                />
-                                リセール {up.resaleValuePercent}%
-                              </span>
-                            )}
-                            {isEstimated ? (
-                              <span className="inline-flex items-center rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
-                                参考推定相場
-                              </span>
-                            ) : (
-                              <>
-                                <span className="inline-flex items-center gap-1 rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
-                                  <span
-                                    className={`h-1.5 w-1.5 rounded-full ${
-                                      isYahooLowest ? 'bg-[#ad8755]' : 'bg-[#a66c75]'
-                                    }`}
-                                  />
-                                  {isYahooLowest ? 'Yahoo!最安' : '楽天最安'}
-                                </span>
-                                <TrustedShopBadge isTrusted={bestOffer?.isTrustedShop} compact />
-                              </>
-                            )}
-                          </div>
-
-                          {/* 2行目: 未使用品目安 ｜ 発売時定価 */}
-                          {metaLineParts.length > 0 && (
-                            <div className="truncate text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
-                              {metaLineParts.join(' ｜ ')}
-                            </div>
-                          )}
-
-                          {/* 3行目: アクションリンク / ボタン */}
-                          {isEstimated ? (
-                            <div data-export-ignore="true" className="flex flex-wrap items-center gap-2 pt-0.5">
-                              <a
-                                href={u.rakutenSearchUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 rounded-md bg-[#f5f5f7] px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:bg-zinc-200/70 hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f37] dark:hover:text-zinc-100"
-                              >
-                                <span>楽天市場で実際の在庫を検索</span>
-                                <ExternalLink className="h-3 w-3 shrink-0" />
-                              </a>
-                              <a
-                                href={u.yahooSearchUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 rounded-md bg-[#f5f5f7] px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:bg-zinc-200/70 hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f37] dark:hover:text-zinc-100"
-                              >
-                                <span>Yahoo!で実際の在庫を検索</span>
-                                <ExternalLink className="h-3 w-3 shrink-0" />
-                              </a>
-                            </div>
-                          ) : (
-                            <>
-                              <div data-export-ignore="true" className="flex flex-wrap items-center gap-2 pt-0.5">
-                                {offerCount > 0 && (
-                                  <button
-                                    type="button"
-                                    onClick={() => openShopComparisonModal(c.p, c.sku)}
-                                    className="inline-flex items-center gap-1 rounded-md bg-[#f5f5f7] px-2.5 py-1 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-200/70 hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:bg-[#23252b] dark:text-zinc-200 dark:hover:bg-[#2c2f37]"
-                                  >
-                                    <span aria-hidden="true">🏪</span>
-                                    <span>ショップ比較 ({offerCount}件)</span>
-                                  </button>
-                                )}
-                                {!isShopsOpen && (
-                                  <button
-                                    type="button"
-                                    onClick={() => setOpenShopCards((prev) => ({ ...prev, [c.sel.pid]: true }))}
-                                    className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-xs font-medium text-zinc-500 hover:text-zinc-900 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-100"
-                                  >
-                                    <span>内訳</span>
-                                    <ChevronDown className="h-3 w-3" />
-                                  </button>
-                                )}
-                              </div>
-
-                              {isShopsOpen && (
-                                <div className="space-y-1 pt-1 text-xs">
-                                  {up.rakuten && (
-                                    <div className="flex items-center justify-between gap-2">
-                                      <span className="truncate text-zinc-600 dark:text-zinc-300">
-                                        <span className="font-medium text-zinc-500">楽天:</span>{' '}
-                                        <strong className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
-                                          {yen(up.rakuten.price)}
-                                        </strong>{' '}
-                                        <span className="text-zinc-500 dark:text-zinc-400">
-                                          ({up.rakuten.shopName})
-                                        </span>
-                                      </span>
-                                      <a
-                                        data-export-ignore="true"
-                                        href={up.rakuten.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex shrink-0 items-center gap-0.5 font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100"
-                                      >
-                                        商品 <ExternalLink className="h-3 w-3" />
-                                      </a>
-                                    </div>
-                                  )}
-                                  {up.yahoo && (
-                                    <div className="flex items-center justify-between gap-2">
-                                      <span className="truncate text-zinc-600 dark:text-zinc-300">
-                                        <span className="font-medium text-zinc-500">Yahoo!:</span>{' '}
-                                        <strong className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
-                                          {yen(up.yahoo.price)}
-                                        </strong>{' '}
-                                        <span className="text-zinc-500 dark:text-zinc-400">
-                                          ({up.yahoo.shopName})
-                                        </span>
-                                      </span>
-                                      <a
-                                        data-export-ignore="true"
-                                        href={up.yahoo.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex shrink-0 items-center gap-0.5 font-medium text-zinc-500 hover:text-zinc-900 hover:underline dark:text-zinc-400 dark:hover:text-zinc-100"
-                                      >
-                                        商品 <ExternalLink className="h-3 w-3" />
-                                      </a>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    );
-                  })}
+                  {cols.map((c) => (
+                    <td key={c.sel.pid} className="px-4 py-3.5 sm:px-5 sm:py-4 align-middle">
+                      <UsedOneLine
+                        u={getUsedData(c)}
+                        loading={loadingModalKey === `${c.p.id}__${c.sku.id}`}
+                        onOpen={() => openShopComparisonModal(c.p, c.sku)}
+                      />
+                    </td>
+                  ))}
                 </tr>
-                {showFlags.fx && (
-                  <>
-                    <tr className="bg-[#f5f5f7]/80 dark:bg-[#23252b]/70">
-                      <td colSpan={cols.length + 1} className="px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-500">
-                        為替レート比較 — 当時の市場レート（Frankfurter API） vs Apple適用レート（税抜円÷USD） ＆ 今の為替から見た割安・割高判定
-                      </td>
-                    </tr>
-                    <tr>
-                      <td
-                        className={`${
-                          isExporting ? '' : 'sticky left-0 z-10'
-                        } bg-white px-4 py-3.5 sm:px-5 sm:py-4 align-top text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22] dark:text-zinc-400`}
-                      >
-                        <div>今の為替レート判定</div>
-                        <div className="mt-1 text-xs font-normal text-zinc-400">現在レート理論価格(税込10%)比</div>
-                      </td>
-                      {cols.map((c) => {
-                        const curPt = c.sku.priceHistory.length ? lastOf(c.sku.priceHistory) : undefined;
-                        return (
-                          <td key={c.sel.pid} className="px-4 py-3.5 sm:px-5 sm:py-4 align-top">
-                            {curPt ? (
-                              <div className="space-y-1">
-                                <CurrentFxFairnessBadge pt={curPt} compact={false} showFairPrice={true} />
-                              </div>
-                            ) : (
-                              <span className="text-zinc-400">—</span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                    <tr>
-                      <td
-                        className={`${
-                          isExporting ? '' : 'sticky left-0 z-10'
-                        } bg-white px-4 py-3.5 sm:px-5 sm:py-4 align-top text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22] dark:text-zinc-400`}
-                      >
-                        <div>当時の市場レート vs Apple適用レート</div>
-                        <div className="mt-1 text-xs font-normal text-zinc-400">発売時 ／ 最新改定時</div>
-                      </td>
-                      {cols.map((c) => {
-                        const launchPt = c.sku.priceHistory[0];
-                        const curPt = c.sku.priceHistory.length ? lastOf(c.sku.priceHistory) : undefined;
-                        return (
-                          <td key={c.sel.pid} className="px-4 py-3.5 sm:px-5 sm:py-4 align-top">
-                            {launchPt ? (
-                              <div className="space-y-2">
-                                <div>
-                                  <div className="mb-1 text-xs font-semibold text-zinc-500">発売時 ({launchPt.date} / US ${launchPt.usdPrice ?? '—'}):</div>
-                                  <FxRatePairChip pt={launchPt} />
-                                </div>
-                                {curPt && curPt !== launchPt && (
-                                  <div>
-                                    <div className="mb-1 text-xs font-semibold text-zinc-500">最新/終売時 ({curPt.date} / US ${curPt.usdPrice ?? '—'}):</div>
-                                    <FxRatePairChip pt={curPt} />
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <span className="text-zinc-400">—</span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </>
-                )}
-                <tr className="bg-[#f5f5f7]/80 dark:bg-[#23252b]/70">
-                  <td colSpan={cols.length + 1} className="px-4 sm:px-5 py-2.5 text-xs">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-300">
-                          スペック比較
-                        </span>
-                        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                          <span className="h-1.5 w-1.5 rounded-full bg-zinc-600 dark:bg-zinc-300" />
-                          <span>違いがある項目 ({totalDiffSpecCount}件)</span>
+                <tr className="bg-white dark:bg-[#1c1d22]">
+                  <td colSpan={cols.length + 1} className="px-4 py-4 sm:px-5">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                        <span className="text-base font-semibold text-[#1d1d1f] dark:text-zinc-100">スペック比較</span>
+                        <span className="text-sm text-[#6e6e73] dark:text-zinc-400">
+                          {specSections.reduce((n, sec) => n + sec.rows.length, 0)}項目 ／ 違いがある項目 {totalDiffSpecCount}件
                         </span>
                       </div>
-                      {isExporting ? (
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                          {diffOnly
-                            ? '🔍 違いがある項目のみ表示中'
-                            : specExpanded
-                              ? '📋 全スペック項目を表示中'
-                              : `📋 主要スペック${PRIMARY_SPEC_ROWS.length}項目を表示中`}
-                        </span>
-                      ) : (
-                        <div data-export-ignore="true" className="flex flex-wrap items-center gap-2">
-                          <button
-                            type="button"
-                            aria-pressed={diffOnly}
-                            onClick={() => setDiffOnly((prev) => !prev)}
-                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition ${
-                              diffOnly
-                                ? 'bg-zinc-800 text-zinc-100 shadow-sm dark:bg-zinc-200 dark:text-zinc-900'
-                                : 'bg-white text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-300 dark:hover:bg-[#25272e]'
-                            }`}
-                          >
-                            <span aria-hidden="true">🔍</span>
-                            <span>差分のみ表示（同じ項目を隠す）</span>
-                          </button>
-                          <div className="inline-flex items-center gap-2">
-                            <span className="hidden md:inline text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                              📋 スペック表示範囲:
-                            </span>
-                            <div
-                              role="group"
-                              aria-label="スペック表示範囲"
-                              className="inline-flex rounded-lg bg-zinc-200/80 p-0.5 text-xs font-medium dark:bg-[#1c1d22]"
-                            >
-                              <button
-                                type="button"
-                                onClick={() => setSpecExpanded(false)}
-                                className={`rounded-md px-2.5 py-1 transition ${
-                                  !specExpanded
-                                    ? 'bg-white font-semibold text-zinc-900 shadow-sm dark:bg-[#25272e] dark:text-zinc-100'
-                                    : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
-                                }`}
-                              >
-                                主要項目のみ（初期）
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setSpecExpanded(true)}
-                                className={`rounded-md px-2.5 py-1 transition ${
-                                  specExpanded
-                                    ? 'bg-white font-semibold text-zinc-900 shadow-sm dark:bg-[#25272e] dark:text-zinc-100'
-                                    : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
-                                }`}
-                              >
-                                すべて展開
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                      {!isExporting && (
+                        <button
+                          type="button"
+                          data-export-ignore="true"
+                          aria-pressed={diffOnly}
+                          onClick={() => setDiffOnly((prev) => !prev)}
+                          className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
+                            diffOnly
+                              ? 'bg-[#1d1d1f] text-white dark:bg-zinc-200 dark:text-zinc-900'
+                              : 'bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e5e5ea] dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-[#2c2f37]'
+                          }`}
+                        >
+                          差分のみ表示（同じ項目を隠す）
+                        </button>
                       )}
                     </div>
                   </td>
                 </tr>
-                {displayedSpecRows.length === 0 ? (
+                {specSections.length === 0 ? (
                   <tr>
-                    <td colSpan={cols.length + 1} className="p-5 text-center text-xs text-zinc-500 dark:text-zinc-400">
-                      <span>
-                        {cols.length < 2
-                          ? '1機種のみ選択中のため、選択中のモデル間で異なるスペック項目はありません'
-                          : '選択中のモデル間で異なるスペック項目はありません'}
-                      </span>{' '}
-                      <button
-                        data-export-ignore="true"
-                        type="button"
-                        onClick={() => setDiffOnly(false)}
-                        className="ml-1 font-semibold text-zinc-800 underline underline-offset-2 hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-zinc-100"
-                      >
+                    <td colSpan={cols.length + 1} className="p-6 text-center text-sm text-[#6e6e73] dark:text-zinc-400">
+                      <span>{cols.length < 2 ? '1機種のみ選択中のため、違いのあるスペック項目はありません' : '選択中のモデル間で異なるスペック項目はありません'}</span>{' '}
+                      <button type="button" onClick={() => setDiffOnly(false)} className="font-medium text-[#0071e3] hover:underline">
                         （すべて表示に戻す）
                       </button>
-                      {!specExpanded && visibleDetailRows.length > 0 && (
-                        <button
-                          data-export-ignore="true"
-                          type="button"
-                          onClick={() => setSpecExpanded(true)}
-                          className="ml-2 font-semibold text-zinc-700 underline underline-offset-2 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-100"
-                        >
-                          （詳細スペックの差分 {visibleDetailRows.length}項目を表示）
-                        </button>
-                      )}
                     </td>
                   </tr>
                 ) : (
-                  displayedSpecRows.map((er) => (
-                    <tr key={er.row.key}>
-                      <td
-                        className={`${
-                          isExporting ? '' : 'sticky left-0'
-                        } bg-white px-4 py-3.5 sm:px-5 sm:py-4 text-xs shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22] ${
-                          er.hasDiff
-                            ? 'font-semibold text-zinc-800 dark:text-zinc-200'
-                            : 'font-normal text-zinc-500 dark:text-zinc-500'
-                        }`}
-                      >
-                        <div className="inline-flex items-center gap-1.5">
-                          {er.hasDiff ? (
-                            <span
-                              className="h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-700 dark:bg-zinc-300"
-                              title="比較中のモデル間で違いがある項目"
-                            />
-                          ) : (
-                            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-transparent" aria-hidden="true" />
-                          )}
-                          <span>{er.row.label}</span>
-                        </div>
-                      </td>
-                      {cols.map((c, idx) => (
-                        <td
-                          key={c.sel.pid}
-                          className={`px-4 py-3.5 sm:px-5 sm:py-4 align-top ${
-                            er.hasDiff
-                              ? 'font-medium text-zinc-900 dark:text-zinc-100'
-                              : 'text-zinc-500 dark:text-zinc-500'
-                          }`}
-                        >
-                          {er.values[idx]}
+                  specSections.map((sec) => (
+                    <React.Fragment key={sec.id}>
+                      <tr className="bg-[#f5f5f7] dark:bg-[#23252b]">
+                        <td colSpan={cols.length + 1} className="px-4 pb-3 pt-7 text-sm font-semibold text-[#1d1d1f] dark:text-zinc-100 sm:px-5">
+                          {sec.title}
                         </td>
+                      </tr>
+                      {sec.rows.map((er) => (
+                        <tr key={er.row.key}>
+                          <td
+                            className={`${
+                              isExporting ? '' : 'sticky left-0'
+                            } bg-white px-4 py-3.5 text-sm shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22] sm:px-5 ${
+                              er.hasDiff ? 'font-semibold text-[#1d1d1f] dark:text-zinc-100' : 'font-normal text-[#6e6e73] dark:text-zinc-400'
+                            }`}
+                          >
+                            {er.row.label}
+                          </td>
+                          {cols.map((c, idx) => (
+                            <td
+                              key={c.sel.pid}
+                              className={`break-words px-4 py-3.5 align-top text-sm leading-relaxed sm:px-5 ${
+                                er.hasDiff ? 'font-medium text-[#1d1d1f] dark:text-zinc-100' : 'text-[#6e6e73] dark:text-zinc-400'
+                              }`}
+                            >
+                              {er.values[idx]}
+                            </td>
+                          ))}
+                        </tr>
                       ))}
-                    </tr>
+                    </React.Fragment>
                   ))
                 )}
-                <tr data-export-ignore="true" className={isExporting ? 'hidden' : ''}>
-                  <td colSpan={cols.length + 1} className="p-0">
-                    <button
-                      type="button"
-                      onClick={() => setSpecExpanded((prev) => !prev)}
-                      className="flex w-full items-center justify-center gap-1.5 bg-[#f5f5f7] px-4 py-3 text-xs font-semibold text-zinc-600 transition hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f37] dark:hover:text-zinc-100"
-                    >
-                      {specExpanded ? (
-                        <span>
-                          ▲ 詳細スペックを折りたたむ（主要{PRIMARY_SPEC_ROWS.length}項目のみ表示に戻す）
-                        </span>
-                      ) : (
-                        <span>
-                          ▼ 詳細スペック（アーキテクチャ・ボードID・モデル番号・対応バンド等 残り{detailEvalRows.length}項目{diffOnly ? ` / 差分${visibleDetailRows.length}項目` : ''}）をすべて表示
-                        </span>
-                      )}
-                    </button>
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
