@@ -34,7 +34,15 @@
         darkMode: 'class',
         theme: {
           extend: {
+            fontFamily: {
+              sans: [
+                '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"',
+                '"Hiragino Sans"', '"Hiragino Kaku Gothic ProN"', '"Noto Sans JP"', 'sans-serif',
+              ],
+            },
             colors: {
+              'apple-blue': { DEFAULT: '#0071e3', hover: '#0077ed' },
+              hairline: '#e5e5ea',
               zinc: {
                 50: '#f5f5f7',
                 100: '#ececef',
@@ -127,6 +135,55 @@
         background-color: #16171a;
         color: #ececef;
       }
+      /* ===== Apple HIG タイポグラフィ ===== */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Hiragino Sans",
+          "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      h1, h2, h3 { letter-spacing: -0.015em; }
+
+      /* ===== Liquid Glass（すりガラス＋立体ハイライト） ===== */
+      .liquid-glass {
+        background: rgba(255, 255, 255, 0.72);
+        -webkit-backdrop-filter: blur(24px) saturate(190%);
+        backdrop-filter: blur(24px) saturate(190%);
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      }
+      html.dark .liquid-glass {
+        background: rgba(28, 28, 30, 0.72);
+        border-color: rgba(255, 255, 255, 0.14);
+        box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+      }
+      /* モーダル・ボトムシート等、長文を載せる面は不透明度を上げて可読性を確保 */
+      .liquid-glass.liquid-glass-strong { background: rgba(255, 255, 255, 0.95); }
+      html.dark .liquid-glass.liquid-glass-strong { background: rgba(28, 28, 30, 0.95); }
+      @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        .liquid-glass { background: rgba(255, 255, 255, 0.96); }
+        html.dark .liquid-glass { background: rgba(28, 28, 30, 0.96); }
+      }
+
+      /* ===== Apple カード（極薄ヘアライン＋アンビエントシャドウ） ===== */
+      .apple-card {
+        background: #ffffff;
+        border: 1px solid #e5e5ea;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      }
+      html.dark .apple-card {
+        background: #1c1c1e;
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      /* フローティングUIの出現アニメーション */
+      @keyframes glass-in { from { opacity: 0; transform: translateY(-6px) scale(0.98); } to { opacity: 1; transform: none; } }
+      .animate-glass-in { animation: glass-in 0.28s cubic-bezier(0.32, 0.72, 0, 1) both; }
+      @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+      .animate-sheet-up { animation: sheet-up 0.32s cubic-bezier(0.32, 0.72, 0, 1) both; }
+      @media (min-width: 640px) { .animate-sheet-up { animation-name: glass-in; } }
+
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>

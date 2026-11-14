@@ -20,6 +20,7 @@ import {
   secondaryActionBtnCls,
   SectionTitle,
   Segmented,
+  Toggle,
   yen,
   type BudgetCategoryFilter,
   type CarrierId,
@@ -502,9 +503,9 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                   key={b.value}
                   type="button"
                   onClick={() => setMaxPrice(b.value)}
-                  className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
                     maxPrice === b.value
-                      ? 'bg-zinc-900 text-zinc-100 shadow-2xs dark:bg-zinc-200 dark:text-zinc-900'
+                      ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
                       : 'bg-white text-zinc-700 hover:bg-zinc-200/70 dark:bg-[#1c1d22] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
                   }`}
                 >
@@ -523,7 +524,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               aria-label="予算上限スライダー"
-              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-200 accent-zinc-900 dark:bg-[#18191e] dark:accent-zinc-200"
+              className="h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-[#18191e] dark:accent-zinc-200"
             />
             <div className="mt-1.5 flex justify-between text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
               <span>¥10,000</span>
@@ -547,39 +548,29 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
             </div>
 
             <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm">
-              <label className="inline-flex cursor-pointer items-center gap-2 font-medium text-zinc-700 dark:text-zinc-300">
-                <input
-                  type="checkbox"
-                  checked={includeUsed && !onlyNew}
-                  disabled={onlyNew}
-                  onChange={(e) => setIncludeUsed(e.target.checked)}
-                  className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200"
-                />
-                <span>中古・未使用品を含む</span>
-              </label>
-              <label className="inline-flex cursor-pointer items-center gap-2 font-medium text-zinc-700 dark:text-zinc-300">
-                <input
-                  type="checkbox"
-                  checked={onlyNew}
-                  onChange={(e) => {
-                    const checked = e.target.checked;
-                    setOnlyNew(checked);
-                    if (checked) setIncludeProgram(false);
-                  }}
-                  className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200"
-                />
-                <span>Apple直販（新品）のみ</span>
-              </label>
-              <label className="inline-flex cursor-pointer items-center gap-2 font-medium text-zinc-700 dark:text-zinc-300">
-                <input
-                  type="checkbox"
-                  checked={includeProgram && !onlyNew}
-                  disabled={onlyNew}
-                  onChange={(e) => setIncludeProgram(e.target.checked)}
-                  className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200"
-                />
-                <span>キャリア2年返却（実質負担額）を含める</span>
-              </label>
+              <Toggle
+                size="sm"
+                checked={includeUsed && !onlyNew}
+                disabled={onlyNew}
+                onChange={setIncludeUsed}
+                label="中古・未使用品を含む"
+              />
+              <Toggle
+                size="sm"
+                checked={onlyNew}
+                onChange={(checked) => {
+                  setOnlyNew(checked);
+                  if (checked) setIncludeProgram(false);
+                }}
+                label="Apple直販（新品）のみ"
+              />
+              <Toggle
+                size="sm"
+                checked={includeProgram && !onlyNew}
+                disabled={onlyNew}
+                onChange={setIncludeProgram}
+                label="キャリア2年返却（実質負担額）を含める"
+              />
             </div>
           </div>
         </div>
@@ -591,12 +582,12 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         <div className={`${card} flex flex-col justify-between p-5 sm:p-6`}>
           <div>
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
                 予算内「最高スペック」
               </span>
               {topUsed1 && (
-                <span className="rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
+                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
                   性能スコア {topUsed1.score.total}点
                 </span>
               )}
@@ -668,12 +659,12 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         <div className={`${card} flex flex-col justify-between p-5 sm:p-6`}>
           <div>
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
                 予算内「Apple直販新品」最高機
               </span>
               {bestNewWithinBudget && (
-                <span className="rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
+                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
                   性能スコア {bestNewWithinBudget.score.total}点
                 </span>
               )}
@@ -765,12 +756,12 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         <div className={`${card} flex flex-col justify-between p-5 sm:p-6`}>
           <div>
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-zinc-500" />
                 キャリア2年返却の最高機
               </span>
               {bestProgramWithinBudget && (
-                <span className="rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
+                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
                   性能スコア {bestProgramWithinBudget.score.total}点
                 </span>
               )}
@@ -880,7 +871,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                   <div>
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex min-w-0 items-center gap-2">
-                        <span className="inline-flex h-6 min-w-[2rem] shrink-0 items-center justify-center rounded-lg bg-white px-2 text-xs font-bold tabular-nums text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-200">
+                        <span className="inline-flex h-6 min-w-[2rem] shrink-0 items-center justify-center rounded-full bg-white px-2 text-xs font-bold tabular-nums text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-200">
                           #{idx + 1}
                         </span>
                         <CatIcon cat={item.p.category} className="h-4 w-4 shrink-0 text-zinc-400" />
@@ -888,7 +879,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                           {item.p.name}
                         </span>
                       </div>
-                      <span className="shrink-0 rounded-lg bg-white px-2.5 py-0.5 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#1c1d22] dark:text-zinc-300">
+                      <span className="shrink-0 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#1c1d22] dark:text-zinc-300">
                         スコア {item.score.total}
                       </span>
                     </div>
@@ -902,7 +893,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                       <span>・{item.score.releaseYear}年（残{item.score.remainingSupportYears}年）</span>
                     </div>
 
-                    <div className="mt-3.5 rounded-xl bg-white p-3.5 dark:bg-[#1c1d22]">
+                    <div className="mt-3.5 rounded-2xl bg-white p-3.5 dark:bg-[#1c1d22]">
                       <div className="flex items-baseline justify-between gap-2">
                         <div>
                           <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">

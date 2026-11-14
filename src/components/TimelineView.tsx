@@ -28,6 +28,8 @@ import {
   rateDiffVal,
   SectionTitle,
   selectCls,
+  Segmented,
+  Toggle,
   sortCategories,
   SPEC_ROWS,
   resolveSpecRaw,
@@ -593,22 +595,16 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
           <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
             全機種 価格イベント一覧 <span className="text-xs font-semibold text-zinc-500">({filtered.length}件)</span>
           </h3>
-          <div className="inline-flex rounded-xl bg-zinc-200/70 p-1 dark:bg-[#23252b]">
-            <button
-              type="button"
-              onClick={() => setViewMode('grouped')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${viewMode === 'grouped' ? 'bg-white text-zinc-900 shadow-2xs dark:bg-[#1c1d22] dark:text-zinc-100' : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
-            >
-              📅 日付・イベント別グループ表示
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('flat')}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${viewMode === 'flat' ? 'bg-white text-zinc-900 shadow-2xs dark:bg-[#1c1d22] dark:text-zinc-100' : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
-            >
-              📋 フラット一覧表
-            </button>
-          </div>
+          <Segmented<'grouped' | 'flat'>
+            size="sm"
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel="表示モード"
+            options={[
+              { value: 'grouped', label: '📅 日付・イベント別' },
+              { value: 'flat', label: '📋 フラット一覧' },
+            ]}
+          />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -638,7 +634,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
               onClick={() => { setKind(pill.value); setLimit(150); }}
               className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                 active
-                  ? 'bg-zinc-900 text-zinc-100 shadow-2xs dark:bg-zinc-200 dark:text-zinc-900'
+                  ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
                   : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
               }`}
             >
@@ -661,10 +657,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
             placeholder="製品名・イベントで検索..."
             className={`${selectCls} w-44 sm:w-56 py-1.5 text-xs`}
           />
-          <label className="inline-flex cursor-pointer items-center gap-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-300">
-            <input type="checkbox" checked={allSkus} onChange={(e) => setAllSkus(e.target.checked)} className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200" />
-            全容量SKU
-          </label>
+          <Toggle checked={allSkus} onChange={setAllSkus} size="sm" label="全容量SKU" />
           <button className={`${btnCls} py-1.5 text-xs`} onClick={() => setSortDesc(!sortDesc)}>
             {sortDesc ? '↓ 新しい順' : '↑ 古い順'}
           </button>

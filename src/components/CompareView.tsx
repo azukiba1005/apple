@@ -12,6 +12,9 @@ import {
   buildCompareTable,
   buildShareSearchString,
   card,
+  glassCls,
+  primaryBtnCls,
+  Toggle,
   CarrierBadge,
   carrierColor,
   CARRIER_META,
@@ -442,14 +445,14 @@ function TradeInSimulatorBar({
     <div className={`${card} px-5 py-3.5 sm:px-6 sm:py-4`}>
       <div className="flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex flex-wrap items-center gap-2.5 min-w-0">
-          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#f5f5f7] text-xs dark:bg-[#23252b]">
+          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f5f5f7] text-xs dark:bg-white/10">
             🔄
           </span>
           <h3 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">
             下取り・買い替え追い金シミュレーター
           </h3>
           {tradeInEst ? (
-            <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#f5f5f7] px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-800 dark:bg-[#23252b] dark:text-zinc-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f5f7] px-3 py-1 text-xs font-semibold tabular-nums text-zinc-800 dark:bg-[#23252b] dark:text-zinc-200">
               <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
               {tradeInEst.myProduct.name} ({tradeInEst.mySku.label}) 売却推計:{' '}
               <strong className="font-bold text-zinc-900 dark:text-zinc-100">−{yen(tradeInEst.activeYen)}</strong>
@@ -470,10 +473,10 @@ function TradeInSimulatorBar({
                     key={pr.id}
                     type="button"
                     onClick={() => applyPreset(pr.id, pr.skuHint)}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
+                    className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                       isSelected
-                        ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                        : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
+                        ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
+                        : 'bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e8e8ed] dark:bg-white/10 dark:text-zinc-200'
                     }`}
                   >
                     {pr.label}
@@ -506,7 +509,7 @@ function TradeInSimulatorBar({
       </div>
 
       {expanded && (
-        <div className="mt-3.5 rounded-2xl bg-[#f5f5f7] p-4 dark:bg-[#23252b]">
+        <div className="mt-3.5 rounded-3xl bg-[#f5f5f7] p-4 dark:bg-white/[0.04]">
           {/* クイック選択プリセットボタン */}
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">定番の乗り換え元:</span>
@@ -519,10 +522,10 @@ function TradeInSimulatorBar({
                   key={pr.id}
                   type="button"
                   onClick={() => applyPreset(pr.id, pr.skuHint)}
-                  className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                     isSelected
-                      ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                      : 'bg-white text-zinc-700 hover:bg-zinc-200/70 dark:bg-[#1c1d22] dark:text-zinc-200 dark:hover:bg-[#2c2f36]'
+                      ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
+                      : 'bg-white text-[#1d1d1f] shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:bg-[#fafafa] dark:bg-white/10 dark:text-zinc-200'
                   }`}
                 >
                   {pr.label}
@@ -538,7 +541,7 @@ function TradeInSimulatorBar({
                 1. 現在使っている機種
               </label>
               <select
-                className={`${selectCls} !bg-white dark:!bg-[#1c1d22] w-full`}
+                className={`${selectCls} w-full`}
                 value={mySel?.pid ?? ''}
                 aria-label="現在使っている機種を選択"
                 onChange={(e) => {
@@ -575,7 +578,7 @@ function TradeInSimulatorBar({
                 2. 容量 (SKU)
               </label>
               <select
-                className={`${selectCls} !bg-white dark:!bg-[#1c1d22] w-full`}
+                className={`${selectCls} w-full`}
                 disabled={!myProduct}
                 value={mySel?.sid ?? ''}
                 aria-label="現在使っている機種の容量を選択"
@@ -601,7 +604,7 @@ function TradeInSimulatorBar({
               </label>
               <div className="flex flex-wrap items-center gap-2">
                 <select
-                  className={`${selectCls} !bg-white dark:!bg-[#1c1d22] min-w-0 flex-1`}
+                  className={`${selectCls} min-w-0 flex-1`}
                   disabled={!myProduct}
                   value={sellMode}
                   aria-label="売却ルートを選択"
@@ -628,7 +631,7 @@ function TradeInSimulatorBar({
                       step={1000}
                       value={sellCustom}
                       onChange={(e) => setSellCustom(Math.max(0, Number(e.target.value) || 0))}
-                      className={`${selectCls} !bg-white dark:!bg-[#1c1d22] w-28 tabular-nums`}
+                      className={`${selectCls} w-28 tabular-nums`}
                       aria-label="手入力査定額"
                     />
                   </div>
@@ -650,41 +653,17 @@ function TradeInSimulatorBar({
                     <span className="ml-1 text-xs text-zinc-400">(年式推計)</span>
                   )}
                 </span>
-                <div className="flex flex-wrap items-center gap-2 text-xs tabular-nums">
-                  <button
-                    type="button"
-                    onClick={() => setSellMode('flea')}
-                    className={`rounded-lg px-2.5 py-1 font-medium transition ${
-                      sellMode === 'flea'
-                        ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                        : 'bg-white text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#1c1d22] dark:text-zinc-300'
-                    }`}
-                  >
-                    フリマ手取り: {yen(tradeInEst.fleaYen)}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSellMode('shop')}
-                    className={`rounded-lg px-2.5 py-1 font-medium transition ${
-                      sellMode === 'shop'
-                        ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                        : 'bg-white text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#1c1d22] dark:text-zinc-300'
-                    }`}
-                  >
-                    ショップ買取: {yen(tradeInEst.shopYen)}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSellMode('tradein')}
-                    className={`rounded-lg px-2.5 py-1 font-medium transition ${
-                      sellMode === 'tradein'
-                        ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                        : 'bg-white text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#1c1d22] dark:text-zinc-300'
-                    }`}
-                  >
-                    Apple下取り: {yen(tradeInEst.tradeinYen)}
-                  </button>
-                </div>
+                <Segmented<SellMode>
+                  size="sm"
+                  value={sellMode === 'custom' ? 'flea' : sellMode}
+                  onChange={setSellMode}
+                  ariaLabel="売却ルート"
+                  options={[
+                    { value: 'flea', label: <span className="tabular-nums">フリマ {yen(tradeInEst.fleaYen)}</span> },
+                    { value: 'shop', label: <span className="tabular-nums">ショップ {yen(tradeInEst.shopYen)}</span> },
+                    { value: 'tradein', label: <span className="tabular-nums">Apple下取り {yen(tradeInEst.tradeinYen)}</span> },
+                  ]}
+                />
               </div>
               <div className="text-xs font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
                 適用中の下取り差引: −{yen(tradeInEst.activeYen)}
@@ -738,8 +717,8 @@ function TradeInCardOverlay({
     <div
       className={
         inTable
-          ? `rounded-xl bg-[#f5f5f7] ${compact ? 'p-2.5' : 'p-3.5'} dark:bg-[#23252b]`
-          : 'rounded-xl bg-[#f5f5f7] p-3.5 dark:bg-[#23252b]'
+          ? `rounded-2xl bg-[#f5f5f7] ${compact ? 'p-2.5' : 'p-3.5'} dark:bg-white/[0.06]`
+          : 'rounded-2xl bg-[#f5f5f7] p-3.5 dark:bg-white/[0.06]'
       }
     >
       <div className="flex items-center justify-between gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
@@ -969,7 +948,6 @@ export const CompareView = React.memo(function CompareView({
   const [adding, setAdding] = useState('');
   const [q, setQ] = useState('');
   const [catF, setCatF] = useState('');
-  const [mobileView, setMobileView] = useState<'stack' | 'table'>('stack');
   const [usedMap, setUsedMap] = useState<Record<string, UsedMarketData>>({});
   const [activeShopModal, setActiveShopModal] = useState<{ p: Product; sku: Sku } | null>(null);
   const [loadingModalKey, setLoadingModalKey] = useState<string | null>(null);
@@ -1319,185 +1297,357 @@ export const CompareView = React.memo(function CompareView({
     return { min, ids: vals.filter((x) => x.v === min).map((x) => x.id) };
   };
 
-  const SHOW_SWITCH_ITEMS: { key: CompareShowKey; icon: string; label: string }[] = [
-    { key: 'tradein', icon: '🔄', label: '下取り・追い金計算' },
-  ];
+  /* ---------------- スマホ: 2列ピタッと比較（表示する2機種のスロット） ---------------- */
+  const [mobilePair, setMobilePair] = useState<[number, number]>([0, 1]);
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const pairIdx = useMemo<number[]>(() => {
+    const n = cols.length;
+    if (n === 0) return [];
+    if (n === 1) return [0];
+    const a = Math.min(mobilePair[0], n - 1);
+    let b = Math.min(mobilePair[1], n - 1);
+    if (a === b) b = a === 0 ? 1 : 0;
+    return [a, b];
+  }, [cols.length, mobilePair]);
+  const mCols = pairIdx.map((i) => cols[i]);
 
-  return (
-    <div className="space-y-5 sm:space-y-6">
-      <div className={`${card} p-5 sm:p-6`}>
-        <SectionTitle icon={<Scale className="h-5 w-5" />} title="スペック＆キャリア価格 比較" desc="機種を追加し、容量・通信方式を選んで横並び比較。最安キャリアを自動ハイライトします。" />
-        <div className="flex flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:items-center">
-          <Segmented<Mode> value={mode} onChange={setMode} options={[{ value: 'bulk', label: '一括価格モード' }, { value: 'return', label: '2年返却（実質）モード' }]} />
-          <label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            <input type="checkbox" checked={mnp} onChange={(e) => setMnp(e.target.checked)} className="h-4 w-4 accent-zinc-700 dark:accent-zinc-300" />MNP/新規割引を適用
-          </label>
-          <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
-            {/* 画像出力コントロール群（範囲選択 ＋ PNG保存 ＋ クリップボードコピー） */}
-            <div className="inline-flex flex-wrap items-center gap-1.5 rounded-xl bg-[#f5f5f7] p-1 dark:bg-[#23252b]">
-              <select
-                value={imageScope}
-                onChange={(e) => setImageScope(e.target.value as ImageExportScope)}
-                aria-label="画像キャプチャ範囲を選択"
-                className="rounded-lg border-0 bg-transparent py-1.5 pl-2.5 pr-1.5 text-xs font-medium text-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:text-zinc-300"
-                title="画像出力する範囲を選択"
-              >
-                <option value="all">範囲: カード＋テーブル全体</option>
-                <option value="cards">範囲: サマリーカードのみ</option>
-                <option value="table">範囲: 比較テーブルのみ</option>
-              </select>
-              <button
-                type="button"
-                disabled={!cols.length || exportingKind !== null}
-                onClick={() => doDownloadImage()}
-                className={`${btnCls} !py-1.5 !px-3 !text-xs`}
-                title={`選択範囲（${IMAGE_EXPORT_SCOPE_LABELS[imageScope]}）を高解像度PNG画像として保存`}
-              >
-                <span>{exportingKind === 'download' ? '⏳ 画像生成中...' : '📷 画像として保存 (PNG)'}</span>
-              </button>
-              <button
-                type="button"
-                disabled={!cols.length || exportingKind !== null}
-                onClick={doCopyImage}
-                className={`${btnCls} !py-1.5 !px-3 !text-xs ${
-                  imageCopied
-                    ? '!bg-[#e3efe7] !text-[#2f573d] dark:!bg-[#22352b] dark:!text-[#9bc4a8]'
-                    : ''
-                }`}
-                title={`選択範囲（${IMAGE_EXPORT_SCOPE_LABELS[imageScope]}）のPNG画像をクリップボードへ直接コピー`}
-              >
-                <span>
-                  {imageCopied
-                    ? '✅ 画像をコピーしました！'
-                    : exportingKind === 'copy'
-                      ? '⏳ コピー中...'
-                      : '📋 画像をコピー'}
-                </span>
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={doCopyShareUrl}
-              disabled={!cols.length}
-              className={`${btnCls} ${
-                urlCopied
-                  ? '!bg-zinc-200/80 dark:!bg-zinc-700'
-                  : ''
-              }`}
-            >
-              {urlCopied ? (
-                <>
-                  <Check className="h-4 w-4 shrink-0 text-[#3d6b4e] dark:text-[#88b396]" />
-                  <span>コピー済</span>
-                </>
-              ) : (
-                <>
-                  <Link2 className="h-4 w-4 shrink-0" />
-                  <span>比較URLをコピー</span>
-                </>
+  const mobileSpecSections = useMemo(
+    () =>
+      SPEC_GROUPS.map((g) => {
+        const rows = evaluateSpecRows(mCols, g.rows).filter((r) => !r.allEmpty);
+        return { id: g.id, title: g.title, rows: diffOnly ? rows.filter((r) => r.hasDiff) : rows };
+      }).filter((sec) => sec.rows.length > 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mCols.map((c) => `${c.p.id}__${c.sku.id}`).join('|'), diffOnly],
+  );
+  const mobileDiffCount = useMemo(
+    () =>
+      SPEC_GROUPS.reduce(
+        (n, g) => n + evaluateSpecRows(mCols, g.rows).filter((r) => !r.allEmpty && r.hasDiff).length,
+        0,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mCols.map((c) => `${c.p.id}__${c.sku.id}`).join('|')],
+  );
+
+  const sortedAllProducts = useMemo(() => [...all].sort(compareProducts), [all]);
+  const allProductCats = useMemo(
+    () => sortCategories(Array.from(new Set(sortedAllProducts.map((x) => x.category)))),
+    [sortedAllProducts],
+  );
+  const defaultSkuIdOf = (p: Product) => [...(pricedSkus(p).length ? pricedSkus(p) : p.skus)].sort(compareSkus)[0].id;
+
+  /** スマホ列の機種変更: 比較リスト内の機種ならその列に表示、それ以外は該当スロットの機種を置き換え */
+  const changeMobileSlotProduct = (slot: number, pid: string) => {
+    const existing = cols.findIndex((c) => c.p.id === pid);
+    const curIdx = pairIdx[slot];
+    if (existing >= 0) {
+      const next: [number, number] = [pairIdx[0] ?? 0, pairIdx[1] ?? 1];
+      if (next[1 - slot] === existing) next[1 - slot] = curIdx;
+      next[slot] = existing;
+      setMobilePair(next);
+      return;
+    }
+    const p = all.find((x) => x.id === pid);
+    if (!p) return;
+    if (curIdx == null) {
+      setSels([...sels, { pid: p.id, sid: defaultSkuIdOf(p) }]);
+      setMobilePair([pairIdx[0] ?? 0, cols.length]);
+      return;
+    }
+    setSels(sels.map((s, i) => (i === curIdx ? { pid: p.id, sid: defaultSkuIdOf(p) } : s)));
+  };
+  const setSkuFor = (pid: string, sid: string) =>
+    setSels(sels.map((s) => (s.pid === pid ? { ...s, sid } : s)));
+
+  /* ---------------- スクロール追従（Sticky）Liquid Glass 機種バー ---------------- */
+  const stickySentinelRef = useRef<HTMLDivElement>(null);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const el = stickySentinelRef.current;
+      if (!el) return;
+      const headerH =
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--app-header-h') || '0', 10) || 0;
+      const next = el.getBoundingClientRect().top < headerH + 8;
+      setShowStickyBar((prev) => (prev === next ? prev : next));
+    };
+    const onScroll = () => {
+      if (!raf) raf = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, [cols.length]);
+
+  const mainPriceOf = (c: (typeof cols)[number]) => {
+    const ch = cheapest(c);
+    return ch.min ?? c.sku.carriers.apple?.currentPrice ?? null;
+  };
+
+  /** キャリア価格セルの中身（PCテーブル・スマホ2列で共通） */
+  const renderCarrierCell = (c: (typeof cols)[number], id: CarrierId) => {
+    const cp = c.sku.carriers[id];
+    const v = carrierValue(cp, mode, mnp);
+    const ch = cheapest(c);
+    const isMin = v != null && ch.ids.includes(id);
+    const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
+    const isDisc = Boolean(cp?.isDiscontinued ?? discInfo.isDiscontinued);
+    const subParts: string[] = cp && v != null ? carrierSubParts(cp, mode, mnp) : [];
+    if (v == null) {
+      const unavail = getCarrierUnavailableInfo(c.p, c.sku, id, mode, mnp);
+      return (
+        <div className="space-y-1.5">
+          <span className="inline-flex items-center rounded-full bg-[#f5f5f7] px-2.5 py-0.5 text-xs text-[#6e6e73] dark:bg-white/10 dark:text-zinc-400">
+            {unavail.badge}
+          </span>
+          {unavail.refPrice != null && (
+            <div className="flex flex-wrap items-center gap-1.5 text-xs text-[#6e6e73] dark:text-zinc-400">
+              <span className="inline-flex flex-wrap items-center gap-1">
+                <span>{unavail.refLabel}:</span>
+                <strong className="font-semibold tabular-nums text-[#1d1d1f] dark:text-zinc-200">{yen(unavail.refPrice)}</strong>
+              </span>
+              {!isExporting && unavail.cellularSku && (
+                <button
+                  type="button"
+                  data-export-ignore="true"
+                  onClick={() => setSkuFor(c.sel.pid, unavail.cellularSku!.id)}
+                  className="text-xs font-medium text-[#0071e3] hover:underline"
+                >
+                  Cellular版へ切替
+                </button>
               )}
-            </button>
-            <a
-              href={xPostIntentUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={btnCls}
-            >
-              <span>𝕏 ポスト</span>
-            </a>
-            <button className={excelBtnCls} disabled={!cols.length} onClick={doExportExcel}><FileSpreadsheet className="h-4 w-4 shrink-0" />Excel</button>
-            <button className={btnCls} disabled={!cols.length} onClick={() => doCopy('md')}><Copy className="h-4 w-4 shrink-0" />Markdown</button>
-            <button className={btnCls} disabled={!cols.length} onClick={() => doCopy('csv')}><Copy className="h-4 w-4 shrink-0" />CSV</button>
-          </div>
-        </div>
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {cols.map((c) => (
-            <span key={c.sel.pid} className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 py-1.5 pl-3.5 pr-2 text-xs sm:text-sm font-medium text-zinc-800 dark:bg-[#25272e] dark:text-zinc-100">
-              <CatIcon cat={c.p.category} className="h-3.5 w-3.5 shrink-0" />{c.p.name}
-              <button aria-label="削除" onClick={() => setSels(sels.filter((s) => s.pid !== c.sel.pid))} className="rounded-full p-1 hover:bg-zinc-300/80 dark:hover:bg-zinc-700"><X className="h-3.5 w-3.5" /></button>
-            </span>
-          ))}
-          {available.length > 0 && (
-            <div className="grid w-full grid-cols-2 gap-2 sm:w-auto sm:inline-flex sm:flex-wrap sm:items-center sm:gap-2">
-              <select className={`${selectCls} w-full sm:w-auto`} value={catF} onChange={(e) => setCatF(e.target.value)} aria-label="カテゴリ絞り込み">
-                <option value="">全カテゴリ</option>{allCats.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
-              <span className="relative w-full sm:w-auto"><Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
-                <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="機種名・識別子で検索" className={`${selectCls} w-full sm:w-48 pl-9`} /></span>
-              <select className={`${selectCls} col-span-2 w-full sm:col-span-1 sm:w-auto sm:max-w-[16rem]`} value={adding} onChange={(e) => { const p = all.find((x) => x.id === e.target.value); if (p) { const nextSkus = [...(pricedSkus(p).length ? pricedSkus(p) : p.skus)].sort(compareSkus); setSels([...sels, { pid: p.id, sid: nextSkus[0].id }]); } setAdding(''); }}>
-                <option value="">＋ 機種を追加… ({matched.length}件)</option>
-                {sortCategories(Array.from(new Set(matched.map((x) => x.category)))).map((cat) => (
-                  <optgroup key={cat} label={cat}>{matched.filter((x) => x.category === cat).sort(compareProducts).map((x) => <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)}){hasDetail(x) ? ' ★' : ''}</option>)}</optgroup>
-                ))}
-              </select>
             </div>
           )}
         </div>
-
-        {/* 表示カスタマイズバー（4つの詳細トグルスイッチ ＋ 差分フィルタ ＋ シンプル/フル詳細一括切替） */}
-        <div className="mt-4 flex flex-col gap-2.5 border-t border-zinc-200/50 pt-3.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between dark:border-white/[0.05]">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-              表示カスタマイズ:
+      );
+    }
+    return (
+      <div className="space-y-1">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+          <span
+            className={`whitespace-nowrap text-[15px] font-semibold tracking-tight tabular-nums sm:text-base ${
+              isDisc ? 'text-[#424245] dark:text-zinc-300' : 'text-[#1d1d1f] dark:text-zinc-100'
+            }`}
+          >
+            {yen(v)}
+          </span>
+          {mode === 'return' && cp?.returnProgram && (
+            <span className="whitespace-nowrap text-xs tabular-nums text-[#6e6e73] dark:text-zinc-400">
+              月々約{yen(Math.round(v / (cp.returnProgram.months || 24)))}
             </span>
-            {SHOW_SWITCH_ITEMS.map((item) => {
-              const active = showFlags[item.key];
-              return (
-                <button
-                  key={item.key}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => toggleShowFlag(item.key)}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                    active
-                      ? 'bg-zinc-800 text-zinc-100 shadow-sm dark:bg-zinc-200 dark:text-zinc-900'
-                      : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-400 dark:hover:bg-[#2d3039] dark:hover:text-zinc-200'
-                  }`}
-                >
-                  <span aria-hidden="true">{item.icon}</span>
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
+          )}
+          {isMin ? (
+            <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[#e8f8ec] px-2 py-0.5 text-[11px] font-semibold text-[#1f7a3a] dark:bg-[#34c759]/15 dark:text-[#5fd884]">
+              <span className={`h-1.5 w-1.5 rounded-full ${isDisc ? 'bg-zinc-500' : 'bg-[#34c759]'}`} />
+              {isDisc ? '終売最安' : '最安'}
+            </span>
+          ) : ch.min != null ? (
+            <span className="whitespace-nowrap text-xs tabular-nums text-[#86868b]">({signedYen(v - ch.min)})</span>
+          ) : null}
+        </div>
+        {subParts.length > 0 && (
+          <div className="break-words text-xs tabular-nums text-[#6e6e73] dark:text-zinc-400">{subParts.join(' ｜ ')}</div>
+        )}
+      </div>
+    );
+  };
+
+  /** キャリア名ラベル（色ドット付き） */
+  const carrierLabel = (id: CarrierId) => (
+    <span className="inline-flex items-center gap-1.5">
+      <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: carrierColor(id, dark) }} />
+      {CARRIER_META[id].label}
+    </span>
+  );
+
+  const modeLabel = `${mode === 'bulk' ? '一括' : '2年返却 実質負担額'}${mnp ? '（MNP/新規割引後）' : ''}`;
+  const toggleChipCls = (active: boolean) =>
+    `inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition ${
+      active
+        ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
+        : 'bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e8e8ed] dark:bg-white/10 dark:text-zinc-200 dark:hover:bg-white/15'
+    }`;
+
+  return (
+    <div className="space-y-4 sm:space-y-6">
+      {/* ===== 条件バー（スマホは「条件・ツール ▾」に補助ツールを格納） ===== */}
+      <div className={`${card} p-4 sm:p-6`}>
+        <SectionTitle
+          icon={<Scale className="h-5 w-5" />}
+          title="モデル比較"
+          desc="容量・通信方式を選んで横並び比較。最安キャリアを自動ハイライトします。"
+        />
+        <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:gap-4">
+          <div className="w-full md:w-auto">
+            <Segmented<Mode>
+              value={mode}
+              onChange={setMode}
+              fullWidth
+              ariaLabel="価格表示モード"
+              options={[
+                { value: 'bulk', label: '一括' },
+                { value: 'return', label: '2年返却（実質）' },
+              ]}
+            />
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <Toggle checked={mnp} onChange={setMnp} size="sm" label="MNP/新規割引" />
             <button
               type="button"
-              aria-pressed={diffOnly}
-              onClick={() => setDiffOnly((prev) => !prev)}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                diffOnly
-                  ? 'bg-zinc-800 text-zinc-100 shadow-sm dark:bg-zinc-200 dark:text-zinc-900'
-                  : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-400 dark:hover:bg-[#2d3039] dark:hover:text-zinc-200'
-              }`}
+              onClick={() => setToolsOpen((v) => !v)}
+              aria-expanded={toolsOpen}
+              aria-controls="compare-tools-panel"
+              className={`${glassCls} inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-[#1d1d1f] transition active:scale-95 md:hidden dark:text-zinc-100`}
             >
-              <span aria-hidden="true">🔍</span>
-              <span>差分のみ表示</span>
+              <Sparkles className="h-4 w-4" />
+              条件・ツール
+              <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${toolsOpen ? 'rotate-180' : ''}`} />
             </button>
           </div>
-          <div className="flex items-center gap-2 self-end sm:self-auto">
-            <button
-              type="button"
-              onClick={applySimpleView}
-              disabled={isSimpleView}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
-                isSimpleView
-                  ? 'bg-zinc-100 text-zinc-400 cursor-default dark:bg-[#23252b] dark:text-zinc-500'
-                  : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-300 dark:hover:bg-[#2d3039] dark:hover:text-zinc-100'
-              }`}
-            >
-              シンプル表示（初期）
-            </button>
-            <button
-              type="button"
-              onClick={applyFullDetailView}
-              disabled={isFullDetailView}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
-                isFullDetailView
-                  ? 'bg-zinc-100 text-zinc-400 cursor-default dark:bg-[#23252b] dark:text-zinc-500'
-                  : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-300 dark:hover:bg-[#2d3039] dark:hover:text-zinc-100'
-              }`}
-            >
-              フル詳細表示
-            </button>
+        </div>
+
+        {/* 補助ツール（スマホは折りたたみ・PCは常時表示） */}
+        <div
+          id="compare-tools-panel"
+          className={`grid transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] md:!grid-rows-[1fr] md:!opacity-100 ${
+            toolsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          }`}
+        >
+          <div className="min-h-0 overflow-hidden md:overflow-visible">
+            {/* 表示カスタマイズ */}
+            <div className="mt-4 flex flex-col gap-3 border-t border-[#e5e5ea] pt-4 md:flex-row md:flex-wrap md:items-center md:justify-between dark:border-white/[0.08]">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+                <Toggle
+                  checked={showFlags.tradein}
+                  onChange={() => toggleShowFlag('tradein')}
+                  size="sm"
+                  label="下取り・追い金計算"
+                />
+                <Toggle checked={diffOnly} onChange={setDiffOnly} size="sm" label="差分のみ表示" />
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Segmented<'simple' | 'full'>
+                  size="sm"
+                  value={isFullDetailView ? 'full' : 'simple'}
+                  onChange={(v) => (v === 'full' ? applyFullDetailView() : applySimpleView())}
+                  ariaLabel="表示の詳しさ"
+                  options={[
+                    { value: 'simple', label: 'シンプル' },
+                    { value: 'full', label: 'フル詳細' },
+                  ]}
+                />
+                {onOpenBudgetTab && (
+                  <button type="button" onClick={onOpenBudgetTab} className={primaryBtnCls}>
+                    <Coins className="h-4 w-4" />
+                    予算から逆算
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* 比較中の機種チップ＋機種追加 */}
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              {cols.map((c) => (
+                <span
+                  key={c.sel.pid}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f5f7] py-1.5 pl-3.5 pr-1.5 text-xs font-medium text-[#1d1d1f] sm:text-sm dark:bg-white/10 dark:text-zinc-100"
+                >
+                  <CatIcon cat={c.p.category} className="h-3.5 w-3.5 shrink-0" />
+                  {c.p.name}
+                  <button
+                    aria-label={`${c.p.name} を比較から外す`}
+                    onClick={() => setSels(sels.filter((s) => s.pid !== c.sel.pid))}
+                    className="rounded-full p-1 transition hover:bg-black/[0.06] dark:hover:bg-white/15"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </span>
+              ))}
+              {available.length > 0 && (
+                <div className="grid w-full grid-cols-2 gap-2 sm:w-auto sm:inline-flex sm:flex-wrap sm:items-center">
+                  <select className={`${selectCls} w-full sm:w-auto`} value={catF} onChange={(e) => setCatF(e.target.value)} aria-label="カテゴリ絞り込み">
+                    <option value="">全カテゴリ</option>
+                    {allCats.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <span className="relative w-full sm:w-auto">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#86868b]" />
+                    <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="機種名・識別子で検索" className={`${selectCls} w-full pl-9 sm:w-48`} />
+                  </span>
+                  <select
+                    className={`${selectCls} col-span-2 w-full sm:col-span-1 sm:w-auto sm:max-w-[16rem]`}
+                    value={adding}
+                    onChange={(e) => {
+                      const p = all.find((x) => x.id === e.target.value);
+                      if (p) setSels([...sels, { pid: p.id, sid: defaultSkuIdOf(p) }]);
+                      setAdding('');
+                    }}
+                  >
+                    <option value="">＋ 機種を追加… ({matched.length}件)</option>
+                    {sortCategories(Array.from(new Set(matched.map((x) => x.category)))).map((cat) => (
+                      <optgroup key={cat} label={cat}>
+                        {matched.filter((x) => x.category === cat).sort(compareProducts).map((x) => (
+                          <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)}){hasDetail(x) ? ' ★' : ''}</option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+
+            {/* 共有・書き出し */}
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-[#e5e5ea] pt-4 dark:border-white/[0.08]">
+              <div className="inline-flex flex-wrap items-center gap-1 rounded-full bg-[#f5f5f7] p-1 dark:bg-white/[0.06]">
+                <select
+                  value={imageScope}
+                  onChange={(e) => setImageScope(e.target.value as ImageExportScope)}
+                  aria-label="画像キャプチャ範囲を選択"
+                  className="rounded-full border-0 bg-transparent py-1.5 pl-3 pr-1.5 text-xs font-medium text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30 dark:text-zinc-200"
+                  title="画像出力する範囲を選択"
+                >
+                  <option value="all">範囲: カード＋テーブル全体</option>
+                  <option value="cards">範囲: サマリーカードのみ</option>
+                  <option value="table">範囲: 比較テーブルのみ</option>
+                </select>
+                <button
+                  type="button"
+                  disabled={!cols.length || exportingKind !== null}
+                  onClick={() => doDownloadImage()}
+                  className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40 dark:bg-white/15 dark:text-zinc-100"
+                  title={`選択範囲（${IMAGE_EXPORT_SCOPE_LABELS[imageScope]}）を高解像度PNG画像として保存`}
+                >
+                  {exportingKind === 'download' ? '⏳ 生成中…' : '📷 画像を保存'}
+                </button>
+                <button
+                  type="button"
+                  disabled={!cols.length || exportingKind !== null}
+                  onClick={doCopyImage}
+                  className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40 dark:bg-white/15 dark:text-zinc-100"
+                  title={`選択範囲（${IMAGE_EXPORT_SCOPE_LABELS[imageScope]}）のPNG画像をクリップボードへ直接コピー`}
+                >
+                  {imageCopied ? '✅ コピー済' : exportingKind === 'copy' ? '⏳ コピー中…' : '📋 画像をコピー'}
+                </button>
+              </div>
+              <button type="button" onClick={doCopyShareUrl} disabled={!cols.length} className={btnCls}>
+                {urlCopied ? <Check className="h-4 w-4 shrink-0 text-[#34c759]" /> : <Link2 className="h-4 w-4 shrink-0" />}
+                <span>{urlCopied ? 'コピー済' : '比較URLをコピー'}</span>
+              </button>
+              <a href={xPostIntentUrl} target="_blank" rel="noopener noreferrer" className={btnCls}>
+                <span>𝕏 ポスト</span>
+              </a>
+              <button className={excelBtnCls} disabled={!cols.length} onClick={doExportExcel}><FileSpreadsheet className="h-4 w-4 shrink-0" />Excel</button>
+              <button className={btnCls} disabled={!cols.length} onClick={() => doCopy('md')}><Copy className="h-4 w-4 shrink-0" />Markdown</button>
+              <button className={btnCls} disabled={!cols.length} onClick={() => doCopy('csv')}><Copy className="h-4 w-4 shrink-0" />CSV</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1516,36 +1666,36 @@ export const CompareView = React.memo(function CompareView({
       )}
 
       {!cols.length ? (
-        <div className={`${card} p-8 sm:p-10 text-center text-sm text-zinc-500`}>比較する機種を追加してください。</div>
+        <div className={`${card} p-8 sm:p-10 text-center text-sm text-[#6e6e73]`}>比較する機種を追加してください。</div>
       ) : (
         <div
           ref={captureRootRef}
           className={
             isExporting
-              ? 'space-y-5 rounded-2xl bg-[#f5f5f7] p-6 text-zinc-900 dark:bg-[#16171a] dark:text-zinc-100'
-              : 'space-y-5 sm:space-y-6'
+              ? 'space-y-5 rounded-3xl bg-[#f5f5f7] p-6 text-zinc-900 dark:bg-[#16171a] dark:text-zinc-100'
+              : 'space-y-4 sm:space-y-6'
           }
         >
           {/* 画像出力時のみ最上部に表示される図解スライド用タイトル＆条件ヘッダー */}
           {isExporting && (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200/60 pb-4 dark:border-white/[0.06]">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e5e5ea] pb-4 dark:border-white/[0.06]">
               <div className="min-w-0">
-                <div className="flex items-center gap-2 text-base font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
+                <div className="flex items-center gap-2 text-base font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
                   <span>📊 Apple製品 スペック＆価格比較（{formatCurrentYearMonthLabel()}）</span>
                 </div>
-                <div className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <div className="mt-1 text-xs font-medium text-[#6e6e73] dark:text-zinc-400">
                   {cols.map((c) => `${c.p.name} (${c.sku.label})`).join('  vs  ')}
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                <span className="rounded-md bg-zinc-200/70 px-2.5 py-1 text-zinc-800 dark:bg-[#25272e] dark:text-zinc-100">
+                <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">
                   {mode === 'bulk' ? '一括価格モード' : '2年返却（実質負担）モード'}
                 </span>
-                <span className="rounded-md bg-zinc-200/70 px-2.5 py-1 text-zinc-700 dark:bg-[#25272e] dark:text-zinc-200">
+                <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-200">
                   {mnp ? 'MNP/新規割引 適用' : '割引なし（通常価格）'}
                 </span>
                 {diffOnly && activeExportScope !== 'cards' && (
-                  <span className="rounded-md bg-zinc-200/70 px-2.5 py-1 text-zinc-700 dark:bg-[#25272e] dark:text-zinc-200">
+                  <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-200">
                     🔍 差分スペックのみ抜粋
                   </span>
                 )}
@@ -1553,25 +1703,16 @@ export const CompareView = React.memo(function CompareView({
             </div>
           )}
 
-          {/* サマリーカード＆自動診断セクション（「比較テーブルのみ」出力時は非表示） */}
+          {/* ===== PC: サマリーカード（画像出力時は全幅で表示） ===== */}
           <div
             data-export-ignore={activeExportScope === 'table' ? 'true' : undefined}
-            className={activeExportScope === 'table' ? 'hidden' : 'space-y-5'}
+            className={activeExportScope === 'table' ? 'hidden' : isExporting ? 'block' : 'hidden md:block'}
           >
-
             <div
               className={
                 isExporting
-                  ? `grid gap-4 ${
-                      cols.length === 1
-                        ? 'grid-cols-1'
-                        : cols.length === 2
-                          ? 'grid-cols-2'
-                          : cols.length === 3
-                            ? 'grid-cols-3'
-                            : 'grid-cols-4'
-                    }`
-                  : 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3'
+                  ? `grid gap-4 ${cols.length === 1 ? 'grid-cols-1' : cols.length === 2 ? 'grid-cols-2' : cols.length === 3 ? 'grid-cols-3' : 'grid-cols-4'}`
+                  : 'grid gap-4 md:grid-cols-2 lg:grid-cols-3'
               }
             >
               {cols.map((c) => {
@@ -1584,16 +1725,15 @@ export const CompareView = React.memo(function CompareView({
                 return (
                   <div key={c.sel.pid} className={`${card} flex flex-col justify-between p-5 sm:p-6`}>
                     <div>
-                      {/* 機種名・容量選択（終売機は控えめな「販売終了・最終価格」ラベル） */}
                       <div className="flex items-center justify-between gap-2.5">
                         <div className="flex min-w-0 flex-col">
                           <div className="flex min-w-0 items-center gap-2">
-                            <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0 text-zinc-400" />
-                            <span className="truncate text-base font-semibold text-zinc-900 dark:text-zinc-100 sm:text-lg">{c.p.name}</span>
+                            <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0 text-[#86868b]" />
+                            <span className="truncate text-lg font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{c.p.name}</span>
                           </div>
                           {isDisc && (
                             <span
-                              className="mt-0.5 pl-6 text-xs text-zinc-500 dark:text-zinc-400"
+                              className="mt-0.5 pl-6 text-xs text-[#6e6e73] dark:text-zinc-400"
                               title={discInfo.discontinuedDate ? `終売: ${discInfo.discontinuedDate}` : 'Apple Store / キャリア販売終了'}
                             >
                               販売終了・最終価格
@@ -1601,27 +1741,26 @@ export const CompareView = React.memo(function CompareView({
                           )}
                         </div>
                         {isExporting ? (
-                          <span className="shrink-0 text-sm font-medium text-zinc-700 dark:text-zinc-200">{c.sku.label}</span>
+                          <span className="shrink-0 text-sm font-medium text-[#424245] dark:text-zinc-200">{c.sku.label}</span>
                         ) : (
                           <select
                             data-export-ignore="true"
-                            className={`${selectCls} shrink-0 !px-2.5 !py-1.5 !text-xs`}
+                            className={`${selectCls} shrink-0 !rounded-full !px-3 !py-1.5 !text-xs`}
                             value={c.sku.id}
                             aria-label={`${c.p.name} の容量・通信方式`}
-                            onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}
+                            onChange={(e) => setSkuFor(c.sel.pid, e.target.value)}
                           >
                             {[...c.p.skus].sort(compareSkus).map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
                           </select>
                         )}
                       </div>
 
-                      {/* メイン価格 */}
                       {ch.min == null ? (
                         (() => {
                           const cellSku = findSiblingCellularSku(c.p, c.sku);
                           const bulkPrice = c.sku.carriers.apple?.currentPrice;
                           return (
-                            <div className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+                            <div className="mt-4 text-sm text-[#6e6e73] dark:text-zinc-400">
                               {cellSku
                                 ? 'このモードでは対象外（Cellularモデルのみ取扱）'
                                 : bulkPrice != null
@@ -1631,7 +1770,7 @@ export const CompareView = React.memo(function CompareView({
                                 <button
                                   type="button"
                                   data-export-ignore="true"
-                                  onClick={() => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: cellSku.id } : s)))}
+                                  onClick={() => setSkuFor(c.sel.pid, cellSku.id)}
                                   className="ml-2 font-medium text-[#0071e3] hover:underline"
                                 >
                                   {cellSku.connectivity} に切替
@@ -1642,18 +1781,17 @@ export const CompareView = React.memo(function CompareView({
                         })()
                       ) : (
                         <div className="mt-4">
-                          <div className={`text-2xl font-semibold tabular-nums sm:text-3xl ${isDisc ? 'text-zinc-700 dark:text-zinc-200' : 'text-zinc-900 dark:text-zinc-100'}`}>
+                          <div className={`text-3xl font-semibold tracking-tight tabular-nums ${isDisc ? 'text-[#424245] dark:text-zinc-200' : 'text-[#1d1d1f] dark:text-zinc-100'}`}>
                             {yen(ch.min)}
                           </div>
                           {apple != null && !ch.ids.includes('apple') && (
-                            <div className="mt-1 text-sm tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
+                            <div className="mt-1 text-sm tabular-nums text-[#1f7a3a] dark:text-[#5fd884]">
                               Apple Store比 {signedYen(ch.min - apple)}
                             </div>
                           )}
                         </div>
                       )}
 
-                      {/* 下取り選択時のみ実質追い金 */}
                       {showFlags.tradein && tradeInEst && (
                         <div className="mt-4">
                           <TradeInCardOverlay
@@ -1668,8 +1806,7 @@ export const CompareView = React.memo(function CompareView({
                       )}
                     </div>
 
-                    {/* 中古最安値の1行サマリー */}
-                    <div className="mt-5 border-t border-zinc-200/60 pt-3 dark:border-white/[0.06]">
+                    <div className="mt-5 border-t border-[#e5e5ea] pt-3 dark:border-white/[0.06]">
                       <UsedOneLine
                         u={usedInfo}
                         loading={loadingModalKey === `${c.p.id}__${c.sku.id}`}
@@ -1682,368 +1819,211 @@ export const CompareView = React.memo(function CompareView({
             </div>
           </div>
 
-          <div
-            data-export-ignore="true"
-            className={`flex items-center justify-between gap-2 sm:hidden ${isExporting ? 'hidden' : ''}`}
-          >
-            <span className="text-xs font-semibold text-zinc-500">スマホ表示モード</span>
-            <Segmented<'stack' | 'table'> value={mobileView} onChange={setMobileView} options={[
-              { value: 'stack', label: '縦並びカード' },
-              { value: 'table', label: '横並び表' },
-            ]} />
-          </div>
-
-          {mobileView === 'stack' && !isExporting && (
-            <div data-export-ignore="true" className="space-y-4 sm:hidden">
-              {showFlags.tradein && tradeInEst && (
-                <div className={`${card} overflow-hidden`}>
-                  <div className="bg-[#f5f5f7] px-4 py-2.5 text-xs font-bold text-zinc-700 dark:bg-[#23252b] dark:text-zinc-200">
-                    🔄 買い替え実質追い金 ＆ 進化点（{tradeInEst.myProduct.name} {tradeInEst.mySku.label} 下取り −{yen(tradeInEst.activeYen)}）
-                  </div>
-                  <div className="space-y-3 p-4">
-                    {cols.map((c) => {
-                      const u = getUsedData(c);
-                      const { appleNewPrice, bestReturnCost } = getCardTradeInProps(c);
-                      return (
-                        <div key={c.sel.pid}>
-                          <div className="mb-1.5 text-xs font-bold text-zinc-900 dark:text-zinc-100">
-                            {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
-                          </div>
-                          <TradeInCardOverlay
-                            tradeInEst={tradeInEst}
-                            targetProduct={c.p}
-                            targetSku={c.sku}
-                            appleNewPrice={appleNewPrice}
-                            lowestUsedPrice={u.usedPricing.lowestPrice}
-                            bestReturnCost={bestReturnCost}
-                            inTable
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
+          {/* ===== スマホ: Apple公式と同じ「2列固定」機種ヘッダー（機種変更プルダウン＋容量ピル） ===== */}
+          {!isExporting && (
+            <div data-export-ignore="true" className="space-y-3 md:hidden">
+              {cols.length > 2 && (
+                <div className="no-scrollbar -mx-3 flex gap-2 overflow-x-auto px-3">
+                  {cols.map((c, i) => {
+                    const slot = pairIdx.indexOf(i);
+                    return (
+                      <button
+                        key={c.sel.pid}
+                        type="button"
+                        onClick={() => {
+                          if (slot >= 0) return;
+                          setMobilePair([pairIdx[0], i]);
+                        }}
+                        className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                          slot >= 0
+                            ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
+                            : 'bg-white text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:bg-white/10 dark:text-zinc-200'
+                        }`}
+                      >
+                        {slot >= 0 && <span className="text-[10px] opacity-70">{slot === 0 ? '左' : '右'}</span>}
+                        {c.p.name}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
-              <div className={`${card} divide-y divide-zinc-200/40 overflow-hidden dark:divide-white/[0.04]`}>
-                <div className="bg-[#f5f5f7] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:bg-[#23252b]">
-                  キャリア別価格 — {mode === 'bulk' ? '一括' : '2年返却 実質負担額'}{mnp ? ' (MNP/新規割引後)' : ''}
-                </div>
-                {CARRIER_ORDER.map((id) => (
-                  <div key={id} className="p-4">
-                    <div className="mb-3"><CarrierBadge id={id} /></div>
-                    <div className="divide-y divide-zinc-200/60 dark:divide-white/[0.06]">
-                      {cols.map((c) => {
-                        const cp = c.sku.carriers[id];
-                        const v = carrierValue(cp, mode, mnp);
-                        const ch = cheapest(c);
-                        const isMin = v != null && ch.ids.includes(id);
-                        const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
-                        const isDisc = Boolean(cp?.isDiscontinued ?? discInfo.isDiscontinued);
-                        return (
-                          <div
-                            key={c.sel.pid}
-                            className={`py-3 text-sm ${isMin ? 'font-medium' : ''}`}
-                          >
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="font-bold text-zinc-900 dark:text-zinc-100">
-                                {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
-                              </span>
-                              {v == null ? (
-                                (() => {
-                                  const unavail = getCarrierUnavailableInfo(c.p, c.sku, id, mode, mnp);
-                                  return (
-                                    <div className="flex flex-col items-end gap-1 text-right">
-                                      <span className="inline-flex items-center rounded-md bg-zinc-200/60 px-2 py-0.5 text-xs text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
-                                        {unavail.badge}
-                                      </span>
-                                      {unavail.refPrice != null && (
-                                        <div className="flex flex-wrap items-center justify-end gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                                          <span className="rounded bg-zinc-200/70 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
-                                            {unavail.refLabel}:{' '}
-                                            <strong className="font-bold tabular-nums">{yen(unavail.refPrice)}</strong>
-                                          </span>
-                                          {!isExporting && unavail.cellularSku && (
-                                            <button
-                                              type="button"
-                                              data-export-ignore="true"
-                                              onClick={() =>
-                                                setSels(
-                                                  sels.map((s) =>
-                                                    s.pid === c.sel.pid ? { ...s, sid: unavail.cellularSku!.id } : s,
-                                                  ),
-                                                )
-                                              }
-                                              className="text-xs font-semibold text-zinc-700 underline hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
-                                            >
-                                              Cellular版へ切替
-                                            </button>
-                                          )}
-                                        </div>
-                                      )}
-                                    </div>
-                                  );
-                                })()
-                              ) : (
-                                <span className="inline-flex flex-wrap items-center justify-end gap-1.5">
-                                  {isDisc ? (
-                                    <>
-                                      {isMin && (
-                                        <span className="inline-flex items-center gap-1 rounded-md bg-zinc-200/80 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#25272e] dark:text-zinc-200">
-                                          <span className="h-1.5 w-1.5 rounded-full bg-zinc-500 dark:bg-zinc-400" />
-                                          終売最安
-                                        </span>
-                                      )}
-                                      <span className="rounded-md bg-zinc-200/70 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
-                                        最終価格
-                                      </span>
-                                    </>
-                                  ) : (
-                                    isMin && (
-                                      <span className="inline-flex items-center gap-1 rounded-md bg-[#e3efe7] px-2 py-0.5 text-xs font-semibold text-[#2f573d] dark:bg-[#22352b] dark:text-[#9bc4a8]">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
-                                        最安
-                                      </span>
-                                    )
-                                  )}
-                                  <span
-                                    className={`text-base font-extrabold tabular-nums ${
-                                      isDisc ? 'text-zinc-700 dark:text-zinc-200' : 'text-zinc-900 dark:text-zinc-100'
-                                    }`}
-                                  >
-                                    {yen(v)}
-                                  </span>
-                                </span>
-                              )}
-                            </div>
-                            {v != null && cp && (() => {
-                              const parts = carrierSubParts(cp, mode, mnp);
-                              return parts.length > 0 ? (
-                                <div className="mt-1 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">{parts.join(' ｜ ')}</div>
-                              ) : null;
-                            })()}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* スマホ縦並び: 中古最安値（1行サマリー） */}
-              <div className={`${card} divide-y divide-zinc-200/60 overflow-hidden dark:divide-white/[0.06]`}>
-                <div className="bg-[#f5f5f7] px-4 py-2.5 text-xs font-semibold text-zinc-500 dark:bg-[#23252b]">中古最安</div>
-                {cols.map((c) => (
-                  <div key={c.sel.pid} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
-                    <span className="font-medium text-zinc-900 dark:text-zinc-100">
-                      {c.p.name} <span className="font-normal text-zinc-500">({c.sku.label})</span>
-                    </span>
-                    <UsedOneLine
-                      u={getUsedData(c)}
-                      loading={loadingModalKey === `${c.p.id}__${c.sku.id}`}
-                      onOpen={() => openShopComparisonModal(c.p, c.sku)}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div className={`${card} overflow-hidden`}>
-                <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-4">
-                  <div className="flex flex-col">
-                    <span className="text-base font-semibold text-[#1d1d1f] dark:text-zinc-100">スペック比較</span>
-                    <span className="text-sm text-[#6e6e73] dark:text-zinc-400">違いがある項目 {totalDiffSpecCount}件</span>
-                  </div>
-                  <button
-                    type="button"
-                    aria-pressed={diffOnly}
-                    onClick={() => setDiffOnly((prev) => !prev)}
-                    className={`inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
-                      diffOnly
-                        ? 'bg-[#1d1d1f] text-white dark:bg-zinc-200 dark:text-zinc-900'
-                        : 'bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#25272e] dark:text-zinc-200'
-                    }`}
-                  >
-                    差分のみ表示
-                  </button>
-                </div>
-                {specSections.length === 0 ? (
-                  <div className="p-5 text-center text-sm text-[#6e6e73] dark:text-zinc-400">
-                    <span>{cols.length < 2 ? '1機種のみ選択中のため、違いのあるスペック項目はありません' : '選択中のモデル間で異なるスペック項目はありません'}</span>{' '}
-                    <button type="button" onClick={() => setDiffOnly(false)} className="font-medium text-[#0071e3] hover:underline">
-                      （すべて表示に戻す）
-                    </button>
-                  </div>
-                ) : (
-                  specSections.map((sec) => (
-                    <div key={sec.id}>
-                      <div className="bg-[#f5f5f7] px-4 pb-3 pt-6 text-sm font-semibold text-[#1d1d1f] dark:bg-[#23252b] dark:text-zinc-100">{sec.title}</div>
-                      <div className="divide-y divide-[#e5e5ea] dark:divide-white/[0.06]">
-                        {sec.rows.map((er) => (
-                          <div key={er.row.key} className="px-4 py-3.5">
-                            <div className={`mb-1.5 text-sm ${er.hasDiff ? 'font-semibold text-[#1d1d1f] dark:text-zinc-100' : 'text-[#6e6e73] dark:text-zinc-400'}`}>{er.row.label}</div>
-                            <div className="space-y-1.5 text-sm leading-relaxed">
-                              {cols.map((c, idx) => (
-                                <div key={c.sel.pid} className="flex items-baseline justify-between gap-3">
-                                  <span className="shrink-0 text-[#6e6e73] dark:text-zinc-400">{c.p.name}</span>
-                                  <span className={`break-words text-right ${er.hasDiff ? 'font-medium text-[#1d1d1f] dark:text-zinc-100' : 'text-[#6e6e73] dark:text-zinc-400'}`}>{er.values[idx]}</span>
-                                </div>
+              <div className="grid grid-cols-2 gap-3">
+                {[0, 1].map((slot) => {
+                  const c = mCols[slot];
+                  if (!c) {
+                    return (
+                      <div key={slot} className={`${card} flex flex-col items-center justify-center gap-2 p-3 text-center`}>
+                        <span className="text-xs text-[#6e6e73]">比較する機種を追加</span>
+                        <select
+                          className={`${selectCls} w-full !rounded-full !py-1.5 !text-sm`}
+                          value=""
+                          onChange={(e) => e.target.value && changeMobileSlotProduct(slot, e.target.value)}
+                          aria-label="機種を追加"
+                        >
+                          <option value="">＋ 機種を選択</option>
+                          {allProductCats.map((cat) => (
+                            <optgroup key={cat} label={cat}>
+                              {sortedAllProducts.filter((x) => x.category === cat && !cols.some((cc) => cc.p.id === x.id)).map((x) => (
+                                <option key={x.id} value={x.id}>{x.name}</option>
                               ))}
-                            </div>
-                          </div>
-                        ))}
+                            </optgroup>
+                          ))}
+                        </select>
+                      </div>
+                    );
+                  }
+                  const skus = [...(pricedSkus(c.p).length ? pricedSkus(c.p) : c.p.skus)].sort(compareSkus);
+                  const connOpts = getProductConnectivityOptions(c.p);
+                  const skusForConn = connOpts.length >= 2 ? skus.filter((k) => k.connectivity === c.sku.connectivity) : skus;
+                  const price = mainPriceOf(c);
+                  const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
+                  return (
+                    <div key={slot} className={`${card} flex min-w-0 flex-col gap-2.5 p-3`}>
+                      <div className="flex items-center justify-center gap-1 text-[#86868b]">
+                        <CatIcon cat={c.p.category} className="h-5 w-5" />
+                      </div>
+                      <div className="relative">
+                        <select
+                          className="w-full appearance-none truncate rounded-full bg-[#f5f5f7] py-1.5 pl-3 pr-7 text-center text-sm font-semibold tracking-tight text-[#1d1d1f] outline-none focus:ring-2 focus:ring-[#0071e3]/30 dark:bg-white/10 dark:text-zinc-100"
+                          value={c.p.id}
+                          aria-label={`${slot === 0 ? '左' : '右'}列の機種を変更`}
+                          onChange={(e) => changeMobileSlotProduct(slot, e.target.value)}
+                        >
+                          {cols.length > 1 && (
+                            <optgroup label="比較リスト">
+                              {cols.map((cc) => <option key={cc.p.id} value={cc.p.id}>{cc.p.name}</option>)}
+                            </optgroup>
+                          )}
+                          {allProductCats.map((cat) => (
+                            <optgroup key={cat} label={cat}>
+                              {sortedAllProducts.filter((x) => x.category === cat && !cols.some((cc) => cc.p.id === x.id && cc.p.id !== c.p.id)).map((x) => (
+                                <option key={x.id} value={x.id}>{x.name}</option>
+                              ))}
+                            </optgroup>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#86868b]" />
+                      </div>
+
+                      {connOpts.length >= 2 && (
+                        <Segmented<string>
+                          size="sm"
+                          fullWidth
+                          value={c.sku.connectivity}
+                          ariaLabel={`${c.p.name} の通信方式`}
+                          onChange={(conn) => {
+                            const t = findSiblingSkuByConnectivity(c.p, c.sku, conn as ConnectivityType);
+                            if (t) setSkuFor(c.sel.pid, t.id);
+                          }}
+                          options={connOpts.map((conn) => ({ value: conn, label: conn }))}
+                        />
+                      )}
+
+                      {skusForConn.length > 6 ? (
+                        <select
+                          className={`${selectCls} w-full !rounded-full !py-1.5 !text-xs`}
+                          value={c.sku.id}
+                          aria-label={`${c.p.name} の容量`}
+                          onChange={(e) => setSkuFor(c.sel.pid, e.target.value)}
+                        >
+                          {skusForConn.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
+                        </select>
+                      ) : (
+                        <div className="flex flex-wrap justify-center gap-1.5" role="radiogroup" aria-label={`${c.p.name} の容量`}>
+                          {skusForConn.map((k) => {
+                            const active = k.id === c.sku.id;
+                            const short = connOpts.length >= 2 ? (k.storage || k.label) : k.label;
+                            return (
+                              <button
+                                key={k.id}
+                                type="button"
+                                role="radio"
+                                aria-checked={active}
+                                onClick={() => setSkuFor(c.sel.pid, k.id)}
+                                className={`rounded-full px-2.5 py-1 text-xs font-medium tabular-nums transition ${
+                                  active
+                                    ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
+                                    : 'bg-[#f5f5f7] text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-200'
+                                }`}
+                              >
+                                {short}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      <div className="text-center">
+                        <div className="text-xl font-semibold tracking-tight tabular-nums text-[#1d1d1f] dark:text-zinc-100">
+                          {price != null ? yen(price) : '—'}
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-[#6e6e73] dark:text-zinc-400">
+                          {discInfo.isDiscontinued ? '販売終了・最終価格' : `${mode === 'bulk' ? '一括' : '実質'}最安`}
+                        </div>
                       </div>
                     </div>
-                  ))
-                )}
+                  );
+                })}
               </div>
             </div>
           )}
 
-          <div
-            ref={tableWrapRef}
-            data-export-ignore={activeExportScope === 'cards' ? 'true' : undefined}
-            className={
-              activeExportScope === 'cards'
-                ? 'hidden'
-                : isExporting
-                  ? `${card} block overflow-visible`
-                  : `${card} overflow-x-auto lg:overflow-x-clip ${mobileView === 'stack' ? 'hidden sm:block' : 'block'}`
-            }
-          >
-            <table
-              ref={tableElRef}
-              className="w-full min-w-[440px] sm:min-w-[720px] border-collapse text-xs sm:text-sm"
-            >
-              <thead>
-                <tr className="border-b border-zinc-200/50 dark:border-white/[0.05]">
-                  <th
-                    className={`${
-                      isExporting ? '' : 'sticky left-0 top-[var(--app-header-h,0px)] z-30 backdrop-blur-md'
-                    } w-28 sm:w-40 bg-white/90 px-4 py-3.5 sm:px-5 sm:py-4 text-left text-xs font-semibold text-zinc-500 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22]/90 dark:text-zinc-400`}
+          {/* 追従バー表示判定用のセンチネル */}
+          <div ref={stickySentinelRef} aria-hidden="true" className="h-px" data-export-ignore="true" />
+
+          <div className="relative space-y-4 sm:space-y-6">
+            {/* ===== スクロール追従 Liquid Glass 機種バー（スマホ・PC共通） ===== */}
+            {!isExporting && (
+              <div data-export-ignore="true" className="sticky top-[calc(var(--app-header-h,0px)+4px)] z-30 h-0">
+                <div
+                  className={`${glassCls} absolute inset-x-0 top-0 rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                    showStickyBar ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
+                  }`}
+                >
+                  {/* スマホ: 2列 */}
+                  <div className="grid grid-cols-2 gap-3 px-3 py-2 md:hidden">
+                    {mCols.map((c) => (
+                      <div key={c.sel.pid} className="min-w-0 text-center">
+                        <div className="truncate text-xs font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{c.p.name}</div>
+                        <div className="truncate text-[11px] tabular-nums text-[#6e6e73] dark:text-zinc-400">
+                          {c.sku.label} ・ <span className="font-semibold text-[#1d1d1f] dark:text-zinc-100">{yen(mainPriceOf(c))}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* PC: テーブル列にそろえた横並び */}
+                  <div
+                    className="hidden md:grid"
+                    style={{ gridTemplateColumns: `10rem repeat(${cols.length}, minmax(0, 1fr))` }}
                   >
-                    項目
-                  </th>
-                  {cols.map((c) => {
-                    const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
-                    return (
-                      <th key={c.sel.pid} className={`${isExporting ? '' : 'sticky top-[var(--app-header-h,0px)] z-20 bg-white/90 backdrop-blur-md dark:bg-[#1c1d22]/90'} min-w-[170px] sm:min-w-[230px] px-4 py-3.5 sm:px-5 sm:py-4 text-left align-top`}>
-                        <div className="flex flex-wrap items-center gap-1.5 text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100">
-                          <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0" />
-                          <span>{c.p.name}</span>
-                        </div>
-                        <div className="mt-1 mb-2 flex flex-wrap items-center gap-1.5 text-xs font-normal text-zinc-500 dark:text-zinc-400">
-                          <span>{c.p.generation} ・ {c.p.releaseDate} 発売</span>
-                          {discInfo.isDiscontinued ? (
-                            <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
-                              <span className="h-1.5 w-1.5 rounded-full bg-zinc-500 dark:bg-zinc-400" />
-                              終売・最終価格{discInfo.discontinuedDate ? ` (${discInfo.discontinuedDate})` : ''}
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
-                              <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
-                              現行販売中
-                            </span>
-                          )}
-                        </div>
-                        {isExporting ? (
-                          <div className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-800 dark:bg-[#25272e] dark:text-zinc-100">
-                            容量・仕様: {c.sku.label}
-                          </div>
-                        ) : (
-                          <>
-                            <select
-                              data-export-ignore="true"
-                              className={`${selectCls} w-full`}
-                              value={c.sku.id}
-                              onChange={(e) => setSels(sels.map((s) => (s.pid === c.sel.pid ? { ...s, sid: e.target.value } : s)))}
-                            >
-                              {c.p.skus.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
-                            </select>
-                            {(() => {
-                              const connOpts = getProductConnectivityOptions(c.p);
-                              if (connOpts.length < 2) return null;
-                              return (
-                                <div
-                                  data-export-ignore="true"
-                                  role="group"
-                                  aria-label={`${c.p.name} の通信方式切り替え`}
-                                  className="mt-2 flex items-center justify-between gap-1.5 rounded-lg bg-[#f5f5f7] p-1 text-xs font-normal dark:bg-[#23252b]"
-                                >
-                                  <span className="pl-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                                    通信
-                                  </span>
-                                  <div className="flex items-center gap-1">
-                                    {connOpts.map((conn) => {
-                                      const active = c.sku.connectivity === conn;
-                                      const targetSku = findSiblingSkuByConnectivity(c.p, c.sku, conn);
-                                      return (
-                                        <button
-                                          key={conn}
-                                          type="button"
-                                          disabled={!targetSku}
-                                          onClick={() => {
-                                            if (targetSku) {
-                                              setSels(
-                                                sels.map((s) =>
-                                                  s.pid === c.sel.pid ? { ...s, sid: targetSku.id } : s,
-                                                ),
-                                              );
-                                            }
-                                          }}
-                                          className={`rounded-md px-2 py-0.5 text-xs font-semibold transition ${
-                                            active
-                                              ? 'bg-white text-zinc-900 shadow-sm dark:bg-[#1c1d22] dark:text-zinc-100'
-                                              : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
-                                          }`}
-                                        >
-                                          {conn}
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              );
-                            })()}
-                          </>
-                        )}
-                      </th>
-                    );
-                  })}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#e5e5ea] dark:divide-white/[0.06]">
+                    <div className="flex items-center px-5 py-2.5 text-[11px] font-medium text-[#6e6e73] dark:text-zinc-400">
+                      {mode === 'bulk' ? '一括' : '実質'}最安
+                    </div>
+                    {cols.map((c) => (
+                      <div key={c.sel.pid} className="flex min-w-0 items-baseline gap-2 px-5 py-2.5">
+                        <span className="truncate text-sm font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{c.p.name}</span>
+                        <span className="shrink-0 text-sm font-semibold tabular-nums text-[#1d1d1f] dark:text-zinc-100">{yen(mainPriceOf(c))}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ===== スマホ本体: 項目名を上段・2機種の値を下段2列（横スクロールゼロ） ===== */}
+            {!isExporting && (
+              <div data-export-ignore="true" className="space-y-3 md:hidden">
                 {showFlags.tradein && tradeInEst && (
-                  <>
-                    <tr className="bg-[#f5f5f7]/80 dark:bg-[#23252b]/70">
-                      <td colSpan={cols.length + 1} className="px-4 sm:px-5 py-2.5 text-xs font-bold text-zinc-600 dark:text-zinc-300">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span>
-                            🔄 買い替え追い金（実質差額）＆スペック進化 — {tradeInEst.myProduct.name} ({tradeInEst.mySku.label}) 下取り差引: −{yen(tradeInEst.activeYen)}
-                          </span>
-                          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                            {tradeInEst.sellModeLabel}
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td
-                        className={`${
-                          isExporting ? '' : 'sticky left-0 z-10'
-                        } bg-white px-4 py-3.5 sm:px-5 sm:py-4 align-top shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22]`}
-                      >
-                        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-700 dark:text-zinc-300">
-                          <span aria-hidden="true">🔄</span>
-                          実質追い金・進化点
-                        </div>
-                        <div className="mt-1 text-xs text-zinc-400">
-                          {tradeInEst.myProduct.name} から乗換
-                        </div>
-                      </td>
-                      {cols.map((c) => {
+                  <MobileSection
+                    title="🔄 実質追い金・進化点"
+                    subtitle={`${tradeInEst.myProduct.name} ${tradeInEst.mySku.label} 下取り −${yen(tradeInEst.activeYen)}`}
+                  >
+                    <div className="grid grid-cols-2 gap-3 p-3">
+                      {mCols.map((c) => {
                         const u = getUsedData(c);
                         const { appleNewPrice, bestReturnCost } = getCardTradeInProps(c);
                         return (
-                          <td key={c.sel.pid} className="px-4 py-3 sm:px-5 sm:py-3.5 align-top">
+                          <div key={c.sel.pid} className="min-w-0">
                             <TradeInCardOverlay
                               tradeInEst={tradeInEst}
                               targetProduct={c.p}
@@ -2054,230 +2034,296 @@ export const CompareView = React.memo(function CompareView({
                               compact
                               inTable
                             />
-                          </td>
+                          </div>
                         );
                       })}
-                    </tr>
-                  </>
+                    </div>
+                  </MobileSection>
                 )}
-                <tr className="bg-[#f5f5f7]/80 dark:bg-[#23252b]/70"><td colSpan={cols.length + 1} className="px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-500">価格 — {mode === 'bulk' ? '一括' : '2年返却 実質負担額'}{mnp ? ' (MNP/新規割引後)' : ''}</td></tr>
-                {CARRIER_ORDER.map((id) => (
-                  <tr key={id}>
-                    <td
-                      className={`${
-                        isExporting ? '' : 'sticky left-0 z-10'
-                      } bg-white px-4 py-3.5 sm:px-5 sm:py-4 align-middle shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22]`}
-                    >
-                      <CarrierBadge id={id} small />
-                    </td>
-                    {cols.map((c) => {
-                      const cp = c.sku.carriers[id];
-                      const v = carrierValue(cp, mode, mnp);
-                      const ch = cheapest(c);
-                      const isMin = v != null && ch.ids.includes(id);
-                      const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
-                      const isDisc = Boolean(cp?.isDiscontinued ?? discInfo.isDiscontinued);
 
-                      const subParts: string[] = cp && v != null ? carrierSubParts(cp, mode, mnp) : [];
+                <MobileSection title="キャリア別価格" subtitle={modeLabel}>
+                  {CARRIER_ORDER.map((id) => (
+                    <MobileRow key={id} label={carrierLabel(id)} cells={mCols.map((c) => renderCarrierCell(c, id))} />
+                  ))}
+                </MobileSection>
 
-
-                      return (
-                        <td
-                          key={c.sel.pid}
-                          className={`px-4 py-3.5 sm:px-5 sm:py-4 align-top transition-colors ${
-                            isMin ? 'bg-[#eaf2ed]/45 dark:bg-[#1e2b24]/35' : ''
-                          }`}
-                        >
-                          {v == null ? (
-                            (() => {
-                              const unavail = getCarrierUnavailableInfo(c.p, c.sku, id, mode, mnp);
-                              return (
-                                <div className="space-y-1.5">
-                                  <span className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
-                                    {unavail.badge}
-                                  </span>
-                                  {unavail.refPrice != null && (
-                                    <div className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                                      <span className="inline-flex items-center gap-1 rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
-                                        <span>{unavail.refLabel}:</span>
-                                        <strong className="font-bold tabular-nums text-zinc-700 dark:text-zinc-200">
-                                          {yen(unavail.refPrice)}
-                                        </strong>
-                                      </span>
-                                      {!isExporting && unavail.cellularSku && (
-                                        <button
-                                          type="button"
-                                          data-export-ignore="true"
-                                          onClick={() =>
-                                            setSels(
-                                              sels.map((s) =>
-                                                s.pid === c.sel.pid ? { ...s, sid: unavail.cellularSku!.id } : s,
-                                              ),
-                                            )
-                                          }
-                                          className="text-xs font-semibold text-zinc-700 underline hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
-                                        >
-                                          Cellular版へ切替
-                                        </button>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })()
-                          ) : (
-                            <div className="space-y-1">
-                              {/* 1行目: メイン価格 ＋ 月々目安(返却モード時) ＋ 最安ピル or 最安との差額 */}
-                              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 whitespace-nowrap">
-                                <span
-                                  className={`text-sm sm:text-base font-extrabold tabular-nums ${
-                                    isDisc
-                                      ? 'text-zinc-700 dark:text-zinc-200'
-                                      : 'text-zinc-900 dark:text-zinc-100'
-                                  }`}
-                                >
-                                  {yen(v)}
-                                </span>
-                                {mode === 'return' && cp?.returnProgram && (
-                                  <span className="text-xs font-normal tabular-nums text-zinc-500 dark:text-zinc-400">
-                                    （月々約{yen(Math.round(v / (cp.returnProgram.months || 24)))}）
-                                  </span>
-                                )}
-                                {isMin ? (
-                                  <span className="inline-flex items-center gap-1 rounded bg-[#e3efe7] px-2 py-0.5 text-xs font-semibold text-[#2f573d] dark:bg-[#22352b] dark:text-[#9bc4a8]">
-                                    <span
-                                      className={`h-1.5 w-1.5 rounded-full ${
-                                        isDisc ? 'bg-zinc-500' : 'bg-[#649274]'
-                                      }`}
-                                    />
-                                    {isDisc ? '終売最安' : '最安'}
-                                  </span>
-                                ) : ch.min != null ? (
-                                  <span className="text-xs font-medium tabular-nums text-zinc-400 dark:text-zinc-500">
-                                    ({signedYen(v - ch.min)})
-                                  </span>
-                                ) : null}
-                              </div>
-
-                              {/* 2行目: 補足データ（MNP / 2年返却 / 通常一括 等を1行で凝縮） */}
-                              {subParts.length > 0 && (
-                                <div className="truncate text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
-                                  {subParts.join(' ｜ ')}
-                                </div>
-                              )}
-
-                            </div>
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-                <tr>
-                  <td
-                    className={`${
-                      isExporting ? '' : 'sticky left-0 z-10'
-                    } bg-white px-4 py-3.5 sm:px-5 sm:py-4 align-middle text-sm font-medium text-zinc-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22] dark:text-zinc-300`}
-                  >
-                    中古最安
-                  </td>
-                  {cols.map((c) => (
-                    <td key={c.sel.pid} className="px-4 py-3.5 sm:px-5 sm:py-4 align-middle">
+                <MobileSection title="中古最安">
+                  <MobileRow
+                    label="楽天市場・Yahoo!ショッピング横断"
+                    cells={mCols.map((c) => (
                       <UsedOneLine
+                        key={c.sel.pid}
                         u={getUsedData(c)}
                         loading={loadingModalKey === `${c.p.id}__${c.sku.id}`}
                         onOpen={() => openShopComparisonModal(c.p, c.sku)}
                       />
-                    </td>
-                  ))}
-                </tr>
-                <tr className="bg-white dark:bg-[#1c1d22]">
-                  <td colSpan={cols.length + 1} className="px-4 py-4 sm:px-5">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <span className="text-base font-semibold text-[#1d1d1f] dark:text-zinc-100">スペック比較</span>
-                        <span className="text-sm text-[#6e6e73] dark:text-zinc-400">
-                          {specSections.reduce((n, sec) => n + sec.rows.length, 0)}項目 ／ 違いがある項目 {totalDiffSpecCount}件
-                        </span>
-                      </div>
-                      {!isExporting && (
-                        <button
-                          type="button"
-                          data-export-ignore="true"
-                          aria-pressed={diffOnly}
-                          onClick={() => setDiffOnly((prev) => !prev)}
-                          className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
-                            diffOnly
-                              ? 'bg-[#1d1d1f] text-white dark:bg-zinc-200 dark:text-zinc-900'
-                              : 'bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e5e5ea] dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-[#2c2f37]'
-                          }`}
-                        >
-                          差分のみ表示（同じ項目を隠す）
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-                {specSections.length === 0 ? (
-                  <tr>
-                    <td colSpan={cols.length + 1} className="p-6 text-center text-sm text-[#6e6e73] dark:text-zinc-400">
-                      <span>{cols.length < 2 ? '1機種のみ選択中のため、違いのあるスペック項目はありません' : '選択中のモデル間で異なるスペック項目はありません'}</span>{' '}
+                    ))}
+                  />
+                </MobileSection>
+
+                <MobileSection
+                  title="スペック比較"
+                  subtitle={`違いがある項目 ${mobileDiffCount}件`}
+                  right={<Toggle checked={diffOnly} onChange={setDiffOnly} size="sm" label="差分のみ" />}
+                >
+                  {mobileSpecSections.length === 0 ? (
+                    <div className="p-5 text-center text-sm text-[#6e6e73] dark:text-zinc-400">
+                      {mCols.length < 2 ? '1機種のみ選択中のため、違いのあるスペック項目はありません' : '2機種間で異なるスペック項目はありません'}{' '}
                       <button type="button" onClick={() => setDiffOnly(false)} className="font-medium text-[#0071e3] hover:underline">
-                        （すべて表示に戻す）
+                        すべて表示
                       </button>
-                    </td>
-                  </tr>
-                ) : (
-                  specSections.map((sec) => (
-                    <React.Fragment key={sec.id}>
-                      <tr className="bg-[#f5f5f7] dark:bg-[#23252b]">
-                        <td colSpan={cols.length + 1} className="px-4 pb-3 pt-7 text-sm font-semibold text-[#1d1d1f] dark:text-zinc-100 sm:px-5">
+                    </div>
+                  ) : (
+                    mobileSpecSections.map((sec) => (
+                      <div key={sec.id}>
+                        <div className="bg-[#f5f5f7] px-3 pb-2 pt-5 text-sm font-semibold tracking-tight text-[#1d1d1f] dark:bg-white/[0.04] dark:text-zinc-100">
                           {sec.title}
+                        </div>
+                        <div className="divide-y divide-[#e5e5ea] dark:divide-white/[0.06]">
+                          {sec.rows.map((er) => (
+                            <MobileRow
+                              key={er.row.key}
+                              label={er.row.label}
+                              emphasize={er.hasDiff}
+                              cells={er.values.map((v, i) => (
+                                <span
+                                  key={i}
+                                  className={er.hasDiff ? 'font-medium text-[#1d1d1f] dark:text-zinc-100' : 'text-[#424245] dark:text-zinc-300'}
+                                >
+                                  {v}
+                                </span>
+                              ))}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </MobileSection>
+              </div>
+            )}
+
+            {/* ===== PC: 左端に項目名列＋右側に各機種列のテーブル ===== */}
+            <div
+              ref={tableWrapRef}
+              data-export-ignore={activeExportScope === 'cards' ? 'true' : undefined}
+              className={
+                activeExportScope === 'cards'
+                  ? 'hidden'
+                  : isExporting
+                    ? `${card} block overflow-visible`
+                    : `${card} hidden overflow-hidden md:block`
+              }
+            >
+              <table ref={tableElRef} className="w-full table-fixed border-collapse text-sm">
+                <colgroup>
+                  <col className="w-40" />
+                  {cols.map((c) => <col key={c.sel.pid} />)}
+                </colgroup>
+                <thead>
+                  <tr className="border-b border-[#e5e5ea] dark:border-white/[0.06]">
+                    <th className="px-5 py-4 text-left align-bottom text-xs font-medium text-[#6e6e73] dark:text-zinc-400">項目</th>
+                    {cols.map((c) => {
+                      const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
+                      const connOpts = getProductConnectivityOptions(c.p);
+                      return (
+                        <th key={c.sel.pid} className="px-5 py-4 text-left align-top">
+                          <div className="flex items-center gap-1.5 text-base font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
+                            <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0 text-[#86868b]" />
+                            <span className="truncate">{c.p.name}</span>
+                          </div>
+                          <div className="mb-2.5 mt-1 flex flex-wrap items-center gap-1.5 text-xs font-normal text-[#6e6e73] dark:text-zinc-400">
+                            <span>{c.p.generation} ・ {c.p.releaseDate} 発売</span>
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2 py-0.5 text-[11px] font-medium text-[#424245] dark:bg-white/10 dark:text-zinc-300">
+                              <span className={`h-1.5 w-1.5 rounded-full ${discInfo.isDiscontinued ? 'bg-zinc-400' : 'bg-[#34c759]'}`} />
+                              {discInfo.isDiscontinued
+                                ? `終売・最終価格${discInfo.discontinuedDate ? ` (${discInfo.discontinuedDate})` : ''}`
+                                : '現行販売中'}
+                            </span>
+                          </div>
+                          {isExporting ? (
+                            <div className="inline-flex items-center rounded-full bg-[#f5f5f7] px-3 py-1 text-xs font-semibold text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">
+                              容量・仕様: {c.sku.label}
+                            </div>
+                          ) : (
+                            <div data-export-ignore="true" className="space-y-2">
+                              <select
+                                className={`${selectCls} w-full !py-1.5 !text-sm`}
+                                value={c.sku.id}
+                                aria-label={`${c.p.name} の容量・仕様`}
+                                onChange={(e) => setSkuFor(c.sel.pid, e.target.value)}
+                              >
+                                {[...c.p.skus].sort(compareSkus).map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
+                              </select>
+                              {connOpts.length >= 2 && (
+                                <Segmented<string>
+                                  size="sm"
+                                  fullWidth
+                                  value={c.sku.connectivity}
+                                  ariaLabel={`${c.p.name} の通信方式切り替え`}
+                                  onChange={(conn) => {
+                                    const t = findSiblingSkuByConnectivity(c.p, c.sku, conn as ConnectivityType);
+                                    if (t) setSkuFor(c.sel.pid, t.id);
+                                  }}
+                                  options={connOpts.map((conn) => ({ value: conn, label: conn }))}
+                                />
+                              )}
+                            </div>
+                          )}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#e5e5ea] dark:divide-white/[0.06]">
+                  {showFlags.tradein && tradeInEst && (
+                    <>
+                      <tr className="bg-[#f5f5f7] dark:bg-white/[0.04]">
+                        <td colSpan={cols.length + 1} className="px-5 py-2.5 text-xs font-semibold text-[#424245] dark:text-zinc-300">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span>
+                              🔄 買い替え追い金（実質差額）＆スペック進化 — {tradeInEst.myProduct.name} ({tradeInEst.mySku.label}) 下取り差引: −{yen(tradeInEst.activeYen)}
+                            </span>
+                            <span className="text-xs font-medium text-[#6e6e73] dark:text-zinc-400">{tradeInEst.sellModeLabel}</span>
+                          </div>
                         </td>
                       </tr>
-                      {sec.rows.map((er) => (
-                        <tr key={er.row.key}>
+                      <tr>
+                        <td className="px-5 py-4 align-top">
+                          <div className="text-xs font-semibold text-[#424245] dark:text-zinc-300">🔄 実質追い金・進化点</div>
+                          <div className="mt-1 text-xs text-[#86868b]">{tradeInEst.myProduct.name} から乗換</div>
+                        </td>
+                        {cols.map((c) => {
+                          const u = getUsedData(c);
+                          const { appleNewPrice, bestReturnCost } = getCardTradeInProps(c);
+                          return (
+                            <td key={c.sel.pid} className="px-5 py-3.5 align-top">
+                              <TradeInCardOverlay
+                                tradeInEst={tradeInEst}
+                                targetProduct={c.p}
+                                targetSku={c.sku}
+                                appleNewPrice={appleNewPrice}
+                                lowestUsedPrice={u.usedPricing.lowestPrice}
+                                bestReturnCost={bestReturnCost}
+                                compact
+                                inTable
+                              />
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    </>
+                  )}
+                  <tr className="bg-[#f5f5f7] dark:bg-white/[0.04]">
+                    <td colSpan={cols.length + 1} className="px-5 pb-2.5 pt-5 text-sm font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
+                      価格 <span className="ml-1 text-xs font-normal text-[#6e6e73] dark:text-zinc-400">{modeLabel}</span>
+                    </td>
+                  </tr>
+                  {CARRIER_ORDER.map((id) => (
+                    <tr key={id}>
+                      <td className="px-5 py-4 align-middle text-sm font-medium text-[#424245] dark:text-zinc-300">{carrierLabel(id)}</td>
+                      {cols.map((c) => {
+                        const v = carrierValue(c.sku.carriers[id], mode, mnp);
+                        const isMin = v != null && cheapest(c).ids.includes(id);
+                        return (
                           <td
-                            className={`${
-                              isExporting ? '' : 'sticky left-0'
-                            } bg-white px-4 py-3.5 text-sm shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)] dark:bg-[#1c1d22] sm:px-5 ${
-                              er.hasDiff ? 'font-semibold text-[#1d1d1f] dark:text-zinc-100' : 'font-normal text-[#6e6e73] dark:text-zinc-400'
-                            }`}
+                            key={c.sel.pid}
+                            className={`px-5 py-4 align-top transition-colors ${isMin ? 'bg-[#e8f8ec]/50 dark:bg-[#34c759]/[0.07]' : ''}`}
                           >
-                            {er.row.label}
+                            {renderCarrierCell(c, id)}
                           </td>
-                          {cols.map((c, idx) => (
+                        );
+                      })}
+                    </tr>
+                  ))}
+                  <tr>
+                    <td className="px-5 py-4 align-middle text-sm font-medium text-[#424245] dark:text-zinc-300">中古最安</td>
+                    {cols.map((c) => (
+                      <td key={c.sel.pid} className="px-5 py-4 align-middle">
+                        <UsedOneLine
+                          u={getUsedData(c)}
+                          loading={loadingModalKey === `${c.p.id}__${c.sku.id}`}
+                          onOpen={() => openShopComparisonModal(c.p, c.sku)}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td colSpan={cols.length + 1} className="px-5 py-4">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                          <span className="text-lg font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">スペック比較</span>
+                          <span className="text-sm text-[#6e6e73] dark:text-zinc-400">
+                            {specSections.reduce((n, sec) => n + sec.rows.length, 0)}項目 ／ 違いがある項目 {totalDiffSpecCount}件
+                          </span>
+                        </div>
+                        {!isExporting && (
+                          <div data-export-ignore="true">
+                            <Toggle checked={diffOnly} onChange={setDiffOnly} size="sm" label="差分のみ表示（同じ項目を隠す）" />
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                  {specSections.length === 0 ? (
+                    <tr>
+                      <td colSpan={cols.length + 1} className="p-6 text-center text-sm text-[#6e6e73] dark:text-zinc-400">
+                        <span>{cols.length < 2 ? '1機種のみ選択中のため、違いのあるスペック項目はありません' : '選択中のモデル間で異なるスペック項目はありません'}</span>{' '}
+                        <button type="button" onClick={() => setDiffOnly(false)} className="font-medium text-[#0071e3] hover:underline">
+                          （すべて表示に戻す）
+                        </button>
+                      </td>
+                    </tr>
+                  ) : (
+                    specSections.map((sec) => (
+                      <React.Fragment key={sec.id}>
+                        <tr className="bg-[#f5f5f7] dark:bg-white/[0.04]">
+                          <td colSpan={cols.length + 1} className="px-5 pb-2.5 pt-6 text-sm font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
+                            {sec.title}
+                          </td>
+                        </tr>
+                        {sec.rows.map((er) => (
+                          <tr key={er.row.key}>
                             <td
-                              key={c.sel.pid}
-                              className={`break-words px-4 py-3.5 align-top text-sm leading-relaxed sm:px-5 ${
-                                er.hasDiff ? 'font-medium text-[#1d1d1f] dark:text-zinc-100' : 'text-[#6e6e73] dark:text-zinc-400'
+                              className={`px-5 py-3.5 align-top text-sm ${
+                                er.hasDiff ? 'font-semibold text-[#1d1d1f] dark:text-zinc-100' : 'font-normal text-[#6e6e73] dark:text-zinc-400'
                               }`}
                             >
-                              {er.values[idx]}
+                              {er.row.label}
                             </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </React.Fragment>
-                  ))
-                )}
-              </tbody>
-            </table>
+                            {cols.map((c, idx) => (
+                              <td
+                                key={c.sel.pid}
+                                className={`break-words px-5 py-3.5 align-top text-sm leading-relaxed ${
+                                  er.hasDiff ? 'font-medium text-[#1d1d1f] dark:text-zinc-100' : 'text-[#6e6e73] dark:text-zinc-400'
+                                }`}
+                              >
+                                {er.values[idx]}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </React.Fragment>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* 画像出力時のみ最下部に表示される出典クレジット＆免責フッター */}
           {isExporting ? (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-200/60 pt-3.5 text-xs dark:border-white/[0.06]">
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e5e5ea] pt-3.5 text-xs dark:border-white/[0.06]">
+              <span className="text-xs text-[#6e6e73] dark:text-zinc-400">
                 ※価格は税込の目安（キャリア返却プログラム・MNP割引・中古最安値を含む）。条件・時期により実際の金額は異なります。
               </span>
-              <div className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-200/70 px-3 py-1 text-xs font-bold tracking-tight text-zinc-800 dark:bg-[#25272e] dark:text-zinc-100">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-semibold tracking-tight text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">
                 <Apple className="h-3.5 w-3.5 shrink-0" />
                 <span>Apple Price Atlas | apple.azarin.me</span>
               </div>
             </div>
           ) : (
-            <p data-export-ignore="true" className="flex items-start gap-1.5 text-xs text-zinc-500">
+            <p data-export-ignore="true" className="flex items-start gap-1.5 px-1 text-xs text-[#6e6e73]">
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
               キャリア価格・返却時の実質負担額は目安のモデル値です。プログラム条件(回数・手数料・端末状態)により実際の金額は異なります。
             </p>
@@ -2301,5 +2347,54 @@ export const CompareView = React.memo(function CompareView({
     </div>
   );
 });
+
+/* ---------- スマホ2列比較のセクション＆行（項目名を上段・2機種の値を下段2列） ---------- */
+function MobileSection({
+  title,
+  subtitle,
+  right,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  right?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className={`${card} overflow-hidden`}>
+      <div className="flex items-center justify-between gap-2 px-3 py-3">
+        <div className="min-w-0">
+          <h3 className="text-base font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{title}</h3>
+          {subtitle && <p className="truncate text-xs text-[#6e6e73] dark:text-zinc-400">{subtitle}</p>}
+        </div>
+        {right}
+      </div>
+      <div className="divide-y divide-[#e5e5ea] border-t border-[#e5e5ea] dark:divide-white/[0.06] dark:border-white/[0.06]">{children}</div>
+    </section>
+  );
+}
+
+function MobileRow({
+  label,
+  cells,
+  emphasize,
+}: {
+  label: React.ReactNode;
+  cells: React.ReactNode[];
+  emphasize?: boolean;
+}) {
+  return (
+    <div className="px-3 py-3">
+      <div className={`mb-1.5 text-xs font-medium ${emphasize ? 'text-[#1d1d1f] dark:text-zinc-200' : 'text-[#6e6e73] dark:text-zinc-400'}`}>{label}</div>
+      <div className="grid grid-cols-2 gap-3">
+        {[0, 1].map((i) => (
+          <div key={i} className="min-w-0 break-words text-sm leading-relaxed">
+            {cells[i] ?? <span className="text-[#86868b]">—</span>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default CompareView;

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { CompareView } from './components/CompareView';
 import { UsedOffersModal, UsedShopOffersModal } from './components/UsedOffersModal';
 import { BudgetSearchModal, BudgetView } from './components/BudgetSearchModal';
@@ -20,7 +20,7 @@ import {
 import {
   Smartphone, Tablet, Watch, Laptop, Sun, Moon, TrendingUp, TrendingDown, Minus, Copy, Download,
   Check, Scale, LineChart as LineIcon, Coins, X, Link2, FileSpreadsheet,
-  Info, Trophy, Apple, Headphones, Search, ShoppingBag, ExternalLink, Sparkles, ChevronDown, ChevronUp,
+  Info, Trophy, Apple, Headphones, Search, ExternalLink, Sparkles, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { toBlob, toPng } from 'html-to-image';
 import {
@@ -32,7 +32,6 @@ import {
   type UsedPricing,
   type UsedShopOffer,
 } from './usedPrice';
-import { AccessoriesView } from './AccessoriesView';
 
 /* =====================================================================================
  * 1. データスキーマ (TypeScript インターフェース)
@@ -1923,11 +1922,18 @@ function buildCompareExcelSheets(products: Product[], sel: Sel[], mode: Mode, mn
  * 4. 共通 UI パーツ
  * ===================================================================================== */
 
-const card = 'rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:bg-[#1c1d22] dark:shadow-none';
-const selectCls = 'rounded-xl bg-[#f5f5f7] px-3.5 py-2 text-base sm:text-sm text-zinc-800 outline-none transition focus:ring-2 focus:ring-zinc-400/50 dark:bg-[#25272e] dark:text-zinc-100';
-const btnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-zinc-100 px-3.5 py-2 text-xs sm:text-sm font-medium text-zinc-700 transition hover:bg-zinc-200/80 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-[#2d3039]';
-const excelBtnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-zinc-100 px-3.5 py-2 text-xs sm:text-sm font-medium text-zinc-700 transition hover:bg-zinc-200/80 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-[#2d3039]';
-const secondaryActionBtnCls = 'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-zinc-100 px-3 py-1.5 text-xs sm:text-sm font-medium text-zinc-700 transition hover:bg-zinc-200/80 dark:bg-[#25272e] dark:text-zinc-300 dark:hover:bg-[#2d3039]';
+/* ---------- Apple HIG / Liquid Glass デザイントークン ---------- */
+/** カード: 大きめ角丸＋極薄ヘアライン（#e5e5ea）＋柔らかいアンビエントシャドウ（index.html の .apple-card） */
+const card = 'apple-card rounded-3xl';
+/** Liquid Glass（すりガラス＋スペキュラーボーダー＋立体シャドウ）: ナビ・追従ヘッダー・モーダル・フローティングUI用 */
+const glassCls = 'liquid-glass';
+const selectCls = 'rounded-xl border border-[#e5e5ea] bg-white px-3.5 py-2 text-base sm:text-sm text-[#1d1d1f] outline-none transition focus:border-[#0071e3] focus:ring-4 focus:ring-[#0071e3]/15 dark:border-white/10 dark:bg-[#2c2c2e] dark:text-zinc-100';
+/** セカンダリ: グレーのピル */
+const btnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#f5f5f7] px-4 py-2 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-[#e8e8ed] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white/10 dark:text-zinc-100 dark:hover:bg-white/15';
+/** プライマリ: Apple System Blue のピル */
+const primaryBtnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#0071e3] px-5 py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-[#0077ed] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40';
+const excelBtnCls = btnCls;
+const secondaryActionBtnCls = 'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#f5f5f7] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-[#e8e8ed] dark:bg-white/10 dark:text-zinc-200 dark:hover:bg-white/15';
 
 function CarrierBadge({ id, small }: { id: CarrierId; small?: boolean }) {
   return (
@@ -2128,24 +2134,127 @@ function CurrentFxFairnessBadge({
   );
 }
 
-function Segmented<T extends string>({ value, onChange, options }: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[] }) {
+/**
+ * iOS 標準のセグメンテッドコントロール
+ * 丸みのあるグレーの溝（track）の中を、白いピル（thumb）が滑らかにスライドする
+ */
+function Segmented<T extends string>({
+  value,
+  onChange,
+  options,
+  size = 'md',
+  fullWidth = false,
+  ariaLabel,
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  options: { value: T; label: React.ReactNode }[];
+  size?: 'sm' | 'md';
+  fullWidth?: boolean;
+  ariaLabel?: string;
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [thumb, setThumb] = useState<{ left: number; width: number } | null>(null);
+  const activeIdx = Math.max(0, options.findIndex((o) => o.value === value));
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = btnRefs.current[activeIdx];
+      if (el) setThumb({ left: el.offsetLeft, width: el.offsetWidth });
+    };
+    measure();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
+    if (trackRef.current) ro?.observe(trackRef.current);
+    return () => ro?.disconnect();
+  }, [activeIdx, options.length]);
+
+  const pad = size === 'sm' ? 'px-3 py-1 text-xs' : 'px-3.5 py-1.5 text-xs sm:px-4 sm:text-sm';
   return (
-    <div className="no-scrollbar inline-flex max-w-full overflow-x-auto rounded-xl bg-zinc-200/60 p-1 dark:bg-[#23252b]">
-      {options.map((o) => (
-        <button key={o.value} onClick={() => onChange(o.value)}
-          className={`flex-1 sm:flex-initial whitespace-nowrap rounded-lg px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-semibold transition ${value === o.value ? 'bg-white text-zinc-900 shadow-xs dark:bg-[#31343d] dark:text-zinc-100' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}>
-          {o.label}
-        </button>
-      ))}
+    <div
+      ref={trackRef}
+      role="radiogroup"
+      aria-label={ariaLabel}
+      className={`no-scrollbar relative ${fullWidth ? 'flex w-full' : 'inline-flex max-w-full'} overflow-x-auto rounded-full bg-[#767680]/[0.12] p-0.5 dark:bg-[#767680]/[0.24]`}
+    >
+      {thumb && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0.5 top-0.5 rounded-full bg-white shadow-[0_3px_8px_rgba(0,0,0,0.12),0_3px_1px_rgba(0,0,0,0.04)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] dark:bg-[#636366]"
+          style={{ left: thumb.left, width: thumb.width }}
+        />
+      )}
+      {options.map((o, i) => {
+        const active = value === o.value;
+        return (
+          <button
+            key={o.value}
+            ref={(el) => { btnRefs.current[i] = el; }}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(o.value)}
+            className={`relative z-[1] ${fullWidth ? 'flex-1' : ''} whitespace-nowrap rounded-full ${pad} font-semibold tracking-tight transition-colors ${active ? 'text-[#1d1d1f] dark:text-white' : 'text-[#1d1d1f]/60 hover:text-[#1d1d1f] dark:text-zinc-400 dark:hover:text-zinc-100'}`}
+          >
+            {o.label}
+          </button>
+        );
+      })}
     </div>
+  );
+}
+
+/** iOS トグルスイッチ（role="switch"） */
+function Toggle({
+  checked,
+  onChange,
+  label,
+  description,
+  size = 'md',
+  className = '',
+  disabled = false,
+}: {
+  disabled?: boolean;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label?: React.ReactNode;
+  description?: React.ReactNode;
+  size?: 'sm' | 'md';
+  className?: string;
+}) {
+  const track = size === 'sm' ? 'h-6 w-10' : 'h-[31px] w-[51px]';
+  const knob = size === 'sm' ? 'h-5 w-5' : 'h-[27px] w-[27px]';
+  const shift = size === 'sm' ? 'translate-x-4' : 'translate-x-5';
+  return (
+    <label className={`inline-flex select-none items-center gap-2.5 ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} ${className}`}>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        disabled={disabled}
+        onClick={() => onChange(!checked)}
+        className={`relative inline-flex shrink-0 items-center rounded-full p-0.5 transition-colors duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#0071e3]/25 ${track} ${checked ? 'bg-[#34c759]' : 'bg-[#e9e9eb] dark:bg-[#39393d]'}`}
+      >
+        <span
+          aria-hidden="true"
+          className={`${knob} rounded-full bg-white shadow-[0_3px_8px_rgba(0,0,0,0.15),0_3px_1px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${checked ? shift : 'translate-x-0'}`}
+        />
+      </button>
+      {(label || description) && (
+        <span className="flex min-w-0 flex-col">
+          {label && <span className="text-sm font-medium text-[#1d1d1f] dark:text-zinc-100">{label}</span>}
+          {description && <span className="text-xs text-[#6e6e73] dark:text-zinc-400">{description}</span>}
+        </span>
+      )}
+    </label>
   );
 }
 
 function SectionTitle({ icon, title, desc }: { icon: React.ReactNode; title: string; desc?: string }) {
   return (
     <div className="mb-4 sm:mb-5 flex items-start gap-3 sm:gap-3.5">
-      <div className="shrink-0 rounded-xl bg-zinc-900 p-2.5 text-zinc-100 dark:bg-[#262830] dark:text-zinc-200">{icon}</div>
-      <div className="min-w-0"><h2 className="text-base sm:text-lg font-bold leading-snug text-zinc-900 dark:text-zinc-100">{title}</h2>{desc && <p className="mt-1 text-xs sm:text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">{desc}</p>}</div>
+      <div className="shrink-0 rounded-2xl bg-[#f5f5f7] p-2.5 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">{icon}</div>
+      <div className="min-w-0"><h2 className="text-lg sm:text-2xl font-semibold leading-tight tracking-tight text-[#1d1d1f] dark:text-zinc-100">{title}</h2>{desc && <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[#6e6e73] dark:text-zinc-400">{desc}</p>}</div>
     </div>
   );
 }
@@ -2172,7 +2281,7 @@ const EmptyNote = ({ text }: { text: string }) => <div className={`${card} p-12 
 const useChartColors = () => { const d = useDark(); return { axis: d ? '#9ca0ab' : '#555863', grid: d ? '#262830' : '#e6e7ec', tipBg: d ? '#1c1d22' : '#ffffff', tipBorder: d ? '#2c2e36' : '#e6e7ec', text: d ? '#ececef' : '#1d1d1f' }; };
 
 /* ---------- URLクエリパラメータの双方向同期ユーティリティ ---------- */
-export type Tab = 'compare' | 'budget' | 'refurbished' | 'timeline' | 'fx' | 'accessories';
+export type Tab = 'compare' | 'budget' | 'refurbished' | 'timeline' | 'fx';
 
 const DEFAULT_COMPARE_IDS = ['iphone-14', 'iphone-15', 'iphone-16'] as const;
 
@@ -2586,9 +2695,7 @@ function parseUrlSearchParams(search: string) {
           ? 'timeline'
           : tabRaw === 'fx'
             ? 'fx'
-            : tabRaw === 'accessories' || tabRaw === 'accessory'
-              ? 'accessories'
-              : 'compare';
+            : 'compare';
   const maxPriceNum = parseInt(params.get('maxPrice') ?? '', 10);
   const maxPrice =
     Number.isFinite(maxPriceNum) && maxPriceNum >= 10000 && maxPriceNum <= 300000
@@ -2700,8 +2807,6 @@ export function isProductDiscontinued(p: Product, sku: Sku): boolean {
   return getSkuDiscontinuedInfo(p, sku).isDiscontinued;
 }
 
-const MemoizedAccessoriesView = React.memo(AccessoriesView);
-
 export {
   CompareView,
   UsedOffersModal,
@@ -2780,8 +2885,10 @@ export {
   downloadXlsx,
   buildCompareExcelSheets,
   card,
+  glassCls,
   selectCls,
   btnCls,
+  primaryBtnCls,
   excelBtnCls,
   secondaryActionBtnCls,
   CarrierBadge,
@@ -2792,6 +2899,7 @@ export {
   FxRatePairChip,
   CurrentFxFairnessBadge,
   Segmented,
+  Toggle,
   SectionTitle,
   ProductSkuPicker,
   EmptyNote,
@@ -3098,45 +3206,94 @@ export default function App() {
     }
   }, [products, sels, mode, mnp, tab, budgetMaxPrice, budgetCat, mySel, sellMode, sellCustom, showFlags, diffOnly, specExpanded]);
 
+  // メインナビゲーション（4タブ）。「予算から探す」はモデル比較タブの「条件・ツール」から開く
   const tabs: { id: Tab; label: string; shortLabel: string; icon: React.ReactNode }[] = [
-    { id: 'compare', label: 'スペック＆キャリア比較', shortLabel: '価格・スペック比較', icon: <Scale className="h-4 w-4 shrink-0" /> },
-    { id: 'budget', label: '💰 予算から探す', shortLabel: '💰 予算で探す', icon: <Sparkles className="h-4 w-4 shrink-0" /> },
-    { id: 'refurbished', label: 'Apple認定整備済品', shortLabel: '整備済品', icon: <Apple className="h-4 w-4 shrink-0" /> },
-    { id: 'timeline', label: '価格改定タイムライン', shortLabel: '価格改定履歴', icon: <LineIcon className="h-4 w-4 shrink-0" /> },
-    { id: 'fx', label: '発売時価格 × 為替', shortLabel: '発売価格×為替', icon: <Coins className="h-4 w-4 shrink-0" /> },
-    { id: 'accessories', label: 'アクセサリー', shortLabel: 'アクセサリー', icon: <ShoppingBag className="h-4 w-4 shrink-0" /> },
+    { id: 'compare', label: 'モデル比較', shortLabel: '比較', icon: <Scale className="h-[18px] w-[18px] shrink-0" /> },
+    { id: 'refurbished', label: '認定整備済品', shortLabel: '整備済品', icon: <Apple className="h-[18px] w-[18px] shrink-0" /> },
+    { id: 'timeline', label: '価格タイムライン', shortLabel: '価格推移', icon: <LineIcon className="h-[18px] w-[18px] shrink-0" /> },
+    { id: 'fx', label: '発売時×為替', shortLabel: '為替', icon: <Coins className="h-[18px] w-[18px] shrink-0" /> },
   ];
+  const activeNavTab: Tab = tab === 'budget' ? 'compare' : tab;
+  const selectTab = (t: Tab) => {
+    setTab(t);
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <ThemeCtx.Provider value={dark}>
       <div className="min-h-screen flex flex-col bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#16171a] dark:text-zinc-100">
-        <header ref={appHeaderRef} className="sticky top-0 z-30 border-b border-zinc-200/50 bg-[#f5f5f7]/85 backdrop-blur-md dark:border-white/[0.04] dark:bg-[#16171a]/85">
-          <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6 sm:py-3.5">
-            <a href="./" className="flex min-w-0 items-center gap-2.5 group">
-              <div className="shrink-0 rounded-xl bg-zinc-900 p-2 text-zinc-100 transition group-hover:opacity-85 dark:bg-[#25272e] dark:text-zinc-100"><Apple className="h-5 w-5" /></div>
-              <div className="min-w-0">
-                <div className="truncate text-sm sm:text-base font-bold leading-tight text-zinc-900 dark:text-zinc-100">Apple Price Atlas</div>
-                <div className="truncate text-xs text-zinc-500 dark:text-zinc-400">スペック・キャリア価格・価格改定の完全比較</div>
-              </div>
+        {/* 浮遊カプセル型 Liquid Glass ナビゲーションバー */}
+        <header ref={appHeaderRef} className="sticky top-0 z-40 px-3 pt-3 pb-2 sm:px-6">
+          <div className={`${glassCls} mx-auto flex max-w-7xl items-center gap-2 rounded-full py-1.5 pl-2 pr-1.5 sm:gap-3`}>
+            <a href="./" className="group flex min-w-0 items-center gap-2 rounded-full py-0.5 pl-0.5 pr-2">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#1d1d1f] text-white transition group-hover:opacity-85 dark:bg-white dark:text-[#1d1d1f]">
+                <Apple className="h-4 w-4" />
+              </span>
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold leading-tight tracking-tight text-[#1d1d1f] dark:text-zinc-100">Apple Price Atlas</span>
+                <span className="hidden truncate text-[11px] leading-tight text-[#6e6e73] lg:block dark:text-zinc-400">スペック・キャリア価格・価格改定の完全比較</span>
+              </span>
             </a>
-            <button onClick={() => setDark(!dark)} aria-label="テーマ切替" className={`${btnCls} ml-auto shrink-0 !px-3 !py-1.5`}>
-              {dark ? <Sun className="h-4 w-4 shrink-0" /> : <Moon className="h-4 w-4 shrink-0" />}
-              <span className="hidden sm:inline">{dark ? 'ライト' : 'ダーク'}</span>
+            <nav aria-label="メインナビゲーション" className="mx-auto hidden items-center gap-0.5 rounded-full bg-[#767680]/[0.08] p-1 md:flex dark:bg-white/[0.06]">
+              {tabs.map((t) => {
+                const active = activeNavTab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => selectTab(t.id)}
+                    aria-current={active ? 'page' : undefined}
+                    className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium tracking-tight transition-all duration-300 ${
+                      active
+                        ? 'bg-white text-[#1d1d1f] shadow-[0_2px_8px_rgba(0,0,0,0.10),0_1px_1px_rgba(0,0,0,0.04)] dark:bg-white/[0.16] dark:text-white'
+                        : 'text-[#1d1d1f]/70 hover:text-[#1d1d1f] dark:text-zinc-400 dark:hover:text-zinc-100'
+                    }`}
+                  >
+                    {t.icon}
+                    <span>{t.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+            <button
+              type="button"
+              onClick={() => setDark(!dark)}
+              aria-label={dark ? 'ライトモードに切替' : 'ダークモードに切替'}
+              className="ml-auto grid h-9 w-9 shrink-0 place-items-center rounded-full text-[#1d1d1f] transition hover:bg-black/[0.05] md:ml-0 dark:text-zinc-100 dark:hover:bg-white/10"
+            >
+              {dark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
             </button>
           </div>
-          <nav className="mx-auto grid max-w-7xl grid-cols-6 sm:flex sm:gap-1.5 px-2 sm:px-6">
-            {tabs.map((t) => (
-              <button key={t.id} onClick={() => setTab(t.id)}
-                className={`inline-flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 whitespace-nowrap border-b-2 px-1.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition ${tab === t.id ? 'border-zinc-900 text-zinc-900 dark:border-zinc-200 dark:text-zinc-100' : 'border-transparent text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'}`}>
-                {t.icon}
-                <span className="sm:hidden">{t.shortLabel}</span>
-                <span className="hidden sm:inline">{t.label}</span>
-              </button>
-            ))}
-          </nav>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
+        {/* スマホ: 画面下部中央に浮かぶ Liquid Glass ボトムドック */}
+        <nav
+          aria-label="メインナビゲーション（モバイル）"
+          className={`${glassCls} fixed left-1/2 z-50 flex w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 items-stretch gap-1 rounded-full p-1.5 md:hidden`}
+          style={{ bottom: 'max(16px, calc(env(safe-area-inset-bottom) + 8px))' }}
+        >
+          {tabs.map((t) => {
+            const active = activeNavTab === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => selectTab(t.id)}
+                aria-current={active ? 'page' : undefined}
+                className={`flex flex-1 flex-col items-center justify-center gap-0.5 rounded-full px-1 py-1.5 text-[10px] font-semibold tracking-tight transition-all duration-300 active:scale-95 ${
+                  active
+                    ? 'bg-white text-[#0071e3] shadow-[0_2px_8px_rgba(0,0,0,0.10)] dark:bg-white/[0.16] dark:text-[#4da3ff]'
+                    : 'text-[#1d1d1f]/65 dark:text-zinc-400'
+                }`}
+              >
+                {t.icon}
+                <span className="leading-none">{t.shortLabel}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        <main className="mx-auto w-full max-w-7xl flex-1 px-3 pb-28 pt-3 sm:px-6 sm:pt-6 md:pb-10">
           {tab === 'compare' && (
             <CompareView
               products={products}
@@ -3189,14 +3346,13 @@ export default function App() {
           )}
           {tab === 'timeline' && <TimelineView products={products} toast={toast} />}
           {tab === 'fx' && <FxView products={products} toast={toast} />}
-          {tab === 'accessories' && <MemoizedAccessoriesView toast={toast} />}
         </main>
 
-        <footer className="mx-auto w-full max-w-7xl px-4 pb-12 pt-6 text-xs text-zinc-500 dark:text-zinc-400 sm:px-6">
+        <footer className="mx-auto w-full max-w-7xl px-4 pb-32 pt-6 text-xs text-[#6e6e73] dark:text-zinc-400 sm:px-6 md:pb-12">
           <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1 leading-relaxed">
               <div>※ 価格は日本国内の税込表示。為替・USD価格・キャリア価格・中古相場には概算/モデル値を含みます。購入前に各公式サイト・販売店で最新情報をご確認ください。</div>
-              <div>※ 当サイトは楽天アフィリエイト等のアフィリエイトプログラムに参加しており、一部ショップリンクに広告（PR）を含みます。</div>
+              <div>※ 当サイトはもしもアフィリエイト（楽天市場・Yahoo!ショッピング・Amazon）に参加しており、一部ショップリンクに広告（PR）を含みます。</div>
             </div>
             <div className="flex flex-wrap shrink-0 items-center gap-5 font-medium">
               <a href="./privacy/" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">プライバシーポリシー</a>
@@ -3208,8 +3364,10 @@ export default function App() {
         </footer>
 
         {toastMsg && (
-          <div className="fixed bottom-5 left-1/2 z-50 w-max max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-full bg-zinc-800 px-5 py-2.5 text-center text-xs sm:text-sm font-medium text-zinc-100 shadow-lg dark:bg-[#282b33] dark:text-zinc-100">
-            <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 shrink-0 text-[#7ea88c]" /><span>{toastMsg}</span></span>
+          <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[60] flex justify-center px-4 md:bottom-6">
+            <div role="status" className={`${glassCls} animate-glass-in max-w-full rounded-full px-5 py-2.5 text-center text-xs sm:text-sm font-medium text-[#1d1d1f] dark:text-zinc-100`}>
+              <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 shrink-0 text-[#34c759]" /><span>{toastMsg}</span></span>
+            </div>
           </div>
         )}
 

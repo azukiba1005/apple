@@ -203,7 +203,7 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
         {/* スマホ向けカードリスト (md未満) */}
         <div className="mt-5 space-y-3 md:hidden">
           {launchRows.length > 0 && (
-            <label className="flex cursor-pointer items-center gap-2.5 rounded-xl bg-[#f5f5f7] px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:bg-[#23252b] dark:text-zinc-300">
+            <label className="flex cursor-pointer items-center gap-2.5 rounded-2xl bg-[#f5f5f7] px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:bg-[#23252b] dark:text-zinc-300">
               <input type="checkbox" checked={allCatSelected} onChange={toggleLaunchCat} className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200" />
               表示カテゴリの全モデルを選択 ({launchRows.length}機種)
             </label>
@@ -221,7 +221,7 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
                   </div>
                   <span className="shrink-0 text-xs text-zinc-500">{r.date}</span>
                 </div>
-                <div className="mt-3 grid grid-cols-3 gap-2.5 rounded-xl bg-white p-3 dark:bg-[#1c1d22]">
+                <div className="mt-3 grid grid-cols-3 gap-2.5 rounded-2xl bg-white p-3 dark:bg-[#1c1d22]">
                   <div>
                     <div className="text-xs text-zinc-500">発売時価格</div>
                     <div className="mt-0.5 text-sm font-bold text-zinc-900 dark:text-zinc-100">{yen(r.jpy)}</div>

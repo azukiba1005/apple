@@ -59,7 +59,7 @@ export function MallSearchButtons({
           href={links[pf]}
           target="_blank"
           rel="noopener noreferrer sponsored"
-          className={`inline-flex items-center gap-1.5 rounded-xl bg-white ${pad} text-xs font-medium text-zinc-700 transition hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-200 dark:hover:bg-[#2c2f36]`}
+          className={`inline-flex items-center gap-1.5 rounded-full bg-white ${pad} text-xs font-medium text-zinc-700 transition hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-200 dark:hover:bg-[#2c2f36]`}
         >
           <span className={`h-2 w-2 rounded-full ${MALL_META[pf].dotCls}`} />
           <span>{labels?.[pf] ?? MALL_BUTTON_LABELS[pf]}</span>
@@ -202,11 +202,11 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
       aria-modal="true"
       aria-label={`${product.name} (${sku.label}) の中古・未使用品 ショップ比較`}
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-3 sm:p-5 backdrop-blur-xs"
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/30 p-0 backdrop-blur-[2px] sm:items-center sm:p-5"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-white text-zinc-900 shadow-2xl dark:bg-[#1c1d22] dark:text-zinc-100"
+        className="liquid-glass liquid-glass-strong animate-sheet-up flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-t-3xl text-[#1d1d1f] sm:max-h-[90vh] sm:rounded-3xl dark:text-zinc-100"
       >
         {/* 1. モーダルヘッダー */}
         <div className="flex items-start justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5">
@@ -264,14 +264,14 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
             type="button"
             aria-label="モーダルを閉じる"
             onClick={onClose}
-            className="shrink-0 rounded-xl bg-zinc-100 p-2 text-zinc-500 transition hover:bg-zinc-200 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-400 dark:hover:bg-zinc-700/70 dark:hover:text-zinc-100"
+            className="shrink-0 rounded-full bg-black/[0.05] p-2 text-[#6e6e73] transition hover:bg-black/[0.09] hover:text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-400 dark:hover:bg-white/15 dark:hover:text-zinc-100"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* 2. クイック絞り込み＆並び替えバー */}
-        <div className="space-y-3 bg-[#f5f5f7] px-5 py-3.5 text-xs sm:px-6 dark:bg-[#23252b]">
+        <div className="space-y-3 bg-black/[0.03] px-5 py-3.5 text-xs sm:px-6 dark:bg-white/[0.04]">
           {/* 上段: 状態フィルタ */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">状態・店舗:</span>
@@ -332,14 +332,14 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
               <div
                 role="group"
                 aria-label="出品リストの並び替え"
-                className="inline-flex rounded-xl bg-zinc-200/70 p-1 text-xs font-medium dark:bg-[#1c1d22]"
+                className="inline-flex rounded-full bg-[#767680]/[0.12] p-0.5 text-xs font-medium dark:bg-[#767680]/[0.24]"
               >
                 <button
                   type="button"
                   onClick={() => setSortOrder('price_asc')}
-                  className={`rounded-lg px-3 py-1 transition ${
+                  className={`rounded-full px-3 py-1 transition ${
                     sortOrder === 'price_asc'
-                      ? 'bg-white font-semibold text-zinc-900 shadow-2xs dark:bg-[#2b2d35] dark:text-zinc-100'
+                      ? 'bg-white font-semibold text-[#1d1d1f] shadow-[0_3px_8px_rgba(0,0,0,0.12)] dark:bg-[#636366] dark:text-white'
                       : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
                   }`}
                 >
@@ -348,9 +348,9 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                 <button
                   type="button"
                   onClick={() => setSortOrder('condition_desc')}
-                  className={`rounded-lg px-3 py-1 transition ${
+                  className={`rounded-full px-3 py-1 transition ${
                     sortOrder === 'condition_desc'
-                      ? 'bg-white font-semibold text-zinc-900 shadow-2xs dark:bg-[#2b2d35] dark:text-zinc-100'
+                      ? 'bg-white font-semibold text-[#1d1d1f] shadow-[0_3px_8px_rgba(0,0,0,0.12)] dark:bg-[#636366] dark:text-white'
                       : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
                   }`}
                 >
@@ -362,7 +362,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
         </div>
 
         {/* 2.5 3大モール横断検索（もしもアフィリエイト経由） */}
-        <div className="flex flex-wrap items-center gap-2 bg-[#f5f5f7] px-5 pb-3.5 text-xs sm:px-6 dark:bg-[#23252b]">
+        <div className="flex flex-wrap items-center gap-2 bg-black/[0.03] px-5 pb-3.5 text-xs sm:px-6 dark:bg-white/[0.04]">
           <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">3大モールで探す:</span>
           <MallSearchButtons links={mallLinks} size="sm" />
         </div>
@@ -370,7 +370,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
         {/* 3. ショップ別ランキングリスト（余白で区切るフラットリスト） */}
         <div className="flex-1 space-y-2.5 overflow-y-auto px-5 py-4 sm:px-6">
           {allOffers.length > 0 && !hasRakutenOffers && (
-            <div className="flex flex-col gap-2.5 rounded-xl bg-[#f5f5f7]/80 px-4 py-3 text-xs text-zinc-600 sm:flex-row sm:items-center sm:justify-between dark:bg-[#23252b]/75 dark:text-zinc-300">
+            <div className="flex flex-col gap-2.5 rounded-2xl bg-white/70 px-4 py-3 text-xs text-zinc-600 sm:flex-row sm:items-center sm:justify-between dark:bg-[#23252b]/75 dark:text-zinc-300">
               <span>
                 楽天市場の出品は現在取得できませんでした。Yahoo!ショッピングの実在庫を最安値として表示しています。
               </span>
@@ -428,10 +428,10 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
               return (
                 <div
                   key={`${offer.platform}-${offer.price}-${offer.shopName}-${idx}`}
-                  className={`flex flex-col gap-3 rounded-xl px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 ${
+                  className={`flex flex-col gap-3 rounded-2xl px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 ${
                     isFirst
-                      ? 'bg-[#eaf2ed]/45 dark:bg-[#1e2b24]/35'
-                      : 'bg-[#f5f5f7]/80 dark:bg-[#23252b]/75'
+                      ? 'bg-[#e8f8ec]/70 dark:bg-[#34c759]/[0.08]'
+                      : 'bg-white/70 dark:bg-white/[0.04]'
                   }`}
                 >
                   {/* 左〜中央: 順位バッジ ＋ モール・ショップ名 ＋ 状態バッジ＆商品タイトル */}
@@ -439,7 +439,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                     <div className="flex flex-wrap items-center gap-2">
                       {/* 順位バッジ */}
                       <span
-                        className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-0.5 text-xs font-bold tabular-nums ${
+                        className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold tabular-nums ${
                           rank === 1
                             ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
                             : rank <= 3
@@ -452,7 +452,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                       </span>
 
                       {/* モールバッジ ([楽天] or [Yahoo!]) */}
-                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#2c2f36] dark:text-zinc-300">
+                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#2c2f36] dark:text-zinc-300">
                         <span
                           className={`h-2 w-2 rounded-full ${
                             offer.platform === 'yahoo' ? 'bg-[#ad8755]' : 'bg-[#a66c75]'
@@ -468,7 +468,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
 
                       {/* 大手認定バッジ */}
                       {offer.isTrusted && (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#2c2f36] dark:text-zinc-300">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#2c2f36] dark:text-zinc-300">
                           <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
                           <span>✓ 大手認定</span>
                         </span>
@@ -477,12 +477,12 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
 
                     {/* 状態・特徴バッジ ＋ 商品タイトル（1行省略＋ホバー全文） */}
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-300">
+                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-300">
                         <span className={`h-1.5 w-1.5 rounded-full ${condMeta.dotCls}`} />
                         <span>{condMeta.label}</span>
                       </span>
                       {offer.simFree && (
-                        <span className="inline-flex shrink-0 items-center rounded-lg bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#2c2f36] dark:text-zinc-300">
+                        <span className="inline-flex shrink-0 items-center rounded-full bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#2c2f36] dark:text-zinc-300">
                           SIMフリー
                         </span>
                       )}
@@ -518,7 +518,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                       href={offer.url}
                       target="_blank"
                       rel="noopener noreferrer sponsored"
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-2 text-xs font-semibold text-zinc-100 transition hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#0071e3] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#0077ed]"
                     >
                       <span>ショップで見る</span>
                       <ExternalLink className="h-3.5 w-3.5" />
@@ -531,7 +531,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
         </div>
 
         {/* 4. モーダルフッター */}
-        <div className="flex flex-wrap items-center justify-between gap-2 bg-[#f5f5f7] px-5 py-3 text-xs text-zinc-500 sm:px-6 dark:bg-[#18191e] dark:text-zinc-400">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-black/[0.06] px-5 py-3 text-xs text-[#6e6e73] sm:px-6 dark:border-white/10 dark:text-zinc-400">
           <span>
             ※厳密タイトル検証によりケース・フィルム・ジャンク品・別容量・別モデル（Pro/Max/mini等）を自動除外しています。在庫・価格は各ショップページでご確認ください。リンクはもしもアフィリエイト経由です（PR）。
           </span>

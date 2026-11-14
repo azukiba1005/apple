@@ -68,11 +68,11 @@ function Toggle({ checked, disabled, onChange, label }: { checked: boolean; disa
       aria-label={label}
       disabled={disabled}
       onClick={() => onChange?.(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 ${
-        checked ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-700'
+      className={`relative inline-flex h-[31px] w-[51px] shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#0071e3]/25 ${
+        checked ? 'bg-[#34c759]' : 'bg-[#e9e9eb] dark:bg-[#39393d]'
       } ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
     >
-      <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
+      <span className={`inline-block h-[27px] w-[27px] transform rounded-full bg-white shadow-[0_3px_8px_rgba(0,0,0,0.15)] transition-transform duration-300 ${checked ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
     </button>
   );
 }
@@ -127,7 +127,7 @@ export default function CookieConsent() {
           className="fixed inset-x-0 bottom-0 z-[60] p-3 sm:p-4"
           style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
         >
-          <div className="mx-auto flex max-w-5xl flex-col gap-4 rounded-2xl border border-zinc-200 bg-white/95 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.12)] backdrop-blur-md dark:border-zinc-800 dark:bg-[#1f2126]/95 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
+          <div className="mx-auto flex max-w-5xl flex-col gap-4 liquid-glass rounded-3xl p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
             <div className="flex min-w-0 flex-1 gap-3">
               <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
                 <Cookie className="h-5 w-5" />
@@ -153,14 +153,14 @@ export default function CookieConsent() {
               <button
                 type="button"
                 onClick={() => finish(false, false)}
-                className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-xs font-semibold text-zinc-800 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18] dark:bg-white/10 dark:text-zinc-100 dark:hover:bg-white/15"
               >
                 必須のみ
               </button>
               <button
                 type="button"
                 onClick={() => finish(true, true)}
-                className="rounded-full bg-zinc-900 px-5 py-2 text-xs font-semibold text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+                className="rounded-full bg-[#0071e3] px-5 py-2 text-xs font-semibold text-white hover:bg-[#0077ed]"
               >
                 すべて同意
               </button>
@@ -176,9 +176,9 @@ export default function CookieConsent() {
             aria-modal="true"
             aria-labelledby="cookie-settings-title"
             onClick={(e) => e.stopPropagation()}
-            className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl dark:bg-[#1f2126] sm:rounded-2xl"
+            className="liquid-glass liquid-glass-strong animate-sheet-up flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl"
           >
-            <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
+            <div className="flex items-center justify-between border-b border-black/[0.06] px-5 py-4 dark:border-white/10">
               <div className="flex items-center gap-2">
                 <Cookie className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 <h2 id="cookie-settings-title" className="text-base font-bold text-zinc-900 dark:text-zinc-100">Cookie 設定</h2>
@@ -193,7 +193,7 @@ export default function CookieConsent() {
                 利用目的ごとに Cookie 等の利用可否を選択できます。設定はいつでもフッターの「Cookie 設定」から変更できます。
               </p>
               {CATEGORIES.map((c) => (
-                <div key={c.key} className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+                <div key={c.key} className="rounded-2xl bg-white/60 p-4 dark:bg-white/[0.04]">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{c.title}</span>
@@ -206,14 +206,14 @@ export default function CookieConsent() {
               ))}
             </div>
 
-            <div className="flex flex-col-reverse gap-2 border-t border-zinc-200 px-5 py-4 dark:border-zinc-800 sm:flex-row sm:justify-end" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-              <button type="button" onClick={() => finish(false, false)} className="rounded-full border border-zinc-300 px-4 py-2 text-xs font-semibold text-zinc-800 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-800">
+            <div className="flex flex-col-reverse gap-2 border-t border-black/[0.06] px-5 py-4 dark:border-white/10 sm:flex-row sm:justify-end" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+              <button type="button" onClick={() => finish(false, false)} className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18] dark:bg-white/10 dark:text-zinc-100 dark:hover:bg-white/15">
                 すべて拒否
               </button>
-              <button type="button" onClick={() => finish(analytics, marketing)} className="rounded-full border border-zinc-300 px-4 py-2 text-xs font-semibold text-zinc-800 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-800">
+              <button type="button" onClick={() => finish(analytics, marketing)} className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18] dark:bg-white/10 dark:text-zinc-100 dark:hover:bg-white/15">
                 選択内容を保存
               </button>
-              <button type="button" onClick={() => finish(true, true)} className="rounded-full bg-zinc-900 px-5 py-2 text-xs font-semibold text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white">
+              <button type="button" onClick={() => finish(true, true)} className="rounded-full bg-[#0071e3] px-5 py-2 text-xs font-semibold text-white hover:bg-[#0077ed]">
                 すべて同意
               </button>
             </div>
