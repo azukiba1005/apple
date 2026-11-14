@@ -25,6 +25,7 @@ import {
   type Tab,
 } from '../App';
 import { estimateUsedMarketData } from '../usedPrice';
+import { toMoshimoUrl } from '../utils/moshimo';
 
 export type RefurbStockStatus = 'Live' | 'Reference';
 export type RefurbCategoryFilter = 'all' | 'Mac' | 'iPad' | 'iPhone' | 'Apple Watch' | 'AirPods';
@@ -821,7 +822,7 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                         </span>
                         {item.usedUrl && (
                           <a
-                            href={item.usedUrl}
+                            href={toMoshimoUrl(item.usedUrl)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-0.5 text-xs font-semibold text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
@@ -867,7 +868,7 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                           </div>
                           {item.usedUrl && (
                             <a
-                              href={item.usedUrl}
+                              href={toMoshimoUrl(item.usedUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 whitespace-nowrap text-xs font-bold text-zinc-900 underline hover:opacity-80 dark:text-zinc-100"

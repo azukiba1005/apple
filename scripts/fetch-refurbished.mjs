@@ -23,6 +23,7 @@
  */
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { toMoshimoAffiliateUrl } from './lib/moshimo.mjs';
 
 /* ============================================================================
  * 1. 定数・フィードURL定義
@@ -1081,11 +1082,13 @@ export function enrichRefurbishedItemStepC(rawItem, product, sku) {
         ? 'Yahoo!ショッピング（じゃんぱら・イオシス・ソフマップ等）最安相場'
         : '楽天市場（イオシス・じゃんぱら・ゲオ等）最安相場';
 
-  const usedUrl =
+  // すべて もしもアフィリエイト経由（楽天市場 / Yahoo!ショッピング）に統一
+  const usedUrl = toMoshimoAffiliateUrl(
     primaryOffer?.url ||
-    up?.yahoo?.url ||
-    up?.rakuten?.url ||
-    `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(`${product.name} ${sku.storage || sku.label} 中古`)}/`;
+      up?.yahoo?.url ||
+      up?.rakuten?.url ||
+      `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(`${product.name} ${sku.storage || sku.label} 中古`)}/`,
+  );
 
   const priceGapVsUsed =
     usedLowestPrice != null && usedLowestPrice > 0 ? refurbishedPrice - usedLowestPrice : null;
@@ -1148,9 +1151,9 @@ export function enrichRefurbishedItemStepC(rawItem, product, sku) {
     usedPlatform,
     usedIsEstimated,
     rakutenUsedPrice: up?.rakuten?.price ?? null,
-    rakutenUsedUrl: up?.rakuten?.url ?? undefined,
+    rakutenUsedUrl: up?.rakuten?.url ? toMoshimoAffiliateUrl(up.rakuten.url, { platform: 'rakuten' }) : undefined,
     yahooUsedPrice: up?.yahoo?.price ?? null,
-    yahooUsedUrl: up?.yahoo?.url ?? undefined,
+    yahooUsedUrl: up?.yahoo?.url ? toMoshimoAffiliateUrl(up.yahoo.url, { platform: 'yahoo' }) : undefined,
     priceGapVsUsed,
     url: rawItem.url || APPLE_REFURB_CATEGORY_URLS[product.category] || 'https://www.apple.com/jp/shop/refurbished',
     isLiveStock,

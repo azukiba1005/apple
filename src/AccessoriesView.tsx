@@ -37,6 +37,7 @@ import {
   type AccessoryTier,
   type DeviceCompatGroupId,
 } from './accessoriesData';
+import { buildMallSearchLinks, MALL_META } from './utils/moshimo';
 
 const yen = (n: number | null | undefined) =>
   n == null ? '—' : `¥${Math.round(n).toLocaleString('ja-JP')}`;
@@ -955,40 +956,24 @@ export function AccessoriesView({ toast }: { toast: (m: string) => void }) {
                     <span className="text-xs text-zinc-400 dark:text-zinc-500">
                       {item.certification}
                     </span>
+                    {/* 購入・検索リンク: 楽天市場 / Yahoo!ショッピング / Amazon（すべて もしもアフィリエイト経由） */}
                     <div className="flex flex-wrap items-center gap-2">
-                      <a
-                        href={`https://www.apple.com/jp/shop/accessories/all-accessories?fh=${encodeURIComponent(item.name)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
-                      >
-                        <span>Apple Store</span>
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                      <a
-                        href={`https://search.rakuten.co.jp/search/mall/${encodeURIComponent(
-                          `${item.brand} ${item.name}`,
-                        )}/`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
-                      >
-                        <span className="h-2 w-2 rounded-full bg-[#a66c75]" />
-                        <span>楽天市場</span>
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                      <a
-                        href={`https://shopping.yahoo.co.jp/search?p=${encodeURIComponent(
-                          `${item.brand} ${item.name}`,
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
-                      >
-                        <span className="h-2 w-2 rounded-full bg-[#ad8755]" />
-                        <span>Yahoo!</span>
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
+                      {Object.entries(buildMallSearchLinks(`${item.brand} ${item.name}`)).map(([key, href]) => {
+                        const pf = key as keyof typeof MALL_META;
+                        return (
+                          <a
+                            key={pf}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer sponsored"
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
+                          >
+                            <span className={`h-2 w-2 rounded-full ${MALL_META[pf].dotCls}`} />
+                            <span>{pf === 'yahoo' ? 'Yahoo!' : MALL_META[pf].label}</span>
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        );
+                      })}
                     </div>
                   </div>
                 </article>

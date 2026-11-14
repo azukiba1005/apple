@@ -107,6 +107,7 @@ import {
   type UsedShopOffer,
 } from '../usedPrice';
 import { UsedShopOffersModal } from './UsedOffersModal';
+import { toMoshimoUrl } from '../utils/moshimo';
 
 /* ---------- 🔄 買い替え追い金（実質差額）＆スペック進化シミュレーター ---------- */
 export interface TradeInEstimate {
@@ -836,9 +837,18 @@ function UsedOneLine({ u, loading, onOpen }: { u: UsedMarketData; loading?: bool
   if (isEstimated) {
     return (
       <div data-export-ignore="true" className="flex flex-wrap items-center gap-x-3 text-sm text-zinc-500 dark:text-zinc-400">
-        <a href={u.rakutenSearchUrl} target="_blank" rel="noopener noreferrer" className={linkCls}>
-          中古在庫を検索 <ExternalLink className="h-3.5 w-3.5" />
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">在庫を探す:</span>
+        <a href={toMoshimoUrl(u.rakutenSearchUrl, 'rakuten')} target="_blank" rel="noopener noreferrer sponsored" className={linkCls}>
+          楽天市場 <ExternalLink className="h-3.5 w-3.5" />
         </a>
+        <a href={toMoshimoUrl(u.yahooSearchUrl, 'yahoo')} target="_blank" rel="noopener noreferrer sponsored" className={linkCls}>
+          Yahoo! <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+        {u.amazonSearchUrl && (
+          <a href={toMoshimoUrl(u.amazonSearchUrl, 'amazon')} target="_blank" rel="noopener noreferrer sponsored" className={linkCls}>
+            Amazon <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        )}
         <button type="button" onClick={onOpen} className={linkCls}>
           {loading ? '取得中…' : 'ショップ一覧'} <ExternalLink className="h-3.5 w-3.5" />
         </button>

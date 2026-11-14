@@ -2,20 +2,39 @@
  * 4大キャリア最新端末価格 ＆ 楽天市場・Yahoo!ショッピング中古最安値 自動収集モジュール＆CLIスクリプト
  * 出力先: data/cache/live-prices-cache.json
  *
- * 1. 楽天モバイル（新品キャリア価格）の確実な取得:
- *    - 楽天商品検索APIで `shopCode=rakutenmobile` を指定し、現行のiPhone・Apple Watch・AirPodsの
- *      「楽天モバイル公式 楽天市場店」における新品一括価格と商品URLを取得
+ * 1. 楽天モバイル（新品キャリア価格）の取得:
+ *    - APIキー不要の楽天市場 公開検索ページ抽出で「楽天モバイル公式 楽天市場店」（item.rakuten.co.jp/rakutenmobile/）の
+ *      新品一括価格と商品URLを取得（取得不可時は既存データを維持）
  * 2. docomo / au / SoftBank のキャリア価格取得（Playwright + フォールバック設計）:
  *    - Playwright (Chromium) を使用し、各キャリアの公式オンラインショップ価格一覧ページから
  *      「通常一括価格」と「2年返却プログラム適用時の実質負担額」の取得を試行
  *    - HTML構造変更やWAFブロック等で取得できなかった項目はエラーで止めず既存マスターデータを維持
- * 3. 楽天市場 ＆ Yahoo!ショッピングの中古最安値取得:
+ * 3. 楽天市場 ＆ Yahoo!ショッピングの中古最安値取得（楽天公式API / RAKUTEN_APP_ID は不使用）:
+ *    - 楽天市場: APIキー不要の公開検索ページ（search.rakuten.co.jp）HTML から JSON / ld+json / 商品要素を軽量抽出
+ *      （RAKUTEN_PROXY_URL 設定時は `{RAKUTEN_PROXY_URL}?url=...` の中継プロキシ経由で取得）
+ *    - Yahoo!ショッピング: 商品検索API v3（YAHOO_CLIENT_ID / YAHOO_APP_ID）をメインに在庫・最安値を取得
  *    - 厳密タイトル検証 (`isValidProductTitle`) ＋ 大手中古ショップ優先ロジック (`isTrustedShop`)
- *    - アフィリエイトURL変換（楽天アフィリエイト / Yahoo! バリューコマース・もしも）を適用
- *    - APIのレートリミット回避のため 1リクエストごとに `1200ms` のウェイトを挿入
+ *    - 楽天側が0件でも処理を止めず、Yahoo!実在庫＋もしも経由の楽天/Amazon検索リンクで補完
+ *    - 全リンクを もしもアフィリエイト（楽天市場・Yahoo!・Amazon）経由URLへ変換
+ *    - レートリミット回避のため 1リクエストごとに `1200ms` のウェイトを挿入
  */
 import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import {
+  buildRawMallSearchUrls,
+  getRuntimeEnv,
+  resolveMoshimoConfig,
+  toMoshimoAffiliateUrl,
+} from './lib/moshimo.mjs';
+
+export {
+  configureRuntimeEnv,
+  toMoshimoAffiliateUrl,
+  toMoshimoRakutenUrl,
+  toMoshimoYahooUrl,
+  toMoshimoAmazonUrl,
+  buildMoshimoMallSearchLinks,
+} from './lib/moshimo.mjs';
 
 // ローカルの .env があれば自動で読み込む（Edge環境等での例外を安全に回避）
 try {
@@ -35,8 +54,11 @@ try {
  * 0. 楽天市場・Yahoo!ショッピング 中古検索＆厳密タイトル検証ユーティリティ
  * ============================================================================ */
 
-export const RAKUTEN_API_ENDPOINT = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601';
-export const RAKUTEN_OPENAPI_ENDPOINT = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601';
+/** 楽天市場 公開検索ページ（APIキー不要） */
+export const RAKUTEN_SEARCH_BASE = 'https://search.rakuten.co.jp/search/mall';
+/** 一般的なブラウザの User-Agent（楽天市場 公開検索ページ取得用） */
+export const BROWSER_USER_AGENT =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36';
 export const YAHOO_API_ENDPOINT = 'https://shopping.yahooapis.jp/ShoppingWebService/V3/itemSearch';
 
 export const RAKUTEN_NG_KEYWORD =
@@ -375,27 +397,38 @@ export function buildYahooQuery(productName, storage, category = '') {
   return [`"${cleanName}"`, cleanStorage, YAHOO_NEGATIVE_TERMS].filter(Boolean).join(' ');
 }
 
-export function buildRakutenWebSearchUrl({
+/** 楽天市場 公開検索ページのURL（アフィリエイト変換前・価格が安い順 s=2） */
+export function buildRakutenRawSearchUrl({
   productName,
   storage,
   category,
   launchPrice,
   condition = '中古',
-  affiliateId = process.env.RAKUTEN_AFFILIATE_ID,
+  keyword: explicitKeyword = '',
+  withFilters = true,
+  /** 'price' = 価格が安い順 (s=2) / 'standard' = 楽天標準順（関連度） */
+  sort = 'price',
 }) {
-  const keyword = buildRakutenKeyword(productName, storage, condition, category);
-  const genreId = getRakutenGenreId(category);
-  const minPrice = calcMinPrice(launchPrice);
-  const qs = new URLSearchParams({
-    min: String(minPrice),
-    nitem: RAKUTEN_NG_KEYWORD,
-    s: '2',
-  });
-  const rawUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}/${genreId}/?${qs.toString()}`;
-  return toRakutenAffiliateUrl(rawUrl, affiliateId);
+  const keyword = explicitKeyword || buildRakutenKeyword(productName, storage, condition, category);
+  // 楽天市場はスペースを「+」表記に正規化して 301 リダイレクトするため、最初から「+」で組み立てる
+  const kwPath = encodeURIComponent(keyword).replace(/%20/g, '+');
+  const qs = new URLSearchParams();
+  if (sort === 'price') qs.set('s', '2');
+  if (withFilters) {
+    qs.set('min', String(calcMinPrice(launchPrice)));
+    qs.set('nitem', RAKUTEN_NG_KEYWORD);
+    const genreId = getRakutenGenreId(category);
+    return `${RAKUTEN_SEARCH_BASE}/${kwPath}/${genreId}/?${qs.toString()}`;
+  }
+  return `${RAKUTEN_SEARCH_BASE}/${kwPath}/?${qs.toString()}`;
 }
 
-export function buildYahooWebSearchUrl({ productName, storage, category, launchPrice }) {
+/** 楽天市場の検索URL（もしもアフィリエイト経由） */
+export function buildRakutenWebSearchUrl(opts) {
+  return toMoshimoAffiliateUrl(buildRakutenRawSearchUrl(opts), { platform: 'rakuten' });
+}
+
+export function buildYahooRawSearchUrl({ productName, storage, category, launchPrice }) {
   const cleanName = cleanSearchProductName(productName);
   const cleanStorage = extractStorageToken(storage, category);
   const p = [cleanName, cleanStorage, '中古', '-ケース', '-フィルム', '-ジャンク'].filter(Boolean).join(' ');
@@ -408,49 +441,52 @@ export function buildYahooWebSearchUrl({ productName, storage, category, launchP
     used: '1',
     X: '2',
   });
-  const rawUrl = `https://shopping.yahoo.co.jp/search?${qs.toString()}`;
-  return toYahooAffiliateUrl(rawUrl);
+  return `https://shopping.yahoo.co.jp/search?${qs.toString()}`;
 }
 
-export function normalizeRakutenAffiliateId(raw = process.env.RAKUTEN_AFFILIATE_ID) {
-  const s = String(raw ?? '').trim();
-  if (!s) return '';
-  return /^[0-9a-f]+\.[0-9a-f]+\.[0-9a-f]+\.[0-9a-f]+$/i.test(s) ? s : '';
+/** Yahoo!ショッピングの検索URL（もしもアフィリエイト経由） */
+export function buildYahooWebSearchUrl(opts) {
+  return toMoshimoAffiliateUrl(buildYahooRawSearchUrl(opts), { platform: 'yahoo' });
 }
 
-export function normalizeRakutenAppId(raw = process.env.RAKUTEN_APP_ID) {
-  return String(raw ?? '').trim();
+/** Amazon.co.jp の検索URL（整備済品・新品、もしもアフィリエイト経由） */
+export function buildAmazonWebSearchUrl({ productName, storage, category }) {
+  const cleanName = cleanSearchProductName(productName);
+  const cleanStorage = extractStorageToken(storage, category);
+  const keyword = ['Apple', cleanName, cleanStorage].filter(Boolean).join(' ');
+  const raw = buildRawMallSearchUrls(keyword).amazon;
+  return toMoshimoAffiliateUrl(raw, { platform: 'amazon' });
 }
 
-export function toRakutenAffiliateUrl(rawUrl, affiliateId = process.env.RAKUTEN_AFFILIATE_ID) {
-  const url = String(rawUrl ?? '').trim();
-  const aid = normalizeRakutenAffiliateId(affiliateId) || String(affiliateId ?? '').trim();
-  if (!url || !aid) return url;
-  if (url.includes('hb.afl.rakuten.co.jp')) return url;
-  return `https://hb.afl.rakuten.co.jp/hgc/${encodeURIComponent(aid)}/?pc=${encodeURIComponent(url)}&m=${encodeURIComponent(url)}`;
+/**
+ * 3大モール横断の検索結果ページ直リンク（もしもアフィリエイト経由）。
+ * 楽天市場の抽出が0件だった場合などのフォールバックボタンとして返す。
+ */
+export function buildMallFallbackLinks({ productName, storage, category, launchPrice }) {
+  return {
+    rakuten: {
+      label: '楽天市場で在庫を見る',
+      url: buildRakutenWebSearchUrl({ productName, storage, category, launchPrice, condition: '中古' }),
+    },
+    yahoo: {
+      label: 'Yahoo!ショッピングで探す',
+      url: buildYahooWebSearchUrl({ productName, storage, category, launchPrice }),
+    },
+    amazon: {
+      label: 'Amazonで在庫を見る',
+      url: buildAmazonWebSearchUrl({ productName, storage, category }),
+    },
+  };
 }
 
-export function toYahooAffiliateUrl(
-  rawUrl,
-  {
-    vcSid = process.env.YAHOO_VC_SID,
-    vcPid = process.env.YAHOO_VC_PID,
-    moshimoAid = process.env.YAHOO_MOSHIMO_AID,
-  } = {},
-) {
-  const url = String(rawUrl ?? '').trim();
-  if (!url) return url;
-  if (url.includes('ck.jp.ap.valuecommerce.com') || url.includes('af.moshimo.com')) return url;
-  const sid = String(vcSid ?? '').trim();
-  const pid = String(vcPid ?? '').trim();
-  const maid = String(moshimoAid ?? '').trim();
-  if (sid && pid) {
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${encodeURIComponent(sid)}&pid=${encodeURIComponent(pid)}&vc_url=${encodeURIComponent(url)}`;
-  }
-  if (maid) {
-    return `https://af.moshimo.com/af/c/click?a_id=${encodeURIComponent(maid)}&p_id=1225&pc_id=1925&pl_id=18502&url=${encodeURIComponent(url)}`;
-  }
-  return url;
+/** Yahoo!ショッピング Client ID（YAHOO_CLIENT_ID 優先・旧 YAHOO_APP_ID も許容） */
+export function resolveYahooClientId(explicit = '') {
+  return String(explicit ?? '').trim() || getRuntimeEnv('YAHOO_CLIENT_ID') || getRuntimeEnv('YAHOO_APP_ID');
+}
+
+/** モール別に もしもアフィリエイトURLへ変換（platform: 'rakuten' | 'yahoo' | 'amazon'） */
+export function toMallAffiliateUrl(rawUrl, platform) {
+  return toMoshimoAffiliateUrl(String(rawUrl ?? ''), platform ? { platform } : {});
 }
 
 function hashCode(str) {
@@ -495,10 +531,7 @@ export function mergeAndSortShopOffers(offerLists = [], maxOffers = 15) {
             : isTrustedShop(shopName);
       const conditionRank = raw.conditionRank || inferConditionRank(title, 'used');
       const simFree = typeof raw.simFree === 'boolean' ? raw.simFree : inferSimFree(title);
-      const url =
-        platform === 'yahoo'
-          ? toYahooAffiliateUrl(String(raw.url || ''))
-          : toRakutenAffiliateUrl(String(raw.url || ''));
+      const url = toMallAffiliateUrl(String(raw.url || ''), platform);
       merged.push({
         platform,
         price,
@@ -615,11 +648,12 @@ export function extractValidatedRakutenOffers(
 ) {
   if (!Array.isArray(items)) return [];
   const offers = [];
-  for (const raw of items.slice(0, 20)) {
+  // 楽天市場 公開検索ページ抽出結果（{ itemName, itemPrice, shopName, itemUrl }）
+  for (const raw of items.slice(0, RAKUTEN_SCRAPE_MAX_ITEMS * 3)) {
     const it = raw?.Item ?? raw;
     if (!it) continue;
-    const price = Number(it.itemPrice);
-    const title = String(it.itemName ?? '');
+    const price = Number(it.itemPrice ?? it.price);
+    const title = String(it.itemName ?? it.title ?? '');
     const shopName = String(it.shopName || '楽天市場ショップ');
     if (!Number.isFinite(price) || price < minPrice) continue;
     if (!isValidProductTitle(title, productName, storage, category)) continue;
@@ -631,7 +665,7 @@ export function extractValidatedRakutenOffers(
       isTrusted: isTrustedShop(shopName),
       conditionRank: inferConditionRank(title, defaultRank),
       simFree: inferSimFree(title),
-      url: toRakutenAffiliateUrl(String(it.affiliateUrl || it.itemUrl || '')),
+      url: toMallAffiliateUrl(String(it.itemUrl || it.url || ''), 'rakuten'),
     });
   }
   return mergeAndSortShopOffers([offers], 15);
@@ -685,7 +719,7 @@ export function extractValidatedYahooOffers(
       isTrusted: isTrustedShop(shopName),
       conditionRank: inferConditionRank(title, defaultRank),
       simFree: inferSimFree(title),
-      url: toYahooAffiliateUrl(String(hit.url || '')),
+      url: toMallAffiliateUrl(String(hit.url || ''), 'yahoo'),
     });
   }
   return mergeAndSortShopOffers([offers], 15);
@@ -714,159 +748,414 @@ export function pickCheapestYahooItem(
   return selectBestValidatedCandidate(candidates, offers);
 }
 
-let useSimplifiedRakutenParams = false;
-let rakutenApiFatalError = null;
+/* ============================================================================
+ * 楽天市場: APIキー不要の公開検索ページ抽出（楽天公式API / RAKUTEN_APP_ID は不使用）
+ *   - https://search.rakuten.co.jp/search/mall/{keyword}/?s=2 を一般ブラウザUAで取得
+ *   - RAKUTEN_PROXY_URL 設定時は `{RAKUTEN_PROXY_URL}?url={encodeURIComponent(検索URL)}` を経由
+ *   - HTML 内の埋め込み JSON（window.__INITIAL_STATE__ 等）/ ld+json / 商品要素（searchresultitem）から
+ *     「商品タイトル」「価格」「ショップ名」「商品URL」を軽量な正規表現で抽出
+ * ========================================================================== */
 
-export function isRakutenApiDisabled() {
-  return Boolean(rakutenApiFatalError);
+export const RAKUTEN_FETCH_TIMEOUT_MS = 9000;
+export const RAKUTEN_SCRAPE_MAX_ITEMS = 45;
+/** 連続でこの回数「取得失敗 or 0件抽出」になったら、その実行中は楽天抽出を停止して Yahoo!/検索リンクで補完 */
+export const RAKUTEN_SCRAPE_MAX_CONSECUTIVE_FAILURES = 4;
+
+const rakutenScrapeState = { consecutiveFailures: 0, disabledReason: null, lastStatus: null };
+
+export function isRakutenScrapeDisabled() {
+  return Boolean(rakutenScrapeState.disabledReason);
 }
 
-export async function callRakutenIchibaSearch({
-  appId = process.env.RAKUTEN_APP_ID?.trim(),
-  affiliateId = process.env.RAKUTEN_AFFILIATE_ID?.trim(),
-  accessKey = process.env.RAKUTEN_ACCESS_KEY?.trim(),
-  keyword = '',
-  shopCode = '',
-  genreId = '',
-  minPrice = 0,
-  hits = 20,
-}) {
-  const cleanAppId = normalizeRakutenAppId(appId);
-  if (!cleanAppId || rakutenApiFatalError) return null;
+export function getRakutenScrapeState() {
+  return { ...rakutenScrapeState };
+}
 
-  const cleanKeyword = sanitizeRakutenKeyword(keyword);
-  if (!cleanKeyword) return null;
+export function resetRakutenScrapeState() {
+  rakutenScrapeState.consecutiveFailures = 0;
+  rakutenScrapeState.disabledReason = null;
+  rakutenScrapeState.lastStatus = null;
+}
 
-  const cleanAffId = normalizeRakutenAffiliateId(affiliateId);
-  const cleanAccessKey = String(accessKey ?? '').trim();
-  const endpoint = cleanAccessKey ? RAKUTEN_OPENAPI_ENDPOINT : RAKUTEN_API_ENDPOINT;
-  const siteUrl = String(process.env.RAKUTEN_REFERER ?? 'https://apple.azarin.me').trim().replace(/\/+$/, '');
-  const requestHeaders = {
-    Referer: `${siteUrl}/`,
-    Origin: siteUrl,
-    'User-Agent': 'ApplePriceAtlas/1.0 (+https://apple.azarin.me)',
-  };
-  if (cleanAccessKey) requestHeaders.Authorization = `Bearer ${cleanAccessKey}`;
-
-  const buildParams = (simplified = false) => {
-    const p = new URLSearchParams({
-      applicationId: cleanAppId,
-      format: 'json',
-      formatVersion: '2',
-      keyword: cleanKeyword,
-      availability: '1',
-      hits: String(hits),
-    });
-    if (shopCode) p.set('shopCode', shopCode);
-    if (!simplified) {
-      if (genreId) p.set('genreId', genreId);
-      if (RAKUTEN_NG_KEYWORD) p.set('NGKeyword', RAKUTEN_NG_KEYWORD);
-      if (minPrice > 0) p.set('minPrice', String(minPrice));
-      p.set('sort', '+itemPrice');
-      if (cleanAffId) p.set('affiliateId', cleanAffId);
-    }
-    if (cleanAccessKey) p.set('accessKey', cleanAccessKey);
-    return p;
-  };
-
-  const doFetch = (params) => fetch(`${endpoint}?${params.toString()}`, { headers: requestHeaders });
-
-  const markFatal = (status, errDesc) => {
-    rakutenApiFatalError = errDesc;
-    const hint = !cleanAccessKey
-      ? 'GitHub Secrets に RAKUTEN_ACCESS_KEY（楽天デベロッパーズで発行したアクセスキー）を追加してください。'
-      : /REFERRER|referer|origin/i.test(errDesc)
-        ? `楽天デベロッパーズのアプリ設定「許可されたWebサイト」に ${siteUrl} を登録してください。`
-        : 'RAKUTEN_APP_ID / RAKUTEN_ACCESS_KEY の値（前後の空白・改行含む）を確認してください。';
+function noteRakutenScrapeResult(ok, reason = '') {
+  if (ok) {
+    rakutenScrapeState.consecutiveFailures = 0;
+    return;
+  }
+  rakutenScrapeState.consecutiveFailures += 1;
+  if (
+    !rakutenScrapeState.disabledReason &&
+    rakutenScrapeState.consecutiveFailures >= RAKUTEN_SCRAPE_MAX_CONSECUTIVE_FAILURES
+  ) {
+    rakutenScrapeState.disabledReason = reason || 'consecutive failures';
     console.warn(
-      `[warn] 楽天API 認証/設定エラー (HTTP ${status}: ${errDesc})\n       → ${hint}\n       → 以降の楽天APIリクエストはスキップし、Yahoo!・既存データ・推定相場で安全に補完します。`,
+      `[warn] 楽天市場 公開検索ページの抽出が連続${rakutenScrapeState.consecutiveFailures}回失敗しました (${rakutenScrapeState.disabledReason})\n` +
+        '       → HTML仕様変更・IP制限の可能性があります。以降は Yahoo!ショッピング実在庫＋もしも経由の楽天/Amazon検索リンクで補完します。\n' +
+        '       → 継続的にブロックされる場合は RAKUTEN_PROXY_URL（Xserver等の中継プロキシ）を設定してください。',
     );
-  };
-  const isAuthError = (status, errDesc) =>
-    status === 401 ||
-    status === 403 ||
-    /applicationId|accessKey|access_key|client_id|REFERRER|Configuration not found|unauthorized|forbidden/i.test(errDesc);
+  }
+}
 
-  let res = await doFetch(buildParams(useSimplifiedRakutenParams));
+/** RAKUTEN_PROXY_URL（任意）を解決 */
+export function resolveRakutenProxyUrl(explicit = '') {
+  return String(explicit ?? '').trim() || getRuntimeEnv('RAKUTEN_PROXY_URL', { allowVitePrefix: false });
+}
 
-  if (!res.ok && !useSimplifiedRakutenParams) {
-    const errBody = await res.json().catch(() => null);
-    const errDesc = errBody?.error_description || errBody?.errors?.errorMessage || errBody?.message || errBody?.error || `HTTP ${res.status}`;
+/** 実際に fetch するURL（プロキシ設定時は `{proxy}?url=...`） */
+export function buildRakutenFetchUrl(searchUrl, proxyUrl = '') {
+  const proxy = resolveRakutenProxyUrl(proxyUrl);
+  if (!proxy) return searchUrl;
+  const sep = proxy.includes('?') ? '&' : '?';
+  return `${proxy}${sep}url=${encodeURIComponent(searchUrl)}`;
+}
 
-    if (isAuthError(res.status, errDesc)) {
-      markFatal(res.status, errDesc);
-      return null;
+async function fetchWithTimeout(url, init = {}, timeoutMs = RAKUTEN_FETCH_TIMEOUT_MS) {
+  const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
+  try {
+    return await fetch(url, ctrl ? { ...init, signal: ctrl.signal } : init);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+const HTML_ENTITY_MAP = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', yen: '¥' };
+
+export function decodeHtmlEntities(s) {
+  return String(s ?? '').replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, code) => {
+    if (code[0] === '#') {
+      const n = code[1] === 'x' || code[1] === 'X' ? parseInt(code.slice(2), 16) : parseInt(code.slice(1), 10);
+      return Number.isFinite(n) && n > 0 && n < 0x110000 ? String.fromCodePoint(n) : m;
     }
+    return HTML_ENTITY_MAP[code.toLowerCase()] ?? m;
+  });
+}
 
-    if (res.status === 400) {
-      console.warn(`[warn] Rakuten API HTTP 400 (${cleanKeyword}): ${errDesc} → 最小パラメータで自動リトライします`);
-      res = await doFetch(buildParams(true));
-      if (res.ok) {
-        useSimplifiedRakutenParams = true;
-        return await res.json();
-      }
+function stripTags(s) {
+  return decodeHtmlEntities(String(s ?? '').replace(/<[^>]*>/g, ' '))
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** "39,800円" / 39800 / { value: 39800 } などから価格(数値)を取り出す */
+export function parseYenPrice(v) {
+  if (v == null) return null;
+  if (typeof v === 'number') return Number.isFinite(v) && v > 0 ? Math.round(v) : null;
+  if (typeof v === 'object') {
+    return parseYenPrice(v.value ?? v.amount ?? v.price ?? v.min ?? v.minPrice ?? v.low ?? v.lowPrice ?? null);
+  }
+  const m = String(v).normalize('NFKC').match(/\d[\d,]*/);
+  if (!m) return null;
+  const n = Number(m[0].replace(/,/g, ''));
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/** 楽天市場の商品ページURLか判定し、クエリ等を除いた正規URLを返す（対象外は空文字） */
+export function normalizeRakutenItemUrl(raw) {
+  const s = decodeHtmlEntities(String(raw ?? '').trim()).replace(/\\\//g, '/');
+  const m = s.match(/^(?:https?:)?\/\/item\.rakuten\.co\.jp\/([^/?#\s"']+)\/([^/?#\s"']+)\/?/i);
+  if (!m) return '';
+  return `https://item.rakuten.co.jp/${m[1]}/${m[2]}/`;
+}
+
+function shopCodeFromItemUrl(url) {
+  const m = String(url ?? '').match(/item\.rakuten\.co\.jp\/([^/?#]+)/i);
+  return m ? m[1] : '';
+}
+
+function firstNonEmptyString(...vals) {
+  for (const v of vals) {
+    if (typeof v === 'string' && v.trim()) return v.trim();
+  }
+  return '';
+}
+
+function toRakutenItemCandidate(o) {
+  if (!o || typeof o !== 'object' || Array.isArray(o)) return null;
+  const itemUrl = normalizeRakutenItemUrl(
+    firstNonEmptyString(o.itemUrl, o.itemURL, o.url, o.link, o.href, o.itemLink, o.productUrl, o['@id']),
+  );
+  if (!itemUrl) return null;
+  const itemName = firstNonEmptyString(o.itemName, o.name, o.title, o.productName, o.itemTitle);
+  if (!itemName) return null;
+  const itemPrice = parseYenPrice(
+    o.itemPrice ?? o.price ?? o.salePrice ?? o.minPrice ?? o.priceWithTax ?? o.offers?.price ?? o.offers?.lowPrice ?? o.priceInfo,
+  );
+  if (!itemPrice) return null;
+  const shopName = firstNonEmptyString(
+    o.shopName,
+    o.shop?.name,
+    o.shop?.shopName,
+    o.merchantName,
+    o.merchant?.name,
+    o.seller?.name,
+    o.offers?.seller?.name,
+  );
+  return { itemName: decodeHtmlEntities(itemName), itemPrice, shopName: decodeHtmlEntities(shopName), itemUrl };
+}
+
+function collectRakutenItemCandidates(node, out, depth = 0, budget = { n: 0 }) {
+  if (!node || depth > 40 || out.length >= RAKUTEN_SCRAPE_MAX_ITEMS * 2 || ++budget.n > 200000) return;
+  if (Array.isArray(node)) {
+    for (const v of node) if (v && typeof v === 'object') collectRakutenItemCandidates(v, out, depth + 1, budget);
+    return;
+  }
+  if (typeof node !== 'object') return;
+  const cand = toRakutenItemCandidate(node);
+  if (cand) out.push(cand);
+  for (const v of Object.values(node)) {
+    if (v && typeof v === 'object') collectRakutenItemCandidates(v, out, depth + 1, budget);
+  }
+}
+
+/** `marker` 直後の最初の `{` から対応する `}` までの JSON 文字列を取り出す（文字列リテラル考慮） */
+function extractBalancedJson(text, startIdx) {
+  const open = text.indexOf('{', startIdx);
+  if (open < 0) return null;
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  for (let i = open; i < text.length; i++) {
+    const c = text[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === '\\') esc = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') inStr = true;
+    else if (c === '{') depth++;
+    else if (c === '}') {
+      depth--;
+      if (depth === 0) return text.slice(open, i + 1);
     }
   }
+  return null;
+}
 
-  if (!res.ok) {
-    const errBody = await res.json().catch(() => null);
-    const errDesc = errBody?.error_description || errBody?.errors?.errorMessage || errBody?.message || errBody?.error || `HTTP ${res.status}`;
-    if (isAuthError(res.status, errDesc)) {
-      markFatal(res.status, errDesc);
-    } else {
-      console.warn(`[warn] Rakuten API エラー (${cleanKeyword}): HTTP ${res.status} ${errDesc}`);
-    }
+function tryParseJson(s) {
+  try {
+    return JSON.parse(s);
+  } catch {
     return null;
   }
-
-  return await res.json();
 }
 
-export async function fetchFromRakutenApi({
+/** 1-A: 埋め込み JSON（window.__INITIAL_STATE__ / __NEXT_DATA__ / application/json） */
+function extractFromEmbeddedJson(html) {
+  const out = [];
+  const markers = ['window.__INITIAL_STATE__', '__INITIAL_STATE__', 'window.__NUXT__', 'window.__PRELOADED_STATE__'];
+  for (const marker of markers) {
+    let idx = html.indexOf(marker);
+    let guard = 0;
+    while (idx >= 0 && guard++ < 3) {
+      const json = extractBalancedJson(html, idx + marker.length);
+      const parsed = json ? tryParseJson(json) : null;
+      if (parsed) collectRakutenItemCandidates(parsed, out);
+      idx = html.indexOf(marker, idx + marker.length);
+    }
+    if (out.length) return out;
+  }
+  const scriptRe = /<script[^>]+type=["']application\/json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  let m;
+  while ((m = scriptRe.exec(html))) {
+    const parsed = tryParseJson(m[1].trim());
+    if (parsed) collectRakutenItemCandidates(parsed, out);
+  }
+  return out;
+}
+
+/** 1-B: ld+json（ItemList / Product） */
+function extractFromLdJson(html) {
+  const out = [];
+  const re = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    const parsed = tryParseJson(m[1].trim());
+    if (parsed) collectRakutenItemCandidates(parsed, out);
+  }
+  return out;
+}
+
+/** 1-C: 商品アイテム要素（searchresultitem）を軽量正規表現で抽出 */
+function extractFromItemBlocks(html) {
+  const out = [];
+  const parts = html.split(/<div[^>]+class=["'][^"']*\bsearchresultitem\b[^"']*["'][^>]*>/i);
+  for (const rawChunk of parts.slice(1, RAKUTEN_SCRAPE_MAX_ITEMS + 1)) {
+    const chunk = rawChunk.slice(0, 20000);
+    const urlM = chunk.match(/href=["']((?:https?:)?\/\/item\.rakuten\.co\.jp\/[^"']+)["']/i);
+    const itemUrl = urlM ? normalizeRakutenItemUrl(urlM[1]) : '';
+    if (!itemUrl) continue;
+
+    let itemName = '';
+    const titleAttr =
+      chunk.match(/<a[^>]+href=["'](?:https?:)?\/\/item\.rakuten\.co\.jp\/[^"']+["'][^>]*\btitle=["']([^"']+)["']/i) ||
+      chunk.match(/<a[^>]+\btitle=["']([^"']+)["'][^>]*href=["'](?:https?:)?\/\/item\.rakuten\.co\.jp\//i);
+    if (titleAttr) itemName = stripTags(titleAttr[1]);
+    if (!itemName) {
+      const h2 = chunk.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+      if (h2) itemName = stripTags(h2[1]);
+    }
+    if (!itemName) {
+      const alt = chunk.match(/<img[^>]+\balt=["']([^"']{8,})["']/i);
+      if (alt) itemName = stripTags(alt[1]);
+    }
+    if (!itemName) continue;
+
+    const priceM =
+      chunk.match(/class=["'][^"']*\bprice[^"']*["'][^>]*>\s*(?:<[^>]+>\s*)*([\d,]{3,})/i) ||
+      chunk.match(/class=["'][^"']*\bimportant\b[^"']*["'][^>]*>\s*([\d,]{3,})/i) ||
+      chunk.match(/([\d,]{3,})\s*(?:<[^>]+>\s*)*円/);
+    const itemPrice = priceM ? parseYenPrice(priceM[1]) : null;
+    if (!itemPrice) continue;
+
+    let shopName = '';
+    const shopM = chunk.match(/href=["'](?:https?:)?\/\/www\.rakuten\.co\.jp\/[^/"'?]+\/?[^"']*["'][^>]*>([\s\S]*?)<\/a>/i);
+    if (shopM) shopName = stripTags(shopM[1]);
+
+    out.push({ itemName, itemPrice, shopName, itemUrl });
+  }
+  return out;
+}
+
+/**
+ * 楽天市場 公開検索ページ HTML から商品リストを抽出する（3方式を合算・URL重複排除）。
+ * @returns {{ itemName: string, itemPrice: number, shopName: string, itemUrl: string }[]}
+ */
+export function parseRakutenSearchHtml(html) {
+  const text = String(html ?? '');
+  if (!text) return [];
+  const merged = new Map();
+  for (const list of [extractFromEmbeddedJson(text), extractFromLdJson(text), extractFromItemBlocks(text)]) {
+    for (const it of list) {
+      const prev = merged.get(it.itemUrl);
+      if (!prev) merged.set(it.itemUrl, { ...it });
+      else if (!prev.shopName && it.shopName) prev.shopName = it.shopName;
+    }
+    if (merged.size >= RAKUTEN_SCRAPE_MAX_ITEMS) break;
+  }
+  return [...merged.values()].slice(0, RAKUTEN_SCRAPE_MAX_ITEMS).map((it) => ({
+    ...it,
+    shopName: it.shopName || shopCodeFromItemUrl(it.itemUrl) || '楽天市場ショップ',
+  }));
+}
+
+/**
+ * 楽天市場 公開検索ページを取得して抽出する（失敗しても例外を投げない）。
+ * @returns {Promise<{ status: 'ok'|'empty'|'error'|'disabled', items: any[], httpStatus?: number, error?: string }>}
+ */
+export async function scrapeRakutenSearch({ searchUrl, proxyUrl = '' }) {
+  if (isRakutenScrapeDisabled()) return { status: 'disabled', items: [] };
+  if (typeof process !== 'undefined' && process.env?.SKIP_RAKUTEN_SCRAPE === '1') {
+    return { status: 'disabled', items: [] };
+  }
+  const fetchUrl = buildRakutenFetchUrl(searchUrl, proxyUrl);
+  try {
+    const res = await fetchWithTimeout(fetchUrl, {
+      headers: {
+        'User-Agent': BROWSER_USER_AGENT,
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ja,en-US;q=0.8,en;q=0.6',
+        'Cache-Control': 'no-cache',
+      },
+      redirect: 'follow',
+    });
+    if (!res.ok) {
+      noteRakutenScrapeResult(false, `HTTP ${res.status}`);
+      rakutenScrapeState.lastStatus = 'error';
+      return { status: 'error', items: [], httpStatus: res.status, error: `HTTP ${res.status}` };
+    }
+    const html = await res.text();
+    const items = parseRakutenSearchHtml(html);
+    noteRakutenScrapeResult(items.length > 0, items.length > 0 ? '' : 'no items parsed');
+    rakutenScrapeState.lastStatus = items.length > 0 ? 'ok' : 'empty';
+    return { status: items.length > 0 ? 'ok' : 'empty', items, httpStatus: res.status };
+  } catch (err) {
+    const msg = String(err?.name === 'AbortError' ? 'timeout' : (err?.message ?? err));
+    noteRakutenScrapeResult(false, msg);
+    rakutenScrapeState.lastStatus = 'error';
+    return { status: 'error', items: [], error: msg };
+  }
+}
+
+/**
+ * 楽天市場（APIキー不要）から中古/未使用の有効出品を取得して最安候補を返す。
+ * @returns {Promise<{ offer: object|null, status: string, rawCount: number, searchUrl: string }>}
+ */
+export async function searchRakutenMarketOffers({
   productName,
   storage = '',
   category = 'iPhone',
   launchPrice = 98800,
   condition = '中古',
-  appId = process.env.RAKUTEN_APP_ID?.trim(),
-  affiliateId = process.env.RAKUTEN_AFFILIATE_ID?.trim(),
-  accessKey = process.env.RAKUTEN_ACCESS_KEY?.trim(),
+  proxyUrl = '',
 }) {
-  const cleanAppId = String(appId ?? '').trim();
-  if (!cleanAppId || rakutenApiFatalError) return null;
   const minPrice = calcMinPrice(launchPrice);
-  const genreId = getRakutenGenreId(category);
-  const kw = buildRakutenKeyword(productName, storage, condition, category);
-  const json = await callRakutenIchibaSearch({
-    appId: cleanAppId,
-    affiliateId,
-    accessKey,
-    keyword: kw,
-    genreId,
-    minPrice,
-    hits: 20,
-  });
-  if (!json) return null;
   const defaultRank = condition === '未使用' ? 'unused' : 'used';
-  return pickCheapestRakutenItem(
-    json?.Items ?? [],
-    minPrice,
-    productName,
-    storage,
-    category,
-    new Date().toISOString().slice(0, 10),
-    defaultRank,
-  );
+  const today = new Date().toISOString().slice(0, 10);
+  const base = { productName, storage, category, launchPrice, condition };
+  const pick = (items) =>
+    items.length > 0
+      ? pickCheapestRakutenItem(items, minPrice, productName, storage, category, today, defaultRank)
+      : null;
+
+  // ① 価格が安い順（s=2）
+  const priceUrl = buildRakutenRawSearchUrl({ ...base, sort: 'price' });
+  const first = await scrapeRakutenSearch({ searchUrl: priceUrl, proxyUrl });
+  let items = first.items;
+  let offer = pick(items);
+  let lastStatus = first.status;
+  let usedUrl = priceUrl;
+
+  // ② 安い順だと旧機種・別モデルが上位を占めて有効出品が少ない場合は「標準順（関連度）」も取得して合算
+  if ((first.status === 'ok' || first.status === 'empty') && (offer?.offers?.length ?? 0) < 3) {
+    const standardUrl = buildRakutenRawSearchUrl({ ...base, sort: 'standard' });
+    const second = await scrapeRakutenSearch({ searchUrl: standardUrl, proxyUrl });
+    if (second.items.length > 0) {
+      const seen = new Set(items.map((it) => it.itemUrl));
+      items = [...items, ...second.items.filter((it) => !seen.has(it.itemUrl))];
+      offer = pick(items);
+      usedUrl = standardUrl;
+    }
+    lastStatus = items.length > 0 ? 'ok' : second.status;
+
+    // ③ ジャンル/価格フィルタ付きURLで1件も抽出できない場合は、フィルタなしの標準検索で最終確認
+    if (items.length === 0 && second.status === 'empty') {
+      const plainUrl = buildRakutenRawSearchUrl({ ...base, sort: 'standard', withFilters: false });
+      const third = await scrapeRakutenSearch({ searchUrl: plainUrl, proxyUrl });
+      items = third.items;
+      offer = pick(items);
+      lastStatus = third.status;
+      usedUrl = plainUrl;
+    }
+  }
+
+  return {
+    offer,
+    status: offer ? 'ok' : lastStatus === 'ok' ? 'filtered_empty' : lastStatus,
+    rawCount: items.length,
+    searchUrl: usedUrl,
+  };
 }
+
+/** 楽天市場（APIキー不要）の最安候補のみを返すショートハンド */
+export async function fetchFromRakutenMarket(opts) {
+  const { offer } = await searchRakutenMarketOffers(opts);
+  return offer;
+}
+
+/* ============================================================================
+ * Yahoo!ショッピング 商品検索API v3（YAHOO_CLIENT_ID / 旧 YAHOO_APP_ID）
+ * ========================================================================== */
 
 export async function fetchFromYahooApi({
   productName,
   storage = '',
   category = 'iPhone',
   launchPrice = 98800,
-  yahooAppId = process.env.YAHOO_APP_ID?.trim(),
+  yahooAppId = '',
 }) {
-  const cleanYahooAppId = String(yahooAppId ?? '').trim();
+  const cleanYahooAppId = resolveYahooClientId(yahooAppId);
   if (!cleanYahooAppId) return null;
   const priceFrom = calcMinPrice(launchPrice);
   const genreCategoryId = getYahooGenreCategoryId(category);
@@ -882,11 +1171,12 @@ export async function fetchFromYahooApi({
     results: '20',
   });
 
-  const res = await fetch(`${YAHOO_API_ENDPOINT}?${params.toString()}`);
+  const res = await fetchWithTimeout(`${YAHOO_API_ENDPOINT}?${params.toString()}`, {}, 10000);
   if (!res.ok) throw new Error(`Yahoo! Shopping API HTTP ${res.status}`);
   const json = await res.json();
   return pickCheapestYahooItem(json?.hits ?? [], priceFrom, productName, storage, category);
 }
+
 
 export function buildUsedPricingObject({
   rakutenOffer,
@@ -945,7 +1235,7 @@ export function buildUsedPricingObject({
     return {
       price: offer.price,
       shopName: isRealApi ? String(offer.shopName ?? '') : '',
-      url: platform === 'yahoo' ? toYahooAffiliateUrl(offer.url) : toRakutenAffiliateUrl(offer.url),
+      url: toMallAffiliateUrl(offer.url, platform),
       updatedAt: offer.updatedAt,
       isTrustedShop: isRealApi ? Boolean(offer.isTrustedShop) : false,
       ...(isRealApi && offer.itemName ? { itemName: offer.itemName } : {}),
@@ -967,7 +1257,7 @@ export function buildUsedPricingObject({
         isTrusted: Boolean(offer.isTrustedShop),
         conditionRank: inferConditionRank(title, defaultRank),
         simFree: inferSimFree(title),
-        url: platform === 'yahoo' ? toYahooAffiliateUrl(offer.url) : toRakutenAffiliateUrl(offer.url),
+        url: toMallAffiliateUrl(offer.url, platform),
       },
     ];
   };
@@ -996,7 +1286,12 @@ export function buildUsedPricingObject({
 }
 
 /**
- * 楽天市場 ＆ Yahoo!ショッピング 横断検索メイン関数（Cloudflare Pages Functions / Vite dev server 用）
+ * 楽天市場（APIキー不要の公開検索ページ抽出）＆ Yahoo!ショッピングAPI 横断検索メイン関数
+ * （Cloudflare Pages Functions / Vite dev server 用）
+ *
+ * - 楽天公式API（RAKUTEN_APP_ID）は使用しない
+ * - 楽天側が HTML仕様変更・IP制限等で0件でもエラーで止めず、Yahoo!の実在庫を最安値として返し、
+ *   楽天市場・Amazon は もしもアフィリエイト経由の検索結果ページ直リンク（mallLinks）で補完する
  */
 export async function searchRakutenUsedPrice({
   productName,
@@ -1004,61 +1299,59 @@ export async function searchRakutenUsedPrice({
   category = 'iPhone',
   launchPrice = 98800,
   releaseDate = '2023-09-22',
-  appId = process.env.RAKUTEN_APP_ID,
-  affiliateId = process.env.RAKUTEN_AFFILIATE_ID,
-  accessKey = process.env.RAKUTEN_ACCESS_KEY,
-  yahooAppId = process.env.YAHOO_APP_ID,
-  /** 楽天APIの「1秒1リクエスト」制限対策: 連続する楽天リクエスト間に挿入する待機時間(ms) */
+  yahooAppId = '',
+  /** 任意: Xserver等の中継プロキシURL（未設定時は RAKUTEN_PROXY_URL → 直接fetch） */
+  proxyUrl = '',
+  /** 連続する楽天市場ページ取得の間に挿入する待機時間(ms)（アクセス集中の回避） */
   rakutenGapMs = 0,
 }) {
   const minPrice = calcMinPrice(launchPrice);
   const genreId = getRakutenGenreId(category);
   const keyword = buildRakutenKeyword(productName, storage, '中古', category);
   const fallback = estimatePlatformOffers({ productName, storage, category, launchPrice, releaseDate });
+  const resolvedYahooId = resolveYahooClientId(yahooAppId);
 
   let rakutenOffer = null;
   let yahooOffer = null;
   let unusedOffer = null;
+  let rakutenStatus = 'skipped';
+  let yahooStatus = resolvedYahooId ? 'pending' : 'not_configured';
 
-  const tasks = [];
+  const tasks = [
+    (async () => {
+      try {
+        const used = await searchRakutenMarketOffers({
+          productName,
+          storage,
+          category,
+          launchPrice,
+          condition: '中古',
+          proxyUrl,
+        });
+        rakutenOffer = used.offer;
+        rakutenStatus = used.status;
+      } catch (err) {
+        rakutenStatus = 'error';
+        console.warn(`[warn] 楽天市場 抽出 (${productName} ${storage}): ${err?.message ?? err}`);
+      }
+      if (isRakutenScrapeDisabled()) return;
+      if (rakutenGapMs > 0) await new Promise((r) => setTimeout(r, rakutenGapMs));
+      try {
+        unusedOffer = await fetchFromRakutenMarket({
+          productName,
+          storage,
+          category,
+          launchPrice,
+          condition: '未使用',
+          proxyUrl,
+        });
+      } catch {
+        /* ignore */
+      }
+    })(),
+  ];
 
-  if (appId) {
-    tasks.push(
-      (async () => {
-        try {
-          rakutenOffer = await fetchFromRakutenApi({
-            productName,
-            storage,
-            category,
-            launchPrice,
-            condition: '中古',
-            appId,
-            affiliateId,
-            accessKey,
-          });
-        } catch (err) {
-          console.warn(`[warn] Rakuten API (${productName} ${storage}): ${err.message}`);
-        }
-        if (rakutenGapMs > 0) await new Promise((r) => setTimeout(r, rakutenGapMs));
-        try {
-          unusedOffer = await fetchFromRakutenApi({
-            productName,
-            storage,
-            category,
-            launchPrice,
-            condition: '未使用',
-            appId,
-            affiliateId,
-            accessKey,
-          });
-        } catch {
-          /* ignore */
-        }
-      })(),
-    );
-  }
-
-  if (yahooAppId) {
+  if (resolvedYahooId) {
     tasks.push(
       (async () => {
         try {
@@ -1067,18 +1360,18 @@ export async function searchRakutenUsedPrice({
             storage,
             category,
             launchPrice,
-            yahooAppId,
+            yahooAppId: resolvedYahooId,
           });
+          yahooStatus = yahooOffer ? 'ok' : 'empty';
         } catch (err) {
-          console.warn(`[warn] Yahoo API (${productName} ${storage}): ${err.message}`);
+          yahooStatus = 'error';
+          console.warn(`[warn] Yahoo API (${productName} ${storage}): ${err?.message ?? err}`);
         }
       })(),
     );
   }
 
-  if (tasks.length > 0) {
-    await Promise.all(tasks);
-  }
+  await Promise.all(tasks);
 
   const finalRakuten = rakutenOffer ?? fallback.rakutenOffer;
   const finalYahoo = yahooOffer ?? fallback.yahooOffer;
@@ -1094,6 +1387,8 @@ export async function searchRakutenUsedPrice({
   const bestOffer = usedPricing.lowestPlatform === 'yahoo' ? finalYahoo : finalRakuten;
   const anyApi = rakutenOffer?.source === 'api' || yahooOffer?.source === 'api';
   const unusedIsApi = unusedOffer?.source === 'api';
+  const mallLinks = buildMallFallbackLinks({ productName, storage, category, launchPrice });
+  const hasRakutenOffers = (usedPricing.offers ?? []).some((o) => o.platform === 'rakuten');
 
   return {
     keyword,
@@ -1121,6 +1416,15 @@ export async function searchRakutenUsedPrice({
       : null,
     resaleRate: usedPricing.resaleValuePercent,
     source: anyApi ? 'api' : 'mock',
+    /** 各モールの取得状況（rakuten: ok / filtered_empty / empty / error / disabled, yahoo: ok / empty / error / not_configured） */
+    sourceStatus: { rakuten: rakutenStatus, yahoo: yahooStatus },
+    /** もしもアフィリエイト経由の3大モール検索結果ページ直リンク（常に付与） */
+    mallLinks,
+    /** 楽天市場の実出品が0件だった場合に表示すべき直リンクボタン（楽天市場・Amazon） */
+    fallbackLinks: hasRakutenOffers ? [] : [mallLinks.rakuten, mallLinks.amazon],
+    rakutenSearchUrl: mallLinks.rakuten.url,
+    yahooSearchUrl: mallLinks.yahoo.url,
+    amazonSearchUrl: mallLinks.amazon.url,
     fetchedAt: new Date().toISOString(),
   };
 }
@@ -1519,7 +1823,7 @@ export function buildFallbackCarrierPrices(product, sku, previousCachedSku = nul
   }
 
   if (result.rakuten?.url) {
-    result.rakuten.url = toRakutenAffiliateUrl(result.rakuten.url);
+    result.rakuten.url = toMallAffiliateUrl(result.rakuten.url, 'rakuten');
   }
 
   return result;
@@ -1531,19 +1835,16 @@ export async function fetchRakutenMobileOfficialPrice({
   connectivity = '-',
   category = 'iPhone',
   launchPrice = 98800,
-  appId = process.env.RAKUTEN_APP_ID?.trim(),
-  affiliateId = process.env.RAKUTEN_AFFILIATE_ID?.trim(),
-  accessKey = process.env.RAKUTEN_ACCESS_KEY?.trim(),
+  proxyUrl = '',
 }) {
-  const cleanAppId = String(appId ?? '').trim();
-  if (!cleanAppId || isRakutenApiDisabled()) return null;
+  if (isRakutenScrapeDisabled()) return null;
 
   if (category === 'Mac' || category === 'iPad') return null;
   if (category === 'Apple Watch' && !/Cellular/i.test(connectivity)) return null;
 
   const cleanName = cleanSearchProductName(productName);
   const cleanStorage = extractStorageToken(storage, category);
-  const keyword = [cleanName, cleanStorage]
+  const keyword = ['楽天モバイル', cleanName, cleanStorage]
     .filter(Boolean)
     .join(' ')
     .replace(/[()（）+/,-]/g, ' ')
@@ -1553,22 +1854,14 @@ export async function fetchRakutenMobileOfficialPrice({
   const defaultLaunch = category === 'AirPods' ? 23800 : category === 'Apple Watch' ? 42800 : 80000;
   const minNewPrice = Math.max(Math.round((Number(launchPrice) || defaultLaunch) * 0.5), minFloor);
 
-  const validAffId =
-    affiliateId && /^[0-9a-f]+\.[0-9a-f]+\.[0-9a-f]+\.[0-9a-f]+$/i.test(affiliateId.trim())
-      ? affiliateId.trim()
-      : '';
-
-  const json = await callRakutenIchibaSearch({
-    appId: cleanAppId,
-    affiliateId: validAffId,
-    accessKey,
-    keyword,
-    shopCode: 'rakutenmobile',
-    minPrice: minNewPrice,
-    hits: 30,
-  });
-  const items = json?.Items ?? [];
-  if (!Array.isArray(items) || items.length === 0) return null;
+  // APIキー不要: 楽天市場 公開検索ページから「楽天モバイル公式 楽天市場店（/rakutenmobile/）」の出品のみ抽出
+  const searchUrl = `${RAKUTEN_SEARCH_BASE}/${encodeURIComponent(keyword).replace(/%20/g, '+')}/?${new URLSearchParams({
+    min: String(minNewPrice),
+    s: '2',
+  }).toString()}`;
+  const scraped = await scrapeRakutenSearch({ searchUrl, proxyUrl });
+  const items = scraped.items.filter((it) => /item\.rakuten\.co\.jp\/rakutenmobile\//i.test(it.itemUrl));
+  if (items.length === 0) return null;
 
   const validItems = [];
   for (const raw of items) {
@@ -1588,7 +1881,7 @@ export async function fetchRakutenMobileOfficialPrice({
     const isStandalone = /単品|本体のみ|回線セットなし|SIMフリー/i.test(title) && !/回線セット|プランセット/i.test(title);
     validItems.push({
       price,
-      url: toRakutenAffiliateUrl(String(it.affiliateUrl || it.itemUrl || ''), affiliateId),
+      url: toMallAffiliateUrl(String(it.itemUrl || ''), 'rakuten'),
       itemName: title,
       shopName: String(it.shopName || '楽天モバイル公式 楽天市場店'),
       isStandalone,
@@ -1607,7 +1900,7 @@ export async function fetchRakutenMobileOfficialPrice({
     itemName: picked.itemName,
     shopName: picked.shopName,
     updatedAt: picked.updatedAt,
-    source: 'rakutenmobile_api',
+    source: 'rakutenmobile_scrape',
   };
 }
 
@@ -1858,25 +2151,20 @@ export function mergeLiveCarrierPrice(baseCarrierObj, liveData, carrierId, categ
 }
 
 export async function runFetchLivePrices() {
-  const appId = process.env.RAKUTEN_APP_ID?.trim();
-  const affiliateId = process.env.RAKUTEN_AFFILIATE_ID?.trim();
-  const accessKey = process.env.RAKUTEN_ACCESS_KEY?.trim();
-  const yahooAppId = process.env.YAHOO_APP_ID?.trim();
+  const yahooAppId = resolveYahooClientId();
+  const proxyUrl = resolveRakutenProxyUrl();
+  const moshimo = resolveMoshimoConfig();
+  const flag = (name, resolved) =>
+    getRuntimeEnv(name) ? `設定済 (${resolved})` : resolved ? `既定値 (${resolved})` : '未設定 (もしも変換なし・元URLのまま)';
 
   console.log('================================================================');
   console.log('📦 Apple Price Atlas 自動価格収集バッチ (scripts/fetch-live-prices.mjs)');
-  console.log(`  RAKUTEN_APP_ID      : ${appId ? '設定済' : '未設定 (既存データ/推定フォールバック)'}`);
-  console.log(`  YAHOO_APP_ID        : ${yahooAppId ? '設定済' : '未設定 (既存データ/推定フォールバック)'}`);
-  console.log(`  RAKUTEN_AFFILIATE_ID: ${affiliateId ? '設定済' : '未設定'}`);
-  console.log(
-    `  YAHOO_AFFILIATE     : ${
-      process.env.YAHOO_VC_SID && process.env.YAHOO_VC_PID
-        ? 'ValueCommerce設定済'
-        : process.env.YAHOO_MOSHIMO_AID
-          ? 'もしも設定済'
-          : '未設定'
-    }`,
-  );
+  console.log('  楽天市場            : APIキー不要の公開検索ページ抽出（楽天公式APIは不使用）');
+  console.log(`  RAKUTEN_PROXY_URL   : ${proxyUrl ? '設定済 (中継プロキシ経由)' : '未設定 (直接fetch)'}`);
+  console.log(`  YAHOO_CLIENT_ID     : ${yahooAppId ? '設定済' : '未設定 (既存データ/推定フォールバック)'}`);
+  console.log(`  MOSHIMO_RAKUTEN_AID : ${flag('MOSHIMO_RAKUTEN_AID', moshimo.rakutenAid)}`);
+  console.log(`  MOSHIMO_YAHOO_AID   : ${flag('MOSHIMO_YAHOO_AID', moshimo.yahooAid)}`);
+  console.log(`  MOSHIMO_AMAZON_AID  : ${flag('MOSHIMO_AMAZON_AID', moshimo.amazonAid)}`);
   console.log('================================================================\n');
 
   const { masterProducts, previousCache } = loadMasterBaseline();
@@ -1889,6 +2177,8 @@ export async function runFetchLivePrices() {
 
   let rakutenMobileHits = 0;
   let usedApiHits = 0;
+  let rakutenScrapeHits = 0;
+  let yahooApiHits = 0;
   const cacheProductsOut = {};
 
   for (const product of targetProducts) {
@@ -1918,7 +2208,7 @@ export async function runFetchLivePrices() {
         product.category === 'iPhone' ||
         product.category === 'AirPods' ||
         (product.category === 'Apple Watch' && /Cellular/i.test(sku.connectivity || ''));
-      if (appId && !isRakutenApiDisabled() && isRakutenEligible) {
+      if (!isRakutenScrapeDisabled() && isRakutenEligible) {
         if (rakutenMobileQueryCache.has(rmKey)) {
           rmLive = rakutenMobileQueryCache.get(rmKey);
         } else {
@@ -1929,16 +2219,14 @@ export async function runFetchLivePrices() {
               connectivity: sku.connectivity,
               category: product.category,
               launchPrice,
-              appId,
-              affiliateId,
-              accessKey,
+              proxyUrl,
             });
             if (rmLive) rakutenMobileHits++;
           } catch (err) {
-            console.warn(`[warn] 楽天モバイル公式API (${product.name} ${storageTerm}): ${err.message}`);
+            console.warn(`[warn] 楽天モバイル公式 楽天市場店 抽出 (${product.name} ${storageTerm}): ${err.message}`);
           }
           rakutenMobileQueryCache.set(rmKey, rmLive);
-          if (!isRakutenApiDisabled()) await sleep(API_WAIT_MS);
+          if (!isRakutenScrapeDisabled()) await sleep(API_WAIT_MS);
         }
       }
       if (rmLive && isRakutenEligible) {
@@ -1976,39 +2264,37 @@ export async function runFetchLivePrices() {
         let yahooOffer = null;
         let unusedOffer = null;
 
-        if (appId && !isRakutenApiDisabled()) {
+        // 楽天市場: APIキー不要の公開検索ページ抽出（0件・失敗時も止めずに Yahoo!/既存データで補完）
+        if (!isRakutenScrapeDisabled()) {
           try {
-            rakutenOffer = await fetchFromRakutenApi({
+            rakutenOffer = await fetchFromRakutenMarket({
               productName: product.name,
               storage: storageTerm,
               category: product.category,
               launchPrice,
               condition: '中古',
-              appId,
-              affiliateId,
-              accessKey,
+              proxyUrl,
             });
           } catch (err) {
-            console.warn(`[warn] 楽天市場API 中古 (${product.name} ${storageTerm}): ${err.message}`);
+            console.warn(`[warn] 楽天市場 抽出 中古 (${product.name} ${storageTerm}): ${err.message}`);
           }
-          if (!isRakutenApiDisabled()) await sleep(API_WAIT_MS);
+          if (rakutenOffer) rakutenScrapeHits++;
+          if (!isRakutenScrapeDisabled()) await sleep(API_WAIT_MS);
 
-          if (!isRakutenApiDisabled()) {
+          if (!isRakutenScrapeDisabled()) {
             try {
-              unusedOffer = await fetchFromRakutenApi({
+              unusedOffer = await fetchFromRakutenMarket({
                 productName: product.name,
                 storage: storageTerm,
                 category: product.category,
                 launchPrice,
                 condition: '未使用',
-                appId,
-                affiliateId,
-                accessKey,
+                proxyUrl,
               });
             } catch {
               /* ignore */
             }
-            if (!isRakutenApiDisabled()) await sleep(API_WAIT_MS);
+            if (!isRakutenScrapeDisabled()) await sleep(API_WAIT_MS);
           }
         }
 
@@ -2024,6 +2310,7 @@ export async function runFetchLivePrices() {
           } catch (err) {
             console.warn(`[warn] Yahoo! API 中古 (${product.name} ${storageTerm}): ${err.message}`);
           }
+          if (yahooOffer) yahooApiHits++;
           await sleep(API_WAIT_MS);
         }
 
@@ -2042,22 +2329,20 @@ export async function runFetchLivePrices() {
       }
 
       if (usedPricing) {
+        // 旧アフィリエイト（楽天アフィリエイト/VC）URLが残っていても もしも経由へ統一
         if (usedPricing.rakuten?.url) {
-          usedPricing.rakuten.url = toRakutenAffiliateUrl(usedPricing.rakuten.url, affiliateId);
+          usedPricing.rakuten.url = toMallAffiliateUrl(usedPricing.rakuten.url, 'rakuten');
         }
         if (usedPricing.yahoo?.url) {
-          usedPricing.yahoo.url = toYahooAffiliateUrl(usedPricing.yahoo.url);
+          usedPricing.yahoo.url = toMallAffiliateUrl(usedPricing.yahoo.url, 'yahoo');
         }
         if (usedPricing.unused?.url) {
-          usedPricing.unused.url = toRakutenAffiliateUrl(usedPricing.unused.url, affiliateId);
+          usedPricing.unused.url = toMallAffiliateUrl(usedPricing.unused.url, 'rakuten');
         }
         if (Array.isArray(usedPricing.offers)) {
           usedPricing.offers = usedPricing.offers.slice(0, 15).map((offer) => ({
             ...offer,
-            url:
-              offer.platform === 'yahoo'
-                ? toYahooAffiliateUrl(offer.url)
-                : toRakutenAffiliateUrl(offer.url, affiliateId),
+            url: toMallAffiliateUrl(offer.url, offer.platform === 'yahoo' ? 'yahoo' : 'rakuten'),
           }));
         }
         usedPricing.resaleValuePercent =
@@ -2089,15 +2374,15 @@ export async function runFetchLivePrices() {
     schemaVersion: 1,
     updatedAt: new Date().toISOString(),
     sources: {
-      rakutenMobileApi: rakutenMobileHits > 0 ? 'api' : 'fallback',
+      rakutenMobileScrape: rakutenMobileHits > 0 ? 'scraped' : 'fallback',
       carrierScraping: {
         docomo: scrapedCarriers.docomo.size > 0 ? 'scraped' : 'fallback',
         au: scrapedCarriers.au.size > 0 ? 'scraped' : 'fallback',
         softbank: scrapedCarriers.softbank.size > 0 ? 'scraped' : 'fallback',
       },
       usedPricesApi: {
-        rakuten: appId && usedApiHits > 0 ? 'api' : 'fallback',
-        yahoo: yahooAppId && usedApiHits > 0 ? 'api' : 'fallback',
+        rakuten: rakutenScrapeHits > 0 ? 'scraped' : 'fallback',
+        yahoo: yahooAppId && yahooApiHits > 0 ? 'api' : 'fallback',
       },
     },
     products: cacheProductsOut,
@@ -2147,7 +2432,7 @@ export async function runFetchLivePrices() {
 
   console.log(`\n✅ ${LIVE_CACHE_PATH} を更新しました。`);
   console.log(
-    `   対象モデル: ${Object.keys(cacheProductsOut).length}機種 / 楽天モバイル実取得: ${rakutenMobileHits}件 / キャリアスクレイピング: docomo=${scrapedCarriers.docomo.size}, au=${scrapedCarriers.au.size}, softbank=${scrapedCarriers.softbank.size} / 中古API実取得: ${usedApiHits}件`,
+    `   対象モデル: ${Object.keys(cacheProductsOut).length}機種 / 楽天モバイル実取得: ${rakutenMobileHits}件 / キャリアスクレイピング: docomo=${scrapedCarriers.docomo.size}, au=${scrapedCarriers.au.size}, softbank=${scrapedCarriers.softbank.size} / 中古実取得: ${usedApiHits}件 (楽天抽出=${rakutenScrapeHits}, Yahoo!API=${yahooApiHits})`,
   );
 
   return output;

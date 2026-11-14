@@ -12,8 +12,7 @@ import { enrichAllProducts } from './spec-enrichment.mjs';
 import {
   estimatePlatformOffers,
   buildUsedPricingObject,
-  toRakutenAffiliateUrl,
-  toYahooAffiliateUrl,
+  toMallAffiliateUrl,
 } from './fetch-live-prices.mjs';
 
 const APPLEDB_PATH = 'data/cache/appledb-main.json';
@@ -970,7 +969,7 @@ products.forEach((p) => {
           returnProgram: cVal.returnProgram !== undefined ? cVal.returnProgram : (prev.returnProgram ?? null),
         };
         if (cid === 'rakuten' && mergedCarriers[cid].url) {
-          mergedCarriers[cid].url = toRakutenAffiliateUrl(mergedCarriers[cid].url);
+          mergedCarriers[cid].url = toMallAffiliateUrl(mergedCarriers[cid].url, 'rakuten');
         }
       }
       s.carriers = mergedCarriers;
@@ -1000,7 +999,7 @@ products.forEach((p) => {
       const anyApi = rIsApi || yIsApi || uIsApi;
 
       if (cu.rakuten) {
-        cu.rakuten.url = toRakutenAffiliateUrl(cu.rakuten.url);
+        cu.rakuten.url = toMallAffiliateUrl(cu.rakuten.url, 'rakuten');
         if (!rIsApi) {
           cu.rakuten.shopName = '';
           cu.rakuten.isTrustedShop = false;
@@ -1009,7 +1008,7 @@ products.forEach((p) => {
         }
       }
       if (cu.yahoo) {
-        cu.yahoo.url = toYahooAffiliateUrl(cu.yahoo.url);
+        cu.yahoo.url = toMallAffiliateUrl(cu.yahoo.url, 'yahoo');
         if (!yIsApi) {
           cu.yahoo.shopName = '';
           cu.yahoo.isTrustedShop = false;
@@ -1019,7 +1018,7 @@ products.forEach((p) => {
       }
       if (cu.unused) {
         if (uIsApi) {
-          cu.unused.url = toRakutenAffiliateUrl(cu.unused.url);
+          cu.unused.url = toMallAffiliateUrl(cu.unused.url, 'rakuten');
         } else {
           delete cu.unused;
         }
@@ -1029,6 +1028,12 @@ products.forEach((p) => {
         cu.offers = [];
       } else {
         cu.isEstimated = false;
+        if (Array.isArray(cu.offers)) {
+          cu.offers = cu.offers.map((o) => ({
+            ...o,
+            url: toMallAffiliateUrl(o.url, o.platform === 'yahoo' ? 'yahoo' : 'rakuten'),
+          }));
+        }
       }
       if (launchPrice && cu.lowestPrice > 0) {
         cu.resaleValuePercent = Math.round((cu.lowestPrice / launchPrice) * 100);

@@ -12,6 +12,7 @@ on:
       - 'scripts/fetch-live-prices.mjs'
       - 'scripts/build-products.mjs'
       - 'scripts/fetch-refurbished.mjs'
+      - 'scripts/lib/**'
       - 'data/catalog/**'
       - '.github/workflows/update-prices.yml'
 
@@ -57,13 +58,17 @@ jobs:
 
       - name: Fetch live prices, rebuild products.json & fetch refurbished data
         env:
-          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
-          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
-          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
-          YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
-          YAHOO_VC_SID: ${{ secrets.YAHOO_VC_SID }}
-          YAHOO_VC_PID: ${{ secrets.YAHOO_VC_PID }}
-          YAHOO_MOSHIMO_AID: ${{ secrets.YAHOO_MOSHIMO_AID }}
+          # 楽天市場は APIキー不要の公開検索ページ抽出（RAKUTEN_APP_ID は廃止）
+          RAKUTEN_PROXY_URL: ${{ secrets.RAKUTEN_PROXY_URL }}
+          # Yahoo!ショッピング 商品検索API v3（未登録なら旧 YAHOO_APP_ID を使用）
+          YAHOO_CLIENT_ID: ${{ secrets.YAHOO_CLIENT_ID || secrets.YAHOO_APP_ID }}
+          # もしもアフィリエイト a_id（Secrets 未登録時は既定の提携ID。Amazon は未提携のため空＝変換なし）
+          MOSHIMO_RAKUTEN_AID: ${{ secrets.MOSHIMO_RAKUTEN_AID || secrets.VITE_MOSHIMO_RAKUTEN_AID || '5900939' }}
+          MOSHIMO_YAHOO_AID: ${{ secrets.MOSHIMO_YAHOO_AID || secrets.VITE_MOSHIMO_YAHOO_AID || '5900940' }}
+          MOSHIMO_AMAZON_AID: ${{ secrets.MOSHIMO_AMAZON_AID || secrets.VITE_MOSHIMO_AMAZON_AID || '' }}
+          VITE_MOSHIMO_RAKUTEN_AID: ${{ secrets.VITE_MOSHIMO_RAKUTEN_AID || secrets.MOSHIMO_RAKUTEN_AID || '5900939' }}
+          VITE_MOSHIMO_YAHOO_AID: ${{ secrets.VITE_MOSHIMO_YAHOO_AID || secrets.MOSHIMO_YAHOO_AID || '5900940' }}
+          VITE_MOSHIMO_AMAZON_AID: ${{ secrets.VITE_MOSHIMO_AMAZON_AID || secrets.MOSHIMO_AMAZON_AID || '' }}
         run: |
           node scripts/fetch-live-prices.mjs
           node scripts/build-products.mjs

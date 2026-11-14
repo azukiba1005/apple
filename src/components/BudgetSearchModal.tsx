@@ -33,6 +33,7 @@ import {
   estimateUsedMarketData,
   type UsedMarketData,
 } from '../usedPrice';
+import { toMoshimoUrl } from '../utils/moshimo';
 
 /* =====================================================================================
  * 7.5 タブ4: 💰 予算から逆算！最高スペック検索 (BudgetView)
@@ -647,7 +648,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                 </span>
               </button>
               <a
-                href={topUsed1.qualifyingUrl}
+                href={toMoshimoUrl(topUsed1.qualifyingUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={secondaryActionBtnCls}
@@ -941,7 +942,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                       <span>{inCompare ? '✓ 比較リストに追加済' : '＋ 比較リストに追加'}</span>
                     </button>
                     <a
-                      href={item.qualifyingUrl}
+                      href={toMoshimoUrl(item.qualifyingUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={secondaryActionBtnCls}

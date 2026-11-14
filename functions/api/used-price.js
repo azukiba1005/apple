@@ -1,12 +1,35 @@
 // Cloudflare Pages Function: /api/used-price
-// 楽天市場API / Yahoo!ショッピングAPI から該当機種・容量の出品リストをリアルタイム取得し、
-// 状態ランク・SIMフリー判定済みの offers（安い順・最大15件）を返す。
-// 楽天APIの「1秒1リクエスト」制限対策として、正規化した「機種ID＋容量」単位で
+// 楽天市場（APIキー不要の公開検索ページ抽出）＋ Yahoo!ショッピングAPI から該当機種・容量の出品リストを
+// リアルタイム取得し、状態ランク・SIMフリー判定済みの offers（安い順・最大15件）を返す。
+// ※ 楽天公式API（RAKUTEN_APP_ID）は使用しない。楽天側が0件・ブロック時も Yahoo! 実在庫＋
+//   もしもアフィリエイト経由の楽天市場/Amazon検索リンク（mallLinks / fallbackLinks）で必ず応答する。
+// アクセス集中を避けるため、正規化した「機種ID＋容量」単位で
 // Cache API (caches.default) に 10 分間（s-maxage=600）エッジキャッシュする。
-import { searchRakutenUsedPrice } from '../../scripts/fetch-live-prices.mjs';
+//
+// 利用する環境変数（Cloudflare Pages > Settings > Variables）:
+//   YAHOO_CLIENT_ID（旧 YAHOO_APP_ID も可） / RAKUTEN_PROXY_URL（任意）
+//   MOSHIMO_RAKUTEN_AID / MOSHIMO_YAHOO_AID / MOSHIMO_AMAZON_AID
+//   ※ 未設定時は既定の提携ID（楽天市場: 5900939 / Yahoo!: 5900940）。Amazon は未提携のため変換なし
+import {
+  buildMallFallbackLinks,
+  configureRuntimeEnv,
+  searchRakutenUsedPrice,
+} from '../../scripts/fetch-live-prices.mjs';
 
 const CACHE_TTL_SECONDS = 600;
-const RAKUTEN_GAP_MS = 1100;
+const RAKUTEN_GAP_MS = 800;
+
+const RUNTIME_ENV_KEYS = [
+  'YAHOO_CLIENT_ID',
+  'YAHOO_APP_ID',
+  'RAKUTEN_PROXY_URL',
+  'MOSHIMO_RAKUTEN_AID',
+  'MOSHIMO_YAHOO_AID',
+  'MOSHIMO_AMAZON_AID',
+  'VITE_MOSHIMO_RAKUTEN_AID',
+  'VITE_MOSHIMO_YAHOO_AID',
+  'VITE_MOSHIMO_AMAZON_AID',
+];
 
 /** 機種ID＋容量を正規化（大文字小文字・空白・全角半角の揺れを吸収） */
 function normalizeKeyPart(v) {
@@ -39,6 +62,13 @@ export async function onRequestGet(context) {
   const launchPrice = Number(url.searchParams.get('launchPrice') || 0) || 0;
   const releaseDate = url.searchParams.get('releaseDate') || '';
 
+  // process.env が使えない Workers ランタイム向けに env バインディングを共通ユーティリティへ注入
+  const runtimeEnv = {};
+  for (const k of RUNTIME_ENV_KEYS) {
+    if (env?.[k] != null) runtimeEnv[k] = String(env[k]);
+  }
+  configureRuntimeEnv(runtimeEnv);
+
   if (!productName && !productId) {
     return jsonResponse({ error: 'productName or productId is required' }, 400, 'BYPASS');
   }
@@ -70,14 +100,30 @@ export async function onRequestGet(context) {
       category,
       launchPrice: launchPrice || 98800,
       releaseDate: releaseDate || '2023-09-22',
-      appId: String(env?.RAKUTEN_APP_ID ?? '').trim(),
-      affiliateId: String(env?.RAKUTEN_AFFILIATE_ID ?? '').trim(),
-      accessKey: String(env?.RAKUTEN_ACCESS_KEY ?? '').trim(),
-      yahooAppId: String(env?.YAHOO_APP_ID ?? '').trim(),
+      yahooAppId: String(env?.YAHOO_CLIENT_ID || env?.YAHOO_APP_ID || '').trim(),
+      proxyUrl: String(env?.RAKUTEN_PROXY_URL ?? '').trim(),
       rakutenGapMs: RAKUTEN_GAP_MS,
     });
   } catch (err) {
-    return jsonResponse({ error: String(err?.message ?? err) }, 502, 'MISS');
+    // 想定外の例外でも 5xx で止めず、もしも経由の3大モール検索リンクだけは返す
+    let mallLinks = null;
+    try {
+      mallLinks = buildMallFallbackLinks({ productName: productName || productId, storage, category, launchPrice });
+    } catch {
+      /* ignore */
+    }
+    return jsonResponse(
+      {
+        error: String(err?.message ?? err),
+        source: 'mock',
+        isEstimated: true,
+        offers: [],
+        mallLinks,
+        fallbackLinks: mallLinks ? [mallLinks.rakuten, mallLinks.amazon] : [],
+      },
+      200,
+      'BYPASS',
+    );
   }
 
   // 安い順・最大15件に整形（searchRakutenUsedPrice 側で除外・ランク/SIMフリー判定済み）

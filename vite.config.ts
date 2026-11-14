@@ -1,13 +1,14 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import { searchRakutenUsedPrice } from './scripts/fetch-live-prices.mjs';
+import { configureRuntimeEnv, searchRakutenUsedPrice } from './scripts/fetch-live-prices.mjs';
+import { MOSHIMO_DEFAULT_AIDS } from './scripts/lib/moshimo.mjs';
 
-function usedPriceProxy(envConfig: {
-  appId: string;
-  affiliateId: string;
-  accessKey: string;
-  yahooAppId: string;
-}): Plugin {
+/**
+ * 開発/プレビューサーバー用 `/api/used-price` ミドルウェア
+ * （本番は Cloudflare Pages Functions: functions/api/used-price.js）
+ * 楽天市場は APIキー不要の公開検索ページ抽出、Yahoo!は YAHOO_CLIENT_ID で取得。
+ */
+function usedPriceProxy(envConfig: { yahooClientId: string; rakutenProxyUrl: string }): Plugin {
   const attachMiddleware = (middlewares: any) => {
     middlewares.use('/api/used-price', async (req: any, res: any) => {
       try {
@@ -17,10 +18,6 @@ function usedPriceProxy(envConfig: {
         const category = url.searchParams.get('category') || 'iPhone';
         const launchPrice = Number(url.searchParams.get('launchPrice') || 0) || 98800;
         const releaseDate = url.searchParams.get('releaseDate') || '2023-09-22';
-        const appId = process.env.RAKUTEN_APP_ID || envConfig.appId || '';
-        const affiliateId = process.env.RAKUTEN_AFFILIATE_ID || envConfig.affiliateId || '';
-        const accessKey = process.env.RAKUTEN_ACCESS_KEY || envConfig.accessKey || '';
-        const yahooAppId = process.env.YAHOO_APP_ID || envConfig.yahooAppId || '';
 
         const result = await searchRakutenUsedPrice({
           productName,
@@ -28,10 +25,8 @@ function usedPriceProxy(envConfig: {
           category,
           launchPrice,
           releaseDate,
-          appId,
-          affiliateId,
-          accessKey,
-          yahooAppId,
+          yahooAppId: envConfig.yahooClientId,
+          proxyUrl: envConfig.rakutenProxyUrl,
         });
 
         res.statusCode = 200;
@@ -59,29 +54,40 @@ function usedPriceProxy(envConfig: {
 // base './' = GitHub Pages / Cloudflare Pages どちらでも動く相対パス
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const rakutenAppId = process.env.RAKUTEN_APP_ID || env.RAKUTEN_APP_ID || env.VITE_RAKUTEN_APP_ID || '';
-  const rakutenAffiliateId = process.env.RAKUTEN_AFFILIATE_ID || env.RAKUTEN_AFFILIATE_ID || '';
-  const rakutenAccessKey = process.env.RAKUTEN_ACCESS_KEY || env.RAKUTEN_ACCESS_KEY || '';
-  const yahooAppId = process.env.YAHOO_APP_ID || env.YAHOO_APP_ID || env.VITE_YAHOO_APP_ID || '';
+  const pick = (...keys: string[]) =>
+    keys.map((k) => String(process.env[k] || env[k] || '').trim()).find(Boolean) ?? '';
+
+  const yahooClientId = pick('YAHOO_CLIENT_ID', 'YAHOO_APP_ID', 'VITE_YAHOO_CLIENT_ID', 'VITE_YAHOO_APP_ID');
+  const rakutenProxyUrl = pick('RAKUTEN_PROXY_URL');
+  // もしもアフィリエイト a_id（MOSHIMO_* / VITE_MOSHIMO_* どちらでも可・リンクに含まれる公開値）
+  // 未設定時は既定の提携ID（楽天市場: 5900939 / Yahoo!: 5900940 / Amazon: 未提携のため空）
+  const moshimoRakutenAid = pick('VITE_MOSHIMO_RAKUTEN_AID', 'MOSHIMO_RAKUTEN_AID') || MOSHIMO_DEFAULT_AIDS.rakutenAid;
+  const moshimoYahooAid = pick('VITE_MOSHIMO_YAHOO_AID', 'MOSHIMO_YAHOO_AID') || MOSHIMO_DEFAULT_AIDS.yahooAid;
+  const moshimoAmazonAid = pick('VITE_MOSHIMO_AMAZON_AID', 'MOSHIMO_AMAZON_AID') || MOSHIMO_DEFAULT_AIDS.amazonAid;
+
+  // dev サーバー内（Node 側）の共通ユーティリティにも同じ値を注入
+  configureRuntimeEnv({
+    YAHOO_CLIENT_ID: yahooClientId,
+    RAKUTEN_PROXY_URL: rakutenProxyUrl,
+    MOSHIMO_RAKUTEN_AID: moshimoRakutenAid,
+    MOSHIMO_YAHOO_AID: moshimoYahooAid,
+    MOSHIMO_AMAZON_AID: moshimoAmazonAid,
+  });
 
   return {
     base: './',
-    envPrefix: ['VITE_', 'RAKUTEN_', 'YAHOO_'],
+    envPrefix: ['VITE_', 'YAHOO_', 'MOSHIMO_'],
     define: {
-      'import.meta.env.RAKUTEN_APP_ID': JSON.stringify(rakutenAppId),
-      'import.meta.env.RAKUTEN_AFFILIATE_ID': JSON.stringify(rakutenAffiliateId),
-      'import.meta.env.RAKUTEN_ACCESS_KEY': JSON.stringify(rakutenAccessKey),
-      'import.meta.env.YAHOO_APP_ID': JSON.stringify(yahooAppId),
+      'import.meta.env.YAHOO_APP_ID': JSON.stringify(yahooClientId),
+      'import.meta.env.YAHOO_CLIENT_ID': JSON.stringify(yahooClientId),
+      'import.meta.env.VITE_MOSHIMO_RAKUTEN_AID': JSON.stringify(moshimoRakutenAid),
+      'import.meta.env.VITE_MOSHIMO_YAHOO_AID': JSON.stringify(moshimoYahooAid),
+      'import.meta.env.VITE_MOSHIMO_AMAZON_AID': JSON.stringify(moshimoAmazonAid),
+      'import.meta.env.MOSHIMO_RAKUTEN_AID': JSON.stringify(moshimoRakutenAid),
+      'import.meta.env.MOSHIMO_YAHOO_AID': JSON.stringify(moshimoYahooAid),
+      'import.meta.env.MOSHIMO_AMAZON_AID': JSON.stringify(moshimoAmazonAid),
     },
-    plugins: [
-      react(),
-      usedPriceProxy({
-        appId: rakutenAppId,
-        affiliateId: rakutenAffiliateId,
-        accessKey: rakutenAccessKey,
-        yahooAppId,
-      }),
-    ],
+    plugins: [react(), usedPriceProxy({ yahooClientId, rakutenProxyUrl })],
     build: {
       rollupOptions: {
         input: {

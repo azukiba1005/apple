@@ -8,11 +8,67 @@ import {
   type Product,
   type Sku,
 } from '../App';
-import type {
-  UsedConditionRank,
-  UsedMarketData,
-  UsedShopOffer,
+import {
+  buildMallSearchUrlsForSku,
+  type UsedConditionRank,
+  type UsedMarketData,
+  type UsedShopOffer,
 } from '../usedPrice';
+import { MALL_META, toMoshimoUrl, type MoshimoPlatform } from '../utils/moshimo';
+
+export interface MallSearchLinkSet {
+  rakuten: string;
+  yahoo: string;
+  amazon: string;
+}
+
+/** 機種・容量の3大モール検索URL（すべて もしもアフィリエイト経由） */
+export function resolveMallSearchLinks(product: Product, sku: Sku, usedInfo?: UsedMarketData | null): MallSearchLinkSet {
+  const generated = buildMallSearchUrlsForSku(product, sku);
+  return {
+    rakuten: toMoshimoUrl(usedInfo?.rakutenSearchUrl || generated.rakuten, 'rakuten'),
+    yahoo: toMoshimoUrl(usedInfo?.yahooSearchUrl || generated.yahoo, 'yahoo'),
+    amazon: toMoshimoUrl(usedInfo?.amazonSearchUrl || generated.amazon, 'amazon'),
+  };
+}
+
+const MALL_BUTTON_LABELS: Record<MoshimoPlatform, string> = {
+  rakuten: '楽天市場で探す',
+  yahoo: 'Yahoo!ショッピングで探す',
+  amazon: 'Amazonで整備済品・新品を探す',
+};
+
+/** 3大モール横断検索ボタン（楽天市場・Yahoo!ショッピング・Amazon / もしもアフィリエイト経由） */
+export function MallSearchButtons({
+  links,
+  platforms = ['rakuten', 'yahoo', 'amazon'],
+  labels,
+  size = 'md',
+}: {
+  links: MallSearchLinkSet;
+  platforms?: MoshimoPlatform[];
+  labels?: Partial<Record<MoshimoPlatform, string>>;
+  size?: 'sm' | 'md';
+}) {
+  const pad = size === 'sm' ? 'px-3 py-1.5' : 'px-3.5 py-2';
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {platforms.map((pf) => (
+        <a
+          key={pf}
+          href={links[pf]}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          className={`inline-flex items-center gap-1.5 rounded-xl bg-white ${pad} text-xs font-medium text-zinc-700 transition hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-200 dark:hover:bg-[#2c2f36]`}
+        >
+          <span className={`h-2 w-2 rounded-full ${MALL_META[pf].dotCls}`} />
+          <span>{labels?.[pf] ?? MALL_BUTTON_LABELS[pf]}</span>
+          <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+      ))}
+    </div>
+  );
+}
 
 type ShopModalConditionFilter = 'all' | 'unused' | 'rankA_plus' | 'trusted';
 type ShopModalMallFilter = 'all' | 'rakuten' | 'yahoo';
@@ -63,10 +119,16 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
+  // 個別出品リンクもすべて もしもアフィリエイト経由へ（旧 楽天アフィリエイト/VC リンクも置換）
   const allOffers: UsedShopOffer[] = useMemo(() => {
     const raw = usedInfo.usedPricing.offers ?? usedInfo.offers ?? [];
-    return [...raw].sort((a, b) => a.price - b.price);
+    return [...raw]
+      .map((o) => ({ ...o, url: toMoshimoUrl(o.url, o.platform === 'yahoo' ? 'yahoo' : 'rakuten') }))
+      .sort((a, b) => a.price - b.price);
   }, [usedInfo]);
+
+  const mallLinks = useMemo(() => resolveMallSearchLinks(product, sku, usedInfo), [product, sku, usedInfo]);
+  const hasRakutenOffers = allOffers.some((o) => o.platform === 'rakuten');
 
   const discInfo = useMemo(() => getSkuDiscontinuedInfo(product, sku), [product, sku]);
   const refApplePrice = useMemo(() => {
@@ -299,8 +361,27 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
           </div>
         </div>
 
+        {/* 2.5 3大モール横断検索（もしもアフィリエイト経由） */}
+        <div className="flex flex-wrap items-center gap-2 bg-[#f5f5f7] px-5 pb-3.5 text-xs sm:px-6 dark:bg-[#23252b]">
+          <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">3大モールで探す:</span>
+          <MallSearchButtons links={mallLinks} size="sm" />
+        </div>
+
         {/* 3. ショップ別ランキングリスト（余白で区切るフラットリスト） */}
         <div className="flex-1 space-y-2.5 overflow-y-auto px-5 py-4 sm:px-6">
+          {allOffers.length > 0 && !hasRakutenOffers && (
+            <div className="flex flex-col gap-2.5 rounded-xl bg-[#f5f5f7]/80 px-4 py-3 text-xs text-zinc-600 sm:flex-row sm:items-center sm:justify-between dark:bg-[#23252b]/75 dark:text-zinc-300">
+              <span>
+                楽天市場の出品は現在取得できませんでした。Yahoo!ショッピングの実在庫を最安値として表示しています。
+              </span>
+              <MallSearchButtons
+                links={mallLinks}
+                platforms={['rakuten', 'amazon']}
+                labels={{ rakuten: '楽天市場で在庫を見る', amazon: 'Amazonで在庫を見る' }}
+                size="sm"
+              />
+            </div>
+          )}
           {allOffers.length === 0 ? (
             <div className="py-12 text-center text-sm text-zinc-600 dark:text-zinc-300 space-y-3.5">
               <div className="font-bold text-zinc-900 dark:text-zinc-100">
@@ -309,25 +390,17 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
               <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
                 現在この機種のリアルタイム出品リストは未取得です。各モールの検索ページで実際の在庫・価格をご確認ください。
               </p>
-              <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
-                <a
-                  href={usedInfo.rakutenSearchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3.5 py-2 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
-                >
-                  <span>楽天市場で実際の在庫を検索</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-                <a
-                  href={usedInfo.yahooSearchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-3.5 py-2 text-xs font-medium text-zinc-700 transition hover:bg-zinc-200 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-200 dark:hover:bg-zinc-700/70"
-                >
-                  <span>Yahoo!で実際の在庫を検索</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
+              <div className="flex justify-center pt-1">
+                <div className="rounded-2xl bg-[#f5f5f7] p-2 dark:bg-[#23252b]">
+                  <MallSearchButtons
+                    links={mallLinks}
+                    labels={{
+                      rakuten: '楽天市場で在庫を見る',
+                      yahoo: 'Yahoo!ショッピングで在庫を見る',
+                      amazon: 'Amazonで在庫を見る',
+                    }}
+                  />
+                </div>
               </div>
             </div>
           ) : filteredOffers.length === 0 ? (
@@ -444,7 +517,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                     <a
                       href={offer.url}
                       target="_blank"
-                      rel="noopener noreferrer"
+                      rel="noopener noreferrer sponsored"
                       className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-2 text-xs font-semibold text-zinc-100 transition hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
                     >
                       <span>ショップで見る</span>
@@ -460,7 +533,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
         {/* 4. モーダルフッター */}
         <div className="flex flex-wrap items-center justify-between gap-2 bg-[#f5f5f7] px-5 py-3 text-xs text-zinc-500 sm:px-6 dark:bg-[#18191e] dark:text-zinc-400">
           <span>
-            ※厳密タイトル検証によりケース・フィルム・ジャンク品・別容量・別モデル（Pro/Max/mini等）を自動除外しています。在庫・価格は各ショップページでご確認ください。
+            ※厳密タイトル検証によりケース・フィルム・ジャンク品・別容量・別モデル（Pro/Max/mini等）を自動除外しています。在庫・価格は各ショップページでご確認ください。リンクはもしもアフィリエイト経由です（PR）。
           </span>
           <span className="font-medium tabular-nums">
             表示中: {filteredOffers.length}件 / 全{allOffers.length}件
