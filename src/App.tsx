@@ -12,6 +12,7 @@ import {
   type RefurbStockStatus,
 } from './components/RefurbishedView';
 import { TimelineView } from './components/TimelineView';
+import CookieConsent, { openCookieSettings } from './components/CookieConsent';
 import { FxView, LaunchFxView } from './components/LaunchFxView';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, Bar,
@@ -3200,6 +3201,7 @@ export default function App() {
             <div className="flex flex-wrap shrink-0 items-center gap-5 font-medium">
               <a href="./privacy/" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">プライバシーポリシー</a>
               <a href="./terms/" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">利用規約</a>
+              <button type="button" onClick={openCookieSettings} className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">Cookie 設定</button>
               <a href="https://azarin.me/inquiry?category=personal&type=bug&message=Apple%20Price%20Atlas%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">お問い合わせ</a>
             </div>
           </div>
@@ -3210,6 +3212,8 @@ export default function App() {
             <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 shrink-0 text-[#7ea88c]" /><span>{toastMsg}</span></span>
           </div>
         )}
+
+        <CookieConsent />
       </div>
     </ThemeCtx.Provider>
   );
