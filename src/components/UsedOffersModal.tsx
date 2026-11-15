@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ExternalLink, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, ExternalLink, RefreshCw, SlidersHorizontal, X } from 'lucide-react';
 import {
+  ApplePrice,
   getSkuDiscontinuedInfo,
   lastOf,
-  signedYen,
   yen,
   type Product,
   type Sku,
@@ -14,7 +14,7 @@ import {
   type UsedMarketData,
   type UsedShopOffer,
 } from '../usedPrice';
-import { MALL_META, toMoshimoUrl, type MoshimoPlatform } from '../utils/moshimo';
+import { toMoshimoUrl, type MoshimoPlatform } from '../utils/moshimo';
 
 export interface MallSearchLinkSet {
   rakuten: string;
@@ -59,11 +59,10 @@ export function MallSearchButtons({
           href={links[pf]}
           target="_blank"
           rel="noopener noreferrer sponsored"
-          className={`inline-flex items-center gap-1.5 rounded-full bg-white ${pad} text-xs font-medium text-zinc-700 transition hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-200 dark:hover:bg-[#2c2f36]`}
+          className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white ${pad} text-xs font-medium text-[#1d1d1f] shadow-[0_1px_4px_rgba(0,0,0,0.04)] border border-black/[0.06] transition hover:bg-black/[0.03]`}
         >
-          <span className={`h-2 w-2 rounded-full ${MALL_META[pf].dotCls}`} />
           <span>{labels?.[pf] ?? MALL_BUTTON_LABELS[pf]}</span>
-          <ExternalLink className="h-3.5 w-3.5" />
+          <ExternalLink className="h-3.5 w-3.5 text-[#6e6e73]" strokeWidth={1.5} />
         </a>
       ))}
     </div>
@@ -76,13 +75,13 @@ type ShopModalSortOrder = 'price_asc' | 'condition_desc';
 
 const CONDITION_RANK_META: Record<
   UsedConditionRank,
-  { label: string; shortLabel: string; dotCls: string; qualityOrder: number }
+  { shortLabel: string; qualityOrder: number }
 > = {
-  unused: { label: '✨ 未使用品', shortLabel: '未使用品', dotCls: 'bg-[#649274]', qualityOrder: 5 },
-  rankA: { label: 'Aランク（美品）', shortLabel: 'Aランク', dotCls: 'bg-zinc-500', qualityOrder: 4 },
-  rankB: { label: 'Bランク（良品）', shortLabel: 'Bランク', dotCls: 'bg-zinc-400', qualityOrder: 3 },
-  used: { label: '中古品', shortLabel: '中古', dotCls: 'bg-zinc-400', qualityOrder: 2 },
-  rankC: { label: 'Cランク', shortLabel: 'Cランク', dotCls: 'bg-zinc-400', qualityOrder: 1 },
+  unused: { shortLabel: '未使用', qualityOrder: 5 },
+  rankA: { shortLabel: 'Aランク', qualityOrder: 4 },
+  rankB: { shortLabel: 'Bランク', qualityOrder: 3 },
+  used: { shortLabel: '中古', qualityOrder: 2 },
+  rankC: { shortLabel: 'Cランク', qualityOrder: 1 },
 };
 
 export interface UsedOffersModalProps {
@@ -95,9 +94,7 @@ export interface UsedOffersModalProps {
 }
 
 /**
- * 🏪 中古ショップ価格比較モーダル（ポップアップ画面）
- * 選択した機種・容量の楽天市場＆Yahoo!ショッピングの中古・未使用品出品リスト（最大15件）を
- * 状態ランク・モール・価格順で一覧比較できるソフトコントラスト＆枠線レスUIモーダル
+ * 中古ショップ価格比較モーダル（iOSネイティブ風ホワイトボトムシート）
  */
 export const UsedOffersModal = React.memo(function UsedOffersModal({
   product,
@@ -110,6 +107,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
   const [condFilter, setCondFilter] = useState<ShopModalConditionFilter>('all');
   const [mallFilter, setMallFilter] = useState<ShopModalMallFilter>('all');
   const [sortOrder, setSortOrder] = useState<ShopModalSortOrder>('price_asc');
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -119,7 +117,6 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
-  // 個別出品リンクもすべて もしもアフィリエイト経由へ（旧 楽天アフィリエイト/VC リンクも置換）
   const allOffers: UsedShopOffer[] = useMemo(() => {
     const raw = usedInfo.usedPricing.offers ?? usedInfo.offers ?? [];
     return [...raw]
@@ -168,7 +165,10 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
     return [...filtered].sort((a, b) => a.price - b.price);
   }, [allOffers, condFilter, mallFilter, sortOrder]);
 
-  const topFilteredPrice = filteredOffers.length > 0 ? Math.min(...filteredOffers.map((o) => o.price)) : overallLowestPrice;
+  const activeFilterCount =
+    (condFilter !== 'all' ? 1 : 0) +
+    (mallFilter !== 'all' ? 1 : 0) +
+    (sortOrder !== 'price_asc' ? 1 : 0);
 
   const condFilterOptions: { value: ShopModalConditionFilter; label: string; count: number }[] = [
     { value: 'all', label: 'すべて', count: allOffers.length },
@@ -189,10 +189,10 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
     },
   ];
 
-  const mallFilterOptions: { value: ShopModalMallFilter; label: string; dotCls?: string }[] = [
+  const mallFilterOptions: { value: ShopModalMallFilter; label: string }[] = [
     { value: 'all', label: 'すべて' },
-    { value: 'rakuten', label: '楽天市場', dotCls: 'bg-[#a66c75]' },
-    { value: 'yahoo', label: 'Yahoo!ショッピング', dotCls: 'bg-[#ad8755]' },
+    { value: 'rakuten', label: '楽天市場' },
+    { value: 'yahoo', label: 'Yahoo!ショッピング' },
   ];
 
   return (
@@ -200,211 +200,213 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
       data-export-ignore="true"
       role="dialog"
       aria-modal="true"
-      aria-label={`${product.name} (${sku.label}) の中古・未使用品 ショップ比較`}
+      aria-label={`${product.name} (${sku.label}) の中古・未使用品`}
       onClick={onClose}
-      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/30 p-0 backdrop-blur-[2px] sm:items-center sm:p-5"
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/20 p-0 backdrop-blur-[2px] sm:items-center sm:p-5"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="liquid-glass liquid-glass-strong animate-sheet-up flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-t-3xl text-[#1d1d1f] sm:max-h-[90vh] sm:rounded-3xl dark:text-zinc-100"
+        className="animate-sheet-up flex max-h-[88dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[28px] bg-[#f5f5f7]/95 text-[#1d1d1f] shadow-[0_-8px_40px_rgba(0,0,0,0.12)] backdrop-blur-2xl sm:rounded-[28px] sm:shadow-[0_24px_60px_rgba(0,0,0,0.16)]"
       >
-        {/* 1. モーダルヘッダー */}
-        <div className="flex items-start justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center gap-2 text-base sm:text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-                <span aria-hidden="true">🏪</span>
-                <span>
-                  {product.name} ({sku.label}) の中古・未使用品 ショップ比較
-                </span>
-              </span>
-              {maxSavingsVsNew != null && maxSavingsVsNew > 0 && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#eaf2ed] px-3 py-1 text-xs font-semibold tabular-nums text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
-                  {discInfo.isDiscontinued ? '終売最終定価比' : '定価比'} 最大 −{yen(maxSavingsVsNew)} お得
-                </span>
-              )}
-              {usedInfo.source === 'mock' && (
-                <span className="rounded-md bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
-                  相場推定リスト
-                </span>
-              )}
-            </div>
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 tabular-nums">
-              <span>
-                横断最安: <strong className="font-bold text-zinc-900 dark:text-zinc-100">{yen(overallLowestPrice)}</strong>
-              </span>
-              {refApplePrice != null && (
-                <span>
-                  {discInfo.isDiscontinued ? '終売時Apple直販価格' : 'Apple Store新品定価'}:{' '}
-                  <strong className="font-semibold text-zinc-700 dark:text-zinc-300">{yen(refApplePrice)}</strong>
-                </span>
-              )}
-              {usedInfo.usedPricing.resaleValuePercent != null && (
-                <span>
-                  リセール残価率: <strong className="font-semibold text-zinc-700 dark:text-zinc-300">{usedInfo.usedPricing.resaleValuePercent}%</strong>
-                </span>
-              )}
-              {isLoadingLive ? (
-                <span className="inline-flex items-center gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-300">
-                  ⏳ 楽天・Yahoo!の最新出品リストを取得中...
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={onRefreshLive}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 underline underline-offset-2 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                >
-                  🔄 最新在庫を再取得
-                </button>
-              )}
-            </div>
-          </div>
-          <button
-            type="button"
-            aria-label="モーダルを閉じる"
-            onClick={onClose}
-            className="shrink-0 rounded-full bg-black/[0.05] p-2 text-[#6e6e73] transition hover:bg-black/[0.09] hover:text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-400 dark:hover:bg-white/15 dark:hover:text-zinc-100"
-          >
-            <X className="h-5 w-5" />
-          </button>
+        {/* iOS標準ドラッグインジケーター */}
+        <div className="flex shrink-0 justify-center pt-2.5 pb-1 sm:hidden" aria-hidden="true">
+          <div className="h-1 w-9 rounded-full bg-black/15" />
         </div>
 
-        {/* 2. クイック絞り込み＆並び替えバー */}
-        <div className="space-y-3 bg-black/[0.03] px-5 py-3.5 text-xs sm:px-6 dark:bg-white/[0.04]">
-          {/* 上段: 状態フィルタ */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">状態・店舗:</span>
-            {condFilterOptions.map((opt) => {
-              const active = condFilter === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setCondFilter(opt.value)}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                    active
-                      ? 'bg-zinc-900 text-zinc-100 shadow-2xs dark:bg-zinc-200 dark:text-zinc-900'
-                      : 'bg-white text-zinc-600 hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
-                  }`}
-                >
-                  <span>{opt.label}</span>
-                  <span
-                    className={`rounded-full px-1.5 py-0.5 text-xs tabular-nums ${
-                      active
-                        ? 'bg-white/20 text-current dark:bg-zinc-900/15'
-                        : 'bg-zinc-100 text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400'
-                    }`}
-                  >
-                    {opt.count}
-                  </span>
-                </button>
-              );
-            })}
+        {/* 極小2行固定ヘッダー */}
+        <div className="shrink-0 border-b border-black/[0.06] px-4 pt-1.5 pb-3 sm:px-6 sm:pt-4 sm:pb-3.5">
+          {/* 1行目: 機種名 ＋ 閉じるボタン */}
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="min-w-0 truncate text-base font-semibold tracking-tight text-[#1d1d1f] sm:text-lg">
+              {product.name} ({sku.label}) の中古・未使用品
+            </h2>
+            <button
+              type="button"
+              aria-label="モーダルを閉じる"
+              onClick={onClose}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/5 text-[#6e6e73] transition hover:bg-black/10 hover:text-[#1d1d1f]"
+            >
+              <X className="h-4 w-4" strokeWidth={1.5} />
+            </button>
           </div>
 
-          {/* 下段: モールフィルタ ＋ 並び替え */}
-          <div className="flex flex-wrap items-center justify-between gap-2.5">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">モール:</span>
-              {mallFilterOptions.map((opt) => {
-                const active = mallFilter === opt.value;
-                return (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => setMallFilter(opt.value)}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                      active
-                        ? 'bg-zinc-900 text-zinc-100 shadow-2xs dark:bg-zinc-200 dark:text-zinc-900'
-                        : 'bg-white text-zinc-600 hover:bg-zinc-200/70 hover:text-zinc-900 dark:bg-[#1c1d22] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
-                    }`}
-                  >
-                    {opt.dotCls && <span className={`h-2 w-2 rounded-full ${opt.dotCls}`} />}
-                    <span>{opt.label}</span>
-                  </button>
-                );
-              })}
+          {/* 2行目: 最安価格（定価比） ＋ 絞り込み・並び替えボタン ＋ 再取得ボタン */}
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <div className="min-w-0 truncate text-xs text-[#6e6e73] tabular-nums sm:text-sm">
+              <span>最安 </span>
+              <ApplePrice
+                value={overallLowestPrice}
+                className="text-sm font-semibold text-[#1d1d1f] sm:text-base"
+              />
+              {maxSavingsVsNew != null && maxSavingsVsNew > 0 && (
+                <span className="ml-1 text-xs text-[#6e6e73]">
+                  （{discInfo.isDiscontinued ? '終売定価比' : '定価比'} −{yen(maxSavingsVsNew)}）
+                </span>
+              )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">並び替え:</span>
-              <div
-                role="group"
-                aria-label="出品リストの並び替え"
-                className="inline-flex rounded-full bg-[#767680]/[0.12] p-0.5 text-xs font-medium dark:bg-[#767680]/[0.24]"
+            <div className="flex shrink-0 items-center gap-1.5">
+              <button
+                type="button"
+                aria-expanded={filtersOpen}
+                onClick={() => setFiltersOpen((v) => !v)}
+                className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                  filtersOpen || activeFilterCount > 0
+                    ? 'bg-[#1d1d1f] text-white'
+                    : 'bg-black/5 text-[#1d1d1f] hover:bg-black/10'
+                }`}
               >
-                <button
-                  type="button"
-                  onClick={() => setSortOrder('price_asc')}
-                  className={`rounded-full px-3 py-1 transition ${
-                    sortOrder === 'price_asc'
-                      ? 'bg-white font-semibold text-[#1d1d1f] shadow-[0_3px_8px_rgba(0,0,0,0.12)] dark:bg-[#636366] dark:text-white'
-                      : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
-                  }`}
-                >
-                  価格が安い順
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSortOrder('condition_desc')}
-                  className={`rounded-full px-3 py-1 transition ${
-                    sortOrder === 'condition_desc'
-                      ? 'bg-white font-semibold text-[#1d1d1f] shadow-[0_3px_8px_rgba(0,0,0,0.12)] dark:bg-[#636366] dark:text-white'
-                      : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
-                  }`}
-                >
-                  状態が良い順
-                </button>
+                <SlidersHorizontal className="h-3 w-3" strokeWidth={1.5} />
+                <span>絞り込み・並び替え{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}</span>
+                <ChevronDown
+                  className={`h-3.5 w-3.5 transition-transform duration-200 ${filtersOpen ? 'rotate-180' : ''}`}
+                  strokeWidth={1.5}
+                />
+              </button>
+
+              <button
+                type="button"
+                onClick={onRefreshLive}
+                disabled={isLoadingLive}
+                aria-label="最新在庫を再取得"
+                title="最新在庫を再取得"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/5 text-[#6e6e73] transition hover:bg-black/10 hover:text-[#1d1d1f] disabled:opacity-50"
+              >
+                <RefreshCw
+                  className={`h-3.5 w-3.5 ${isLoadingLive ? 'animate-spin' : ''}`}
+                  strokeWidth={1.5}
+                />
+              </button>
+            </div>
+          </div>
+
+          {/* 折りたたみ式フィルターアコーディオン（デフォルト非表示） */}
+          <div
+            className={`grid transition-all duration-200 ease-out ${
+              filtersOpen ? 'mt-3 grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+            }`}
+          >
+            <div className="overflow-hidden">
+              <div className="space-y-2.5 border-t border-black/[0.06] pt-3 text-xs">
+                {/* 状態・店舗 */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="mr-1 whitespace-nowrap text-xs font-medium text-[#6e6e73]">状態・店舗</span>
+                  {condFilterOptions.map((opt) => {
+                    const active = condFilter === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setCondFilter(opt.value)}
+                        className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                          active
+                            ? 'bg-[#1d1d1f] text-white'
+                            : 'bg-white text-[#6e6e73] hover:text-[#1d1d1f]'
+                        }`}
+                      >
+                        <span>{opt.label}</span>
+                        <span className={`tabular-nums ${active ? 'text-white/75' : 'text-[#6e6e73]/75'}`}>
+                          {opt.count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* モール ＋ 並び替え */}
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="mr-1 whitespace-nowrap text-xs font-medium text-[#6e6e73]">モール</span>
+                    {mallFilterOptions.map((opt) => {
+                      const active = mallFilter === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => setMallFilter(opt.value)}
+                          className={`whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                            active
+                              ? 'bg-[#1d1d1f] text-white'
+                              : 'bg-white text-[#6e6e73] hover:text-[#1d1d1f]'
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div
+                    role="group"
+                    aria-label="出品リストの並び替え"
+                    className="inline-flex rounded-full bg-black/[0.06] p-0.5 text-xs font-medium"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setSortOrder('price_asc')}
+                      className={`whitespace-nowrap rounded-full px-2.5 py-1 transition ${
+                        sortOrder === 'price_asc'
+                          ? 'bg-white font-semibold text-[#1d1d1f] shadow-[0_1px_4px_rgba(0,0,0,0.1)]'
+                          : 'text-[#6e6e73] hover:text-[#1d1d1f]'
+                      }`}
+                    >
+                      価格が安い順
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSortOrder('condition_desc')}
+                      className={`whitespace-nowrap rounded-full px-2.5 py-1 transition ${
+                        sortOrder === 'condition_desc'
+                          ? 'bg-white font-semibold text-[#1d1d1f] shadow-[0_1px_4px_rgba(0,0,0,0.1)]'
+                          : 'text-[#6e6e73] hover:text-[#1d1d1f]'
+                      }`}
+                    >
+                      状態が良い順
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 2.5 3大モール横断検索（もしもアフィリエイト経由） */}
-        <div className="flex flex-wrap items-center gap-2 bg-black/[0.03] px-5 pb-3.5 text-xs sm:px-6 dark:bg-white/[0.04]">
-          <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">3大モールで探す:</span>
-          <MallSearchButtons links={mallLinks} size="sm" />
-        </div>
-
-        {/* 3. ショップ別ランキングリスト（余白で区切るフラットリスト） */}
-        <div className="flex-1 space-y-2.5 overflow-y-auto px-5 py-4 sm:px-6">
+        {/* スクロール領域: コンパクト白カード一覧 ＋ 末尾に3大モール検索＆注記 */}
+        <div className="flex-1 space-y-2.5 overflow-y-auto px-4 py-3 sm:px-6 sm:py-4">
           {allOffers.length > 0 && !hasRakutenOffers && (
-            <div className="flex flex-col gap-2.5 rounded-2xl bg-white/70 px-4 py-3 text-xs text-zinc-600 sm:flex-row sm:items-center sm:justify-between dark:bg-[#23252b]/75 dark:text-zinc-300">
+            <div className="flex flex-col gap-2 rounded-2xl border border-black/[0.04] bg-white p-3.5 text-xs text-[#6e6e73] shadow-[0_2px_10px_rgba(0,0,0,0.03)] sm:flex-row sm:items-center sm:justify-between">
               <span>
                 楽天市場の出品は現在取得できませんでした。Yahoo!ショッピングの実在庫を最安値として表示しています。
               </span>
               <MallSearchButtons
                 links={mallLinks}
                 platforms={['rakuten', 'amazon']}
-                labels={{ rakuten: '楽天市場で在庫を見る', amazon: 'Amazonで在庫を見る' }}
+                labels={{ rakuten: '楽天市場で見る', amazon: 'Amazonで見る' }}
                 size="sm"
               />
             </div>
           )}
+
           {allOffers.length === 0 ? (
-            <div className="py-12 text-center text-sm text-zinc-600 dark:text-zinc-300 space-y-3.5">
-              <div className="font-bold text-zinc-900 dark:text-zinc-100">
-                📊 参考推定相場: 約{yen(overallLowestPrice)}（実在庫データ未取得）
+            <div className="space-y-3.5 py-10 text-center text-sm text-[#6e6e73]">
+              <div className="font-semibold text-[#1d1d1f]">
+                参考推定相場: 約{yen(overallLowestPrice)}（実在庫データ未取得）
               </div>
-              <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs text-[#6e6e73]">
                 現在この機種のリアルタイム出品リストは未取得です。各モールの検索ページで実際の在庫・価格をご確認ください。
               </p>
               <div className="flex justify-center pt-1">
-                <div className="rounded-2xl bg-[#f5f5f7] p-2 dark:bg-[#23252b]">
-                  <MallSearchButtons
-                    links={mallLinks}
-                    labels={{
-                      rakuten: '楽天市場で在庫を見る',
-                      yahoo: 'Yahoo!ショッピングで在庫を見る',
-                      amazon: 'Amazonで在庫を見る',
-                    }}
-                  />
-                </div>
+                <MallSearchButtons
+                  links={mallLinks}
+                  labels={{
+                    rakuten: '楽天市場で在庫を見る',
+                    yahoo: 'Yahoo!ショッピングで在庫を見る',
+                    amazon: 'Amazonで在庫を見る',
+                  }}
+                />
               </div>
             </div>
           ) : filteredOffers.length === 0 ? (
-            <div className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="py-10 text-center text-sm text-[#6e6e73]">
               <p>選択した絞り込み条件に一致する出品がありません。</p>
               <button
                 type="button"
@@ -412,7 +414,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                   setCondFilter('all');
                   setMallFilter('all');
                 }}
-                className="mt-2.5 font-semibold text-zinc-800 underline underline-offset-2 hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-zinc-100"
+                className="mt-2.5 font-semibold text-[#1d1d1f] underline underline-offset-2"
               >
                 フィルタをリセットして全{allOffers.length}件を表示
               </button>
@@ -420,124 +422,83 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
           ) : (
             filteredOffers.map((offer, idx) => {
               const rank = idx + 1;
-              const isFirst = rank === 1 && sortOrder === 'price_asc';
               const condMeta = CONDITION_RANK_META[offer.conditionRank] ?? CONDITION_RANK_META.used;
-              const diffFromTop = offer.price - topFilteredPrice;
-              const diffFromApple = refApplePrice != null ? offer.price - refApplePrice : null;
+              const mallLabel = offer.platform === 'yahoo' ? 'Yahoo!' : '楽天市場';
 
               return (
-                <div
+                <a
                   key={`${offer.platform}-${offer.price}-${offer.shopName}-${idx}`}
-                  className={`flex flex-col gap-3 rounded-2xl px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 ${
-                    isFirst
-                      ? 'bg-[#e8f8ec]/70 dark:bg-[#34c759]/[0.08]'
-                      : 'bg-white/70 dark:bg-white/[0.04]'
-                  }`}
+                  href={offer.url}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  className="block rounded-2xl border border-black/[0.04] bg-white p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] active:scale-[0.99]"
                 >
-                  {/* 左〜中央: 順位バッジ ＋ モール・ショップ名 ＋ 状態バッジ＆商品タイトル */}
-                  <div className="min-w-0 flex-1 space-y-1.5">
-                    <div className="flex flex-wrap items-center gap-2">
-                      {/* 順位バッジ */}
+                  {/* 1行目: 順位ピル ＋ ショップ名 ＋ モール名 ｜ 価格 ＋ シェブロン */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex min-w-0 items-center gap-2">
                       <span
-                        className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold tabular-nums ${
+                        className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums ${
                           rank === 1
-                            ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                            : rank <= 3
-                              ? 'bg-zinc-200/80 text-zinc-800 dark:bg-[#2c2f36] dark:text-zinc-200'
-                              : 'bg-zinc-100 text-zinc-600 dark:bg-[#25272e] dark:text-zinc-400'
+                            ? 'bg-[#1d1d1f] text-white'
+                            : 'bg-[#f5f5f7] text-[#6e6e73]'
                         }`}
                       >
-                        {rank === 1 && <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />}
-                        <span>{rank === 1 ? '1位 (最安)' : `${rank}位`}</span>
+                        {rank}位
                       </span>
-
-                      {/* モールバッジ ([楽天] or [Yahoo!]) */}
-                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#2c2f36] dark:text-zinc-300">
-                        <span
-                          className={`h-2 w-2 rounded-full ${
-                            offer.platform === 'yahoo' ? 'bg-[#ad8755]' : 'bg-[#a66c75]'
-                          }`}
-                        />
-                        <span>{offer.platform === 'yahoo' ? 'Yahoo!' : '楽天'}</span>
-                      </span>
-
-                      {/* ショップ名 */}
-                      <span className="truncate text-sm font-bold text-zinc-900 dark:text-zinc-100">
+                      <span className="truncate text-sm font-semibold text-[#1d1d1f]">
                         {offer.shopName}
                       </span>
-
-                      {/* 大手認定バッジ */}
-                      {offer.isTrusted && (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#2c2f36] dark:text-zinc-300">
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
-                          <span>✓ 大手認定</span>
-                        </span>
-                      )}
+                      <span className="shrink-0 whitespace-nowrap text-xs text-[#6e6e73]">
+                        {mallLabel}
+                      </span>
                     </div>
 
-                    {/* 状態・特徴バッジ ＋ 商品タイトル（1行省略＋ホバー全文） */}
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-300">
-                        <span className={`h-1.5 w-1.5 rounded-full ${condMeta.dotCls}`} />
-                        <span>{condMeta.label}</span>
-                      </span>
-                      {offer.simFree && (
-                        <span className="inline-flex shrink-0 items-center rounded-full bg-zinc-200/60 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#2c2f36] dark:text-zinc-300">
-                          SIMフリー
-                        </span>
-                      )}
-                      <span
-                        className="min-w-0 truncate text-xs sm:text-sm text-zinc-500 dark:text-zinc-400"
-                        title={offer.title}
-                      >
-                        {offer.title}
-                      </span>
+                    <div className="flex shrink-0 items-center gap-1">
+                      <ApplePrice
+                        value={offer.price}
+                        className="text-base font-bold text-[#1d1d1f]"
+                      />
+                      <ChevronRight className="h-4 w-4 text-[#6e6e73]/60" strokeWidth={1.5} />
                     </div>
                   </div>
 
-                  {/* 右側: 価格＆差額 ＋ 購入リンクボタン */}
-                  <div className="flex items-center justify-between gap-3.5 sm:shrink-0 sm:justify-end">
-                    <div className="text-left sm:text-right tabular-nums">
-                      <div className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                        {yen(offer.price)}
-                      </div>
-                      <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {diffFromTop === 0 ? (
-                          diffFromApple != null && diffFromApple < 0 ? (
-                            <span>（最安 / 定価比 {signedYen(diffFromApple)}）</span>
-                          ) : (
-                            <span>（第1位・最安基準）</span>
-                          )
-                        ) : (
-                          <span>（第1位との差 +{yen(diffFromTop)}）</span>
-                        )}
-                      </div>
-                    </div>
-
-                    <a
-                      href={offer.url}
-                      target="_blank"
-                      rel="noopener noreferrer sponsored"
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#0071e3] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#0077ed]"
+                  {/* 2行目: 状態ランク ＋ SIMフリー ＋ 1行省略タイトル */}
+                  <div className="mt-1.5 flex min-w-0 items-center gap-1.5">
+                    <span className="shrink-0 whitespace-nowrap rounded-md bg-[#f5f5f7] px-2 py-0.5 text-[11px] text-[#6e6e73]">
+                      {condMeta.shortLabel}
+                    </span>
+                    {offer.simFree && (
+                      <span className="shrink-0 whitespace-nowrap rounded-md bg-[#f5f5f7] px-2 py-0.5 text-[11px] text-[#6e6e73]">
+                        SIMフリー
+                      </span>
+                    )}
+                    <span
+                      className="min-w-0 truncate text-xs text-[#6e6e73]"
+                      title={offer.title}
                     >
-                      <span>ショップで見る</span>
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
+                      {offer.title}
+                    </span>
                   </div>
-                </div>
+                </a>
               );
             })
           )}
-        </div>
 
-        {/* 4. モーダルフッター */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-black/[0.06] px-5 py-3 text-xs text-[#6e6e73] sm:px-6 dark:border-white/10 dark:text-zinc-400">
-          <span>
-            ※厳密タイトル検証によりケース・フィルム・ジャンク品・別容量・別モデル（Pro/Max/mini等）を自動除外しています。在庫・価格は各ショップページでご確認ください。リンクはもしもアフィリエイト経由です（PR）。
-          </span>
-          <span className="font-medium tabular-nums">
-            表示中: {filteredOffers.length}件 / 全{allOffers.length}件
-          </span>
+          {/* スクロール末尾: 3大モール横断検索 ＋ 注意書き */}
+          <div className="space-y-3 border-t border-black/[0.06] pt-4 pb-2">
+            <div className="space-y-2">
+              <div className="text-xs font-medium text-[#6e6e73]">3大モールで探す</div>
+              <MallSearchButtons links={mallLinks} size="sm" />
+            </div>
+            <div className="space-y-1 text-[11px] leading-relaxed text-[#6e6e73]">
+              <p>
+                ※厳密タイトル検証によりケース・フィルム・ジャンク品・別容量・別モデル（Pro/Max/mini等）を自動除外しています。在庫・価格は各ショップページでご確認ください。リンクはもしもアフィリエイト経由です（PR）。
+              </p>
+              <p className="font-medium tabular-nums">
+                表示中: {filteredOffers.length}件 / 全{allOffers.length}件
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

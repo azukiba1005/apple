@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { toBlob, toPng } from 'html-to-image';
 import {
+  ApplePrice,
   appleStoreUrlForCategory,
   btnCls,
   buildCompareExcelSheets,
@@ -231,13 +232,13 @@ function computeUpgradeDiffBadges(
       if (diff > 0) {
         badges.push({
           key: 'soc',
-          label: `🚀 ${fromSocShort} → ${toSocShort}（${diff}世代進化！）`,
+          label: `${fromSocShort} → ${toSocShort}（${diff}世代進化）`,
           tone: 'sky',
         });
       } else if (diff === 0 && /Pro/i.test(toSocShort) && !/Pro/i.test(fromSocShort)) {
         badges.push({
           key: 'soc',
-          label: `🚀 ${fromSocShort} → ${toSocShort}（Proチップ化！）`,
+          label: `${fromSocShort} → ${toSocShort}（Proチップ化）`,
           tone: 'sky',
         });
       }
@@ -246,13 +247,13 @@ function computeUpgradeDiffBadges(
       if (diff > 0) {
         badges.push({
           key: 'soc',
-          label: `🚀 ${fromSocShort} → ${toSocShort}（${diff}世代進化！）`,
+          label: `${fromSocShort} → ${toSocShort}（${diff}世代進化）`,
           tone: 'sky',
         });
       } else if (diff === 0) {
         badges.push({
           key: 'soc',
-          label: `🚀 ${fromSocShort} → ${toSocShort}`,
+          label: `${fromSocShort} → ${toSocShort}`,
           tone: 'sky',
         });
       }
@@ -261,20 +262,20 @@ function computeUpgradeDiffBadges(
       if (diff > 0) {
         badges.push({
           key: 'soc',
-          label: `🚀 ${fromSocShort} → ${toSocShort}（${diff}世代進化！）`,
+          label: `${fromSocShort} → ${toSocShort}（${diff}世代進化）`,
           tone: 'sky',
         });
       }
     } else if (/Intel|Core/i.test(fromSocShort) && /\bM\d/i.test(toSocShort)) {
       badges.push({
         key: 'soc',
-        label: `🚀 Intel → ${toSocShort}（Apple Silicon化で劇的進化！）`,
+        label: `Intel → ${toSocShort}（Apple Silicon化）`,
         tone: 'sky',
       });
     } else {
       badges.push({
         key: 'soc',
-        label: `🚀 チップ: ${fromSocShort} → ${toSocShort}`,
+        label: `チップ: ${fromSocShort} → ${toSocShort}`,
         tone: 'sky',
       });
     }
@@ -288,7 +289,7 @@ function computeUpgradeDiffBadges(
     const isDouble = toScore.ramGb >= fromScore.ramGb * 2;
     badges.push({
       key: 'ram',
-      label: `🧠 RAM ${fromScore.ramGb}GB → ${toScore.ramGb}GB（+${diffRam}GB${isDouble ? '・倍増！' : '増量'}）`,
+      label: `RAM ${fromScore.ramGb}GB → ${toScore.ramGb}GB（+${diffRam}GB${isDouble ? '・倍増' : '増量'}）`,
       tone: 'violet',
     });
   }
@@ -299,13 +300,13 @@ function computeUpgradeDiffBadges(
   if (/Lightning/i.test(fromPorts) && /USB-C|Type-C|Thunderbolt/i.test(toPorts)) {
     badges.push({
       key: 'ports',
-      label: '🔌 Lightning → USB-C 対応！',
+      label: 'Lightning → USB-C 対応',
       tone: 'emerald',
     });
   } else if (/Thunderbolt\s*3/i.test(fromPorts) && /Thunderbolt\s*[45]/i.test(toPorts)) {
     badges.push({
       key: 'ports',
-      label: `🔌 端子進化: ${toPorts}`,
+      label: `端子進化: ${toPorts}`,
       tone: 'emerald',
     });
   }
@@ -318,13 +319,13 @@ function computeUpgradeDiffBadges(
   if (!from120 && to120) {
     badges.push({
       key: 'display',
-      label: '✨ 60Hz → 120Hz ProMotion対応！',
+      label: '60Hz → 120Hz ProMotion対応',
       tone: 'amber',
     });
   } else if (/液晶|Liquid Retina HD/i.test(fromDisp) && /OLED|Super Retina XDR|タンデムOLED/i.test(toDisp)) {
     badges.push({
       key: 'display',
-      label: '✨ 液晶 → 有機EL (XDR) ディスプレイ進化！',
+      label: '液晶 → 有機EL (XDR) ディスプレイ',
       tone: 'amber',
     });
   }
@@ -341,13 +342,13 @@ function computeUpgradeDiffBadges(
     if (diffG < 0) {
       badges.push({
         key: 'weight',
-        label: `⚖️ ${Math.round(fromG)}g → ${Math.round(toG)}g（${diffG}g 軽量化！）`,
+        label: `${Math.round(fromG)}g → ${Math.round(toG)}g（${diffG}g 軽量化）`,
         tone: 'emerald',
       });
     } else if (diffG > 0) {
       badges.push({
         key: 'weight',
-        label: `⚖️ ${Math.round(fromG)}g → ${Math.round(toG)}g（+${diffG}g）`,
+        label: `${Math.round(fromG)}g → ${Math.round(toG)}g（+${diffG}g）`,
         tone: 'zinc',
       });
     }
@@ -360,7 +361,7 @@ function computeUpgradeDiffBadges(
     if (!/48MP/i.test(fromCam) && /48MP/i.test(toCam)) {
       badges.push({
         key: 'camera',
-        label: '📷 12MP → 48MP高解像度カメラ対応！',
+        label: '12MP → 48MP高解像度カメラ対応',
         tone: 'violet',
       });
     }
@@ -375,7 +376,7 @@ function computeUpgradeDiffBadges(
     if (fH != null && tH != null && tH > fH) {
       badges.push({
         key: 'battery',
-        label: `🔋 駆動時間 最大${fH}h → 最大${tH}h（+${tH - fH}時間延長）`,
+        label: `駆動時間 最大${fH}h → 最大${tH}h（+${tH - fH}時間延長）`,
         tone: 'emerald',
       });
     }
@@ -386,7 +387,7 @@ function computeUpgradeDiffBadges(
     if (fStor > 0 && tStor > fStor) {
       badges.push({
         key: 'storage',
-        label: `💾 容量アップ: ${fromSku.label} → ${toSku.label}`,
+        label: `容量アップ: ${fromSku.label} → ${toSku.label}`,
         tone: 'sky',
       });
     }
@@ -445,8 +446,8 @@ function TradeInSimulatorBar({
     <div className={`${card} px-5 py-3.5 sm:px-6 sm:py-4`}>
       <div className="flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex flex-wrap items-center gap-2.5 min-w-0">
-          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f5f5f7] text-xs dark:bg-white/10">
-            🔄
+          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f5f5f7] text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">
+            <Scale className="h-3.5 w-3.5" strokeWidth={1.5} />
           </span>
           <h3 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">
             下取り・買い替え追い金シミュレーター
@@ -723,7 +724,7 @@ function TradeInCardOverlay({
     >
       <div className="flex items-center justify-between gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
         <span>
-          🔄 {tradeInEst.myProduct.name} (−{yen(sellYen)}) 下取り時の実質追い金
+          {tradeInEst.myProduct.name} (−{yen(sellYen)}) 下取り時の実質追い金
         </span>
       </div>
 
@@ -1239,7 +1240,7 @@ export const CompareView = React.memo(function CompareView({
       !navigator.clipboard?.write ||
       typeof ClipboardItem === 'undefined'
     ) {
-      toast('お使いのブラウザは画像のクリップボードコピーに対応していません。「📷 画像として保存 (PNG)」をご利用ください');
+      toast('お使いのブラウザは画像のクリップボードコピーに対応していません。「画像を保存」をご利用ください');
       return;
     }
     setExportingKind('copy');
@@ -1252,7 +1253,7 @@ export const CompareView = React.memo(function CompareView({
       imageCopyTimer.current = window.setTimeout(() => setImageCopied(false), 2000);
       toast('比較画像をクリップボードにコピーしました（Xやスライドへそのままペースト可能）');
     } catch {
-      toast('画像のコピーに失敗しました。「📷 画像として保存 (PNG)」をお試しください');
+      toast('画像のコピーに失敗しました。「画像を保存」をお試しください');
     } finally {
       setExportingKind(null);
     }
@@ -1370,9 +1371,7 @@ export const CompareView = React.memo(function CompareView({
       raf = 0;
       const el = stickySentinelRef.current;
       if (!el) return;
-      const headerH =
-        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--app-header-h') || '0', 10) || 0;
-      const next = el.getBoundingClientRect().top < headerH + 8;
+      const next = el.getBoundingClientRect().top < 8;
       setShowStickyBar((prev) => (prev === next ? prev : next));
     };
     const onScroll = () => {
@@ -1433,21 +1432,19 @@ export const CompareView = React.memo(function CompareView({
     return (
       <div className="space-y-1">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          <span
-            className={`whitespace-nowrap text-[15px] font-semibold tracking-tight tabular-nums sm:text-base ${
+          <ApplePrice
+            value={v}
+            className={`whitespace-nowrap text-[15px] font-semibold sm:text-base ${
               isDisc ? 'text-[#424245] dark:text-zinc-300' : 'text-[#1d1d1f] dark:text-zinc-100'
             }`}
-          >
-            {yen(v)}
-          </span>
+          />
           {mode === 'return' && cp?.returnProgram && (
             <span className="whitespace-nowrap text-xs tabular-nums text-[#6e6e73] dark:text-zinc-400">
               月々約{yen(Math.round(v / (cp.returnProgram.months || 24)))}
             </span>
           )}
           {isMin ? (
-            <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[#e8f8ec] px-2 py-0.5 text-[11px] font-semibold text-[#1f7a3a] dark:bg-[#34c759]/15 dark:text-[#5fd884]">
-              <span className={`h-1.5 w-1.5 rounded-full ${isDisc ? 'bg-zinc-500' : 'bg-[#34c759]'}`} />
+            <span className="inline-flex items-center whitespace-nowrap rounded-full bg-[#e8f8ec] px-2 py-0.5 text-[11px] font-semibold text-[#1f7a3a] dark:bg-[#34c759]/15 dark:text-[#5fd884]">
               {isDisc ? '終売最安' : '最安'}
             </span>
           ) : ch.min != null ? (
@@ -1595,7 +1592,7 @@ export const CompareView = React.memo(function CompareView({
                     {sortCategories(Array.from(new Set(matched.map((x) => x.category)))).map((cat) => (
                       <optgroup key={cat} label={cat}>
                         {matched.filter((x) => x.category === cat).sort(compareProducts).map((x) => (
-                          <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)}){hasDetail(x) ? ' ★' : ''}</option>
+                          <option key={x.id} value={x.id}>{x.name} ({x.releaseDate.slice(0, 4)})</option>
                         ))}
                       </optgroup>
                     ))}
@@ -1622,19 +1619,21 @@ export const CompareView = React.memo(function CompareView({
                   type="button"
                   disabled={!cols.length || exportingKind !== null}
                   onClick={() => doDownloadImage()}
-                  className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40 dark:bg-white/15 dark:text-zinc-100"
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40 dark:bg-white/15 dark:text-zinc-100"
                   title={`選択範囲（${IMAGE_EXPORT_SCOPE_LABELS[imageScope]}）を高解像度PNG画像として保存`}
                 >
-                  {exportingKind === 'download' ? '⏳ 生成中…' : '📷 画像を保存'}
+                  <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  <span>{exportingKind === 'download' ? '生成中…' : '画像を保存'}</span>
                 </button>
                 <button
                   type="button"
                   disabled={!cols.length || exportingKind !== null}
                   onClick={doCopyImage}
-                  className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40 dark:bg-white/15 dark:text-zinc-100"
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40 dark:bg-white/15 dark:text-zinc-100"
                   title={`選択範囲（${IMAGE_EXPORT_SCOPE_LABELS[imageScope]}）のPNG画像をクリップボードへ直接コピー`}
                 >
-                  {imageCopied ? '✅ コピー済' : exportingKind === 'copy' ? '⏳ コピー中…' : '📋 画像をコピー'}
+                  {imageCopied ? <Check className="h-3.5 w-3.5 text-[#34c759]" strokeWidth={1.5} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.5} />}
+                  <span>{imageCopied ? 'コピー済' : exportingKind === 'copy' ? 'コピー中…' : '画像をコピー'}</span>
                 </button>
               </div>
               <button type="button" onClick={doCopyShareUrl} disabled={!cols.length} className={btnCls}>
@@ -1681,7 +1680,7 @@ export const CompareView = React.memo(function CompareView({
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e5e5ea] pb-4 dark:border-white/[0.06]">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 text-base font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
-                  <span>📊 Apple製品 スペック＆価格比較（{formatCurrentYearMonthLabel()}）</span>
+                  <span>Apple製品 スペック＆価格比較（{formatCurrentYearMonthLabel()}）</span>
                 </div>
                 <div className="mt-1 text-xs font-medium text-[#6e6e73] dark:text-zinc-400">
                   {cols.map((c) => `${c.p.name} (${c.sku.label})`).join('  vs  ')}
@@ -1696,7 +1695,7 @@ export const CompareView = React.memo(function CompareView({
                 </span>
                 {diffOnly && activeExportScope !== 'cards' && (
                   <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-200">
-                    🔍 差分スペックのみ抜粋
+                    差分スペックのみ抜粋
                   </span>
                 )}
               </div>
@@ -1781,9 +1780,10 @@ export const CompareView = React.memo(function CompareView({
                         })()
                       ) : (
                         <div className="mt-4">
-                          <div className={`text-3xl font-semibold tracking-tight tabular-nums ${isDisc ? 'text-[#424245] dark:text-zinc-200' : 'text-[#1d1d1f] dark:text-zinc-100'}`}>
-                            {yen(ch.min)}
-                          </div>
+                          <ApplePrice
+                            value={ch.min}
+                            className={`text-3xl font-semibold ${isDisc ? 'text-[#424245] dark:text-zinc-200' : 'text-[#1d1d1f] dark:text-zinc-100'}`}
+                          />
                           {apple != null && !ch.ids.includes('apple') && (
                             <div className="mt-1 text-sm tabular-nums text-[#1f7a3a] dark:text-[#5fd884]">
                               Apple Store比 {signedYen(ch.min - apple)}
@@ -1972,21 +1972,21 @@ export const CompareView = React.memo(function CompareView({
           <div ref={stickySentinelRef} aria-hidden="true" className="h-px" data-export-ignore="true" />
 
           <div className="relative space-y-4 sm:space-y-6">
-            {/* ===== スクロール追従 Liquid Glass 機種バー（スマホ・PC共通） ===== */}
+            {/* ===== スクロール追従 Liquid Glass 機種バー（1本のみ・高さ44〜52px） ===== */}
             {!isExporting && (
-              <div data-export-ignore="true" className="sticky top-[calc(var(--app-header-h,0px)+4px)] z-30 h-0">
+              <div data-export-ignore="true" className="sticky top-0 z-40 h-0 pt-2">
                 <div
-                  className={`${glassCls} absolute inset-x-0 top-0 rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                  className={`${glassCls} absolute inset-x-0 top-2 rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                     showStickyBar ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
                   }`}
                 >
                   {/* スマホ: 2列 */}
-                  <div className="grid grid-cols-2 gap-3 px-3 py-2 md:hidden">
+                  <div className="grid grid-cols-2 gap-3 px-3 py-1.5 md:hidden">
                     {mCols.map((c) => (
-                      <div key={c.sel.pid} className="min-w-0 text-center">
+                      <div key={c.sel.pid} className="min-w-0 text-center leading-tight">
                         <div className="truncate text-xs font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{c.p.name}</div>
                         <div className="truncate text-[11px] tabular-nums text-[#6e6e73] dark:text-zinc-400">
-                          {c.sku.label} ・ <span className="font-semibold text-[#1d1d1f] dark:text-zinc-100">{yen(mainPriceOf(c))}</span>
+                          {c.sku.label} ・ <ApplePrice value={mainPriceOf(c)} className="text-xs font-semibold text-[#1d1d1f] dark:text-zinc-100" />
                         </div>
                       </div>
                     ))}
@@ -2002,7 +2002,7 @@ export const CompareView = React.memo(function CompareView({
                     {cols.map((c) => (
                       <div key={c.sel.pid} className="flex min-w-0 items-baseline gap-2 px-5 py-2.5">
                         <span className="truncate text-sm font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{c.p.name}</span>
-                        <span className="shrink-0 text-sm font-semibold tabular-nums text-[#1d1d1f] dark:text-zinc-100">{yen(mainPriceOf(c))}</span>
+                        <ApplePrice value={mainPriceOf(c)} className="shrink-0 text-sm font-semibold text-[#1d1d1f] dark:text-zinc-100" />
                       </div>
                     ))}
                   </div>
@@ -2015,7 +2015,7 @@ export const CompareView = React.memo(function CompareView({
               <div data-export-ignore="true" className="space-y-3 md:hidden">
                 {showFlags.tradein && tradeInEst && (
                   <MobileSection
-                    title="🔄 実質追い金・進化点"
+                    title="実質追い金・進化点"
                     subtitle={`${tradeInEst.myProduct.name} ${tradeInEst.mySku.label} 下取り −${yen(tradeInEst.activeYen)}`}
                   >
                     <div className="grid grid-cols-2 gap-3 p-3">
@@ -2182,7 +2182,7 @@ export const CompareView = React.memo(function CompareView({
                         <td colSpan={cols.length + 1} className="px-5 py-2.5 text-xs font-semibold text-[#424245] dark:text-zinc-300">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <span>
-                              🔄 買い替え追い金（実質差額）＆スペック進化 — {tradeInEst.myProduct.name} ({tradeInEst.mySku.label}) 下取り差引: −{yen(tradeInEst.activeYen)}
+                              買い替え追い金（実質差額）＆スペック進化 — {tradeInEst.myProduct.name} ({tradeInEst.mySku.label}) 下取り差引: −{yen(tradeInEst.activeYen)}
                             </span>
                             <span className="text-xs font-medium text-[#6e6e73] dark:text-zinc-400">{tradeInEst.sellModeLabel}</span>
                           </div>
@@ -2190,7 +2190,7 @@ export const CompareView = React.memo(function CompareView({
                       </tr>
                       <tr>
                         <td className="px-5 py-4 align-top">
-                          <div className="text-xs font-semibold text-[#424245] dark:text-zinc-300">🔄 実質追い金・進化点</div>
+                          <div className="text-xs font-semibold text-[#424245] dark:text-zinc-300">実質追い金・進化点</div>
                           <div className="mt-1 text-xs text-[#86868b]">{tradeInEst.myProduct.name} から乗換</div>
                         </td>
                         {cols.map((c) => {

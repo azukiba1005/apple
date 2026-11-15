@@ -410,6 +410,26 @@ const useDark = () => useContext(ThemeCtx);
 const carrierColor = (id: CarrierId, dark: boolean) => (dark ? CARRIER_META[id].dark : CARRIER_META[id].light);
 
 const yen = (n: number | null | undefined) => (n == null ? '—' : `¥${Math.round(n).toLocaleString('ja-JP')}`);
+export function ApplePrice({
+  value,
+  yenClassName = 'text-[0.65em] font-medium mr-0.5',
+  className = '',
+}: {
+  value: number | null | undefined;
+  yenClassName?: string;
+  className?: string;
+}) {
+  if (value == null || !Number.isFinite(value)) return <span className={`tabular-nums tracking-tight ${className}`}>—</span>;
+  const neg = value < 0;
+  const formatted = Math.abs(Math.round(value)).toLocaleString('ja-JP');
+  return (
+    <span className={`inline-flex items-baseline tabular-nums tracking-tight ${className}`}>
+      {neg && <span>−</span>}
+      <span className={yenClassName}>¥</span>
+      <span>{formatted}</span>
+    </span>
+  );
+}
 const signedYen = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : '±'}¥${Math.abs(Math.round(n)).toLocaleString('ja-JP')}`;
 const signedPct = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : '±'}${Math.abs(n).toFixed(1)}%`;
 const ts = (d: string) => Date.parse(d + 'T00:00:00Z');
@@ -1945,11 +1965,8 @@ function CarrierBadge({ id, small }: { id: CarrierId; small?: boolean }) {
 
 function DeltaBadge({ diff, base }: { diff: number; base: number }) {
   const pct = base ? (diff / base) * 100 : 0;
-  const up = diff > 0, down = diff < 0;
-  const dotCls = up ? 'bg-[#a66c75]' : down ? 'bg-[#649274]' : 'bg-zinc-400';
   return (
-    <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
-      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotCls}`} />
+    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
       {signedYen(diff)} ({signedPct(pct)})
     </span>
   );
@@ -1959,18 +1976,16 @@ function DeltaBadge({ diff, base }: { diff: number; base: number }) {
 function ResaleBadge({ rate, launchPrice }: { rate: number | null; launchPrice?: number | null }) {
   if (rate == null || !Number.isFinite(rate)) {
     return (
-      <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
+      <span className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
         リセール率 —
       </span>
     );
   }
-  const dotCls = rate >= 65 ? 'bg-[#649274]' : 'bg-zinc-400 dark:bg-zinc-500';
   return (
     <span
       title={launchPrice ? `（現在の中古最安値 ÷ 発売時Apple直販価格 ${yen(launchPrice)}）× 100` : '（現在の中古最安値 ÷ 発売時Apple直販価格）× 100'}
-      className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300"
+      className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300"
     >
-      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotCls}`} />
       リセール率 {rate}%
     </span>
   );
@@ -1982,9 +1997,8 @@ function TrustedShopBadge({ isTrusted, compact }: { isTrusted?: boolean; compact
     return (
       <span
         title="大手ショップ認定（イオシス・じゃんぱら・ゲオ・ソフマップ・にこスマ等）"
-        className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300"
+        className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300"
       >
-        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#649274]" />
         {compact ? '大手認定' : '大手ショップ認定'}
       </span>
     );
@@ -1992,9 +2006,8 @@ function TrustedShopBadge({ isTrusted, compact }: { isTrusted?: boolean; compact
   return (
     <span
       title="大手ショップ在庫0件のため、タイトル検証を通過した一般ショップの最安値を表示しています"
-      className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400"
+      className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400"
     >
-      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-400" />
       ※一般ショップ
     </span>
   );
@@ -2016,17 +2029,10 @@ function CompactCardFxLine({ pt, latestUsdJpy = DEFAULT_LATEST_USD_JPY }: { pt?:
         : res.status === 'fair'
           ? '適正'
           : null;
-  const dotCls =
-    res.status === 'bargain'
-      ? 'bg-[#649274]'
-      : res.status === 'expensive'
-        ? 'bg-[#a66c75]'
-        : 'bg-zinc-400';
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm tabular-nums text-zinc-500 dark:text-zinc-400">
       <span className="inline-flex items-center gap-1.5">
-        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotCls}`} />
         <span>為替評価:</span>
         {verdictWord && res.pctDiff != null ? (
           <strong className="font-semibold text-zinc-700 dark:text-zinc-200">
@@ -2054,15 +2060,6 @@ function FxRatePairChip({ pt, compact }: { pt?: PricePoint; compact?: boolean })
   const taxPct = Math.round((pt.taxRate ?? taxRateAt(pt.date)) * 100);
   if (mkt == null && apl == null) return <span className="text-xs text-zinc-400">為替データなし</span>;
 
-  const dotCls =
-    diff == null
-      ? 'bg-zinc-400'
-      : diff > 0.5
-        ? 'bg-[#a66c75]'
-        : diff < -0.5
-          ? 'bg-[#649274]'
-          : 'bg-zinc-400';
-
   return (
     <span className="inline-flex flex-wrap items-center gap-2 tabular-nums text-xs sm:text-sm">
       <span className="inline-flex flex-wrap items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1 font-medium text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
@@ -2080,9 +2077,8 @@ function FxRatePairChip({ pt, compact }: { pt?: PricePoint; compact?: boolean })
       {diff != null && (
         <span
           title={`当時の実勢為替 (${mkt?.toFixed(1)}円) と比べて1ドルあたり ${signedRate(diff)} (${diff > 0 ? '上乗せ' : diff < 0 ? '割引' : '同水準'})`}
-          className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300"
+          className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300"
         >
-          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotCls}`} />
           {signedRate(diff)}/ドル {diff > 0.5 ? '(上乗せ)' : diff < -0.5 ? '(割引)' : '(実勢並み)'}
         </span>
       )}
@@ -2106,21 +2102,14 @@ function CurrentFxFairnessBadge({
   if (res.status === 'none' || !pt || res.fairJpy == null || res.jpyDiff == null || res.pctDiff == null) {
     return null;
   }
-  const dotCls =
-    res.status === 'bargain'
-      ? 'bg-[#649274]'
-      : res.status === 'expensive'
-        ? 'bg-[#a66c75]'
-        : 'bg-zinc-400';
   const verdictWord = res.status === 'bargain' ? '割安' : res.status === 'expensive' ? '割高' : '適正水準';
 
   return (
     <span className="inline-flex flex-wrap items-center gap-2 tabular-nums">
       <span
         title={`現在の為替レート (1ドル ${latestUsdJpy.toFixed(1)}円・税込10%) で US $${pt.usdPrice} を換算した理論価格 ${yen(res.fairJpy)} との比較`}
-        className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-zinc-100 px-3 py-1 text-xs sm:text-sm font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300"
+        className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-3 py-1 text-xs sm:text-sm font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300"
       >
-        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotCls}`} />
         {compact
           ? `為替評価: ${verdictWord} (${signedPct(res.pctDiff)})`
           : `今の為替比: ${verdictWord} (${signedYen(res.jpyDiff)} / ${signedPct(res.pctDiff)})`}
@@ -2267,7 +2256,7 @@ function ProductSkuPicker({ products, sel, onChange }: { products: Product[]; se
   return (
     <div className="flex w-full sm:w-auto flex-wrap items-center gap-2.5">
       <select className={`${selectCls} min-w-0 flex-1 sm:flex-initial max-w-full`} value={p.id} onChange={(e) => { const np = sortedProducts.find((x) => x.id === e.target.value)!; const nextSkus = [...(pricedSkus(np).length ? pricedSkus(np) : np.skus)].sort(compareSkus); onChange({ pid: np.id, sid: nextSkus[0].id }); }}>
-        {cats.map((c) => (<optgroup key={c} label={c}>{sortedProducts.filter((x) => x.category === c).map((x) => <option key={x.id} value={x.id}>{x.name}{x.releaseDate ? ` (${x.releaseDate.slice(0, 4)})` : ''}{hasDetail(x) ? ' ★' : ''}</option>)}</optgroup>))}
+        {cats.map((c) => (<optgroup key={c} label={c}>{sortedProducts.filter((x) => x.category === c).map((x) => <option key={x.id} value={x.id}>{x.name}{x.releaseDate ? ` (${x.releaseDate.slice(0, 4)})` : ''}</option>)}</optgroup>))}
       </select>
       <select className={selectCls} value={sel.sid} onChange={(e) => onChange({ pid: p.id, sid: e.target.value })}>
         {skus.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
@@ -2950,7 +2939,7 @@ export type {
  * ===================================================================================== */
 
 const LS_DATA = 'apple-price-atlas:data:v3';
-const LS_THEME = 'apple-price-atlas:theme';
+const LS_THEME = 'apple-price-atlas:theme:v2';
 const LS_EXT = 'apple-price-atlas:ext-version';
 const LS_AUTODB = 'apple-price-atlas:appledb-auto';
 
@@ -2978,8 +2967,13 @@ export default function App() {
   const pendingMyRef = useRef<string | null>(initQuery.myRaw);
 
   const [dark, setDark] = useState<boolean>(() => {
-    // 初回アクセスは必ずライトモード（ユーザーが明示的に切り替えた場合のみ保存値を採用）
-    try { return localStorage.getItem(LS_THEME) === 'dark'; } catch { return false; }
+    // 過去のテーマキーを削除し、初回アクセスは必ずApple公式ライトモードを表示
+    try {
+      localStorage.removeItem('apple-price-atlas:theme');
+      return localStorage.getItem(LS_THEME) === 'dark';
+    } catch {
+      return false;
+    }
   });
   const [products, setProducts] = useState<Product[]>(() => {
     try { const raw = localStorage.getItem(LS_DATA); if (raw) { const r = normalizeDataset(JSON.parse(raw)); if (r.products.length) return r.products; } } catch { /* noop */ }
@@ -3222,8 +3216,8 @@ export default function App() {
   return (
     <ThemeCtx.Provider value={dark}>
       <div className="min-h-screen flex flex-col bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#16171a] dark:text-zinc-100">
-        {/* 浮遊カプセル型 Liquid Glass ナビゲーションバー */}
-        <header ref={appHeaderRef} className="sticky top-0 z-40 px-3 pt-3 pb-2 sm:px-6">
+        {/* 浮遊カプセル型 Liquid Glass ナビゲーションバー（通常スクロール） */}
+        <header ref={appHeaderRef} className="px-3 pt-3 pb-2 sm:px-6">
           <div className={`${glassCls} mx-auto flex max-w-7xl items-center gap-2 rounded-full py-1.5 pl-2 pr-1.5 sm:gap-3`}>
             <a href="./" className="group flex min-w-0 items-center gap-2 rounded-full py-0.5 pl-0.5 pr-2">
               <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#1d1d1f] text-white transition group-hover:opacity-85 dark:bg-white dark:text-[#1d1d1f]">

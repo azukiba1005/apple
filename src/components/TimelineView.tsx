@@ -401,13 +401,13 @@ function SourcePopoverBadge({ pt }: { pt: PricePoint }) {
         onClick={() => setOpen((v) => !v)}
         className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:bg-zinc-200 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-300 dark:hover:bg-zinc-700/70 dark:hover:text-zinc-100"
       >
-        <span>{sources.length > 0 ? `🔗 出典 (${sources.length})` : 'ℹ️ ソース'}</span>
+        <span>{sources.length > 0 ? `出典 (${sources.length})` : 'ソース'}</span>
       </button>
 
       {open && (
         <div className="absolute right-0 bottom-full z-40 mb-2 w-72 sm:w-80 rounded-2xl bg-white p-4 text-left text-xs shadow-xl dark:bg-[#1c1d22]">
           <div className="mb-2 flex items-center justify-between gap-2 pb-1.5">
-            <span className="font-bold text-zinc-800 dark:text-zinc-100">📚 出典・エビデンス ({sources.length}件)</span>
+            <span className="font-bold text-zinc-800 dark:text-zinc-100">出典・エビデンス ({sources.length}件)</span>
             {pt.confidence === 'high' ? (
               <span className="rounded-md bg-[#eaf2ed] px-2 py-0.5 text-xs font-semibold text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]">出典確認済</span>
             ) : pt.approx ? (
@@ -552,10 +552,10 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
 
   const quickFilterPills: { value: EvKind; label: string; count: number }[] = [
     { value: 'all', label: 'すべて', count: rows.length },
-    { value: 'up', label: '📈 値上げのみ', count: counts.up },
-    { value: 'down', label: '📉 値下げのみ', count: counts.down },
-    { value: 'end', label: '📦 販売終了のみ', count: counts.end },
-    { value: 'launch', label: '🚀 発売時のみ', count: counts.launch },
+    { value: 'up', label: '値上げのみ', count: counts.up },
+    { value: 'down', label: '値下げのみ', count: counts.down },
+    { value: 'end', label: '販売終了のみ', count: counts.end },
+    { value: 'launch', label: '発売時のみ', count: counts.launch },
   ];
 
   const exportCsv = () => {
@@ -601,8 +601,8 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
             onChange={setViewMode}
             ariaLabel="表示モード"
             options={[
-              { value: 'grouped', label: '📅 日付・イベント別' },
-              { value: 'flat', label: '📋 フラット一覧' },
+              { value: 'grouped', label: '日付・イベント別' },
+              { value: 'flat', label: 'フラット一覧' },
             ]}
           />
         </div>
@@ -690,7 +690,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                       className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200"
                     />
                     <span className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
-                      📅 {grp.date}
+                      {grp.date}
                     </span>
                     <span className="text-zinc-300 dark:text-zinc-600">｜</span>
                     <span className="font-semibold text-zinc-800 dark:text-zinc-100">

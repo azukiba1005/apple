@@ -449,8 +449,8 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
       <div className={`${card} p-5 sm:p-6`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <SectionTitle
-            icon={<Sparkles className="h-5 w-5" />}
-            title="💰 予算から逆算！最高スペック検索"
+            icon={<Sparkles className="h-5 w-5" strokeWidth={1.5} />}
+            title="予算から逆算！最高スペック検索"
             desc="指定した予算上限の中で、SoC世代・RAM・ProMotion・サポート残年数から「最もスペックが高いApple製品」を自動ランキング抽出します。"
           />
           <div className="flex flex-wrap items-center gap-2.5 ml-auto">
@@ -634,7 +634,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
               >
                 <span>
                   {sels.some((s) => s.pid === topUsed1.p.id)
-                    ? '✓ 比較リストに追加済'
+                    ? '比較リストに追加済'
                     : '＋ 比較リストに追加'}
                 </span>
               </button>
@@ -732,7 +732,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                     >
                       <span>
                         {sels.some((s) => s.pid === target.p.id)
-                          ? '✓ 比較リストに追加済'
+                          ? '比較リストに追加済'
                           : '＋ 比較リストに追加'}
                       </span>
                     </button>
@@ -812,7 +812,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
               >
                 <span>
                   {sels.some((s) => s.pid === bestProgramWithinBudget.p.id)
-                    ? '✓ 比較リストに追加済'
+                    ? '比較リストに追加済'
                     : '＋ 比較リストに追加'}
                 </span>
               </button>
@@ -837,7 +837,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
-              📊 予算 {yen(maxPrice)} 以内のスペック性能ランキング（上位{filteredRanking.length}機種）
+              予算 {yen(maxPrice)} 以内のスペック性能ランキング（上位{filteredRanking.length}機種）
             </h3>
             <p className="mt-0.5 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
               同一機種で複数の容量が予算内に収まる場合、より大容量のSKUを自動選択してランキングしています。
@@ -930,7 +930,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                           : ''
                       }`}
                     >
-                      <span>{inCompare ? '✓ 比較リストに追加済' : '＋ 比較リストに追加'}</span>
+                      <span>{inCompare ? '比較リストに追加済' : '＋ 比較リストに追加'}</span>
                     </button>
                     <a
                       href={toMoshimoUrl(item.qualifyingUrl)}

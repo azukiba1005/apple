@@ -915,9 +915,9 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                   >
                     <span>
                       {inCompare
-                        ? '✓ メイン比較表に追加済'
+                        ? 'メイン比較表に追加済'
                         : inCompareProduct
-                          ? '↻ この容量で比較表を更新'
+                          ? 'この容量で比較表を更新'
                           : '＋ この機種をメイン比較表に追加'}
                     </span>
                   </button>
