@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronRight, ExternalLink, RefreshCw, SlidersHorizontal, X } from 'lucide-react';
 import {
   ApplePrice,
@@ -59,7 +59,7 @@ export function MallSearchButtons({
           href={links[pf]}
           target="_blank"
           rel="noopener noreferrer sponsored"
-          className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white ${pad} text-xs font-medium text-[#1d1d1f] shadow-[0_1px_4px_rgba(0,0,0,0.04)] border border-black/[0.06] transition hover:bg-black/[0.03]`}
+          className={`liquid-glass-card inline-flex items-center gap-1.5 whitespace-nowrap rounded-full ${pad} text-xs font-medium text-[#1d1d1f] transition hover:bg-white/80 active:scale-[0.98]`}
         >
           <span>{labels?.[pf] ?? MALL_BUTTON_LABELS[pf]}</span>
           <ExternalLink className="h-3.5 w-3.5 text-[#6e6e73]" strokeWidth={1.5} />
@@ -94,7 +94,7 @@ export interface UsedOffersModalProps {
 }
 
 /**
- * 中古ショップ価格比較モーダル（iOSネイティブ風ホワイトボトムシート）
+ * 中古ショップ価格比較モーダル（iOSネイティブ風 Liquid Glass ボトムシート）
  */
 export const UsedOffersModal = React.memo(function UsedOffersModal({
   product,
@@ -109,13 +109,154 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
   const [sortOrder, setSortOrder] = useState<ShopModalSortOrder>('price_asc');
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  // スワイプ／ドラッグ閉鎖ステート
+  const [dragY, setDragY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const dragSessionRef = useRef<{
+    startY: number;
+    startTime: number;
+    pointerId?: number;
+    fromScrollArea: boolean;
+    active: boolean;
+  } | null>(null);
+  const closeTimerRef = useRef<number>();
+
+  const dismissSheet = useCallback(() => {
+    if (isClosing) return;
+    setIsDragging(false);
+    setIsClosing(true);
+    window.clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = window.setTimeout(() => {
+      onClose();
+    }, 240);
+  }, [isClosing, onClose]);
+
+  useEffect(() => {
+    return () => window.clearTimeout(closeTimerRef.current);
+  }, []);
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') dismissSheet();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  }, [dismissSheet]);
+
+  const finishDrag = useCallback(
+    (currentY: number, startTime: number) => {
+      const elapsed = Math.max(1, performance.now() - startTime);
+      const velocity = currentY / elapsed; // px/ms
+      if (currentY >= 90 || (velocity > 0.55 && currentY > 24)) {
+        dismissSheet();
+      } else {
+        setIsDragging(false);
+        setDragY(0);
+      }
+      dragSessionRef.current = null;
+    },
+    [dismissSheet],
+  );
+
+  const isInteractiveTarget = (target: EventTarget | null) =>
+    target instanceof HTMLElement && Boolean(target.closest('button, a, input, select, label'));
+
+  // ヘッダー＆ドラッグバー用 Touch Events
+  const handleHeaderTouchStart = (e: React.TouchEvent) => {
+    if (isClosing || e.touches.length !== 1 || isInteractiveTarget(e.target)) return;
+    dragSessionRef.current = {
+      startY: e.touches[0].clientY,
+      startTime: performance.now(),
+      fromScrollArea: false,
+      active: true,
+    };
+    setIsDragging(true);
+  };
+
+  const handleHeaderTouchMove = (e: React.TouchEvent) => {
+    const sess = dragSessionRef.current;
+    if (!sess || !sess.active || sess.fromScrollArea || e.touches.length !== 1) return;
+    const dy = Math.max(0, e.touches[0].clientY - sess.startY);
+    setDragY(dy);
+  };
+
+  const handleHeaderTouchEnd = () => {
+    const sess = dragSessionRef.current;
+    if (!sess || !sess.active || sess.fromScrollArea) return;
+    finishDrag(dragY, sess.startTime);
+  };
+
+  // ヘッダー＆ドラッグバー用 Pointer Events（マウス／トラックパッド操作）
+  const handleHeaderPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === 'touch' || e.button !== 0 || isClosing || isInteractiveTarget(e.target)) return;
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    dragSessionRef.current = {
+      startY: e.clientY,
+      startTime: performance.now(),
+      pointerId: e.pointerId,
+      fromScrollArea: false,
+      active: true,
+    };
+    setIsDragging(true);
+  };
+
+  const handleHeaderPointerMove = (e: React.PointerEvent) => {
+    const sess = dragSessionRef.current;
+    if (!sess || !sess.active || sess.pointerId !== e.pointerId) return;
+    const dy = Math.max(0, e.clientY - sess.startY);
+    setDragY(dy);
+  };
+
+  const handleHeaderPointerUp = (e: React.PointerEvent) => {
+    const sess = dragSessionRef.current;
+    if (!sess || !sess.active || sess.pointerId !== e.pointerId) return;
+    (e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId);
+    finishDrag(dragY, sess.startTime);
+  };
+
+  // スクロール領域が最上部（scrollTop <= 0）での下方向プルによるシート閉鎖
+  const handleScrollTouchStart = (e: React.TouchEvent) => {
+    if (isClosing || e.touches.length !== 1) return;
+    const sc = scrollRef.current;
+    if (!sc || sc.scrollTop > 0) return;
+    dragSessionRef.current = {
+      startY: e.touches[0].clientY,
+      startTime: performance.now(),
+      fromScrollArea: true,
+      active: false,
+    };
+  };
+
+  const handleScrollTouchMove = (e: React.TouchEvent) => {
+    const sess = dragSessionRef.current;
+    if (!sess || !sess.fromScrollArea || e.touches.length !== 1) return;
+    const sc = scrollRef.current;
+    const dy = e.touches[0].clientY - sess.startY;
+    if (!sess.active) {
+      if (sc && sc.scrollTop <= 0 && dy > 6) {
+        sess.active = true;
+        sess.startY = e.touches[0].clientY;
+        sess.startTime = performance.now();
+        setIsDragging(true);
+      } else if (dy < 0) {
+        dragSessionRef.current = null;
+      }
+      return;
+    }
+    setDragY(Math.max(0, dy));
+  };
+
+  const handleScrollTouchEnd = () => {
+    const sess = dragSessionRef.current;
+    if (!sess || !sess.fromScrollArea) return;
+    if (sess.active) {
+      finishDrag(dragY, sess.startTime);
+    } else {
+      dragSessionRef.current = null;
+    }
+  };
 
   const allOffers: UsedShopOffer[] = useMemo(() => {
     const raw = usedInfo.usedPricing.offers ?? usedInfo.offers ?? [];
@@ -195,174 +336,204 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
     { value: 'yahoo', label: 'Yahoo!ショッピング' },
   ];
 
+  const backdropFade = isClosing ? 0 : Math.max(0, 1 - dragY / 320);
+
+  const sheetStyle: React.CSSProperties = isClosing
+    ? {
+        transform: 'translateY(100%)',
+        transition: 'transform 0.24s cubic-bezier(0.32, 0.72, 0, 1)',
+      }
+    : isDragging
+      ? {
+          transform: `translateY(${dragY}px)`,
+          transition: 'none',
+        }
+      : {
+          transform: 'translateY(0px)',
+          transition: 'transform 0.34s cubic-bezier(0.32, 0.72, 0, 1)',
+        };
+
   return (
     <div
       data-export-ignore="true"
       role="dialog"
       aria-modal="true"
       aria-label={`${product.name} (${sku.label}) の中古・未使用品`}
-      onClick={onClose}
-      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/20 p-0 backdrop-blur-[2px] sm:items-center sm:p-5"
+      onClick={dismissSheet}
+      style={{ opacity: backdropFade, transition: isDragging ? 'none' : 'opacity 0.24s ease' }}
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/15 p-0 backdrop-blur-[4px] sm:items-center sm:p-5"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="animate-sheet-up flex max-h-[88dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[28px] bg-[#f5f5f7]/95 text-[#1d1d1f] shadow-[0_-8px_40px_rgba(0,0,0,0.12)] backdrop-blur-2xl sm:rounded-[28px] sm:shadow-[0_24px_60px_rgba(0,0,0,0.16)]"
+        style={sheetStyle}
+        className="liquid-glass animate-sheet-up flex max-h-[88dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[28px] text-[#1d1d1f] sm:rounded-[28px]"
       >
-        {/* iOS標準ドラッグインジケーター */}
-        <div className="flex shrink-0 justify-center pt-2.5 pb-1 sm:hidden" aria-hidden="true">
-          <div className="h-1 w-9 rounded-full bg-black/15" />
-        </div>
+        {/* ドラッグ可能エリア: iOS標準ドラッグインジケーター ＋ 極小2行固定ヘッダー */}
+        <div
+          onTouchStart={handleHeaderTouchStart}
+          onTouchMove={handleHeaderTouchMove}
+          onTouchEnd={handleHeaderTouchEnd}
+          onPointerDown={handleHeaderPointerDown}
+          onPointerMove={handleHeaderPointerMove}
+          onPointerUp={handleHeaderPointerUp}
+          onPointerCancel={handleHeaderPointerUp}
+          className="shrink-0 touch-none select-none border-b border-black/[0.06]"
+        >
+          {/* iOS標準ドラッグインジケーター */}
+          <div className="flex cursor-grab justify-center pt-2.5 pb-1 active:cursor-grabbing sm:hidden" aria-hidden="true">
+            <div className="h-1 w-9 rounded-full bg-black/15" />
+          </div>
 
-        {/* 極小2行固定ヘッダー */}
-        <div className="shrink-0 border-b border-black/[0.06] px-4 pt-1.5 pb-3 sm:px-6 sm:pt-4 sm:pb-3.5">
-          {/* 1行目: 機種名 ＋ 閉じるボタン */}
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="min-w-0 truncate text-base font-semibold tracking-tight text-[#1d1d1f] sm:text-lg">
-              {product.name} ({sku.label}) の中古・未使用品
-            </h2>
-            <button
-              type="button"
-              aria-label="モーダルを閉じる"
-              onClick={onClose}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/5 text-[#6e6e73] transition hover:bg-black/10 hover:text-[#1d1d1f]"
+          <div className="px-4 pt-1.5 pb-3 sm:px-6 sm:pt-4 sm:pb-3.5">
+            {/* 1行目: 機種名 ＋ 閉じるボタン */}
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="min-w-0 truncate text-base font-semibold tracking-tight text-[#1d1d1f] sm:text-lg">
+                {product.name} ({sku.label}) の中古・未使用品
+              </h2>
+              <button
+                type="button"
+                aria-label="モーダルを閉じる"
+                onClick={dismissSheet}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/[0.06] text-[#6e6e73] transition hover:bg-black/10 hover:text-[#1d1d1f]"
+              >
+                <X className="h-4 w-4" strokeWidth={1.5} />
+              </button>
+            </div>
+
+            {/* 2行目: 最安価格（定価比） ＋ 絞り込み・並び替えボタン ＋ 再取得ボタン */}
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <div className="min-w-0 truncate text-xs text-[#6e6e73] tabular-nums sm:text-sm">
+                <span>最安 </span>
+                <ApplePrice
+                  value={overallLowestPrice}
+                  className="text-sm font-semibold text-[#1d1d1f] sm:text-base"
+                />
+                {maxSavingsVsNew != null && maxSavingsVsNew > 0 && (
+                  <span className="ml-1 text-xs text-[#6e6e73]">
+                    （{discInfo.isDiscontinued ? '終売定価比' : '定価比'} −{yen(maxSavingsVsNew)}）
+                  </span>
+                )}
+              </div>
+
+              <div className="flex shrink-0 items-center gap-1.5">
+                <button
+                  type="button"
+                  aria-expanded={filtersOpen}
+                  onClick={() => setFiltersOpen((v) => !v)}
+                  className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                    filtersOpen || activeFilterCount > 0
+                      ? 'bg-[#1d1d1f] text-white'
+                      : 'bg-white/60 text-[#1d1d1f] border border-white/80 hover:bg-white/80'
+                  }`}
+                >
+                  <SlidersHorizontal className="h-3 w-3" strokeWidth={1.5} />
+                  <span>絞り込み・並び替え{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}</span>
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform duration-200 ${filtersOpen ? 'rotate-180' : ''}`}
+                    strokeWidth={1.5}
+                  />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={onRefreshLive}
+                  disabled={isLoadingLive}
+                  aria-label="最新在庫を再取得"
+                  title="最新在庫を再取得"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/80 bg-white/60 text-[#6e6e73] transition hover:bg-white/80 hover:text-[#1d1d1f] disabled:opacity-50"
+                >
+                  <RefreshCw
+                    className={`h-3.5 w-3.5 ${isLoadingLive ? 'animate-spin' : ''}`}
+                    strokeWidth={1.5}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* 折りたたみ式フィルターアコーディオン（デフォルト非表示） */}
+            <div
+              className={`grid transition-all duration-200 ease-out ${
+                filtersOpen ? 'mt-3 grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+              }`}
             >
-              <X className="h-4 w-4" strokeWidth={1.5} />
-            </button>
-          </div>
-
-          {/* 2行目: 最安価格（定価比） ＋ 絞り込み・並び替えボタン ＋ 再取得ボタン */}
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <div className="min-w-0 truncate text-xs text-[#6e6e73] tabular-nums sm:text-sm">
-              <span>最安 </span>
-              <ApplePrice
-                value={overallLowestPrice}
-                className="text-sm font-semibold text-[#1d1d1f] sm:text-base"
-              />
-              {maxSavingsVsNew != null && maxSavingsVsNew > 0 && (
-                <span className="ml-1 text-xs text-[#6e6e73]">
-                  （{discInfo.isDiscontinued ? '終売定価比' : '定価比'} −{yen(maxSavingsVsNew)}）
-                </span>
-              )}
-            </div>
-
-            <div className="flex shrink-0 items-center gap-1.5">
-              <button
-                type="button"
-                aria-expanded={filtersOpen}
-                onClick={() => setFiltersOpen((v) => !v)}
-                className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
-                  filtersOpen || activeFilterCount > 0
-                    ? 'bg-[#1d1d1f] text-white'
-                    : 'bg-black/5 text-[#1d1d1f] hover:bg-black/10'
-                }`}
-              >
-                <SlidersHorizontal className="h-3 w-3" strokeWidth={1.5} />
-                <span>絞り込み・並び替え{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}</span>
-                <ChevronDown
-                  className={`h-3.5 w-3.5 transition-transform duration-200 ${filtersOpen ? 'rotate-180' : ''}`}
-                  strokeWidth={1.5}
-                />
-              </button>
-
-              <button
-                type="button"
-                onClick={onRefreshLive}
-                disabled={isLoadingLive}
-                aria-label="最新在庫を再取得"
-                title="最新在庫を再取得"
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/5 text-[#6e6e73] transition hover:bg-black/10 hover:text-[#1d1d1f] disabled:opacity-50"
-              >
-                <RefreshCw
-                  className={`h-3.5 w-3.5 ${isLoadingLive ? 'animate-spin' : ''}`}
-                  strokeWidth={1.5}
-                />
-              </button>
-            </div>
-          </div>
-
-          {/* 折りたたみ式フィルターアコーディオン（デフォルト非表示） */}
-          <div
-            className={`grid transition-all duration-200 ease-out ${
-              filtersOpen ? 'mt-3 grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-            }`}
-          >
-            <div className="overflow-hidden">
-              <div className="space-y-2.5 border-t border-black/[0.06] pt-3 text-xs">
-                {/* 状態・店舗 */}
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="mr-1 whitespace-nowrap text-xs font-medium text-[#6e6e73]">状態・店舗</span>
-                  {condFilterOptions.map((opt) => {
-                    const active = condFilter === opt.value;
-                    return (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => setCondFilter(opt.value)}
-                        className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
-                          active
-                            ? 'bg-[#1d1d1f] text-white'
-                            : 'bg-white text-[#6e6e73] hover:text-[#1d1d1f]'
-                        }`}
-                      >
-                        <span>{opt.label}</span>
-                        <span className={`tabular-nums ${active ? 'text-white/75' : 'text-[#6e6e73]/75'}`}>
-                          {opt.count}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* モール ＋ 並び替え */}
-                <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="overflow-hidden">
+                <div className="space-y-2.5 border-t border-black/[0.06] pt-3 text-xs">
+                  {/* 状態・店舗 */}
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="mr-1 whitespace-nowrap text-xs font-medium text-[#6e6e73]">モール</span>
-                    {mallFilterOptions.map((opt) => {
-                      const active = mallFilter === opt.value;
+                    <span className="mr-1 whitespace-nowrap text-xs font-medium text-[#6e6e73]">状態・店舗</span>
+                    {condFilterOptions.map((opt) => {
+                      const active = condFilter === opt.value;
                       return (
                         <button
                           key={opt.value}
                           type="button"
-                          onClick={() => setMallFilter(opt.value)}
-                          className={`whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                          onClick={() => setCondFilter(opt.value)}
+                          className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
                             active
                               ? 'bg-[#1d1d1f] text-white'
-                              : 'bg-white text-[#6e6e73] hover:text-[#1d1d1f]'
+                              : 'bg-white/60 text-[#6e6e73] border border-white/80 hover:text-[#1d1d1f]'
                           }`}
                         >
-                          {opt.label}
+                          <span>{opt.label}</span>
+                          <span className={`tabular-nums ${active ? 'text-white/75' : 'text-[#6e6e73]/75'}`}>
+                            {opt.count}
+                          </span>
                         </button>
                       );
                     })}
                   </div>
 
-                  <div
-                    role="group"
-                    aria-label="出品リストの並び替え"
-                    className="inline-flex rounded-full bg-black/[0.06] p-0.5 text-xs font-medium"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setSortOrder('price_asc')}
-                      className={`whitespace-nowrap rounded-full px-2.5 py-1 transition ${
-                        sortOrder === 'price_asc'
-                          ? 'bg-white font-semibold text-[#1d1d1f] shadow-[0_1px_4px_rgba(0,0,0,0.1)]'
-                          : 'text-[#6e6e73] hover:text-[#1d1d1f]'
-                      }`}
+                  {/* モール ＋ 並び替え */}
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="mr-1 whitespace-nowrap text-xs font-medium text-[#6e6e73]">モール</span>
+                      {mallFilterOptions.map((opt) => {
+                        const active = mallFilter === opt.value;
+                        return (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => setMallFilter(opt.value)}
+                            className={`whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                              active
+                                ? 'bg-[#1d1d1f] text-white'
+                                : 'bg-white/60 text-[#6e6e73] border border-white/80 hover:text-[#1d1d1f]'
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div
+                      role="group"
+                      aria-label="出品リストの並び替え"
+                      className="inline-flex rounded-full bg-black/[0.06] p-0.5 text-xs font-medium"
                     >
-                      価格が安い順
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSortOrder('condition_desc')}
-                      className={`whitespace-nowrap rounded-full px-2.5 py-1 transition ${
-                        sortOrder === 'condition_desc'
-                          ? 'bg-white font-semibold text-[#1d1d1f] shadow-[0_1px_4px_rgba(0,0,0,0.1)]'
-                          : 'text-[#6e6e73] hover:text-[#1d1d1f]'
-                      }`}
-                    >
-                      状態が良い順
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setSortOrder('price_asc')}
+                        className={`whitespace-nowrap rounded-full px-2.5 py-1 transition ${
+                          sortOrder === 'price_asc'
+                            ? 'bg-white/90 font-semibold text-[#1d1d1f] shadow-[0_1px_4px_rgba(0,0,0,0.1)]'
+                            : 'text-[#6e6e73] hover:text-[#1d1d1f]'
+                        }`}
+                      >
+                        価格が安い順
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSortOrder('condition_desc')}
+                        className={`whitespace-nowrap rounded-full px-2.5 py-1 transition ${
+                          sortOrder === 'condition_desc'
+                            ? 'bg-white/90 font-semibold text-[#1d1d1f] shadow-[0_1px_4px_rgba(0,0,0,0.1)]'
+                            : 'text-[#6e6e73] hover:text-[#1d1d1f]'
+                        }`}
+                      >
+                        状態が良い順
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -370,10 +541,16 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
           </div>
         </div>
 
-        {/* スクロール領域: コンパクト白カード一覧 ＋ 末尾に3大モール検索＆注記 */}
-        <div className="flex-1 space-y-2.5 overflow-y-auto px-4 py-3 sm:px-6 sm:py-4">
+        {/* スクロール領域: 半透明ガラスカード一覧 ＋ 末尾に3大モール検索＆注記 */}
+        <div
+          ref={scrollRef}
+          onTouchStart={handleScrollTouchStart}
+          onTouchMove={handleScrollTouchMove}
+          onTouchEnd={handleScrollTouchEnd}
+          className="flex-1 space-y-2.5 overflow-y-auto px-4 py-3 sm:px-6 sm:py-4"
+        >
           {allOffers.length > 0 && !hasRakutenOffers && (
-            <div className="flex flex-col gap-2 rounded-2xl border border-black/[0.04] bg-white p-3.5 text-xs text-[#6e6e73] shadow-[0_2px_10px_rgba(0,0,0,0.03)] sm:flex-row sm:items-center sm:justify-between">
+            <div className="liquid-glass-card flex flex-col gap-2 rounded-2xl p-3.5 text-xs text-[#6e6e73] sm:flex-row sm:items-center sm:justify-between">
               <span>
                 楽天市場の出品は現在取得できませんでした。Yahoo!ショッピングの実在庫を最安値として表示しています。
               </span>
@@ -431,7 +608,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                   href={offer.url}
                   target="_blank"
                   rel="noopener noreferrer sponsored"
-                  className="block rounded-2xl border border-black/[0.04] bg-white p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] active:scale-[0.99]"
+                  className="liquid-glass-card block rounded-2xl p-3.5 transition hover:bg-white/80 active:scale-[0.99]"
                 >
                   {/* 1行目: 順位ピル ＋ ショップ名 ＋ モール名 ｜ 価格 ＋ シェブロン */}
                   <div className="flex items-center justify-between gap-2">
@@ -440,7 +617,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                         className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums ${
                           rank === 1
                             ? 'bg-[#1d1d1f] text-white'
-                            : 'bg-[#f5f5f7] text-[#6e6e73]'
+                            : 'bg-black/[0.06] text-[#6e6e73]'
                         }`}
                       >
                         {rank}位
@@ -464,11 +641,11 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
 
                   {/* 2行目: 状態ランク ＋ SIMフリー ＋ 1行省略タイトル */}
                   <div className="mt-1.5 flex min-w-0 items-center gap-1.5">
-                    <span className="shrink-0 whitespace-nowrap rounded-md bg-[#f5f5f7] px-2 py-0.5 text-[11px] text-[#6e6e73]">
+                    <span className="shrink-0 whitespace-nowrap rounded-md bg-black/[0.05] px-2 py-0.5 text-[11px] text-[#6e6e73]">
                       {condMeta.shortLabel}
                     </span>
                     {offer.simFree && (
-                      <span className="shrink-0 whitespace-nowrap rounded-md bg-[#f5f5f7] px-2 py-0.5 text-[11px] text-[#6e6e73]">
+                      <span className="shrink-0 whitespace-nowrap rounded-md bg-black/[0.05] px-2 py-0.5 text-[11px] text-[#6e6e73]">
                         SIMフリー
                       </span>
                     )}

@@ -1949,7 +1949,7 @@ const card = 'apple-card rounded-3xl';
 const glassCls = 'liquid-glass';
 const selectCls = 'rounded-xl border border-[#e5e5ea] bg-white px-3.5 py-2 text-base sm:text-sm text-[#1d1d1f] outline-none transition focus:border-[#0071e3] focus:ring-4 focus:ring-[#0071e3]/15 dark:border-white/10 dark:bg-[#2c2c2e] dark:text-zinc-100';
 /** セカンダリ: グレーのピル */
-const btnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#f5f5f7] px-4 py-2 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-[#e8e8ed] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white/10 dark:text-zinc-100 dark:hover:bg-white/15';
+const btnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white/65 backdrop-blur-md border border-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.95)] px-4 py-2 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-white/85 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white/10 dark:border-white/10 dark:text-zinc-100 dark:hover:bg-white/15';
 /** プライマリ: Apple System Blue のピル */
 const primaryBtnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#0071e3] px-5 py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-[#0077ed] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40';
 const excelBtnCls = btnCls;

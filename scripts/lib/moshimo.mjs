@@ -104,9 +104,31 @@ export function detectMallPlatform(rawUrl) {
   return null;
 }
 
+function decodeIfEncodedHttpUrl(raw) {
+  let s = String(raw ?? '').trim();
+  for (let i = 0; i < 2; i++) {
+    if (/^https?%3A%2F%2F/i.test(s)) {
+      try {
+        const dec = decodeURIComponent(s).trim();
+        if (dec === s) break;
+        s = dec;
+      } catch {
+        break;
+      }
+    } else {
+      break;
+    }
+  }
+  return s;
+}
+
+function isHttpUrl(raw) {
+  return /^https?:\/\//i.test(String(raw ?? '').trim());
+}
+
 /** もしもアフィリエイトのラップURLかどうか */
 export function isMoshimoUrl(rawUrl) {
-  const u = safeParseUrl(rawUrl);
+  const u = safeParseUrl(decodeIfEncodedHttpUrl(rawUrl));
   return Boolean(u && u.hostname.toLowerCase() === 'af.moshimo.com');
 }
 
@@ -115,17 +137,19 @@ export function isMoshimoUrl(rawUrl) {
  * 剥がせない場合は入力値をそのまま返す。
  */
 export function unwrapAffiliateUrl(rawUrl) {
-  let current = String(rawUrl ?? '').trim();
+  let current = decodeIfEncodedHttpUrl(rawUrl);
   for (let i = 0; i < 3; i++) {
     const u = safeParseUrl(current);
     if (!u) return current;
     const host = u.hostname.toLowerCase();
     let inner = null;
     if (host === 'hb.afl.rakuten.co.jp') inner = u.searchParams.get('pc') || u.searchParams.get('m');
-    else if (host === 'ck.jp.ap.valuecommerce.com') inner = u.searchParams.get('vc_url');
+    else if (host === 'ck.jp.ap.valuecommerce.com' || u.searchParams.has('vc_url')) inner = u.searchParams.get('vc_url');
     else if (host === 'af.moshimo.com') inner = u.searchParams.get('url');
     if (!inner) return current;
-    current = inner.trim();
+    const next = decodeIfEncodedHttpUrl(inner);
+    if (!next || !isHttpUrl(next)) return current;
+    current = next;
   }
   return current;
 }
@@ -134,12 +158,12 @@ export function unwrapAffiliateUrl(rawUrl) {
  * もしもアフィリエイト URL 生成
  * -------------------------------------------------------------------------- */
 
-/** 指定モールのもしも「どこでもリンク」URLを生成（a_id 空なら targetUrl をそのまま返す） */
+/** 指定モールのもしも「どこでもリンク」URLを生成（a_id 空・不正URL・既にもしもURLならそのまま返す） */
 export function buildMoshimoUrl(targetUrl, aId, platform) {
-  const url = String(targetUrl ?? '').trim();
+  const url = decodeIfEncodedHttpUrl(targetUrl);
   const aid = String(aId ?? '').trim();
   const prog = MOSHIMO_PROGRAMS[platform];
-  if (!url || !aid || !prog) return url;
+  if (!url || !isHttpUrl(url) || isMoshimoUrl(url) || !aid || !prog) return url;
   return (
     `${MOSHIMO_CLICK_ENDPOINT}?a_id=${encodeURIComponent(aid)}` +
     `&p_id=${prog.p_id}&pc_id=${prog.pc_id}&pl_id=${prog.pl_id}` +
@@ -153,10 +177,16 @@ export function buildMoshimoUrl(targetUrl, aId, platform) {
  * @param {{ platform?: 'rakuten'|'yahoo'|'amazon', rakutenAid?: string, yahooAid?: string, amazonAid?: string }} [opts]
  */
 export function toMoshimoAffiliateUrl(targetUrl, opts = {}) {
-  const original = String(targetUrl ?? '').trim();
-  if (!original) return original;
+  const original = decodeIfEncodedHttpUrl(targetUrl);
+  if (!original || !isHttpUrl(original)) return original;
+
+  // 二重変換の防止: すでに af.moshimo.com のURLである場合は絶対に再変換しない
+  if (isMoshimoUrl(original)) return original;
 
   const raw = unwrapAffiliateUrl(original);
+  if (!raw || !isHttpUrl(raw)) return original;
+  if (isMoshimoUrl(raw)) return raw;
+
   const platform = opts.platform || detectMallPlatform(raw);
   if (!platform || !MOSHIMO_PROGRAMS[platform]) return raw;
 
