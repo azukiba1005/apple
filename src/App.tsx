@@ -1949,7 +1949,7 @@ const card = 'apple-card rounded-3xl';
 const glassCls = 'liquid-glass';
 const selectCls = 'rounded-xl border border-[#e5e5ea] bg-white px-3.5 py-2 text-base sm:text-sm text-[#1d1d1f] outline-none transition focus:border-[#0071e3] focus:ring-4 focus:ring-[#0071e3]/15 dark:border-white/10 dark:bg-[#2c2c2e] dark:text-zinc-100';
 /** セカンダリ: グレーのピル */
-const btnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white/65 backdrop-blur-md border border-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.95)] px-4 py-2 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-white/85 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white/10 dark:border-white/10 dark:text-zinc-100 dark:hover:bg-white/15';
+const btnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white/80 backdrop-blur-md border border-black/[0.06] shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] px-4 py-2 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-white active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40';
 /** プライマリ: Apple System Blue のピル */
 const primaryBtnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#0071e3] px-5 py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-[#0077ed] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40';
 const excelBtnCls = btnCls;
@@ -2222,7 +2222,7 @@ function Toggle({
         aria-checked={checked}
         disabled={disabled}
         onClick={() => onChange(!checked)}
-        className={`relative inline-flex shrink-0 items-center rounded-full p-0.5 transition-colors duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#0071e3]/25 ${track} ${checked ? 'bg-[#34c759]' : 'bg-[#e9e9eb] dark:bg-[#39393d]'}`}
+        className={`relative inline-flex shrink-0 items-center rounded-full p-0.5 transition-colors duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#0071e3]/25 ${track} ${checked ? 'bg-[#0071e3]' : 'bg-[#e5e5ea]'}`}
       >
         <span
           aria-hidden="true"
@@ -2231,8 +2231,8 @@ function Toggle({
       </button>
       {(label || description) && (
         <span className="flex min-w-0 flex-col">
-          {label && <span className="text-sm font-medium text-[#1d1d1f] dark:text-zinc-100">{label}</span>}
-          {description && <span className="text-xs text-[#6e6e73] dark:text-zinc-400">{description}</span>}
+          {label && <span className="text-sm font-medium text-[#1d1d1f]">{label}</span>}
+          {description && <span className="text-xs text-[#6e6e73]">{description}</span>}
         </span>
       )}
     </label>
@@ -2939,7 +2939,6 @@ export type {
  * ===================================================================================== */
 
 const LS_DATA = 'apple-price-atlas:data:v3';
-const LS_THEME = 'apple-price-atlas:theme:v2';
 const LS_EXT = 'apple-price-atlas:ext-version';
 const LS_AUTODB = 'apple-price-atlas:appledb-auto';
 
@@ -2966,15 +2965,7 @@ export default function App() {
   const pendingCompareRef = useRef<string | null>(initQuery.compareRaw);
   const pendingMyRef = useRef<string | null>(initQuery.myRaw);
 
-  const [dark, setDark] = useState<boolean>(() => {
-    // 過去のテーマキーを削除し、初回アクセスは必ずApple公式ライトモードを表示
-    try {
-      localStorage.removeItem('apple-price-atlas:theme');
-      return localStorage.getItem(LS_THEME) === 'dark';
-    } catch {
-      return false;
-    }
-  });
+  const dark = false;
   const [products, setProducts] = useState<Product[]>(() => {
     try { const raw = localStorage.getItem(LS_DATA); if (raw) { const r = normalizeDataset(JSON.parse(raw)); if (r.products.length) return r.products; } } catch { /* noop */ }
     return normalizeDataset(BUILTIN_DATASET).products;
@@ -3043,7 +3034,13 @@ export default function App() {
     window.addEventListener('resize', apply);
     return () => { ro?.disconnect(); window.removeEventListener('resize', apply); };
   }, []);
-  useEffect(() => { document.documentElement.classList.toggle('dark', dark); try { localStorage.setItem(LS_THEME, dark ? 'dark' : 'light'); } catch { /* noop */ } }, [dark]);
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+    try {
+      localStorage.removeItem('apple-price-atlas:theme');
+      localStorage.removeItem('apple-price-atlas:theme:v2');
+    } catch { /* noop */ }
+  }, []);
   useEffect(() => { try { localStorage.setItem(LS_DATA, JSON.stringify({ schemaVersion: 1, products })); } catch { /* noop */ } }, [products]);
   useEffect(() => {
     try {
@@ -3215,20 +3212,20 @@ export default function App() {
 
   return (
     <ThemeCtx.Provider value={dark}>
-      <div className="min-h-screen flex flex-col bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#16171a] dark:text-zinc-100">
+      <div className="min-h-screen flex flex-col bg-[#f5f5f7] text-[#1d1d1f]">
         {/* 浮遊カプセル型 Liquid Glass ナビゲーションバー（通常スクロール） */}
         <header ref={appHeaderRef} className="px-3 pt-3 pb-2 sm:px-6">
-          <div className={`${glassCls} mx-auto flex max-w-7xl items-center gap-2 rounded-full py-1.5 pl-2 pr-1.5 sm:gap-3`}>
+          <div className={`${glassCls} mx-auto flex max-w-7xl items-center gap-2 rounded-full py-1.5 pl-2 pr-2 sm:gap-3`}>
             <a href="./" className="group flex min-w-0 items-center gap-2 rounded-full py-0.5 pl-0.5 pr-2">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#1d1d1f] text-white transition group-hover:opacity-85 dark:bg-white dark:text-[#1d1d1f]">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#1d1d1f] text-white transition group-hover:opacity-85">
                 <Apple className="h-4 w-4" />
               </span>
               <span className="min-w-0">
-                <span className="block truncate text-sm font-semibold leading-tight tracking-tight text-[#1d1d1f] dark:text-zinc-100">Apple Price Atlas</span>
-                <span className="hidden truncate text-[11px] leading-tight text-[#6e6e73] lg:block dark:text-zinc-400">スペック・キャリア価格・価格改定の完全比較</span>
+                <span className="block truncate text-sm font-semibold leading-tight tracking-tight text-[#1d1d1f]">Apple Price Atlas</span>
+                <span className="hidden truncate text-[11px] leading-tight text-[#6e6e73] lg:block">スペック・キャリア価格・価格改定の完全比較</span>
               </span>
             </a>
-            <nav aria-label="メインナビゲーション" className="mx-auto hidden items-center gap-0.5 rounded-full bg-[#767680]/[0.08] p-1 md:flex dark:bg-white/[0.06]">
+            <nav aria-label="メインナビゲーション" className="mx-auto hidden items-center gap-0.5 rounded-full bg-black/[0.05] p-1 md:flex">
               {tabs.map((t) => {
                 const active = activeNavTab === t.id;
                 return (
@@ -3239,8 +3236,8 @@ export default function App() {
                     aria-current={active ? 'page' : undefined}
                     className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium tracking-tight transition-all duration-300 ${
                       active
-                        ? 'bg-white text-[#1d1d1f] shadow-[0_2px_8px_rgba(0,0,0,0.10),0_1px_1px_rgba(0,0,0,0.04)] dark:bg-white/[0.16] dark:text-white'
-                        : 'text-[#1d1d1f]/70 hover:text-[#1d1d1f] dark:text-zinc-400 dark:hover:text-zinc-100'
+                        ? 'bg-white text-[#1d1d1f] shadow-[0_2px_8px_rgba(0,0,0,0.08),0_1px_1px_rgba(0,0,0,0.04)]'
+                        : 'text-[#6e6e73] hover:text-[#1d1d1f]'
                     }`}
                   >
                     {t.icon}
@@ -3249,14 +3246,6 @@ export default function App() {
                 );
               })}
             </nav>
-            <button
-              type="button"
-              onClick={() => setDark(!dark)}
-              aria-label={dark ? 'ライトモードに切替' : 'ダークモードに切替'}
-              className="ml-auto grid h-9 w-9 shrink-0 place-items-center rounded-full text-[#1d1d1f] transition hover:bg-black/[0.05] md:ml-0 dark:text-zinc-100 dark:hover:bg-white/10"
-            >
-              {dark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
-            </button>
           </div>
         </header>
 
@@ -3276,8 +3265,8 @@ export default function App() {
                 aria-current={active ? 'page' : undefined}
                 className={`flex flex-1 flex-col items-center justify-center gap-0.5 rounded-full px-1 py-1.5 text-[10px] font-semibold tracking-tight transition-all duration-300 active:scale-95 ${
                   active
-                    ? 'bg-white text-[#0071e3] shadow-[0_2px_8px_rgba(0,0,0,0.10)] dark:bg-white/[0.16] dark:text-[#4da3ff]'
-                    : 'text-[#1d1d1f]/65 dark:text-zinc-400'
+                    ? 'bg-white text-[#0071e3] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                    : 'text-[#6e6e73]'
                 }`}
               >
                 {t.icon}

@@ -2134,8 +2134,7 @@ export const CompareView = React.memo(function CompareView({
                           </div>
                           <div className="mb-2.5 mt-1 flex flex-wrap items-center gap-1.5 text-xs font-normal text-[#6e6e73] dark:text-zinc-400">
                             <span>{c.p.generation} ・ {c.p.releaseDate} 発売</span>
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2 py-0.5 text-[11px] font-medium text-[#424245] dark:bg-white/10 dark:text-zinc-300">
-                              <span className={`h-1.5 w-1.5 rounded-full ${discInfo.isDiscontinued ? 'bg-zinc-400' : 'bg-[#34c759]'}`} />
+                            <span className="inline-flex items-center rounded-full bg-[#f5f5f7] px-2 py-0.5 text-[11px] font-medium text-[#424245]">
                               {discInfo.isDiscontinued
                                 ? `終売・最終価格${discInfo.discontinuedDate ? ` (${discInfo.discontinuedDate})` : ''}`
                                 : '現行販売中'}
@@ -2228,7 +2227,7 @@ export const CompareView = React.memo(function CompareView({
                         return (
                           <td
                             key={c.sel.pid}
-                            className={`px-5 py-4 align-top transition-colors ${isMin ? 'bg-[#e8f8ec]/50 dark:bg-[#34c759]/[0.07]' : ''}`}
+                            className={`px-5 py-4 align-top transition-colors ${isMin ? 'bg-[#f5f5f7]/70' : ''}`}
                           >
                             {renderCarrierCell(c, id)}
                           </td>

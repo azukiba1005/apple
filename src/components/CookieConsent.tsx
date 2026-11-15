@@ -69,7 +69,7 @@ function Toggle({ checked, disabled, onChange, label }: { checked: boolean; disa
       disabled={disabled}
       onClick={() => onChange?.(!checked)}
       className={`relative inline-flex h-[31px] w-[51px] shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#0071e3]/25 ${
-        checked ? 'bg-[#34c759]' : 'bg-[#e9e9eb] dark:bg-[#39393d]'
+        checked ? 'bg-[#0071e3]' : 'bg-[#e5e5ea]'
       } ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
     >
       <span className={`inline-block h-[27px] w-[27px] transform rounded-full bg-white shadow-[0_3px_8px_rgba(0,0,0,0.15)] transition-transform duration-300 ${checked ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />

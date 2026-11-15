@@ -361,12 +361,12 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
       aria-label={`${product.name} (${sku.label}) の中古・未使用品`}
       onClick={dismissSheet}
       style={{ opacity: backdropFade, transition: isDragging ? 'none' : 'opacity 0.24s ease' }}
-      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/15 p-0 backdrop-blur-[4px] sm:items-center sm:p-5"
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/25 p-0 backdrop-blur-md sm:items-center sm:p-5"
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={sheetStyle}
-        className="liquid-glass animate-sheet-up flex max-h-[88dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[28px] text-[#1d1d1f] sm:rounded-[28px]"
+        className="liquid-glass-sheet animate-sheet-up flex max-h-[88dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[28px] text-[#1d1d1f] sm:rounded-[28px]"
       >
         {/* ドラッグ可能エリア: iOS標準ドラッグインジケーター ＋ 極小2行固定ヘッダー */}
         <div
@@ -387,7 +387,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
           <div className="px-4 pt-1.5 pb-3 sm:px-6 sm:pt-4 sm:pb-3.5">
             {/* 1行目: 機種名 ＋ 閉じるボタン */}
             <div className="flex items-center justify-between gap-3">
-              <h2 className="min-w-0 truncate text-base font-semibold tracking-tight text-[#1d1d1f] sm:text-lg">
+              <h2 className="min-w-0 truncate text-base font-bold tracking-tight text-[#1d1d1f] sm:text-lg">
                 {product.name} ({sku.label}) の中古・未使用品
               </h2>
               <button
@@ -403,10 +403,10 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
             {/* 2行目: 最安価格（定価比） ＋ 絞り込み・並び替えボタン ＋ 再取得ボタン */}
             <div className="mt-2 flex items-center justify-between gap-2">
               <div className="min-w-0 truncate text-xs text-[#6e6e73] tabular-nums sm:text-sm">
-                <span>最安 </span>
+                <span className="font-medium">最安 </span>
                 <ApplePrice
                   value={overallLowestPrice}
-                  className="text-sm font-semibold text-[#1d1d1f] sm:text-base"
+                  className="text-sm font-bold text-[#1d1d1f] sm:text-base"
                 />
                 {maxSavingsVsNew != null && maxSavingsVsNew > 0 && (
                   <span className="ml-1 text-xs text-[#6e6e73]">
@@ -423,7 +423,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                   className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition ${
                     filtersOpen || activeFilterCount > 0
                       ? 'bg-[#1d1d1f] text-white'
-                      : 'bg-white/60 text-[#1d1d1f] border border-white/80 hover:bg-white/80'
+                      : 'bg-white/90 text-[#1d1d1f] border border-black/[0.06] hover:bg-white'
                   }`}
                 >
                   <SlidersHorizontal className="h-3 w-3" strokeWidth={1.5} />
@@ -440,7 +440,7 @@ export const UsedOffersModal = React.memo(function UsedOffersModal({
                   disabled={isLoadingLive}
                   aria-label="最新在庫を再取得"
                   title="最新在庫を再取得"
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/80 bg-white/60 text-[#6e6e73] transition hover:bg-white/80 hover:text-[#1d1d1f] disabled:opacity-50"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-black/[0.06] bg-white/90 text-[#6e6e73] transition hover:bg-white hover:text-[#1d1d1f] disabled:opacity-50"
                 >
                   <RefreshCw
                     className={`h-3.5 w-3.5 ${isLoadingLive ? 'animate-spin' : ''}`}
