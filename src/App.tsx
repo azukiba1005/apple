@@ -1947,17 +1947,17 @@ function buildCompareExcelSheets(products: Product[], sel: Sel[], mode: Mode, mn
 const card = 'apple-card rounded-3xl';
 /** Liquid Glass（すりガラス＋スペキュラーボーダー＋立体シャドウ）: ナビ・追従ヘッダー・モーダル・フローティングUI用 */
 const glassCls = 'liquid-glass';
-const selectCls = 'rounded-xl border border-[#e5e5ea] bg-white px-3.5 py-2 text-base sm:text-sm text-[#1d1d1f] outline-none transition focus:border-[#0071e3] focus:ring-4 focus:ring-[#0071e3]/15 dark:border-white/10 dark:bg-[#2c2c2e] dark:text-zinc-100';
+const selectCls = 'rounded-xl border border-black/10 bg-[#f5f5f7] px-3.5 py-2 text-base sm:text-sm font-medium text-[#1d1d1f] outline-none transition hover:bg-[#ebebf0] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/30';
 /** セカンダリ: グレーのピル */
 const btnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white/80 backdrop-blur-md border border-black/[0.06] shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] px-4 py-2 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-white active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40';
 /** プライマリ: Apple System Blue のピル */
 const primaryBtnCls = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#0071e3] px-5 py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-[#0077ed] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40';
 const excelBtnCls = btnCls;
-const secondaryActionBtnCls = 'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#f5f5f7] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-[#e8e8ed] dark:bg-white/10 dark:text-zinc-200 dark:hover:bg-white/15';
+const secondaryActionBtnCls = 'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#f5f5f7] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-[#1d1d1f] transition hover:bg-[#e8e8ed]';
 
 function CarrierBadge({ id, small }: { id: CarrierId; small?: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-zinc-100 font-medium text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300 ${small ? 'px-2.5 py-1 text-xs' : 'px-3 py-1 text-xs sm:text-sm'}`}>
+    <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-zinc-100 font-medium text-zinc-700 ${small ? 'px-2.5 py-1 text-xs' : 'px-3 py-1 text-xs sm:text-sm'}`}>
       {CARRIER_META[id].label}
     </span>
   );
@@ -1966,7 +1966,7 @@ function CarrierBadge({ id, small }: { id: CarrierId; small?: boolean }) {
 function DeltaBadge({ diff, base }: { diff: number; base: number }) {
   const pct = base ? (diff / base) * 100 : 0;
   return (
-    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-700">
       {signedYen(diff)} ({signedPct(pct)})
     </span>
   );
@@ -1976,7 +1976,7 @@ function DeltaBadge({ diff, base }: { diff: number; base: number }) {
 function ResaleBadge({ rate, launchPrice }: { rate: number | null; launchPrice?: number | null }) {
   if (rate == null || !Number.isFinite(rate)) {
     return (
-      <span className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400">
+      <span className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-500">
         リセール率 —
       </span>
     );
@@ -1984,7 +1984,7 @@ function ResaleBadge({ rate, launchPrice }: { rate: number | null; launchPrice?:
   return (
     <span
       title={launchPrice ? `（現在の中古最安値 ÷ 発売時Apple直販価格 ${yen(launchPrice)}）× 100` : '（現在の中古最安値 ÷ 発売時Apple直販価格）× 100'}
-      className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300"
+      className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-700"
     >
       リセール率 {rate}%
     </span>
@@ -1997,7 +1997,7 @@ function TrustedShopBadge({ isTrusted, compact }: { isTrusted?: boolean; compact
     return (
       <span
         title="大手ショップ認定（イオシス・じゃんぱら・ゲオ・ソフマップ・にこスマ等）"
-        className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300"
+        className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600"
       >
         {compact ? '大手認定' : '大手ショップ認定'}
       </span>
@@ -2006,7 +2006,7 @@ function TrustedShopBadge({ isTrusted, compact }: { isTrusted?: boolean; compact
   return (
     <span
       title="大手ショップ在庫0件のため、タイトル検証を通過した一般ショップの最安値を表示しています"
-      className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400"
+      className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-500"
     >
       ※一般ショップ
     </span>
@@ -2031,19 +2031,19 @@ function CompactCardFxLine({ pt, latestUsdJpy = DEFAULT_LATEST_USD_JPY }: { pt?:
           : null;
 
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm tabular-nums text-zinc-500 dark:text-zinc-400">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm tabular-nums text-zinc-500">
       <span className="inline-flex items-center gap-1.5">
         <span>為替評価:</span>
         {verdictWord && res.pctDiff != null ? (
-          <strong className="font-semibold text-zinc-700 dark:text-zinc-200">
+          <strong className="font-semibold text-zinc-700">
             {verdictWord} {signedPct(res.pctDiff)}
           </strong>
         ) : (
-          <strong className="font-semibold text-zinc-700 dark:text-zinc-200">—</strong>
+          <strong className="font-semibold text-zinc-700">—</strong>
         )}
       </span>
       {(mkt != null || apl != null) && (
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+        <span className="text-xs text-zinc-500">
           （市場 {mkt != null ? `¥${mkt.toFixed(1)}` : '—'} / Apple {apl != null ? `¥${apl.toFixed(1)}` : '—'}）
         </span>
       )}
@@ -2062,14 +2062,14 @@ function FxRatePairChip({ pt, compact }: { pt?: PricePoint; compact?: boolean })
 
   return (
     <span className="inline-flex flex-wrap items-center gap-2 tabular-nums text-xs sm:text-sm">
-      <span className="inline-flex flex-wrap items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1 font-medium text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
-        <span className="text-zinc-500 dark:text-zinc-400">{compact ? '市場' : '当時の市場レート'}:</span>
-        <strong className="font-semibold text-zinc-800 dark:text-zinc-100">
+      <span className="inline-flex flex-wrap items-center gap-1.5 rounded-xl bg-zinc-100 px-3 py-1 font-medium text-zinc-700">
+        <span className="text-zinc-500">{compact ? '市場' : '当時の市場レート'}:</span>
+        <strong className="font-semibold text-zinc-800">
           {mkt != null ? `1ドル ${mkt.toFixed(1)}円` : '—'}
         </strong>
         <span className="mx-0.5 text-zinc-400">/</span>
-        <span className="text-zinc-500 dark:text-zinc-400">{compact ? 'Apple' : 'Apple適用レート'}:</span>
-        <strong className="font-semibold text-zinc-800 dark:text-zinc-100">
+        <span className="text-zinc-500">{compact ? 'Apple' : 'Apple適用レート'}:</span>
+        <strong className="font-semibold text-zinc-800">
           {apl != null ? `1ドル ${apl.toFixed(1)}円` : '—'}
         </strong>
         {!compact && <span className="text-xs text-zinc-400">(税抜・税{taxPct}%)</span>}
@@ -2077,7 +2077,7 @@ function FxRatePairChip({ pt, compact }: { pt?: PricePoint; compact?: boolean })
       {diff != null && (
         <span
           title={`当時の実勢為替 (${mkt?.toFixed(1)}円) と比べて1ドルあたり ${signedRate(diff)} (${diff > 0 ? '上乗せ' : diff < 0 ? '割引' : '同水準'})`}
-          className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300"
+          className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600"
         >
           {signedRate(diff)}/ドル {diff > 0.5 ? '(上乗せ)' : diff < -0.5 ? '(割引)' : '(実勢並み)'}
         </span>
@@ -2108,15 +2108,15 @@ function CurrentFxFairnessBadge({
     <span className="inline-flex flex-wrap items-center gap-2 tabular-nums">
       <span
         title={`現在の為替レート (1ドル ${latestUsdJpy.toFixed(1)}円・税込10%) で US $${pt.usdPrice} を換算した理論価格 ${yen(res.fairJpy)} との比較`}
-        className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-3 py-1 text-xs sm:text-sm font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300"
+        className="inline-flex items-center whitespace-nowrap rounded-full bg-zinc-100 px-3 py-1 text-xs sm:text-sm font-semibold text-zinc-700"
       >
         {compact
           ? `為替評価: ${verdictWord} (${signedPct(res.pctDiff)})`
           : `今の為替比: ${verdictWord} (${signedYen(res.jpyDiff)} / ${signedPct(res.pctDiff)})`}
       </span>
       {showFairPrice && (
-        <span className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
-          理論価格: <strong className="font-semibold text-zinc-700 dark:text-zinc-300">{yen(res.fairJpy)}</strong>
+        <span className="text-xs sm:text-sm text-zinc-500">
+          理論価格: <strong className="font-semibold text-zinc-700">{yen(res.fairJpy)}</strong>
         </span>
       )}
     </span>
@@ -2164,12 +2164,12 @@ function Segmented<T extends string>({
       ref={trackRef}
       role="radiogroup"
       aria-label={ariaLabel}
-      className={`no-scrollbar relative ${fullWidth ? 'flex w-full' : 'inline-flex max-w-full'} overflow-x-auto rounded-full bg-[#767680]/[0.12] p-0.5 dark:bg-[#767680]/[0.24]`}
+      className={`no-scrollbar relative ${fullWidth ? 'flex w-full' : 'inline-flex max-w-full'} overflow-x-auto rounded-full bg-[#e8e8ed] p-0.5`}
     >
       {thumb && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0.5 top-0.5 rounded-full bg-white shadow-[0_3px_8px_rgba(0,0,0,0.12),0_3px_1px_rgba(0,0,0,0.04)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] dark:bg-[#636366]"
+          className="pointer-events-none absolute bottom-0.5 top-0.5 rounded-full bg-white shadow-sm transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
           style={{ left: thumb.left, width: thumb.width }}
         />
       )}
@@ -2183,7 +2183,7 @@ function Segmented<T extends string>({
             role="radio"
             aria-checked={active}
             onClick={() => onChange(o.value)}
-            className={`relative z-[1] ${fullWidth ? 'flex-1' : ''} whitespace-nowrap rounded-full ${pad} font-semibold tracking-tight transition-colors ${active ? 'text-[#1d1d1f] dark:text-white' : 'text-[#1d1d1f]/60 hover:text-[#1d1d1f] dark:text-zinc-400 dark:hover:text-zinc-100'}`}
+            className={`relative z-[1] ${fullWidth ? 'flex-1' : ''} whitespace-nowrap rounded-full ${pad} font-semibold tracking-tight transition-colors ${active ? 'text-[#1d1d1f]' : 'text-[#6e6e73] hover:text-[#1d1d1f]'}`}
           >
             {o.label}
           </button>
@@ -2242,8 +2242,8 @@ function Toggle({
 function SectionTitle({ icon, title, desc }: { icon: React.ReactNode; title: string; desc?: string }) {
   return (
     <div className="mb-4 sm:mb-5 flex items-start gap-3 sm:gap-3.5">
-      <div className="shrink-0 rounded-2xl bg-[#f5f5f7] p-2.5 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">{icon}</div>
-      <div className="min-w-0"><h2 className="text-lg sm:text-2xl font-semibold leading-tight tracking-tight text-[#1d1d1f] dark:text-zinc-100">{title}</h2>{desc && <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[#6e6e73] dark:text-zinc-400">{desc}</p>}</div>
+      <div className="shrink-0 rounded-2xl bg-[#f5f5f7] p-2.5 text-[#1d1d1f]">{icon}</div>
+      <div className="min-w-0"><h2 className="text-lg sm:text-2xl font-semibold leading-tight tracking-tight text-[#1d1d1f]">{title}</h2>{desc && <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[#6e6e73]">{desc}</p>}</div>
     </div>
   );
 }
@@ -2265,7 +2265,7 @@ function ProductSkuPicker({ products, sel, onChange }: { products: Product[]; se
   );
 }
 
-const EmptyNote = ({ text }: { text: string }) => <div className={`${card} p-12 text-center text-sm text-zinc-500 dark:text-zinc-400`}>{text}</div>;
+const EmptyNote = ({ text }: { text: string }) => <div className={`${card} p-12 text-center text-sm text-zinc-500`}>{text}</div>;
 
 const useChartColors = () => { const d = useDark(); return { axis: d ? '#9ca0ab' : '#555863', grid: d ? '#262830' : '#e6e7ec', tipBg: d ? '#1c1d22' : '#ffffff', tipBorder: d ? '#2c2e36' : '#e6e7ec', text: d ? '#ececef' : '#1d1d1f' }; };
 
@@ -3225,7 +3225,7 @@ export default function App() {
                 <span className="hidden truncate text-[11px] leading-tight text-[#6e6e73] lg:block">スペック・キャリア価格・価格改定の完全比較</span>
               </span>
             </a>
-            <nav aria-label="メインナビゲーション" className="mx-auto hidden items-center gap-0.5 rounded-full bg-black/[0.05] p-1 md:flex">
+            <nav aria-label="メインナビゲーション" className="mx-auto hidden items-center gap-0.5 rounded-full bg-black/[0.04] p-1 md:flex">
               {tabs.map((t) => {
                 const active = activeNavTab === t.id;
                 return (
@@ -3234,9 +3234,9 @@ export default function App() {
                     type="button"
                     onClick={() => selectTab(t.id)}
                     aria-current={active ? 'page' : undefined}
-                    className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium tracking-tight transition-all duration-300 ${
+                    className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium tracking-tight transition-all duration-300 focus:outline-none ${
                       active
-                        ? 'bg-white text-[#1d1d1f] shadow-[0_2px_8px_rgba(0,0,0,0.08),0_1px_1px_rgba(0,0,0,0.04)]'
+                        ? 'bg-white text-[#1d1d1f] shadow-sm'
                         : 'text-[#6e6e73] hover:text-[#1d1d1f]'
                     }`}
                   >
@@ -3331,24 +3331,24 @@ export default function App() {
           {tab === 'fx' && <FxView products={products} toast={toast} />}
         </main>
 
-        <footer className="mx-auto w-full max-w-7xl px-4 pb-32 pt-6 text-xs text-[#6e6e73] dark:text-zinc-400 sm:px-6 md:pb-12">
+        <footer className="mx-auto w-full max-w-7xl px-4 pb-32 pt-6 text-xs text-[#6e6e73] sm:px-6 md:pb-12">
           <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1 leading-relaxed">
               <div>※ 価格は日本国内の税込表示。為替・USD価格・キャリア価格・中古相場には概算/モデル値を含みます。購入前に各公式サイト・販売店で最新情報をご確認ください。</div>
               <div>※ 当サイトはもしもアフィリエイト（楽天市場・Yahoo!ショッピング・Amazon）に参加しており、一部ショップリンクに広告（PR）を含みます。</div>
             </div>
             <div className="flex flex-wrap shrink-0 items-center gap-5 font-medium">
-              <a href="./privacy/" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">プライバシーポリシー</a>
-              <a href="./terms/" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">利用規約</a>
-              <button type="button" onClick={openCookieSettings} className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">Cookie 設定</button>
-              <a href="https://azarin.me/inquiry?category=personal&type=bug&message=Apple%20Price%20Atlas%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 hover:underline dark:hover:text-zinc-200">お問い合わせ</a>
+              <a href="./privacy/" className="hover:text-zinc-900 hover:underline">プライバシーポリシー</a>
+              <a href="./terms/" className="hover:text-zinc-900 hover:underline">利用規約</a>
+              <button type="button" onClick={openCookieSettings} className="hover:text-zinc-900 hover:underline">Cookie 設定</button>
+              <a href="https://azarin.me/inquiry?category=personal&type=bug&message=Apple%20Price%20Atlas%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 hover:underline">お問い合わせ</a>
             </div>
           </div>
         </footer>
 
         {toastMsg && (
           <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[60] flex justify-center px-4 md:bottom-6">
-            <div role="status" className={`${glassCls} animate-glass-in max-w-full rounded-full px-5 py-2.5 text-center text-xs sm:text-sm font-medium text-[#1d1d1f] dark:text-zinc-100`}>
+            <div role="status" className={`${glassCls} animate-glass-in max-w-full rounded-full px-5 py-2.5 text-center text-xs sm:text-sm font-medium text-[#1d1d1f]`}>
               <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 shrink-0 text-[#34c759]" /><span>{toastMsg}</span></span>
             </div>
           </div>

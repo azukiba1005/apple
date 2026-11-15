@@ -174,7 +174,7 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
           <Segmented value={cat} onChange={setCat} options={cats.map((x) => ({ value: x, label: x }))} />
           <div className="ml-auto flex flex-wrap items-center gap-2.5">
             {pickedLaunch.length > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-200/80 px-3 py-1 text-xs font-semibold text-zinc-800 dark:bg-[#25272e] dark:text-zinc-200">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-200/80 px-3 py-1 text-xs font-semibold text-zinc-800">
                 {pickedLaunch.length}機種選択中
                 <button onClick={() => setSelectedIds(new Set())} className="underline hover:no-underline">解除</button>
               </span>
@@ -203,8 +203,8 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
         {/* スマホ向けカードリスト (md未満) */}
         <div className="mt-5 space-y-3 md:hidden">
           {launchRows.length > 0 && (
-            <label className="flex cursor-pointer items-center gap-2.5 rounded-2xl bg-[#f5f5f7] px-3.5 py-2.5 text-xs font-semibold text-zinc-600 dark:bg-[#23252b] dark:text-zinc-300">
-              <input type="checkbox" checked={allCatSelected} onChange={toggleLaunchCat} className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200" />
+            <label className="flex cursor-pointer items-center gap-2.5 rounded-2xl bg-[#f5f5f7] px-3.5 py-2.5 text-xs font-semibold text-zinc-600">
+              <input type="checkbox" checked={allCatSelected} onChange={toggleLaunchCat} className="h-4 w-4 accent-zinc-900" />
               表示カテゴリの全モデルを選択 ({launchRows.length}機種)
             </label>
           )}
@@ -212,29 +212,29 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
             const isSel = selectedIds.has(r.id);
             return (
               <div key={r.id} onClick={() => toggleLaunchOne(r.id)}
-                className={`cursor-pointer rounded-2xl p-4 text-xs tabular-nums transition ${isSel ? 'bg-zinc-200/70 dark:bg-[#2b2d35]' : 'bg-[#f5f5f7] dark:bg-[#23252b]'}`}>
+                className={`cursor-pointer rounded-2xl p-4 text-xs tabular-nums transition ${isSel ? 'bg-zinc-200/70' : 'bg-[#f5f5f7]'}`}>
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex min-w-0 items-center gap-2">
-                    <input type="checkbox" checked={isSel} onChange={() => {}} onClick={(e) => e.stopPropagation()} className="h-4 w-4 shrink-0 accent-zinc-900 dark:accent-zinc-200" />
-                    <span className="truncate text-sm font-bold text-zinc-900 dark:text-zinc-100">{r.name}</span>
+                    <input type="checkbox" checked={isSel} onChange={() => {}} onClick={(e) => e.stopPropagation()} className="h-4 w-4 shrink-0 accent-zinc-900" />
+                    <span className="truncate text-sm font-bold text-zinc-900">{r.name}</span>
                     <span className="shrink-0 text-xs text-zinc-500">({r.sku})</span>
                   </div>
                   <span className="shrink-0 text-xs text-zinc-500">{r.date}</span>
                 </div>
-                <div className="mt-3 grid grid-cols-3 gap-2.5 rounded-2xl bg-white p-3 dark:bg-[#1c1d22]">
+                <div className="mt-3 grid grid-cols-3 gap-2.5 rounded-2xl bg-white p-3">
                   <div>
                     <div className="text-xs text-zinc-500">発売時価格</div>
-                    <div className="mt-0.5 text-sm font-bold text-zinc-900 dark:text-zinc-100">{yen(r.jpy)}</div>
+                    <div className="mt-0.5 text-sm font-bold text-zinc-900">{yen(r.jpy)}</div>
                     <div className="text-xs text-zinc-500">{r.usd != null ? `US $${r.usd}` : '—'}</div>
                   </div>
                   <div>
                     <div className="text-xs text-zinc-500">市場 vs Appleレート</div>
-                    <div className="mt-0.5 font-semibold text-zinc-800 dark:text-zinc-200">{r.fx != null ? `1ドル${r.fx.toFixed(1)}円` : '—'} vs {r.apple != null ? `${r.apple.toFixed(1)}円` : '—'}</div>
+                    <div className="mt-0.5 font-semibold text-zinc-800">{r.fx != null ? `1ドル${r.fx.toFixed(1)}円` : '—'} vs {r.apple != null ? `${r.apple.toFixed(1)}円` : '—'}</div>
                     {r.rateDiff != null && <div className="text-xs text-zinc-500">差: {signedRate(r.rateDiff)}/ドル</div>}
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-zinc-500">為替比プレミアム</div>
-                    <div className="mt-0.5 text-sm font-bold">{r.premium != null ? <span className={r.premium > 0 ? 'text-zinc-700 dark:text-zinc-300' : 'text-[#3d6b4e] dark:text-[#88b396]'}>{signedPct(r.premium)}</span> : '—'}</div>
+                    <div className="mt-0.5 text-sm font-bold">{r.premium != null ? <span className={r.premium > 0 ? 'text-zinc-700' : 'text-[#3d6b4e]'}>{signedPct(r.premium)}</span> : '—'}</div>
                   </div>
                 </div>
                 <div className="mt-2.5">
@@ -249,27 +249,27 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
         <div className="mt-5 hidden overflow-x-auto md:block">
           <table className="w-full min-w-[780px] text-sm">
             <thead>
-              <tr className="text-left text-xs text-zinc-500 dark:text-zinc-400">
+              <tr className="text-left text-xs text-zinc-500">
                 <th className="w-10 px-4 py-3">
-                  <input type="checkbox" aria-label="表示カテゴリの全モデルを選択" checked={allCatSelected} onChange={toggleLaunchCat} className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200" />
+                  <input type="checkbox" aria-label="表示カテゴリの全モデルを選択" checked={allCatSelected} onChange={toggleLaunchCat} className="h-4 w-4 accent-zinc-900" />
                 </th>
                 {['モデル', '発売日', '日本価格', 'USD価格', '当時の市場レート vs Apple適用レート', '為替比プレミアム', '今の為替から見た判定'].map((x) => <th key={x} className="px-4 py-3 font-semibold">{x}</th>)}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-200/40 dark:divide-white/[0.04]">
+            <tbody className="divide-y divide-zinc-200/40">
               {launchRows.map((r) => {
                 const isSel = selectedIds.has(r.id);
                 return (
-                  <tr key={r.id} className={`tabular-nums text-zinc-800 transition dark:text-zinc-200 ${isSel ? 'bg-zinc-200/50 dark:bg-[#25272e]' : 'hover:bg-[#f5f5f7]/60 dark:hover:bg-[#23252b]/50'}`}>
+                  <tr key={r.id} className={`tabular-nums text-zinc-800 transition ${isSel ? 'bg-zinc-200/50' : 'hover:bg-[#f5f5f7]/60'}`}>
                     <td className="px-4 py-3.5">
-                      <input type="checkbox" aria-label={`${r.name} を選択`} checked={isSel} onChange={() => toggleLaunchOne(r.id)} className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200" />
+                      <input type="checkbox" aria-label={`${r.name} を選択`} checked={isSel} onChange={() => toggleLaunchOne(r.id)} className="h-4 w-4 accent-zinc-900" />
                     </td>
-                    <td className="px-4 py-3.5 font-semibold text-zinc-900 dark:text-zinc-100">{r.name} <span className="text-xs font-normal text-zinc-500">{r.sku}</span></td>
-                    <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-300">{r.date}</td>
-                    <td className="px-4 py-3.5 font-semibold text-zinc-900 dark:text-zinc-100">{yen(r.jpy)}</td>
-                    <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-300">{r.usd != null ? `$${r.usd}` : '—'}</td>
+                    <td className="px-4 py-3.5 font-semibold text-zinc-900">{r.name} <span className="text-xs font-normal text-zinc-500">{r.sku}</span></td>
+                    <td className="px-4 py-3.5 text-zinc-600">{r.date}</td>
+                    <td className="px-4 py-3.5 font-semibold text-zinc-900">{yen(r.jpy)}</td>
+                    <td className="px-4 py-3.5 text-zinc-600">{r.usd != null ? `$${r.usd}` : '—'}</td>
                     <td className="px-4 py-3.5"><FxRatePairChip pt={r.pt} compact /></td>
-                    <td className="px-4 py-3.5">{r.premium != null ? <span className={r.premium > 0 ? 'font-semibold text-zinc-700 dark:text-zinc-300' : 'font-semibold text-[#3d6b4e] dark:text-[#88b396]'}>{signedPct(r.premium)}</span> : '—'}</td>
+                    <td className="px-4 py-3.5">{r.premium != null ? <span className={r.premium > 0 ? 'font-semibold text-zinc-700' : 'font-semibold text-[#3d6b4e]'}>{signedPct(r.premium)}</span> : '—'}</td>
                     <td className="px-4 py-3.5"><CurrentFxFairnessBadge pt={r.curPt} compact showFairPrice={true} /></td>
                   </tr>
                 );
@@ -280,7 +280,7 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
       </div>
 
       <div className={`${card} p-5 sm:p-6`}>
-        <h3 className="mb-3.5 text-base font-bold text-zinc-900 dark:text-zinc-100">価格改定の内訳: ドル建て据え置き？ それともドル自体が値上がり？</h3>
+        <h3 className="mb-3.5 text-base font-bold text-zinc-900">価格改定の内訳: ドル建て据え置き？ それともドル自体が値上がり？</h3>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <ProductSkuPicker products={products} sel={{ pid: p.id, sid: sku.id }} onChange={setSel} />
           <button className={`${excelBtnCls} w-full sm:w-auto`} onClick={exportBreakdownExcel}><FileSpreadsheet className="h-4 w-4" />Excel (.xlsx)</button>
@@ -317,13 +317,13 @@ function FxInner({ products, toast }: { products: Product[]; toast: (m: string) 
             const prev = h[i - 1]; const v = verdict(prev, pt);
             const ar = impliedRate(pt); const pr = impliedRate(prev);
             return (
-              <div key={pt.date} className="rounded-2xl bg-[#f5f5f7] p-4 dark:bg-[#23252b]">
+              <div key={pt.date} className="rounded-2xl bg-[#f5f5f7] p-4">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-100">{pt.date}</span>
+                  <span className="text-sm font-bold tabular-nums text-zinc-900">{pt.date}</span>
                   <DeltaBadge diff={pt.appleStorePrice - prev.appleStorePrice} base={prev.appleStorePrice} />
-                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${v.tone === 'down' ? 'bg-[#eaf2ed] text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]' : 'bg-zinc-200/80 text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-300'}`}>{v.text}</span>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${v.tone === 'down' ? 'bg-[#eaf2ed] text-[#3d6b4e]' : 'bg-zinc-200/80 text-zinc-700'}`}>{v.text}</span>
                 </div>
-                <div className="mt-2 grid gap-x-6 gap-y-1 text-xs sm:text-sm tabular-nums text-zinc-600 dark:text-zinc-400 sm:grid-cols-3">
+                <div className="mt-2 grid gap-x-6 gap-y-1 text-xs sm:text-sm tabular-nums text-zinc-600 sm:grid-cols-3">
                   <div>USD: {prev.usdPrice != null ? `$${prev.usdPrice}` : '—'} → {pt.usdPrice != null ? `$${pt.usdPrice}` : '—'}</div>
                   <div>市場為替: {prev.exchangeRate ?? '—'} → {pt.exchangeRate ?? '—'}</div>
                   <div>Appleレート: {pr ? pr.toFixed(1) : '—'} → {ar ? ar.toFixed(1) : '—'}</div>

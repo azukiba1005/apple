@@ -157,15 +157,15 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
             { label: '最大の値上げ', node: maxHike ? <DeltaBadge diff={maxHike.diff} base={maxHike.prev} /> : <span className="text-sm text-zinc-400">値上げなし</span>, sub: maxHike ? maxHike.pt.date : '' },
             { label: '最大の値下げ', node: maxCut ? <DeltaBadge diff={maxCut.diff} base={maxCut.prev} /> : <span className="text-sm text-zinc-400">値下げなし</span>, sub: maxCut ? maxCut.pt.date : '' },
           ].map((x) => (
-            <div key={x.label} className="rounded-2xl bg-[#f5f5f7] p-4 dark:bg-[#23252b]">
-              <div className="mb-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">{x.label}</div>{x.node}<div className="mt-1.5 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">{x.sub}</div>
+            <div key={x.label} className="rounded-2xl bg-[#f5f5f7] p-4">
+              <div className="mb-1.5 text-xs font-semibold text-zinc-500">{x.label}</div>{x.node}<div className="mt-1.5 text-xs tabular-nums text-zinc-500">{x.sub}</div>
             </div>
           ))}
         </div>
         {h.length > 0 && (
-          <div className="mt-3.5 rounded-2xl bg-[#f5f5f7] p-4 dark:bg-[#23252b]">
+          <div className="mt-3.5 rounded-2xl bg-[#f5f5f7] p-4">
             <div className="flex flex-wrap items-center justify-between gap-2.5">
-              <div className="text-xs sm:text-sm font-bold text-zinc-800 dark:text-zinc-100">
+              <div className="text-xs sm:text-sm font-bold text-zinc-800">
                 現在のApple Store価格 × 今の為替レート判定 ({p.name} {sku.label})
               </div>
               <CurrentFxFairnessBadge pt={lastOf(h)} showFairPrice={true} />
@@ -184,16 +184,16 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
             </div>
           </div>
         )}
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-2.5 rounded-xl bg-[#f5f5f7] px-4 py-2.5 text-xs text-zinc-600 dark:bg-[#23252b] dark:text-zinc-300">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2.5 rounded-xl bg-[#f5f5f7] px-4 py-2.5 text-xs text-zinc-600">
           <div className="flex flex-wrap items-center gap-2 tabular-nums">
-            <span className="font-semibold text-zinc-500 dark:text-zinc-400">表示期間:</span>
-            <span className="font-bold text-zinc-800 dark:text-zinc-200">{tl.startDate} (発売)</span>
+            <span className="font-semibold text-zinc-500">表示期間:</span>
+            <span className="font-bold text-zinc-800">{tl.startDate} (発売)</span>
             <span>〜</span>
-            <span className={`font-bold ${tl.isDiscontinued ? 'text-zinc-600 dark:text-zinc-300' : 'text-[#3d6b4e] dark:text-[#88b396]'}`}>
+            <span className={`font-bold ${tl.isDiscontinued ? 'text-zinc-600' : 'text-[#3d6b4e]'}`}>
               {tl.endDate} ({tl.isDiscontinued ? '販売終了' : '現在販売中'})
             </span>
           </div>
-          <div className="flex flex-wrap items-center gap-3.5 text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-wrap items-center gap-3.5 text-xs text-zinc-500">
             <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[#68829e]" />発売</span>
             <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[#a66c75]" />値上げ</span>
             <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[#649274]" />値下げ</span>
@@ -255,21 +255,21 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
       </div>
 
       <div className={`${card} p-5 sm:p-6`}>
-        <h3 className="mb-4 text-base font-bold text-zinc-900 dark:text-zinc-100">改定タイムライン — {p.name} {sku.label}</h3>
-        <ol className="relative ml-3 space-y-5 border-l-2 border-zinc-200/70 dark:border-white/[0.08]">
+        <h3 className="mb-4 text-base font-bold text-zinc-900">改定タイムライン — {p.name} {sku.label}</h3>
+        <ol className="relative ml-3 space-y-5 border-l-2 border-zinc-200/70">
           {timelineEvents.map(({ pt, diff, prev, isEnd }, i) => (
             <li key={pt.date + i} className="ml-5">
-              <span className={`absolute -left-[9px] mt-1.5 h-4 w-4 rounded-full border-2 border-white dark:border-[#1c1d22] ${i === 0 ? 'bg-[#68829e]' : diff > 0 ? 'bg-[#a66c75]' : diff < 0 ? 'bg-[#649274]' : isEnd ? 'bg-zinc-500' : 'bg-zinc-400'}`} />
+              <span className={`absolute -left-[9px] mt-1.5 h-4 w-4 rounded-full border-2 border-white ${i === 0 ? 'bg-[#68829e]' : diff > 0 ? 'bg-[#a66c75]' : diff < 0 ? 'bg-[#649274]' : isEnd ? 'bg-zinc-500' : 'bg-zinc-400'}`} />
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-100">{pt.date}</span>
-                <span className="text-sm text-zinc-600 dark:text-zinc-300">{pt.event}</span>
-                {pt.approx && <span className="rounded-md bg-zinc-200/70 px-2 py-0.5 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">{pt.confidence === 'low' ? '要検証' : '概算'}</span>}
-                {pt.confidence === 'high' && <span className="rounded-md bg-[#eaf2ed] px-2 py-0.5 text-xs font-semibold text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]">出典確認済</span>}
+                <span className="text-sm font-bold tabular-nums text-zinc-900">{pt.date}</span>
+                <span className="text-sm text-zinc-600">{pt.event}</span>
+                {pt.approx && <span className="rounded-md bg-zinc-200/70 px-2 py-0.5 text-xs font-semibold text-zinc-700">{pt.confidence === 'low' ? '要検証' : '概算'}</span>}
+                {pt.confidence === 'high' && <span className="rounded-md bg-[#eaf2ed] px-2 py-0.5 text-xs font-semibold text-[#3d6b4e]">出典確認済</span>}
                 {pt.source && <SourceLink src={pt.source} />}
               </div>
               {pt.note && <div className="mt-1 text-xs sm:text-sm text-zinc-500">{pt.note}</div>}
               <div className="mt-1.5 flex flex-wrap items-center gap-2.5">
-                <span className="text-lg sm:text-xl font-bold tabular-nums text-zinc-900 dark:text-zinc-100">{yen(pt.appleStorePrice)}</span>
+                <span className="text-lg sm:text-xl font-bold tabular-nums text-zinc-900">{yen(pt.appleStorePrice)}</span>
                 {i > 0 && diff !== 0 && <DeltaBadge diff={diff} base={prev} />}
                 {pt.usdPrice != null && <span className="text-xs sm:text-sm font-semibold tabular-nums text-zinc-500">US ${pt.usdPrice}</span>}
                 {i === timelineEvents.length - 1 && <CurrentFxFairnessBadge pt={pt} compact showFairPrice={true} />}
@@ -284,19 +284,19 @@ function TimelineInner({ products, toast }: { products: Product[]; toast: (m: st
 
       <div className={`${card} p-5 sm:p-6`}>
         <div className="mb-4 flex flex-wrap items-center gap-2.5 sm:gap-3.5">
-          <h3 className="w-full sm:w-auto text-base font-bold text-zinc-900 dark:text-zinc-100">一斉改定ビュー: この日の各製品の価格差 (最小容量SKU)</h3>
+          <h3 className="w-full sm:w-auto text-base font-bold text-zinc-900">一斉改定ビュー: この日の各製品の価格差 (最小容量SKU)</h3>
           <select className={`${selectCls} min-w-0 flex-1 sm:flex-initial`} value={day} onChange={(e) => setDay(e.target.value)}>{dates.map((d) => <option key={d} value={d}>{d} ({dateCounts.get(d)}製品)</option>)}</select>
           <button className={`${excelBtnCls} sm:ml-auto`} disabled={!dayRows.length} onClick={exportDayRevision}><FileSpreadsheet className="h-4 w-4" />Excel (.xlsx)</button>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {dayRows.map((r) => (
-            <div key={r.pr.id} className="flex items-center justify-between gap-3 rounded-2xl bg-[#f5f5f7] p-4 dark:bg-[#23252b]">
+            <div key={r.pr.id} className="flex items-center justify-between gap-3 rounded-2xl bg-[#f5f5f7] p-4">
               <div className="min-w-0">
-                <div className="flex items-center gap-2 truncate text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                <div className="flex items-center gap-2 truncate text-sm font-semibold text-zinc-900">
                   <CatIcon cat={r.pr.category} className="h-4 w-4 shrink-0 text-zinc-500" />
                   <span className="truncate">{r.pr.name}</span>
                 </div>
-                <div className="mt-0.5 text-xs sm:text-sm tabular-nums text-zinc-500 dark:text-zinc-400">{r.s.label}: {yen(r.base)} → {yen(r.base + r.diff)}</div>
+                <div className="mt-0.5 text-xs sm:text-sm tabular-nums text-zinc-500">{r.s.label}: {yen(r.base)} → {yen(r.base + r.diff)}</div>
               </div>
               <DeltaBadge diff={r.diff} base={r.base} />
             </div>
@@ -315,7 +315,7 @@ function SourceLink({ src }: { src: string }) {
   let host = src;
   try { if (isUrl) host = new URL(src).hostname.replace(/^www\./, ''); } catch { /* noop */ }
   return isUrl
-    ? <a href={src} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"><Link2 className="h-3 w-3" />{host}</a>
+    ? <a href={src} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-zinc-600 underline hover:text-zinc-900"><Link2 className="h-3 w-3" />{host}</a>
     : <span className="text-xs text-zinc-500">出典: {src}</span>;
 }
 
@@ -330,28 +330,28 @@ function InlineFxRateCell({ pt, showMarket = true }: { pt?: PricePoint; showMark
   return (
     <div className="inline-flex items-center gap-2 whitespace-nowrap tabular-nums">
       {apl != null ? (
-        <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+        <span className="text-xs font-semibold text-zinc-800">
           Apple ¥{apl.toFixed(1)}/$
         </span>
       ) : (
         <span className="text-xs text-zinc-400">Apple —</span>
       )}
       {showMarket && mkt != null && (
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+        <span className="text-xs text-zinc-500">
           （市場 ¥{mkt.toFixed(1)}）
         </span>
       )}
       {diff != null && (
         diff > 0.5 ? (
-          <span className="inline-flex items-center rounded-md bg-zinc-200/70 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#2c2f36] dark:text-zinc-300">
+          <span className="inline-flex items-center rounded-md bg-zinc-200/70 px-2 py-0.5 text-xs font-medium text-zinc-600">
             +¥{diff.toFixed(1)} 割高
           </span>
         ) : diff < -0.5 ? (
-          <span className="inline-flex items-center rounded-md bg-[#eaf2ed] px-2 py-0.5 text-xs font-semibold text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]">
+          <span className="inline-flex items-center rounded-md bg-[#eaf2ed] px-2 py-0.5 text-xs font-semibold text-[#3d6b4e]">
             -¥{Math.abs(diff).toFixed(1)} 割安
           </span>
         ) : (
-          <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
+          <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
             {diff >= 0 ? '+' : '-'}¥{Math.abs(diff).toFixed(1)} 適正
           </span>
         )
@@ -399,30 +399,30 @@ function SourcePopoverBadge({ pt }: { pt: PricePoint }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:bg-zinc-200 hover:text-zinc-900 dark:bg-[#25272e] dark:text-zinc-300 dark:hover:bg-zinc-700/70 dark:hover:text-zinc-100"
+        className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:bg-zinc-200 hover:text-zinc-900"
       >
         <span>{sources.length > 0 ? `出典 (${sources.length})` : 'ソース'}</span>
       </button>
 
       {open && (
-        <div className="absolute right-0 bottom-full z-40 mb-2 w-72 sm:w-80 rounded-2xl bg-white p-4 text-left text-xs shadow-xl dark:bg-[#1c1d22]">
+        <div className="absolute right-0 bottom-full z-40 mb-2 w-72 sm:w-80 rounded-2xl bg-white p-4 text-left text-xs shadow-xl">
           <div className="mb-2 flex items-center justify-between gap-2 pb-1.5">
-            <span className="font-bold text-zinc-800 dark:text-zinc-100">出典・エビデンス ({sources.length}件)</span>
+            <span className="font-bold text-zinc-800">出典・エビデンス ({sources.length}件)</span>
             {pt.confidence === 'high' ? (
-              <span className="rounded-md bg-[#eaf2ed] px-2 py-0.5 text-xs font-semibold text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]">出典確認済</span>
+              <span className="rounded-md bg-[#eaf2ed] px-2 py-0.5 text-xs font-semibold text-[#3d6b4e]">出典確認済</span>
             ) : pt.approx ? (
-              <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">概算・推定</span>
+              <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">概算・推定</span>
             ) : null}
           </div>
           {sources.length > 0 && (
-            <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-300">
+            <ul className="space-y-1.5 text-xs text-zinc-600">
               {sources.map((s, idx) => {
                 const isUrl = /^https?:\/\//.test(s);
                 return (
                   <li key={idx} className="flex items-start gap-1.5 break-all">
                     <span className="mt-0.5 text-zinc-400">•</span>
                     {isUrl ? (
-                      <a href={s} target="_blank" rel="noreferrer" className="text-zinc-700 underline hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-100">
+                      <a href={s} target="_blank" rel="noreferrer" className="text-zinc-700 underline hover:text-zinc-950">
                         {s}
                       </a>
                     ) : (
@@ -434,8 +434,8 @@ function SourcePopoverBadge({ pt }: { pt: PricePoint }) {
             </ul>
           )}
           {pt.note && (
-            <div className="mt-2.5 rounded-xl bg-[#f5f5f7] p-2.5 text-xs leading-relaxed text-zinc-600 dark:bg-[#23252b] dark:text-zinc-300">
-              <span className="font-semibold text-zinc-700 dark:text-zinc-200">補足: </span>
+            <div className="mt-2.5 rounded-xl bg-[#f5f5f7] p-2.5 text-xs leading-relaxed text-zinc-600">
+              <span className="font-semibold text-zinc-700">補足: </span>
               {pt.note}
             </div>
           )}
@@ -543,10 +543,10 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
 
   const counts = { up: rows.filter((r) => r.kind === 'up').length, down: rows.filter((r) => r.kind === 'down').length, launch: rows.filter((r) => r.kind === 'launch').length, end: rows.filter((r) => r.kind === 'end').length };
   const kindBadge: Record<EvRow['kind'], string> = {
-    launch: 'bg-zinc-200/80 text-zinc-700 dark:bg-[#2c2f36] dark:text-zinc-300',
-    up: 'bg-zinc-200/80 text-zinc-700 dark:bg-[#2c2f36] dark:text-zinc-300',
-    down: 'bg-[#eaf2ed] text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]',
-    end: 'bg-zinc-100 text-zinc-500 dark:bg-[#25272e] dark:text-zinc-400',
+    launch: 'bg-zinc-200/80 text-zinc-700',
+    up: 'bg-zinc-200/80 text-zinc-700',
+    down: 'bg-[#eaf2ed] text-[#3d6b4e]',
+    end: 'bg-zinc-100 text-zinc-500',
   };
   const kindLabel: Record<EvRow['kind'], string> = { launch: '発売', up: '値上げ', down: '値下げ', end: '販売終了' };
 
@@ -592,7 +592,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
       {/* 上段: タイトル & 表示モード切替 & 出力ボタン */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
-          <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-base font-bold text-zinc-900">
             全機種 価格イベント一覧 <span className="text-xs font-semibold text-zinc-500">({filtered.length}件)</span>
           </h3>
           <Segmented<'grouped' | 'flat'>
@@ -609,7 +609,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
 
         <div className="flex flex-wrap items-center gap-2">
           {picked.length > 0 && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-200/80 px-3 py-1 text-xs font-semibold text-zinc-800 dark:bg-[#25272e] dark:text-zinc-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-200/80 px-3 py-1 text-xs font-semibold text-zinc-800">
               {picked.length}件選択中
               <button onClick={() => setSelected(new Set())} className="underline hover:no-underline">解除</button>
             </span>
@@ -634,12 +634,12 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
               onClick={() => { setKind(pill.value); setLimit(150); }}
               className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                 active
-                  ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-                  : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
+                  ? 'bg-[#1d1d1f] text-white'
+                  : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70'
               }`}
             >
               <span>{pill.label}</span>
-              <span className={`rounded-full px-1.5 py-0.5 text-xs tabular-nums ${active ? 'bg-white/20 text-current dark:bg-zinc-900/15' : 'bg-zinc-200/70 text-zinc-500 dark:bg-[#1c1d22] dark:text-zinc-400'}`}>
+              <span className={`rounded-full px-1.5 py-0.5 text-xs tabular-nums ${active ? 'bg-white/20 text-current' : 'bg-zinc-200/70 text-zinc-500'}`}>
                 {pill.count}
               </span>
             </button>
@@ -665,7 +665,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
       </div>
 
       {filtered.length === 0 && (
-        <div className="rounded-2xl bg-[#f5f5f7] py-10 text-center text-sm text-zinc-500 dark:bg-[#23252b]">
+        <div className="rounded-2xl bg-[#f5f5f7] py-10 text-center text-sm text-zinc-500">
           条件に一致する価格イベントがありません
         </div>
       )}
@@ -677,33 +677,33 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
             return (
               <div
                 key={grp.date}
-                className="overflow-hidden rounded-2xl bg-[#f5f5f7]/80 dark:bg-[#23252b]/80"
+                className="overflow-hidden rounded-2xl bg-[#f5f5f7]/80"
               >
                 {/* グループヘッダー（見出しバー） */}
-                <div className="flex flex-wrap items-center justify-between gap-2.5 bg-zinc-200/50 px-4 py-3 text-xs dark:bg-[#282a32]">
+                <div className="flex flex-wrap items-center justify-between gap-2.5 bg-zinc-200/50 px-4 py-3 text-xs">
                   <div className="flex flex-wrap items-center gap-2.5">
                     <input
                       type="checkbox"
                       aria-label={`${grp.date} のイベントをすべて選択`}
                       checked={allGrpSelected}
                       onChange={() => toggleGroup(grp.items)}
-                      className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200"
+                      className="h-4 w-4 accent-zinc-900"
                     />
-                    <span className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+                    <span className="font-bold tabular-nums text-zinc-900">
                       {grp.date}
                     </span>
-                    <span className="text-zinc-300 dark:text-zinc-600">｜</span>
-                    <span className="font-semibold text-zinc-800 dark:text-zinc-100">
+                    <span className="text-zinc-300">｜</span>
+                    <span className="font-semibold text-zinc-800">
                       {grp.title}
                     </span>
                   </div>
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400 tabular-nums">
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-zinc-500 tabular-nums">
                     <span>
-                      （対象: <strong className="font-semibold text-zinc-700 dark:text-zinc-200">{grp.modelCount}モデル</strong>
+                      （対象: <strong className="font-semibold text-zinc-700">{grp.modelCount}モデル</strong>
                       {grp.items.length > grp.modelCount ? `・${grp.items.length}SKU` : ''}
                       {grp.marketUsdJpy != null && (
                         <>
-                          {' / '}当日市場レート: <strong className="font-semibold text-zinc-700 dark:text-zinc-200">$1 = ¥{grp.marketUsdJpy.toFixed(1)}</strong>
+                          {' / '}当日市場レート: <strong className="font-semibold text-zinc-700">$1 = ¥{grp.marketUsdJpy.toFixed(1)}</strong>
                         </>
                       )}
                       ）
@@ -712,7 +712,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                 </div>
 
                 {/* グループ内の各行 */}
-                <div className="divide-y divide-zinc-200/40 dark:divide-white/[0.04]">
+                <div className="divide-y divide-zinc-200/40">
                   {grp.items.map((r) => {
                     const isSel = selected.has(r.key);
                     const hasDiff = r.prev != null && r.prev !== r.price;
@@ -722,8 +722,8 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                         onClick={() => toggleOne(r.key)}
                         className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 text-xs sm:text-sm transition cursor-pointer sm:flex-nowrap ${
                           isSel
-                            ? 'bg-zinc-200/60 dark:bg-[#2c2f38]'
-                            : 'hover:bg-white/60 dark:hover:bg-[#282b33]'
+                            ? 'bg-zinc-200/60'
+                            : 'hover:bg-white/60'
                         }`}
                       >
                         {/* 左側: チェック + 機種名・容量 + 種別バッジ */}
@@ -733,20 +733,20 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                             checked={isSel}
                             onChange={() => {}}
                             onClick={(e) => { e.stopPropagation(); toggleOne(r.key); }}
-                            className="h-4 w-4 shrink-0 accent-zinc-900 dark:accent-zinc-200"
+                            className="h-4 w-4 shrink-0 accent-zinc-900"
                           />
                           <span className={`shrink-0 whitespace-nowrap rounded-lg px-2 py-0.5 text-xs font-semibold ${kindBadge[r.kind]}`}>
                             {kindLabel[r.kind]}
                           </span>
                           <CatIcon cat={r.product.category} className="h-4 w-4 shrink-0 text-zinc-400" />
-                          <span className="truncate font-bold text-zinc-900 dark:text-zinc-100" title={r.product.name}>
+                          <span className="truncate font-bold text-zinc-900" title={r.product.name}>
                             {r.product.name}
                           </span>
-                          <span className="shrink-0 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                          <span className="shrink-0 text-xs font-medium text-zinc-500">
                             {r.sku.label}
                           </span>
                           {r.approx && (
-                            <span className="shrink-0 rounded-md bg-zinc-200/70 px-1.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#2c2f36] dark:text-zinc-300">
+                            <span className="shrink-0 rounded-md bg-zinc-200/70 px-1.5 py-0.5 text-xs font-medium text-zinc-600">
                               概算
                             </span>
                           )}
@@ -760,9 +760,9 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                               <span className="text-xs text-zinc-400">→</span>
                             </>
                           )}
-                          <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{yen(r.price)}</span>
+                          <span className="text-sm font-bold text-zinc-900">{yen(r.price)}</span>
                           {r.usd != null && (
-                            <span className="text-xs text-zinc-400 dark:text-zinc-500">(${r.usd})</span>
+                            <span className="text-xs text-zinc-400">(${r.usd})</span>
                           )}
                         </div>
 
@@ -792,12 +792,12 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
 
       {/* ==================== モードB: フラット一覧表 ==================== */}
       {viewMode === 'flat' && filtered.length > 0 && (
-        <div className="overflow-x-auto rounded-2xl bg-[#f5f5f7]/60 dark:bg-[#23252b]/60">
+        <div className="overflow-x-auto rounded-2xl bg-[#f5f5f7]/60">
           <table className="w-full min-w-[920px] text-xs sm:text-sm">
             <thead>
-              <tr className="bg-zinc-200/50 text-left text-xs text-zinc-500 dark:bg-[#282a32] dark:text-zinc-400">
+              <tr className="bg-zinc-200/50 text-left text-xs text-zinc-500">
                 <th className="w-10 px-4 py-3">
-                  <input type="checkbox" aria-label="表示中のすべてを選択" checked={allFilteredSelected} onChange={toggleFiltered} className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200" />
+                  <input type="checkbox" aria-label="表示中のすべてを選択" checked={allFilteredSelected} onChange={toggleFiltered} className="h-4 w-4 accent-zinc-900" />
                 </th>
                 <th className="whitespace-nowrap px-4 py-3 font-semibold">日付</th>
                 <th className="whitespace-nowrap px-4 py-3 font-semibold">製品 / SKU</th>
@@ -809,7 +809,7 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                 <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">出典</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-200/40 dark:divide-white/[0.04]">
+            <tbody className="divide-y divide-zinc-200/40">
               {visibleRows.map((r) => {
                 const isSel = selected.has(r.key);
                 const hasDiff = r.prev != null && r.prev !== r.price;
@@ -817,8 +817,8 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                   <tr
                     key={r.key}
                     onClick={() => toggleOne(r.key)}
-                    className={`cursor-pointer align-middle text-zinc-800 transition dark:text-zinc-200 ${
-                      isSel ? 'bg-zinc-200/60 dark:bg-[#2c2f38]' : 'hover:bg-white/60 dark:hover:bg-[#282b33]'
+                    className={`cursor-pointer align-middle text-zinc-800 transition ${
+                      isSel ? 'bg-zinc-200/60' : 'hover:bg-white/60'
                     }`}
                   >
                     <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
@@ -827,14 +827,14 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                         aria-label={`${r.product.name} ${r.date} を選択`}
                         checked={isSel}
                         onChange={() => toggleOne(r.key)}
-                        className="h-4 w-4 accent-zinc-900 dark:accent-zinc-200"
+                        className="h-4 w-4 accent-zinc-900"
                       />
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3.5 font-semibold tabular-nums text-zinc-700 dark:text-zinc-300">{r.date}</td>
+                    <td className="whitespace-nowrap px-4 py-3.5 font-semibold tabular-nums text-zinc-700">{r.date}</td>
                     <td className="whitespace-nowrap px-4 py-3.5">
                       <div className="flex items-center gap-2">
                         <CatIcon cat={r.product.category} className="h-4 w-4 shrink-0 text-zinc-400" />
-                        <span className="font-bold text-zinc-900 dark:text-zinc-100">{r.product.name}</span>
+                        <span className="font-bold text-zinc-900">{r.product.name}</span>
                         <span className="text-xs text-zinc-500">({r.sku.label})</span>
                       </div>
                     </td>
@@ -843,14 +843,14 @@ function AllEventsTable({ products, toast }: { products: Product[]; toast: (m: s
                         {kindLabel[r.kind]}
                       </span>
                     </td>
-                    <td className="max-w-[240px] truncate px-4 py-3.5 text-zinc-600 dark:text-zinc-300" title={r.event}>
+                    <td className="max-w-[240px] truncate px-4 py-3.5 text-zinc-600" title={r.event}>
                       {r.event}
-                      {r.approx && <span className="ml-1.5 rounded-md bg-zinc-200/70 px-1.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-[#2c2f36] dark:text-zinc-300">概算</span>}
+                      {r.approx && <span className="ml-1.5 rounded-md bg-zinc-200/70 px-1.5 py-0.5 text-xs font-medium text-zinc-600">概算</span>}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3.5 tabular-nums">
                       {hasDiff && <span className="text-xs text-zinc-400 line-through">{yen(r.prev)}</span>}
                       {hasDiff && <span className="mx-1 text-xs text-zinc-400">→</span>}
-                      <span className="font-bold text-zinc-900 dark:text-zinc-100">{yen(r.price)}</span>
+                      <span className="font-bold text-zinc-900">{yen(r.price)}</span>
                       {r.usd != null && <span className="ml-1.5 text-xs text-zinc-400">(${r.usd})</span>}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3.5">

@@ -483,44 +483,44 @@ export const RefurbishedView = React.memo(function RefurbishedView({
 
         {/* サマリー統計バー */}
         <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-2xl bg-[#f5f5f7] px-4 py-3.5 dark:bg-[#23252b]">
-            <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400">現在Apple公式の実在庫数</div>
-            <div className="mt-1 text-base sm:text-lg font-bold tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
+          <div className="rounded-2xl bg-[#f5f5f7] px-4 py-3.5">
+            <div className="text-xs font-medium text-zinc-500">現在Apple公式の実在庫数</div>
+            <div className="mt-1 text-base sm:text-lg font-bold tabular-nums text-[#3d6b4e]">
               {stats.liveCount} <span className="text-xs font-semibold text-zinc-500">構成</span>
             </div>
-            <div className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <div className="mt-0.5 text-xs text-zinc-500">
               {showReferenceItems
                 ? `参考整備済相場 (+${stats.refCount}件) も表示中`
                 : `定番モデルの参考相場: 別途 ${stats.refCount}件`}
             </div>
           </div>
 
-          <div className="rounded-2xl bg-[#f5f5f7] px-4 py-3.5 dark:bg-[#23252b]">
-            <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400">新品定価からの最大割引額</div>
-            <div className="mt-1 text-base sm:text-lg font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+          <div className="rounded-2xl bg-[#f5f5f7] px-4 py-3.5">
+            <div className="text-xs font-medium text-zinc-500">新品定価からの最大割引額</div>
+            <div className="mt-1 text-base sm:text-lg font-bold tabular-nums text-zinc-900">
               −{yen(stats.maxDiscount)} <span className="text-xs font-semibold text-zinc-500">(約15% OFF〜)</span>
             </div>
-            <div className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <div className="mt-0.5 text-xs text-zinc-500">
               Apple純正パーツ交換・徹底クリーニング済
             </div>
           </div>
 
-          <div className="rounded-2xl bg-[#f5f5f7] px-4 py-3.5 dark:bg-[#23252b]">
-            <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400">整備済品が圧倒的にお得な機種</div>
-            <div className="mt-1 text-base sm:text-lg font-bold tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
+          <div className="rounded-2xl bg-[#f5f5f7] px-4 py-3.5">
+            <div className="text-xs font-medium text-zinc-500">整備済品が圧倒的にお得な機種</div>
+            <div className="mt-1 text-base sm:text-lg font-bold tabular-nums text-[#3d6b4e]">
               {stats.under15kCount} <span className="text-xs font-semibold">モデル</span>
             </div>
-            <div className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <div className="mt-0.5 text-xs text-zinc-500">
               中古最安との差額 ＋¥15,000 以内
             </div>
           </div>
 
-          <div className="rounded-2xl bg-[#f5f5f7] px-4 py-3.5 dark:bg-[#23252b]">
-            <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Apple認定整備済品の特典</div>
-            <div className="mt-1 text-sm font-bold text-zinc-900 dark:text-zinc-100">
+          <div className="rounded-2xl bg-[#f5f5f7] px-4 py-3.5">
+            <div className="text-xs font-medium text-zinc-500">Apple認定整備済品の特典</div>
+            <div className="mt-1 text-sm font-bold text-zinc-900">
               新品バッテリー・外装 ＆ 1年保証
             </div>
-            <div className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <div className="mt-0.5 text-xs text-zinc-500">
               AppleCare+ 加入可・全付属品同梱
             </div>
           </div>
@@ -540,8 +540,8 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                     onClick={() => setCatFilter(c.id)}
                     className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full px-3.5 py-2 text-xs sm:text-sm font-semibold transition ${
                       active
-                        ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-                        : 'bg-[#f5f5f7] text-zinc-700 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
+                        ? 'bg-[#1d1d1f] text-white'
+                        : 'bg-[#f5f5f7] text-zinc-700 hover:bg-zinc-200/70'
                     }`}
                   >
                     {c.id !== 'all' && <CatIcon cat={c.id} className="h-3.5 w-3.5 shrink-0" />}
@@ -549,8 +549,8 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                     <span
                       className={`rounded-full px-1.5 py-0.5 text-xs font-bold tabular-nums ${
                         active
-                          ? 'bg-white/20 text-zinc-100 dark:bg-zinc-900/15 dark:text-zinc-900'
-                          : 'bg-zinc-200/70 text-zinc-600 dark:bg-[#1c1d22] dark:text-zinc-300'
+                          ? 'bg-white/20 text-zinc-100'
+                          : 'bg-zinc-200/70 text-zinc-600'
                       }`}
                     >
                       {count}
@@ -569,14 +569,14 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="モデル名・チップ(M3/M4/A18)で検索..."
-                  className="w-full rounded-2xl bg-[#f5f5f7] py-2 pl-9 pr-8 text-xs sm:text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-400/50 dark:bg-[#23252b] dark:text-zinc-100"
+                  className="w-full rounded-2xl bg-[#f5f5f7] py-2 pl-9 pr-8 text-xs sm:text-sm text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-400/50"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
                     aria-label="検索クリア"
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -588,8 +588,8 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                 onClick={() => setOnlyBargainVsUsed((v) => !v)}
                 className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold transition ${
                   onlyBargainVsUsed
-                    ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                    : 'bg-[#f5f5f7] text-zinc-700 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
+                    ? 'bg-zinc-900 text-zinc-100'
+                    : 'bg-[#f5f5f7] text-zinc-700 hover:bg-zinc-200/70'
                 }`}
               >
                 <Sparkles className="h-3.5 w-3.5 shrink-0" />
@@ -602,21 +602,21 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                 onClick={() => setShowReferenceItems((v) => !v)}
                 className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold transition ${
                   showReferenceItems
-                    ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-                    : 'bg-[#f5f5f7] text-zinc-700 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
+                    ? 'bg-[#1d1d1f] text-white'
+                    : 'bg-[#f5f5f7] text-zinc-700 hover:bg-zinc-200/70'
                 }`}
               >
                 <span
                   className={`h-2 w-2 rounded-full ${
-                    showReferenceItems ? 'bg-[#649274]' : 'bg-zinc-400 dark:bg-zinc-500'
+                    showReferenceItems ? 'bg-[#649274]' : 'bg-zinc-400'
                   }`}
                 />
                 <span>在庫なしモデルの参考整備済相場も表示</span>
                 <span
                   className={`rounded-full px-1.5 py-0.5 text-xs font-bold tabular-nums ${
                     showReferenceItems
-                      ? 'bg-white/20 text-zinc-100 dark:bg-zinc-900/15 dark:text-zinc-900'
-                      : 'bg-zinc-200/70 text-zinc-600 dark:bg-[#1c1d22] dark:text-zinc-300'
+                      ? 'bg-white/20 text-zinc-100'
+                      : 'bg-zinc-200/70 text-zinc-600'
                   }`}
                 >
                   {showReferenceItems ? 'ON' : `OFF (+${stats.refCount}件)`}
@@ -628,7 +628,7 @@ export const RefurbishedView = React.memo(function RefurbishedView({
           {/* 並び替え（価格が安い順 / 新品からの割引額が大きい順 / 中古相場との差額が小さい順） */}
           <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1">並び替え:</span>
+              <span className="text-xs font-semibold text-zinc-500 mr-1">並び替え:</span>
               {sortOptions.map((opt) => {
                 const active = sortKey === opt.id;
                 return (
@@ -638,8 +638,8 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                     onClick={() => setSortKey(opt.id)}
                     className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold transition ${
                       active
-                        ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900'
-                        : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70 dark:bg-[#23252b] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
+                        ? 'bg-zinc-900 text-zinc-100'
+                        : 'bg-[#f5f5f7] text-zinc-600 hover:bg-zinc-200/70'
                     }`}
                   >
                     <span>{opt.label}</span>
@@ -647,9 +647,9 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                 );
               })}
             </div>
-            <div className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 tabular-nums">
+            <div className="text-xs sm:text-sm text-zinc-500 tabular-nums">
               表示中 ({showReferenceItems ? '実在庫＋参考相場' : 'Apple公式 実在庫のみ'}):{' '}
-              <strong className="font-bold text-zinc-900 dark:text-zinc-100">{filteredAndSorted.length}</strong> 件
+              <strong className="font-bold text-zinc-900">{filteredAndSorted.length}</strong> 件
             </div>
           </div>
         </div>
@@ -658,12 +658,12 @@ export const RefurbishedView = React.memo(function RefurbishedView({
       {/* アイテムカード一覧 */}
       {filteredAndSorted.length === 0 ? (
         <div className={`${card} p-8 sm:p-10 text-center space-y-3.5`}>
-          <div className="text-sm sm:text-base font-semibold text-zinc-700 dark:text-zinc-200">
+          <div className="text-sm sm:text-base font-semibold text-zinc-700">
             {!showReferenceItems
               ? '現在この条件でApple公式ストアに実在庫がある認定整備済製品はありません。'
               : '条件に一致するApple認定整備済製品が見つかりませんでした。'}
           </div>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-xs sm:text-sm text-zinc-500">
             {!showReferenceItems
               ? '「在庫なしモデルの参考整備済相場も表示」をONにすると、定番モデルの参考整備済相場（約15%OFF）と中古最安値を比較できます。'
               : 'カテゴリや検索キーワードを変更してお試しください。'}
@@ -699,15 +699,15 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                   {/* 上部ステータス＆カテゴリ＆スペックバッジ */}
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900 px-2.5 py-1 text-xs font-bold text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900 px-2.5 py-1 text-xs font-bold text-zinc-100">
                         <CatIcon cat={item.category} className="h-3.5 w-3.5 shrink-0" />
                         <span>{item.category}</span>
                       </span>
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
                           isLive
-                            ? 'bg-[#eaf2ed] text-[#3d6b4e] dark:bg-[#1e2b24] dark:text-[#88b396]'
-                            : 'bg-zinc-100 text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300'
+                            ? 'bg-[#eaf2ed] text-[#3d6b4e]'
+                            : 'bg-zinc-100 text-zinc-600'
                         }`}
                       >
                         <span
@@ -718,14 +718,14 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                         <span>{item.stockLabel || (isLive ? 'Apple公式 在庫あり' : '参考整備済相場（在庫なし）')}</span>
                       </span>
                       {item.specs.releaseYear && (
-                        <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
+                        <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600">
                           {item.specs.releaseYear}年発売
                         </span>
                       )}
                     </div>
 
                     {/* 割引率ピルバッジ */}
-                    <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-3 py-1 text-xs font-bold tabular-nums text-zinc-800 dark:bg-[#25272e] dark:text-zinc-200">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-3 py-1 text-xs font-bold tabular-nums text-zinc-800">
                       新品比 −{yen(item.discountAmount)} ({item.discountPercent.toFixed(1)}% OFF)
                     </span>
                   </div>
@@ -733,46 +733,46 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                   {/* 製品名・SKU・正規化タイトル */}
                   <div className="mt-3">
                     <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-                      <h3 className="text-base sm:text-lg font-bold leading-snug text-zinc-900 dark:text-zinc-100">
+                      <h3 className="text-base sm:text-lg font-bold leading-snug text-zinc-900">
                         {item.productName}
                       </h3>
-                      <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-semibold text-zinc-800 dark:bg-[#25272e] dark:text-zinc-200">
+                      <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-semibold text-zinc-800">
                         {item.skuLabel}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 line-clamp-1">
+                    <p className="mt-1 text-xs sm:text-sm text-zinc-500 line-clamp-1">
                       {item.title}
                     </p>
                   </div>
 
                   {/* 既存DB (products.json) から注入された詳細スペック */}
-                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-600 dark:text-zinc-300">
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-600">
                     {item.specs.soc && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1 dark:bg-[#23252b]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1">
                         <span className="text-zinc-400">SoC:</span>
                         <strong className="font-semibold">{item.specs.soc.split(' (')[0]}</strong>
                       </span>
                     )}
                     {item.specs.ram && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1 dark:bg-[#23252b]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1">
                         <span className="text-zinc-400">RAM:</span>
                         <strong className="font-semibold">{item.specs.ram}</strong>
                       </span>
                     )}
                     {item.storage && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1 dark:bg-[#23252b]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1">
                         <span className="text-zinc-400">構成:</span>
                         <strong className="font-semibold">{item.storage}</strong>
                       </span>
                     )}
                     {item.connectivity && item.connectivity !== '-' && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1 dark:bg-[#23252b]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1">
                         <span className="text-zinc-400">通信:</span>
                         <strong className="font-semibold">{item.connectivity}</strong>
                       </span>
                     )}
                     {item.specs.weight && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1 dark:bg-[#23252b]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] px-2.5 py-1">
                         <span className="text-zinc-400">重量:</span>
                         <strong className="font-semibold">{item.specs.weight.split(' / ')[0]}</strong>
                       </span>
@@ -782,32 +782,32 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                   {/* ① Apple認定整備済品価格 / ② 参考：Apple新品定価 / ③ 当サイトの中古最安値 の3価格横並び表示 */}
                   <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                     {/* ① Apple認定整備済品価格（メイン表示） */}
-                    <div className="rounded-2xl bg-[#f5f5f7] p-3.5 dark:bg-[#25272e]">
+                    <div className="rounded-2xl bg-[#f5f5f7] p-3.5">
                       <div className="flex items-center justify-between gap-1">
-                        <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
+                        <span className="text-xs font-bold text-zinc-900">
                           ① Apple認定整備済品
                         </span>
-                        <span className="rounded-md bg-zinc-900 px-1.5 py-0.5 text-xs font-bold text-zinc-100 dark:bg-zinc-200 dark:text-zinc-900">
+                        <span className="rounded-md bg-zinc-900 px-1.5 py-0.5 text-xs font-bold text-zinc-100">
                           {item.discountPercent.toFixed(0)}% OFF
                         </span>
                       </div>
-                      <div className="mt-1.5 text-xl font-bold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-100">
+                      <div className="mt-1.5 text-xl font-bold tabular-nums tracking-tight text-zinc-900">
                         {yen(item.refurbishedPrice)}
                       </div>
-                      <div className="mt-1 text-xs font-semibold tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
+                      <div className="mt-1 text-xs font-semibold tabular-nums text-[#3d6b4e]">
                         新品比 −{yen(item.discountAmount)} ({item.discountPercent.toFixed(1)}% OFF)
                       </div>
                     </div>
 
                     {/* ② 参考：Apple新品定価（または終売時最終価格） */}
-                    <div className="rounded-2xl bg-[#f5f5f7]/70 p-3.5 dark:bg-[#23252b]/70">
-                      <div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+                    <div className="rounded-2xl bg-[#f5f5f7]/70 p-3.5">
+                      <div className="text-xs font-semibold text-zinc-500">
                         ② 参考：{item.isOriginalDiscontinued ? '終売時最終価格' : 'Apple新品定価'}
                       </div>
-                      <div className="mt-1.5 text-base sm:text-lg font-bold tabular-nums text-zinc-600 line-through decoration-zinc-400 dark:text-zinc-300">
+                      <div className="mt-1.5 text-base sm:text-lg font-bold tabular-nums text-zinc-600 line-through decoration-zinc-400">
                         {yen(item.originalNewPrice)}
                       </div>
-                      <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                      <div className="mt-1 text-xs text-zinc-500">
                         {item.isOriginalDiscontinued
                           ? 'Apple Store新品は販売終了'
                           : 'Apple Store現行新品価格'}
@@ -815,9 +815,9 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                     </div>
 
                     {/* ③ 当サイトの中古最安値（イオシス・じゃんぱら等の楽天/Yahoo!最安） */}
-                    <div className="rounded-2xl bg-[#f5f5f7]/70 p-3.5 dark:bg-[#23252b]/70">
+                    <div className="rounded-2xl bg-[#f5f5f7]/70 p-3.5">
                       <div className="flex items-center justify-between gap-1">
-                        <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-semibold text-zinc-500">
                           ③ 当サイト中古最安値
                         </span>
                         {item.usedUrl && (
@@ -825,17 +825,17 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                             href={toMoshimoUrl(item.usedUrl)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-0.5 text-xs font-semibold text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                            className="inline-flex items-center gap-0.5 text-xs font-semibold text-zinc-600 underline hover:text-zinc-900"
                           >
                             <span>詳細</span>
                             <ExternalLink className="h-3 w-3" />
                           </a>
                         )}
                       </div>
-                      <div className="mt-1.5 text-base sm:text-lg font-bold tabular-nums text-zinc-800 dark:text-zinc-100">
+                      <div className="mt-1.5 text-base sm:text-lg font-bold tabular-nums text-zinc-800">
                         {item.usedLowestPrice != null ? yen(item.usedLowestPrice) : '—'}
                       </div>
-                      <div className="mt-1 truncate text-xs text-zinc-500 dark:text-zinc-400" title={item.usedShopName}>
+                      <div className="mt-1 truncate text-xs text-zinc-500" title={item.usedShopName}>
                         {gap != null
                           ? `整備済との差額: ${gap >= 0 ? `+${yen(gap)}` : signedYen(gap)}`
                           : item.usedShopName}
@@ -847,8 +847,8 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                   {item.usedLowestPrice != null && gap != null && (
                     <div className="mt-3.5">
                       {isRefurbBargainVsUsed ? (
-                        <div className="rounded-2xl bg-[#eaf2ed]/75 px-3.5 py-2.5 text-xs font-semibold leading-relaxed text-[#3d6b4e] dark:bg-[#1e2b24]/75 dark:text-[#88b396]">
-                          <span className="mr-1.5 inline-block rounded-md bg-[#487558] px-2 py-0.5 text-xs font-bold text-zinc-100 dark:bg-[#649274] dark:text-zinc-950">
+                        <div className="rounded-2xl bg-[#eaf2ed]/75 px-3.5 py-2.5 text-xs font-semibold leading-relaxed text-[#3d6b4e]">
+                          <span className="mr-1.5 inline-block rounded-md bg-[#487558] px-2 py-0.5 text-xs font-bold text-zinc-100">
                             おすすめ
                           </span>
                           {gap > 0
@@ -856,13 +856,13 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                             : `中古最安（${yen(item.usedLowestPrice)}）と同等以下の価格で、Apple公式の新品バッテリー・外装・1年保証が付くため整備済品が圧倒的にお得！`}
                         </div>
                       ) : isUsedMuchCheaper ? (
-                        <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-[#f5f5f7] px-3.5 py-2.5 text-xs font-semibold leading-relaxed text-zinc-700 dark:bg-[#23252b] dark:text-zinc-300">
+                        <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-[#f5f5f7] px-3.5 py-2.5 text-xs font-semibold leading-relaxed text-zinc-700">
                           <div>
-                            <span className="mr-1.5 inline-block rounded-md bg-zinc-700 px-2 py-0.5 text-xs font-bold text-zinc-100 dark:bg-zinc-300 dark:text-zinc-900">
+                            <span className="mr-1.5 inline-block rounded-md bg-zinc-700 px-2 py-0.5 text-xs font-bold text-zinc-100">
                               コスパ比較
                             </span>
                             コスパ重視なら中古ショップ（{yen(item.usedLowestPrice)}）の方が大幅に安上がり
-                            <span className="ml-1 text-xs font-normal text-zinc-500 dark:text-zinc-400">
+                            <span className="ml-1 text-xs font-normal text-zinc-500">
                               （差額 −{yen(gap)} / {item.usedShopName}）
                             </span>
                           </div>
@@ -871,7 +871,7 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                               href={toMoshimoUrl(item.usedUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 whitespace-nowrap text-xs font-bold text-zinc-900 underline hover:opacity-80 dark:text-zinc-100"
+                              className="inline-flex items-center gap-1 whitespace-nowrap text-xs font-bold text-zinc-900 underline hover:opacity-80"
                             >
                               <span>中古最安を見る</span>
                               <ExternalLink className="h-3.5 w-3.5 shrink-0" />
@@ -879,9 +879,9 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                           )}
                         </div>
                       ) : (
-                        <div className="rounded-2xl bg-[#f5f5f7] px-3.5 py-2.5 text-xs leading-relaxed text-zinc-600 dark:bg-[#23252b] dark:text-zinc-400">
+                        <div className="rounded-2xl bg-[#f5f5f7] px-3.5 py-2.5 text-xs leading-relaxed text-zinc-600">
                           中古最安（{yen(item.usedLowestPrice)}）との差額は{' '}
-                          <strong className="font-bold text-zinc-800 dark:text-zinc-200">
+                          <strong className="font-bold text-zinc-800">
                             ＋{yen(gap)}
                           </strong>
                           。初期費用を抑えるなら中古、新品バッテリー・外装＆Apple公式1年保証を重視するなら認定整備済品がおすすめです。
@@ -909,7 +909,7 @@ export const RefurbishedView = React.memo(function RefurbishedView({
                     onClick={() => handleAddToCompare(item)}
                     className={`${secondaryActionBtnCls} flex-1 !py-2.5 ${
                       inCompare
-                        ? '!bg-zinc-200/80 dark:!bg-zinc-700'
+                        ? '!bg-zinc-200/80'
                         : ''
                     }`}
                   >

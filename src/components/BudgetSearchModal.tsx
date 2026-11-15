@@ -459,13 +459,13 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
               onClick={copyBudgetShareUrl}
               className={`${btnCls} ${
                 urlCopied
-                  ? '!bg-zinc-200/80 dark:!bg-zinc-700'
+                  ? '!bg-zinc-200/80'
                   : ''
               }`}
             >
               {urlCopied ? (
                 <>
-                  <Check className="h-4 w-4 shrink-0 text-[#487558] dark:text-[#88b396]" />
+                  <Check className="h-4 w-4 shrink-0 text-[#487558]" />
                   <span>コピー済</span>
                 </>
               ) : (
@@ -488,14 +488,14 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         </div>
 
         {/* クイック予算選択ボタン + スライダー */}
-        <div className="mt-4 rounded-2xl bg-[#f5f5f7] p-4 sm:p-5 dark:bg-[#23252b]">
+        <div className="mt-4 rounded-2xl bg-[#f5f5f7] p-4 sm:p-5">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <div className="flex items-baseline gap-2.5">
-              <span className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400">予算上限:</span>
-              <span className="text-2xl sm:text-3xl font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+              <span className="text-xs sm:text-sm font-medium text-zinc-500">予算上限:</span>
+              <span className="text-2xl sm:text-3xl font-bold tabular-nums text-zinc-900">
                 {yen(maxPrice)}
               </span>
-              <span className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">以内（税込）</span>
+              <span className="text-xs sm:text-sm text-zinc-500">以内（税込）</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {QUICK_BUDGETS.map((b) => (
@@ -505,8 +505,8 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                   onClick={() => setMaxPrice(b.value)}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
                     maxPrice === b.value
-                      ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-                      : 'bg-white text-zinc-700 hover:bg-zinc-200/70 dark:bg-[#1c1d22] dark:text-zinc-300 dark:hover:bg-[#2c2f36]'
+                      ? 'bg-[#1d1d1f] text-white'
+                      : 'bg-white text-zinc-700 hover:bg-zinc-200/70'
                   }`}
                 >
                   {b.label}
@@ -524,9 +524,9 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               aria-label="予算上限スライダー"
-              className="h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-[#18191e] dark:accent-zinc-200"
+              className="h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 accent-zinc-900"
             />
-            <div className="mt-1.5 flex justify-between text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
+            <div className="mt-1.5 flex justify-between text-xs tabular-nums text-zinc-500">
               <span>¥10,000</span>
               <span>¥50,000</span>
               <span>¥100,000</span>
@@ -539,7 +539,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
 
           <div className="mt-4 flex flex-col gap-3.5 pt-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">カテゴリ:</span>
+              <span className="text-xs font-semibold text-zinc-500">カテゴリ:</span>
               <Segmented<BudgetCategoryFilter>
                 value={catFilter}
                 onChange={setCatFilter}
@@ -582,12 +582,12 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         <div className={`${card} flex flex-col justify-between p-5 sm:p-6`}>
           <div>
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
                 予算内「最高スペック」
               </span>
               {topUsed1 && (
-                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
+                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600">
                   性能スコア {topUsed1.score.total}点
                 </span>
               )}
@@ -595,23 +595,23 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
             {topUsed1 ? (
               <>
                 <div className="mt-3">
-                  <div className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                  <div className="text-base sm:text-lg font-bold text-zinc-900">
                     {topUsed1.p.name} ({topUsed1.sku.label})
                     {topUsed2 ? ` / ${topUsed2.p.name} (${topUsed2.sku.label})` : ''}
                   </div>
                   <div className="mt-1.5 flex flex-wrap items-baseline gap-2">
-                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                    <span className="text-xs font-medium text-zinc-500">
                       {topUsed1.qualifyingRouteLabel}
                     </span>
-                    <span className="text-xl sm:text-2xl font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+                    <span className="text-xl sm:text-2xl font-bold tabular-nums text-zinc-900">
                       {yen(topUsed1.qualifyingPrice)}
                     </span>
-                    <span className="text-xs font-medium tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
+                    <span className="text-xs font-medium tabular-nums text-[#3d6b4e]">
                       （予算残り {yen(maxPrice - topUsed1.qualifyingPrice)}）
                     </span>
                   </div>
                 </div>
-                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-600">
                   搭載チップ「{topUsed1.score.socLabel}」{topUsed1.score.ramGb ? `・RAM ${topUsed1.score.ramGb}GB` : ''}
                   ・{topUsed1.score.releaseYear}年発売（想定サポート残約
                   {topUsed1.score.remainingSupportYears}年）。
@@ -659,12 +659,12 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         <div className={`${card} flex flex-col justify-between p-5 sm:p-6`}>
           <div>
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
                 予算内「Apple直販新品」最高機
               </span>
               {bestNewWithinBudget && (
-                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
+                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600">
                   性能スコア {bestNewWithinBudget.score.total}点
                 </span>
               )}
@@ -672,22 +672,22 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
             {bestNewWithinBudget ? (
               <>
                 <div className="mt-3">
-                  <div className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                  <div className="text-base sm:text-lg font-bold text-zinc-900">
                     {bestNewWithinBudget.p.name} ({bestNewWithinBudget.sku.label})
                   </div>
                   <div className="mt-1.5 flex flex-wrap items-baseline gap-2">
-                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                    <span className="text-xs font-medium text-zinc-500">
                       Apple Store直販（新品）
                     </span>
-                    <span className="text-xl sm:text-2xl font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+                    <span className="text-xl sm:text-2xl font-bold tabular-nums text-zinc-900">
                       {yen(bestNewWithinBudget.appleNewPrice)}
                     </span>
-                    <span className="text-xs font-medium tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
+                    <span className="text-xs font-medium tabular-nums text-[#3d6b4e]">
                       （予算残り {yen(maxPrice - (bestNewWithinBudget.appleNewPrice ?? 0))}）
                     </span>
                   </div>
                 </div>
-                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-600">
                   新品・メーカー保証・バッテリー100%で選べる予算内最高性能（
                   {bestNewWithinBudget.score.socLabel}
                   {bestNewWithinBudget.score.ramGb ? ` / RAM ${bestNewWithinBudget.score.ramGb}GB` : ''}
@@ -695,17 +695,17 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                 </p>
               </>
             ) : nearestNewAboveBudget ? (
-              <div className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-                <div className="font-semibold text-zinc-800 dark:text-zinc-200">
+              <div className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-600">
+                <div className="font-semibold text-zinc-800">
                   予算 {yen(maxPrice)} 以内の現行Apple Store新品はありません
                 </div>
                 <p className="mt-1.5">
                   あと{' '}
-                  <strong className="font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+                  <strong className="font-bold tabular-nums text-zinc-900">
                     ＋{yen((nearestNewAboveBudget.appleNewPrice ?? 0) - maxPrice)}
                   </strong>{' '}
                   で{' '}
-                  <strong className="font-bold text-zinc-900 dark:text-zinc-100">
+                  <strong className="font-bold text-zinc-900">
                     {nearestNewAboveBudget.p.name} ({nearestNewAboveBudget.sku.label})
                   </strong>{' '}
                   新品（{yen(nearestNewAboveBudget.appleNewPrice)}）に届きます。
@@ -756,12 +756,12 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         <div className={`${card} flex flex-col justify-between p-5 sm:p-6`}>
           <div>
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 dark:bg-[#25272e] dark:text-zinc-300">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700">
                 <span className="h-1.5 w-1.5 rounded-full bg-zinc-500" />
                 キャリア2年返却の最高機
               </span>
               {bestProgramWithinBudget && (
-                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#25272e] dark:text-zinc-300">
+                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-zinc-600">
                   性能スコア {bestProgramWithinBudget.score.total}点
                 </span>
               )}
@@ -769,20 +769,20 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
             {bestProgramWithinBudget && bestProgramWithinBudget.bestCarrierReturn ? (
               <>
                 <div className="mt-3">
-                  <div className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                  <div className="text-base sm:text-lg font-bold text-zinc-900">
                     {bestProgramWithinBudget.p.name} ({bestProgramWithinBudget.sku.label})
                   </div>
                   <div className="mt-1.5 flex flex-wrap items-baseline gap-2">
                     <CarrierBadge id={bestProgramWithinBudget.bestCarrierReturn.cid} small />
-                    <span className="text-xl sm:text-2xl font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+                    <span className="text-xl sm:text-2xl font-bold tabular-nums text-zinc-900">
                       実質 {yen(bestProgramWithinBudget.bestCarrierReturn.effectiveCost)}
                     </span>
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    <span className="text-xs text-zinc-500">
                       （月約{yen(Math.round(bestProgramWithinBudget.bestCarrierReturn.effectiveCost / 24))}）
                     </span>
                   </div>
                 </div>
-                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                <p className="mt-3 text-xs sm:text-sm leading-relaxed text-zinc-600">
                   一括だと新品 {yen(bestProgramWithinBudget.appleNewPrice)}・中古{' '}
                   {yen(bestProgramWithinBudget.lowestUsedPrice)} の上位機ですが、
                   {CARRIER_META[bestProgramWithinBudget.bestCarrierReturn.cid].label}「
@@ -836,10 +836,10 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
       <div className={`${card} p-5 sm:p-6`}>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-base sm:text-lg font-bold text-zinc-900">
               予算 {yen(maxPrice)} 以内のスペック性能ランキング（上位{filteredRanking.length}機種）
             </h3>
-            <p className="mt-0.5 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-0.5 text-xs sm:text-sm text-zinc-500">
               同一機種で複数の容量が予算内に収まる場合、より大容量のSKUを自動選択してランキングしています。
             </p>
           </div>
@@ -856,7 +856,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
         </div>
 
         {!filteredRanking.length ? (
-          <div className="rounded-2xl bg-[#f5f5f7] p-8 text-center text-sm text-zinc-500 dark:bg-[#23252b] dark:text-zinc-400">
+          <div className="rounded-2xl bg-[#f5f5f7] p-8 text-center text-sm text-zinc-500">
             指定した予算（{yen(maxPrice)}）・フィルター条件に一致する製品がありません。予算上限を上げるか、「中古・未使用品を含む」をONにしてください。
           </div>
         ) : (
@@ -866,26 +866,26 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
               return (
                 <div
                   key={`${item.p.id}__${item.sku.id}`}
-                  className="flex flex-col justify-between rounded-2xl bg-[#f5f5f7]/80 p-4 sm:p-5 transition hover:bg-[#ececef] dark:bg-[#23252b] dark:hover:bg-[#282b32]"
+                  className="flex flex-col justify-between rounded-2xl bg-[#f5f5f7]/80 p-4 sm:p-5 transition hover:bg-[#ececef]"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex min-w-0 items-center gap-2">
-                        <span className="inline-flex h-6 min-w-[2rem] shrink-0 items-center justify-center rounded-full bg-white px-2 text-xs font-bold tabular-nums text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-200">
+                        <span className="inline-flex h-6 min-w-[2rem] shrink-0 items-center justify-center rounded-full bg-white px-2 text-xs font-bold tabular-nums text-zinc-700">
                           #{idx + 1}
                         </span>
                         <CatIcon cat={item.p.category} className="h-4 w-4 shrink-0 text-zinc-400" />
-                        <span className="truncate text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100">
+                        <span className="truncate text-sm sm:text-base font-bold text-zinc-900">
                           {item.p.name}
                         </span>
                       </div>
-                      <span className="shrink-0 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold tabular-nums text-zinc-600 dark:bg-[#1c1d22] dark:text-zinc-300">
+                      <span className="shrink-0 rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold tabular-nums text-zinc-600">
                         スコア {item.score.total}
                       </span>
                     </div>
 
-                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-                      <span className="rounded-md bg-white px-2 py-0.5 font-medium text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-300">
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
+                      <span className="rounded-md bg-white px-2 py-0.5 font-medium text-zinc-700">
                         {item.sku.label}
                       </span>
                       <span>{item.score.socLabel}</span>
@@ -893,24 +893,24 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                       <span>・{item.score.releaseYear}年（残{item.score.remainingSupportYears}年）</span>
                     </div>
 
-                    <div className="mt-3.5 rounded-2xl bg-white p-3.5 dark:bg-[#1c1d22]">
+                    <div className="mt-3.5 rounded-2xl bg-white p-3.5">
                       <div className="flex items-baseline justify-between gap-2">
                         <div>
-                          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                          <span className="text-xs font-medium text-zinc-500">
                             {item.qualifyingRouteLabel}
                           </span>
-                          <div className="text-lg sm:text-xl font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+                          <div className="text-lg sm:text-xl font-bold tabular-nums text-zinc-900">
                             {yen(item.qualifyingPrice)}
                           </div>
                         </div>
                         <div className="text-right">
                           <span className="text-xs text-zinc-400">予算との差額</span>
-                          <div className="text-xs font-semibold tabular-nums text-[#3d6b4e] dark:text-[#88b396]">
+                          <div className="text-xs font-semibold tabular-nums text-[#3d6b4e]">
                             残り {yen(maxPrice - item.qualifyingPrice)}
                           </div>
                         </div>
                       </div>
-                      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
+                      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs tabular-nums text-zinc-500">
                         <span>中古最安: {yen(item.lowestUsedPrice)}</span>
                         {item.unusedPrice != null && <span>未使用: {yen(item.unusedPrice)}</span>}
                         {item.appleNewPrice != null && <span>Apple新品: {yen(item.appleNewPrice)}</span>}
@@ -926,7 +926,7 @@ export const BudgetSearchModal = React.memo(function BudgetSearchModal({
                       }
                       className={`${secondaryActionBtnCls} flex-1 ${
                         inCompare
-                          ? '!bg-zinc-200/80 dark:!bg-zinc-700'
+                          ? '!bg-zinc-200/80'
                           : ''
                       }`}
                     >

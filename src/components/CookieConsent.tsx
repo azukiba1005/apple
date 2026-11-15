@@ -129,15 +129,15 @@ export default function CookieConsent() {
         >
           <div className="mx-auto flex max-w-5xl flex-col gap-4 liquid-glass rounded-3xl p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
             <div className="flex min-w-0 flex-1 gap-3">
-              <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
+              <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700">
                 <Cookie className="h-5 w-5" />
               </div>
               <div className="min-w-0 space-y-1">
-                <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Cookie の利用について</p>
-                <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                <p className="text-sm font-bold text-zinc-900">Cookie の利用について</p>
+                <p className="text-xs leading-relaxed text-zinc-600">
                   当サイトでは、サイトの基本機能の提供、アクセス解析、アフィリエイトの成果計測のために Cookie およびローカルストレージを利用します。
                   「すべて同意」を選択すると、これらの利用に同意したものとみなされます。詳しくは
-                  <a href="./privacy/" className="mx-0.5 font-medium text-zinc-900 underline underline-offset-2 hover:text-zinc-600 dark:text-zinc-200 dark:hover:text-zinc-400">プライバシーポリシー</a>
+                  <a href="./privacy/" className="mx-0.5 font-medium text-zinc-900 underline underline-offset-2 hover:text-zinc-600">プライバシーポリシー</a>
                   をご確認ください。
                 </p>
               </div>
@@ -146,14 +146,14 @@ export default function CookieConsent() {
               <button
                 type="button"
                 onClick={() => setSettingsOpen(true)}
-                className="rounded-full px-4 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                className="rounded-full px-4 py-2 text-xs font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
               >
                 設定
               </button>
               <button
                 type="button"
                 onClick={() => finish(false, false)}
-                className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18] dark:bg-white/10 dark:text-zinc-100 dark:hover:bg-white/15"
+                className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18]"
               >
                 必須のみ
               </button>
@@ -178,39 +178,39 @@ export default function CookieConsent() {
             onClick={(e) => e.stopPropagation()}
             className="liquid-glass liquid-glass-strong animate-sheet-up flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl"
           >
-            <div className="flex items-center justify-between border-b border-black/[0.06] px-5 py-4 dark:border-white/10">
+            <div className="flex items-center justify-between border-b border-black/[0.06] px-5 py-4">
               <div className="flex items-center gap-2">
-                <Cookie className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                <h2 id="cookie-settings-title" className="text-base font-bold text-zinc-900 dark:text-zinc-100">Cookie 設定</h2>
+                <Cookie className="h-5 w-5 text-amber-600" />
+                <h2 id="cookie-settings-title" className="text-base font-bold text-zinc-900">Cookie 設定</h2>
               </div>
-              <button type="button" aria-label="閉じる" onClick={() => setSettingsOpen(false)} className="rounded-full p-1.5 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100">
+              <button type="button" aria-label="閉じる" onClick={() => setSettingsOpen(false)} className="rounded-full p-1.5 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
-              <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="text-xs leading-relaxed text-zinc-600">
                 利用目的ごとに Cookie 等の利用可否を選択できます。設定はいつでもフッターの「Cookie 設定」から変更できます。
               </p>
               {CATEGORIES.map((c) => (
-                <div key={c.key} className="rounded-2xl bg-white/60 p-4 dark:bg-white/[0.04]">
+                <div key={c.key} className="rounded-2xl bg-white/60 p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{c.title}</span>
-                      {c.locked && <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">常に有効</span>}
+                      <span className="text-sm font-semibold text-zinc-900">{c.title}</span>
+                      {c.locked && <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500">常に有効</span>}
                     </div>
                     <Toggle label={c.title} checked={values[c.key]} disabled={c.locked} onChange={setters[c.key]} />
                   </div>
-                  <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">{c.desc}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-zinc-600">{c.desc}</p>
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-col-reverse gap-2 border-t border-black/[0.06] px-5 py-4 dark:border-white/10 sm:flex-row sm:justify-end" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-              <button type="button" onClick={() => finish(false, false)} className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18] dark:bg-white/10 dark:text-zinc-100 dark:hover:bg-white/15">
+            <div className="flex flex-col-reverse gap-2 border-t border-black/[0.06] px-5 py-4 sm:flex-row sm:justify-end" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+              <button type="button" onClick={() => finish(false, false)} className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18]">
                 すべて拒否
               </button>
-              <button type="button" onClick={() => finish(analytics, marketing)} className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18] dark:bg-white/10 dark:text-zinc-100 dark:hover:bg-white/15">
+              <button type="button" onClick={() => finish(analytics, marketing)} className="rounded-full bg-[#767680]/[0.12] px-4 py-2 text-xs font-semibold text-[#1d1d1f] hover:bg-[#767680]/[0.18]">
                 選択内容を保存
               </button>
               <button type="button" onClick={() => finish(true, true)} className="rounded-full bg-[#0071e3] px-5 py-2 text-xs font-semibold text-white hover:bg-[#0077ed]">

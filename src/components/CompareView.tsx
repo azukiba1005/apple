@@ -446,20 +446,20 @@ function TradeInSimulatorBar({
     <div className={`${card} px-5 py-3.5 sm:px-6 sm:py-4`}>
       <div className="flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex flex-wrap items-center gap-2.5 min-w-0">
-          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f5f5f7] text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">
+          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f5f5f7] text-[#1d1d1f]">
             <Scale className="h-3.5 w-3.5" strokeWidth={1.5} />
           </span>
-          <h3 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-xs sm:text-sm font-bold text-zinc-900">
             下取り・買い替え追い金シミュレーター
           </h3>
           {tradeInEst ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f5f7] px-3 py-1 text-xs font-semibold tabular-nums text-zinc-800 dark:bg-[#23252b] dark:text-zinc-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f5f7] px-3 py-1 text-xs font-semibold tabular-nums text-zinc-800">
               <span className="h-1.5 w-1.5 rounded-full bg-[#649274]" />
               {tradeInEst.myProduct.name} ({tradeInEst.mySku.label}) 売却推計:{' '}
-              <strong className="font-bold text-zinc-900 dark:text-zinc-100">−{yen(tradeInEst.activeYen)}</strong>
+              <strong className="font-bold text-zinc-900">−{yen(tradeInEst.activeYen)}</strong>
             </span>
           ) : (
-            <span className="hidden text-xs text-zinc-500 sm:inline dark:text-zinc-400">
+            <span className="hidden text-xs text-zinc-500 sm:inline">
               現在の機種を選ぶと実質追い金・進化点を算出
             </span>
           )}
@@ -476,8 +476,8 @@ function TradeInSimulatorBar({
                     onClick={() => applyPreset(pr.id, pr.skuHint)}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                       isSelected
-                        ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-                        : 'bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e8e8ed] dark:bg-white/10 dark:text-zinc-200'
+                        ? 'bg-[#1d1d1f] text-white'
+                        : 'bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e8e8ed]'
                     }`}
                   >
                     {pr.label}
@@ -510,10 +510,10 @@ function TradeInSimulatorBar({
       </div>
 
       {expanded && (
-        <div className="mt-3.5 rounded-3xl bg-[#f5f5f7] p-4 dark:bg-white/[0.04]">
+        <div className="mt-3.5 rounded-3xl bg-[#f5f5f7] p-4">
           {/* クイック選択プリセットボタン */}
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">定番の乗り換え元:</span>
+            <span className="text-xs font-medium text-zinc-500">定番の乗り換え元:</span>
             {TRADEIN_PRESETS.map((pr) => {
               const matchedP = findProductByQueryToken(sortedAll, pr.id);
               if (!matchedP) return null;
@@ -525,8 +525,8 @@ function TradeInSimulatorBar({
                   onClick={() => applyPreset(pr.id, pr.skuHint)}
                   className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                     isSelected
-                      ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-                      : 'bg-white text-[#1d1d1f] shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:bg-[#fafafa] dark:bg-white/10 dark:text-zinc-200'
+                      ? 'bg-[#1d1d1f] text-white'
+                      : 'bg-white text-[#1d1d1f] shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:bg-[#fafafa]'
                   }`}
                 >
                   {pr.label}
@@ -538,7 +538,7 @@ function TradeInSimulatorBar({
           {/* 機種・容量・売却ルート選択コントロール */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-12 sm:items-center">
             <div className="sm:col-span-5">
-              <label className="mb-1 block text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <label className="mb-1 block text-xs font-medium text-zinc-500">
                 1. 現在使っている機種
               </label>
               <select
@@ -575,7 +575,7 @@ function TradeInSimulatorBar({
             </div>
 
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <label className="mb-1 block text-xs font-medium text-zinc-500">
                 2. 容量 (SKU)
               </label>
               <select
@@ -600,7 +600,7 @@ function TradeInSimulatorBar({
             </div>
 
             <div className="sm:col-span-5">
-              <label className="mb-1 block text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <label className="mb-1 block text-xs font-medium text-zinc-500">
                 3. 売却ルート（状態・方法）
               </label>
               <div className="flex flex-wrap items-center gap-2">
@@ -624,7 +624,7 @@ function TradeInSimulatorBar({
                 </select>
                 {sellMode === 'custom' && (
                   <div className="inline-flex items-center gap-1">
-                    <span className="text-xs font-bold text-zinc-600 dark:text-zinc-300">¥</span>
+                    <span className="text-xs font-bold text-zinc-600">¥</span>
                     <input
                       type="number"
                       min={0}
@@ -645,9 +645,9 @@ function TradeInSimulatorBar({
           {tradeInEst && (
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 text-xs">
               <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1.5">
-                <span className="text-zinc-600 dark:text-zinc-400">
+                <span className="text-zinc-600">
                   {tradeInEst.myProduct.name} ({tradeInEst.mySku.label}) 中古販売相場:{' '}
-                  <strong className="font-semibold tabular-nums text-zinc-900 dark:text-zinc-100">
+                  <strong className="font-semibold tabular-nums text-zinc-900">
                     {yen(tradeInEst.baseUsedPrice)}
                   </strong>
                   {tradeInEst.isFallbackDepreciation && (
@@ -666,7 +666,7 @@ function TradeInSimulatorBar({
                   ]}
                 />
               </div>
-              <div className="text-xs font-bold tabular-nums text-zinc-900 dark:text-zinc-100">
+              <div className="text-xs font-bold tabular-nums text-zinc-900">
                 適用中の下取り差引: −{yen(tradeInEst.activeYen)}
               </div>
             </div>
@@ -718,11 +718,11 @@ function TradeInCardOverlay({
     <div
       className={
         inTable
-          ? `rounded-2xl bg-[#f5f5f7] ${compact ? 'p-2.5' : 'p-3.5'} dark:bg-white/[0.06]`
-          : 'rounded-2xl bg-[#f5f5f7] p-3.5 dark:bg-white/[0.06]'
+          ? `rounded-2xl bg-[#f5f5f7] ${compact ? 'p-2.5' : 'p-3.5'}`
+          : 'rounded-2xl bg-[#f5f5f7] p-3.5'
       }
     >
-      <div className="flex items-center justify-between gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+      <div className="flex items-center justify-between gap-1.5 text-xs font-semibold text-zinc-500">
         <span>
           {tradeInEst.myProduct.name} (−{yen(sellYen)}) 下取り時の実質追い金
         </span>
@@ -731,15 +731,15 @@ function TradeInCardOverlay({
       <div className="mt-2 space-y-1 text-xs tabular-nums">
         {netNew != null && appleNewPrice != null && (
           <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="text-xs text-zinc-500">
               新品（{yen(appleNewPrice)}）へ:
             </span>
             {netNew <= 0 ? (
-              <span className="font-bold text-[#3d6b4e] dark:text-[#88b396]">
+              <span className="font-bold text-[#3d6b4e]">
                 追い金 0円（+{yen(Math.abs(netNew))} プラス）
               </span>
             ) : (
-              <span className="font-bold text-zinc-900 dark:text-zinc-100">
+              <span className="font-bold text-zinc-900">
                 実質追い金 {yen(netNew)}
               </span>
             )}
@@ -747,15 +747,15 @@ function TradeInCardOverlay({
         )}
 
         <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="text-xs text-zinc-500">
             中古最安（{yen(lowestUsedPrice)}）へ:
           </span>
           {netUsed <= 0 ? (
-            <span className="font-bold text-[#3d6b4e] dark:text-[#88b396]">
+            <span className="font-bold text-[#3d6b4e]">
               追い金 0円（+{yen(Math.abs(netUsed))} プラス）
             </span>
           ) : (
-            <span className="font-bold text-zinc-900 dark:text-zinc-100">
+            <span className="font-bold text-zinc-900">
               実質追い金 {yen(netUsed)}
             </span>
           )}
@@ -763,15 +763,15 @@ function TradeInCardOverlay({
 
         {netReturn != null && bestReturnCost != null && (
           <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 text-xs">
-            <span className="text-zinc-500 dark:text-zinc-400">
+            <span className="text-zinc-500">
               2年返却（実質{yen(bestReturnCost)}）:
             </span>
             {netReturn <= 0 ? (
-              <span className="font-semibold text-[#3d6b4e] dark:text-[#88b396]">
+              <span className="font-semibold text-[#3d6b4e]">
                 追い金 0円（+{yen(Math.abs(netReturn))}）
               </span>
             ) : (
-              <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+              <span className="font-semibold text-zinc-700">
                 実質追い金 {yen(netReturn)}
               </span>
             )}
@@ -784,7 +784,7 @@ function TradeInCardOverlay({
           {diffBadges.map((b) => (
             <span
               key={b.key}
-              className="inline-flex items-center rounded-md bg-white px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-[#1c1d22] dark:text-zinc-300"
+              className="inline-flex items-center rounded-md bg-white px-2 py-0.5 text-xs font-medium text-zinc-700"
             >
               {b.label}
             </span>
@@ -816,8 +816,8 @@ function UsedOneLine({ u, loading, onOpen }: { u: UsedMarketData; loading?: bool
   const linkCls = 'inline-flex items-center gap-0.5 text-sm font-medium text-[#0071e3] hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-[#0071e3]';
   if (isEstimated) {
     return (
-      <div data-export-ignore="true" className="flex flex-wrap items-center gap-x-3 text-sm text-zinc-500 dark:text-zinc-400">
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">在庫を探す:</span>
+      <div data-export-ignore="true" className="flex flex-wrap items-center gap-x-3 text-sm text-zinc-500">
+        <span className="text-xs text-zinc-500">在庫を探す:</span>
         <a href={toMoshimoUrl(u.rakutenSearchUrl, 'rakuten')} target="_blank" rel="noopener noreferrer sponsored" className={linkCls}>
           楽天市場 <ExternalLink className="h-3.5 w-3.5" />
         </a>
@@ -836,9 +836,9 @@ function UsedOneLine({ u, loading, onOpen }: { u: UsedMarketData; loading?: bool
     );
   }
   return (
-    <div className="flex flex-wrap items-center gap-x-3 text-sm text-zinc-600 dark:text-zinc-300">
+    <div className="flex flex-wrap items-center gap-x-3 text-sm text-zinc-600">
       <span className="tabular-nums">
-        中古最安 <strong className="font-semibold text-zinc-900 dark:text-zinc-100">{yen(up.lowestPrice)}</strong>
+        中古最安 <strong className="font-semibold text-zinc-900">{yen(up.lowestPrice)}</strong>
       </span>
       <button type="button" data-export-ignore="true" onClick={onOpen} className={linkCls}>
         ショップ一覧 <ExternalLink className="h-3.5 w-3.5" />
@@ -1405,14 +1405,14 @@ export const CompareView = React.memo(function CompareView({
       const unavail = getCarrierUnavailableInfo(c.p, c.sku, id, mode, mnp);
       return (
         <div className="space-y-1.5">
-          <span className="inline-flex items-center rounded-full bg-[#f5f5f7] px-2.5 py-0.5 text-xs text-[#6e6e73] dark:bg-white/10 dark:text-zinc-400">
+          <span className="inline-flex items-center rounded-full bg-[#f5f5f7] px-2.5 py-0.5 text-xs text-[#6e6e73]">
             {unavail.badge}
           </span>
           {unavail.refPrice != null && (
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-[#6e6e73] dark:text-zinc-400">
+            <div className="flex flex-wrap items-center gap-1.5 text-xs text-[#6e6e73]">
               <span className="inline-flex flex-wrap items-center gap-1">
                 <span>{unavail.refLabel}:</span>
-                <strong className="font-semibold tabular-nums text-[#1d1d1f] dark:text-zinc-200">{yen(unavail.refPrice)}</strong>
+                <strong className="font-semibold tabular-nums text-[#1d1d1f]">{yen(unavail.refPrice)}</strong>
               </span>
               {!isExporting && unavail.cellularSku && (
                 <button
@@ -1435,16 +1435,16 @@ export const CompareView = React.memo(function CompareView({
           <ApplePrice
             value={v}
             className={`whitespace-nowrap text-[15px] font-semibold sm:text-base ${
-              isDisc ? 'text-[#424245] dark:text-zinc-300' : 'text-[#1d1d1f] dark:text-zinc-100'
+              isDisc ? 'text-[#424245]' : 'text-[#1d1d1f]'
             }`}
           />
           {mode === 'return' && cp?.returnProgram && (
-            <span className="whitespace-nowrap text-xs tabular-nums text-[#6e6e73] dark:text-zinc-400">
+            <span className="whitespace-nowrap text-xs tabular-nums text-[#6e6e73]">
               月々約{yen(Math.round(v / (cp.returnProgram.months || 24)))}
             </span>
           )}
           {isMin ? (
-            <span className="inline-flex items-center whitespace-nowrap rounded-full bg-[#e8f8ec] px-2 py-0.5 text-[11px] font-semibold text-[#1f7a3a] dark:bg-[#34c759]/15 dark:text-[#5fd884]">
+            <span className="inline-flex items-center whitespace-nowrap rounded-full bg-[#e8f8ec] px-2 py-0.5 text-[11px] font-semibold text-[#1f7a3a]">
               {isDisc ? '終売最安' : '最安'}
             </span>
           ) : ch.min != null ? (
@@ -1452,7 +1452,7 @@ export const CompareView = React.memo(function CompareView({
           ) : null}
         </div>
         {subParts.length > 0 && (
-          <div className="break-words text-xs tabular-nums text-[#6e6e73] dark:text-zinc-400">{subParts.join(' ｜ ')}</div>
+          <div className="break-words text-xs tabular-nums text-[#6e6e73]">{subParts.join(' ｜ ')}</div>
         )}
       </div>
     );
@@ -1470,8 +1470,8 @@ export const CompareView = React.memo(function CompareView({
   const toggleChipCls = (active: boolean) =>
     `inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition ${
       active
-        ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-        : 'bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e8e8ed] dark:bg-white/10 dark:text-zinc-200 dark:hover:bg-white/15'
+        ? 'bg-[#1d1d1f] text-white'
+        : 'bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e8e8ed]'
     }`;
 
   return (
@@ -1503,7 +1503,7 @@ export const CompareView = React.memo(function CompareView({
               onClick={() => setToolsOpen((v) => !v)}
               aria-expanded={toolsOpen}
               aria-controls="compare-tools-panel"
-              className={`${glassCls} inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-[#1d1d1f] transition active:scale-95 md:hidden dark:text-zinc-100`}
+              className={`${glassCls} inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-[#1d1d1f] transition active:scale-95 md:hidden`}
             >
               <Sparkles className="h-4 w-4" />
               条件・ツール
@@ -1521,7 +1521,7 @@ export const CompareView = React.memo(function CompareView({
         >
           <div className="min-h-0 overflow-hidden md:overflow-visible">
             {/* 表示カスタマイズ */}
-            <div className="mt-4 flex flex-col gap-3 border-t border-[#e5e5ea] pt-4 md:flex-row md:flex-wrap md:items-center md:justify-between dark:border-white/[0.08]">
+            <div className="mt-4 flex flex-col gap-3 border-t border-[#e5e5ea] pt-4 md:flex-row md:flex-wrap md:items-center md:justify-between">
               <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
                 <Toggle
                   checked={showFlags.tradein}
@@ -1556,14 +1556,14 @@ export const CompareView = React.memo(function CompareView({
               {cols.map((c) => (
                 <span
                   key={c.sel.pid}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f5f7] py-1.5 pl-3.5 pr-1.5 text-xs font-medium text-[#1d1d1f] sm:text-sm dark:bg-white/10 dark:text-zinc-100"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#f5f5f7] py-1.5 pl-3.5 pr-1.5 text-xs font-medium text-[#1d1d1f] sm:text-sm"
                 >
                   <CatIcon cat={c.p.category} className="h-3.5 w-3.5 shrink-0" />
                   {c.p.name}
                   <button
                     aria-label={`${c.p.name} を比較から外す`}
                     onClick={() => setSels(sels.filter((s) => s.pid !== c.sel.pid))}
-                    className="rounded-full p-1 transition hover:bg-black/[0.06] dark:hover:bg-white/15"
+                    className="rounded-full p-1 transition hover:bg-black/[0.06]"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -1602,13 +1602,13 @@ export const CompareView = React.memo(function CompareView({
             </div>
 
             {/* 共有・書き出し */}
-            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-[#e5e5ea] pt-4 dark:border-white/[0.08]">
-              <div className="inline-flex flex-wrap items-center gap-1 rounded-full bg-[#f5f5f7] p-1 dark:bg-white/[0.06]">
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-[#e5e5ea] pt-4">
+              <div className="inline-flex flex-wrap items-center gap-1 rounded-full border border-black/10 bg-[#f5f5f7] p-1">
                 <select
                   value={imageScope}
                   onChange={(e) => setImageScope(e.target.value as ImageExportScope)}
                   aria-label="画像キャプチャ範囲を選択"
-                  className="rounded-full border-0 bg-transparent py-1.5 pl-3 pr-1.5 text-xs font-medium text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30 dark:text-zinc-200"
+                  className="rounded-full border-0 bg-transparent py-1.5 pl-3 pr-1.5 text-xs font-medium text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
                   title="画像出力する範囲を選択"
                 >
                   <option value="all">範囲: カード＋テーブル全体</option>
@@ -1619,7 +1619,7 @@ export const CompareView = React.memo(function CompareView({
                   type="button"
                   disabled={!cols.length || exportingKind !== null}
                   onClick={() => doDownloadImage()}
-                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40 dark:bg-white/15 dark:text-zinc-100"
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40"
                   title={`選択範囲（${IMAGE_EXPORT_SCOPE_LABELS[imageScope]}）を高解像度PNG画像として保存`}
                 >
                   <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -1629,7 +1629,7 @@ export const CompareView = React.memo(function CompareView({
                   type="button"
                   disabled={!cols.length || exportingKind !== null}
                   onClick={doCopyImage}
-                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40 dark:bg-white/15 dark:text-zinc-100"
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition hover:bg-[#fafafa] disabled:opacity-40"
                   title={`選択範囲（${IMAGE_EXPORT_SCOPE_LABELS[imageScope]}）のPNG画像をクリップボードへ直接コピー`}
                 >
                   {imageCopied ? <Check className="h-3.5 w-3.5 text-[#34c759]" strokeWidth={1.5} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.5} />}
@@ -1671,30 +1671,30 @@ export const CompareView = React.memo(function CompareView({
           ref={captureRootRef}
           className={
             isExporting
-              ? 'space-y-5 rounded-3xl bg-[#f5f5f7] p-6 text-zinc-900 dark:bg-[#16171a] dark:text-zinc-100'
+              ? 'space-y-5 rounded-3xl bg-[#f5f5f7] p-6 text-zinc-900'
               : 'space-y-4 sm:space-y-6'
           }
         >
           {/* 画像出力時のみ最上部に表示される図解スライド用タイトル＆条件ヘッダー */}
           {isExporting && (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e5e5ea] pb-4 dark:border-white/[0.06]">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e5e5ea] pb-4">
               <div className="min-w-0">
-                <div className="flex items-center gap-2 text-base font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
+                <div className="flex items-center gap-2 text-base font-semibold tracking-tight text-[#1d1d1f]">
                   <span>Apple製品 スペック＆価格比較（{formatCurrentYearMonthLabel()}）</span>
                 </div>
-                <div className="mt-1 text-xs font-medium text-[#6e6e73] dark:text-zinc-400">
+                <div className="mt-1 text-xs font-medium text-[#6e6e73]">
                   {cols.map((c) => `${c.p.name} (${c.sku.label})`).join('  vs  ')}
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">
+                <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f]">
                   {mode === 'bulk' ? '一括価格モード' : '2年返却（実質負担）モード'}
                 </span>
-                <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-200">
+                <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f]">
                   {mnp ? 'MNP/新規割引 適用' : '割引なし（通常価格）'}
                 </span>
                 {diffOnly && activeExportScope !== 'cards' && (
-                  <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-200">
+                  <span className="rounded-full bg-white px-3 py-1 text-[#1d1d1f]">
                     差分スペックのみ抜粋
                   </span>
                 )}
@@ -1728,11 +1728,11 @@ export const CompareView = React.memo(function CompareView({
                         <div className="flex min-w-0 flex-col">
                           <div className="flex min-w-0 items-center gap-2">
                             <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0 text-[#86868b]" />
-                            <span className="truncate text-lg font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{c.p.name}</span>
+                            <span className="truncate text-lg font-semibold tracking-tight text-[#1d1d1f]">{c.p.name}</span>
                           </div>
                           {isDisc && (
                             <span
-                              className="mt-0.5 pl-6 text-xs text-[#6e6e73] dark:text-zinc-400"
+                              className="mt-0.5 pl-6 text-xs text-[#6e6e73]"
                               title={discInfo.discontinuedDate ? `終売: ${discInfo.discontinuedDate}` : 'Apple Store / キャリア販売終了'}
                             >
                               販売終了・最終価格
@@ -1740,7 +1740,7 @@ export const CompareView = React.memo(function CompareView({
                           )}
                         </div>
                         {isExporting ? (
-                          <span className="shrink-0 text-sm font-medium text-[#424245] dark:text-zinc-200">{c.sku.label}</span>
+                          <span className="shrink-0 text-sm font-medium text-[#424245]">{c.sku.label}</span>
                         ) : (
                           <select
                             data-export-ignore="true"
@@ -1759,7 +1759,7 @@ export const CompareView = React.memo(function CompareView({
                           const cellSku = findSiblingCellularSku(c.p, c.sku);
                           const bulkPrice = c.sku.carriers.apple?.currentPrice;
                           return (
-                            <div className="mt-4 text-sm text-[#6e6e73] dark:text-zinc-400">
+                            <div className="mt-4 text-sm text-[#6e6e73]">
                               {cellSku
                                 ? 'このモードでは対象外（Cellularモデルのみ取扱）'
                                 : bulkPrice != null
@@ -1782,10 +1782,10 @@ export const CompareView = React.memo(function CompareView({
                         <div className="mt-4">
                           <ApplePrice
                             value={ch.min}
-                            className={`text-3xl font-semibold ${isDisc ? 'text-[#424245] dark:text-zinc-200' : 'text-[#1d1d1f] dark:text-zinc-100'}`}
+                            className={`text-3xl font-semibold ${isDisc ? 'text-[#424245]' : 'text-[#1d1d1f]'}`}
                           />
                           {apple != null && !ch.ids.includes('apple') && (
-                            <div className="mt-1 text-sm tabular-nums text-[#1f7a3a] dark:text-[#5fd884]">
+                            <div className="mt-1 text-sm tabular-nums text-[#1f7a3a]">
                               Apple Store比 {signedYen(ch.min - apple)}
                             </div>
                           )}
@@ -1806,7 +1806,7 @@ export const CompareView = React.memo(function CompareView({
                       )}
                     </div>
 
-                    <div className="mt-5 border-t border-[#e5e5ea] pt-3 dark:border-white/[0.06]">
+                    <div className="mt-5 border-t border-[#e5e5ea] pt-3">
                       <UsedOneLine
                         u={usedInfo}
                         loading={loadingModalKey === `${c.p.id}__${c.sku.id}`}
@@ -1836,8 +1836,8 @@ export const CompareView = React.memo(function CompareView({
                         }}
                         className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
                           slot >= 0
-                            ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-                            : 'bg-white text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:bg-white/10 dark:text-zinc-200'
+                            ? 'bg-[#1d1d1f] text-white'
+                            : 'bg-white text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.06)]'
                         }`}
                       >
                         {slot >= 0 && <span className="text-[10px] opacity-70">{slot === 0 ? '左' : '右'}</span>}
@@ -1884,7 +1884,7 @@ export const CompareView = React.memo(function CompareView({
                       </div>
                       <div className="relative">
                         <select
-                          className="w-full appearance-none truncate rounded-full bg-[#f5f5f7] py-1.5 pl-3 pr-7 text-center text-sm font-semibold tracking-tight text-[#1d1d1f] outline-none focus:ring-2 focus:ring-[#0071e3]/30 dark:bg-white/10 dark:text-zinc-100"
+                          className="w-full appearance-none truncate rounded-full bg-[#f5f5f7] py-1.5 pl-3 pr-7 text-center text-sm font-semibold tracking-tight text-[#1d1d1f] outline-none focus:ring-2 focus:ring-[#0071e3]/30"
                           value={c.p.id}
                           aria-label={`${slot === 0 ? '左' : '右'}列の機種を変更`}
                           onChange={(e) => changeMobileSlotProduct(slot, e.target.value)}
@@ -1942,8 +1942,8 @@ export const CompareView = React.memo(function CompareView({
                                 onClick={() => setSkuFor(c.sel.pid, k.id)}
                                 className={`rounded-full px-2.5 py-1 text-xs font-medium tabular-nums transition ${
                                   active
-                                    ? 'bg-[#1d1d1f] text-white dark:bg-white dark:text-[#1d1d1f]'
-                                    : 'bg-[#f5f5f7] text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-200'
+                                    ? 'bg-[#1d1d1f] text-white'
+                                    : 'bg-[#f5f5f7] text-[#1d1d1f]'
                                 }`}
                               >
                                 {short}
@@ -1954,10 +1954,10 @@ export const CompareView = React.memo(function CompareView({
                       )}
 
                       <div className="text-center">
-                        <div className="text-xl font-semibold tracking-tight tabular-nums text-[#1d1d1f] dark:text-zinc-100">
+                        <div className="text-xl font-semibold tracking-tight tabular-nums text-[#1d1d1f]">
                           {price != null ? yen(price) : '—'}
                         </div>
-                        <div className="mt-0.5 text-[11px] text-[#6e6e73] dark:text-zinc-400">
+                        <div className="mt-0.5 text-[11px] text-[#6e6e73]">
                           {discInfo.isDiscontinued ? '販売終了・最終価格' : `${mode === 'bulk' ? '一括' : '実質'}最安`}
                         </div>
                       </div>
@@ -1984,9 +1984,9 @@ export const CompareView = React.memo(function CompareView({
                   <div className="grid grid-cols-2 gap-3 px-3 py-1.5 md:hidden">
                     {mCols.map((c) => (
                       <div key={c.sel.pid} className="min-w-0 text-center leading-tight">
-                        <div className="truncate text-xs font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{c.p.name}</div>
-                        <div className="truncate text-[11px] tabular-nums text-[#6e6e73] dark:text-zinc-400">
-                          {c.sku.label} ・ <ApplePrice value={mainPriceOf(c)} className="text-xs font-semibold text-[#1d1d1f] dark:text-zinc-100" />
+                        <div className="truncate text-xs font-semibold tracking-tight text-[#1d1d1f]">{c.p.name}</div>
+                        <div className="truncate text-[11px] tabular-nums text-[#6e6e73]">
+                          {c.sku.label} ・ <ApplePrice value={mainPriceOf(c)} className="text-xs font-semibold text-[#1d1d1f]" />
                         </div>
                       </div>
                     ))}
@@ -1996,13 +1996,13 @@ export const CompareView = React.memo(function CompareView({
                     className="hidden md:grid"
                     style={{ gridTemplateColumns: `10rem repeat(${cols.length}, minmax(0, 1fr))` }}
                   >
-                    <div className="flex items-center px-5 py-2.5 text-[11px] font-medium text-[#6e6e73] dark:text-zinc-400">
+                    <div className="flex items-center px-5 py-2.5 text-[11px] font-medium text-[#6e6e73]">
                       {mode === 'bulk' ? '一括' : '実質'}最安
                     </div>
                     {cols.map((c) => (
                       <div key={c.sel.pid} className="flex min-w-0 items-baseline gap-2 px-5 py-2.5">
-                        <span className="truncate text-sm font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{c.p.name}</span>
-                        <ApplePrice value={mainPriceOf(c)} className="shrink-0 text-sm font-semibold text-[#1d1d1f] dark:text-zinc-100" />
+                        <span className="truncate text-sm font-semibold tracking-tight text-[#1d1d1f]">{c.p.name}</span>
+                        <ApplePrice value={mainPriceOf(c)} className="shrink-0 text-sm font-semibold text-[#1d1d1f]" />
                       </div>
                     ))}
                   </div>
@@ -2067,7 +2067,7 @@ export const CompareView = React.memo(function CompareView({
                   right={<Toggle checked={diffOnly} onChange={setDiffOnly} size="sm" label="差分のみ" />}
                 >
                   {mobileSpecSections.length === 0 ? (
-                    <div className="p-5 text-center text-sm text-[#6e6e73] dark:text-zinc-400">
+                    <div className="p-5 text-center text-sm text-[#6e6e73]">
                       {mCols.length < 2 ? '1機種のみ選択中のため、違いのあるスペック項目はありません' : '2機種間で異なるスペック項目はありません'}{' '}
                       <button type="button" onClick={() => setDiffOnly(false)} className="font-medium text-[#0071e3] hover:underline">
                         すべて表示
@@ -2076,10 +2076,10 @@ export const CompareView = React.memo(function CompareView({
                   ) : (
                     mobileSpecSections.map((sec) => (
                       <div key={sec.id}>
-                        <div className="bg-[#f5f5f7] px-3 pb-2 pt-5 text-sm font-semibold tracking-tight text-[#1d1d1f] dark:bg-white/[0.04] dark:text-zinc-100">
+                        <div className="bg-[#f5f5f7] px-3 pb-2 pt-5 text-sm font-semibold tracking-tight text-[#1d1d1f]">
                           {sec.title}
                         </div>
-                        <div className="divide-y divide-[#e5e5ea] dark:divide-white/[0.06]">
+                        <div className="divide-y divide-[#e5e5ea]">
                           {sec.rows.map((er) => (
                             <MobileRow
                               key={er.row.key}
@@ -2088,7 +2088,7 @@ export const CompareView = React.memo(function CompareView({
                               cells={er.values.map((v, i) => (
                                 <span
                                   key={i}
-                                  className={er.hasDiff ? 'font-medium text-[#1d1d1f] dark:text-zinc-100' : 'text-[#424245] dark:text-zinc-300'}
+                                  className={er.hasDiff ? 'font-medium text-[#1d1d1f]' : 'text-[#424245]'}
                                 >
                                   {v}
                                 </span>
@@ -2121,18 +2121,18 @@ export const CompareView = React.memo(function CompareView({
                   {cols.map((c) => <col key={c.sel.pid} />)}
                 </colgroup>
                 <thead>
-                  <tr className="border-b border-[#e5e5ea] dark:border-white/[0.06]">
-                    <th className="px-5 py-4 text-left align-bottom text-xs font-medium text-[#6e6e73] dark:text-zinc-400">項目</th>
+                  <tr className="border-b border-[#e5e5ea]">
+                    <th className="px-5 py-4 text-left align-bottom text-xs font-medium text-[#6e6e73]">項目</th>
                     {cols.map((c) => {
                       const discInfo = getSkuDiscontinuedInfo(c.p, c.sku);
                       const connOpts = getProductConnectivityOptions(c.p);
                       return (
                         <th key={c.sel.pid} className="px-5 py-4 text-left align-top">
-                          <div className="flex items-center gap-1.5 text-base font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
+                          <div className="flex items-center gap-1.5 text-base font-semibold tracking-tight text-[#1d1d1f]">
                             <CatIcon cat={c.p.category} className="h-4 w-4 shrink-0 text-[#86868b]" />
                             <span className="truncate">{c.p.name}</span>
                           </div>
-                          <div className="mb-2.5 mt-1 flex flex-wrap items-center gap-1.5 text-xs font-normal text-[#6e6e73] dark:text-zinc-400">
+                          <div className="mb-2.5 mt-1 flex flex-wrap items-center gap-1.5 text-xs font-normal text-[#6e6e73]">
                             <span>{c.p.generation} ・ {c.p.releaseDate} 発売</span>
                             <span className="inline-flex items-center rounded-full bg-[#f5f5f7] px-2 py-0.5 text-[11px] font-medium text-[#424245]">
                               {discInfo.isDiscontinued
@@ -2141,7 +2141,7 @@ export const CompareView = React.memo(function CompareView({
                             </span>
                           </div>
                           {isExporting ? (
-                            <div className="inline-flex items-center rounded-full bg-[#f5f5f7] px-3 py-1 text-xs font-semibold text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">
+                            <div className="inline-flex items-center rounded-full bg-[#f5f5f7] px-3 py-1 text-xs font-semibold text-[#1d1d1f]">
                               容量・仕様: {c.sku.label}
                             </div>
                           ) : (
@@ -2174,22 +2174,22 @@ export const CompareView = React.memo(function CompareView({
                     })}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e5e5ea] dark:divide-white/[0.06]">
+                <tbody className="divide-y divide-[#e5e5ea]">
                   {showFlags.tradein && tradeInEst && (
                     <>
-                      <tr className="bg-[#f5f5f7] dark:bg-white/[0.04]">
-                        <td colSpan={cols.length + 1} className="px-5 py-2.5 text-xs font-semibold text-[#424245] dark:text-zinc-300">
+                      <tr className="bg-[#f5f5f7]">
+                        <td colSpan={cols.length + 1} className="px-5 py-2.5 text-xs font-semibold text-[#424245]">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <span>
                               買い替え追い金（実質差額）＆スペック進化 — {tradeInEst.myProduct.name} ({tradeInEst.mySku.label}) 下取り差引: −{yen(tradeInEst.activeYen)}
                             </span>
-                            <span className="text-xs font-medium text-[#6e6e73] dark:text-zinc-400">{tradeInEst.sellModeLabel}</span>
+                            <span className="text-xs font-medium text-[#6e6e73]">{tradeInEst.sellModeLabel}</span>
                           </div>
                         </td>
                       </tr>
                       <tr>
                         <td className="px-5 py-4 align-top">
-                          <div className="text-xs font-semibold text-[#424245] dark:text-zinc-300">実質追い金・進化点</div>
+                          <div className="text-xs font-semibold text-[#424245]">実質追い金・進化点</div>
                           <div className="mt-1 text-xs text-[#86868b]">{tradeInEst.myProduct.name} から乗換</div>
                         </td>
                         {cols.map((c) => {
@@ -2213,14 +2213,14 @@ export const CompareView = React.memo(function CompareView({
                       </tr>
                     </>
                   )}
-                  <tr className="bg-[#f5f5f7] dark:bg-white/[0.04]">
-                    <td colSpan={cols.length + 1} className="px-5 pb-2.5 pt-5 text-sm font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
-                      価格 <span className="ml-1 text-xs font-normal text-[#6e6e73] dark:text-zinc-400">{modeLabel}</span>
+                  <tr className="bg-[#f5f5f7]">
+                    <td colSpan={cols.length + 1} className="px-5 pb-2.5 pt-5 text-sm font-semibold tracking-tight text-[#1d1d1f]">
+                      価格 <span className="ml-1 text-xs font-normal text-[#6e6e73]">{modeLabel}</span>
                     </td>
                   </tr>
                   {CARRIER_ORDER.map((id) => (
                     <tr key={id}>
-                      <td className="px-5 py-4 align-middle text-sm font-medium text-[#424245] dark:text-zinc-300">{carrierLabel(id)}</td>
+                      <td className="px-5 py-4 align-middle text-sm font-medium text-[#424245]">{carrierLabel(id)}</td>
                       {cols.map((c) => {
                         const v = carrierValue(c.sku.carriers[id], mode, mnp);
                         const isMin = v != null && cheapest(c).ids.includes(id);
@@ -2236,7 +2236,7 @@ export const CompareView = React.memo(function CompareView({
                     </tr>
                   ))}
                   <tr>
-                    <td className="px-5 py-4 align-middle text-sm font-medium text-[#424245] dark:text-zinc-300">中古最安</td>
+                    <td className="px-5 py-4 align-middle text-sm font-medium text-[#424245]">中古最安</td>
                     {cols.map((c) => (
                       <td key={c.sel.pid} className="px-5 py-4 align-middle">
                         <UsedOneLine
@@ -2251,8 +2251,8 @@ export const CompareView = React.memo(function CompareView({
                     <td colSpan={cols.length + 1} className="px-5 py-4">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                          <span className="text-lg font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">スペック比較</span>
-                          <span className="text-sm text-[#6e6e73] dark:text-zinc-400">
+                          <span className="text-lg font-semibold tracking-tight text-[#1d1d1f]">スペック比較</span>
+                          <span className="text-sm text-[#6e6e73]">
                             {specSections.reduce((n, sec) => n + sec.rows.length, 0)}項目 ／ 違いがある項目 {totalDiffSpecCount}件
                           </span>
                         </div>
@@ -2266,7 +2266,7 @@ export const CompareView = React.memo(function CompareView({
                   </tr>
                   {specSections.length === 0 ? (
                     <tr>
-                      <td colSpan={cols.length + 1} className="p-6 text-center text-sm text-[#6e6e73] dark:text-zinc-400">
+                      <td colSpan={cols.length + 1} className="p-6 text-center text-sm text-[#6e6e73]">
                         <span>{cols.length < 2 ? '1機種のみ選択中のため、違いのあるスペック項目はありません' : '選択中のモデル間で異なるスペック項目はありません'}</span>{' '}
                         <button type="button" onClick={() => setDiffOnly(false)} className="font-medium text-[#0071e3] hover:underline">
                           （すべて表示に戻す）
@@ -2276,8 +2276,8 @@ export const CompareView = React.memo(function CompareView({
                   ) : (
                     specSections.map((sec) => (
                       <React.Fragment key={sec.id}>
-                        <tr className="bg-[#f5f5f7] dark:bg-white/[0.04]">
-                          <td colSpan={cols.length + 1} className="px-5 pb-2.5 pt-6 text-sm font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">
+                        <tr className="bg-[#f5f5f7]">
+                          <td colSpan={cols.length + 1} className="px-5 pb-2.5 pt-6 text-sm font-semibold tracking-tight text-[#1d1d1f]">
                             {sec.title}
                           </td>
                         </tr>
@@ -2285,7 +2285,7 @@ export const CompareView = React.memo(function CompareView({
                           <tr key={er.row.key}>
                             <td
                               className={`px-5 py-3.5 align-top text-sm ${
-                                er.hasDiff ? 'font-semibold text-[#1d1d1f] dark:text-zinc-100' : 'font-normal text-[#6e6e73] dark:text-zinc-400'
+                                er.hasDiff ? 'font-semibold text-[#1d1d1f]' : 'font-normal text-[#6e6e73]'
                               }`}
                             >
                               {er.row.label}
@@ -2294,7 +2294,7 @@ export const CompareView = React.memo(function CompareView({
                               <td
                                 key={c.sel.pid}
                                 className={`break-words px-5 py-3.5 align-top text-sm leading-relaxed ${
-                                  er.hasDiff ? 'font-medium text-[#1d1d1f] dark:text-zinc-100' : 'text-[#6e6e73] dark:text-zinc-400'
+                                  er.hasDiff ? 'font-medium text-[#1d1d1f]' : 'text-[#6e6e73]'
                                 }`}
                               >
                                 {er.values[idx]}
@@ -2312,11 +2312,11 @@ export const CompareView = React.memo(function CompareView({
 
           {/* 画像出力時のみ最下部に表示される出典クレジット＆免責フッター */}
           {isExporting ? (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e5e5ea] pt-3.5 text-xs dark:border-white/[0.06]">
-              <span className="text-xs text-[#6e6e73] dark:text-zinc-400">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e5e5ea] pt-3.5 text-xs">
+              <span className="text-xs text-[#6e6e73]">
                 ※価格は税込の目安（キャリア返却プログラム・MNP割引・中古最安値を含む）。条件・時期により実際の金額は異なります。
               </span>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-semibold tracking-tight text-[#1d1d1f] dark:bg-white/10 dark:text-zinc-100">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-semibold tracking-tight text-[#1d1d1f]">
                 <Apple className="h-3.5 w-3.5 shrink-0" />
                 <span>Apple Price Atlas | apple.azarin.me</span>
               </div>
@@ -2363,12 +2363,12 @@ function MobileSection({
     <section className={`${card} overflow-hidden`}>
       <div className="flex items-center justify-between gap-2 px-3 py-3">
         <div className="min-w-0">
-          <h3 className="text-base font-semibold tracking-tight text-[#1d1d1f] dark:text-zinc-100">{title}</h3>
-          {subtitle && <p className="truncate text-xs text-[#6e6e73] dark:text-zinc-400">{subtitle}</p>}
+          <h3 className="text-base font-semibold tracking-tight text-[#1d1d1f]">{title}</h3>
+          {subtitle && <p className="truncate text-xs text-[#6e6e73]">{subtitle}</p>}
         </div>
         {right}
       </div>
-      <div className="divide-y divide-[#e5e5ea] border-t border-[#e5e5ea] dark:divide-white/[0.06] dark:border-white/[0.06]">{children}</div>
+      <div className="divide-y divide-[#e5e5ea] border-t border-[#e5e5ea]">{children}</div>
     </section>
   );
 }
@@ -2384,7 +2384,7 @@ function MobileRow({
 }) {
   return (
     <div className="px-3 py-3">
-      <div className={`mb-1.5 text-xs font-medium ${emphasize ? 'text-[#1d1d1f] dark:text-zinc-200' : 'text-[#6e6e73] dark:text-zinc-400'}`}>{label}</div>
+      <div className={`mb-1.5 text-xs font-medium ${emphasize ? 'text-[#1d1d1f]' : 'text-[#6e6e73]'}`}>{label}</div>
       <div className="grid grid-cols-2 gap-3">
         {[0, 1].map((i) => (
           <div key={i} className="min-w-0 break-words text-sm leading-relaxed">
