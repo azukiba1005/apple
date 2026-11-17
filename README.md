@@ -1,5 +1,7 @@
 # Apple Price Atlas
 
+[English Ver](./README_en.md)
+
 **歴代Apple製品のスペック・キャリア価格・中古相場・価格改定の完全比較データベース**
 
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
@@ -203,4 +205,4 @@ npm run build
 
 - 当サイトおよびリポジトリに記載されている製品名、ロゴ、ブランド等は Apple Inc. および各社の商標または登録商標です。
 - 表示される価格・在庫・実質負担額・下取り額等の情報は取得時点の参考値です。最新の正確な価格および契約条件については、必ず Apple 公式サイトおよび各キャリア・各販売ショップのページにてご確認ください。
-- License: MIT License
+- License: [MIT License](./LICENSE)
