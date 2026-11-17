@@ -10,8 +10,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-UI-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Pages_%26_Workers-F38020?logo=cloudflare&logoColor=white)](https://pages.cloudflare.com/)
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-Automation-2088FF?logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
-🔗 **Live Demo:** [https://apple.azarin.me](https://apple.azarin.me)
+🔗 **ウェブサイトはこちら** [https://apple.azarin.me](https://apple.azarin.me)
 
 ---
 
